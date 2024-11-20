@@ -49,7 +49,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/dating-meet-backend.git
+   git clone https://github.com/ndtdoanh/Dating_Meeting.git
    ```
 2. Install dependencies:
    ```bash
@@ -64,7 +64,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/dating-meet-frontend.git
+   git clone https://github.com/ndtdoanh/Dating_Meeting.git
    ```
 2. Install dependencies:
    ```bash
@@ -79,7 +79,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/dating-meet-mobile.git
+   git clone https://github.com/ndtdoanh/Dating_Meeting.git
    ```
 2. Install dependencies:
    ```bash
@@ -94,5 +94,5 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 If you have any questions about the project, feel free to reach out:
 
-- Email: example@example.com
-- GitHub: https://github.com/username
+- Email: nguyentrongdoanh202@gmail.com
+- GitHub: https://github.com/ndtdoanh
