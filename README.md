@@ -1,9 +1,9 @@
 
-# Dating & Meet Project
+# Hackathon Project
 
 ## Introduction
 
-**Dating & Meet** is a dating and social app designed to connect users through features such as swipe, matches, messaging, random video calls, and an AI-powered chatbot. The app also integrates with local events and coffee shops, while providing a point system that allows users to redeem vouchers.
+**HaCoF (Hackathon Collaboration Framework)** is an innovative web-based platform tailored for managing university-level hackathons. It streamlines key processes such as participant registration, team collaboration, project submission, and evaluation. Designed to enhance efficiency and engagement, HaCoF provides real-time updates, intuitive tools, and data-driven insights, ensuring an exceptional experience for organizers, judges, and participants alike.
 
 This project is developed using modern technologies such as **Spring Boot** for the backend, **ReactJS** for the web frontend, and **Flutter** for the mobile app. Each team member has specific roles in the development and maintenance of the system.
 
@@ -16,22 +16,25 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 ## Key Features
 
-1. **Swipe**: Users can swipe left or right to like or pass on profiles.
-2. **Matches**: If two users like each other, a match is created.
-3. **Messaging**: Users can chat with people they've matched with.
-4. **Random Video Call**: A random video call feature to connect matched users.
-5. **AI Chatbot**: Provides users with conversation suggestions and tips via an AI chatbot.
-6. **Event/Coffee Shop Integration**: Connects users with nearby events or coffee shops.
-7. **Points and Vouchers**: Users can earn points and redeem them for vouchers.
+1. **Authentication & Roles**: Secure login with email/Google, role-based access control (Admin, Organizer, Judge, Mentor, Participant, Guest).
+2. **Hackathon Management**: Create/manage hackathons, schedules, and registrations; broadcast announcements.
+3. **Participant Tools**: Register for hackathons, create/join teams, submit projects with file uploads.
+4. **Team Collaboration**: Integrated chat, task boards, and file sharing for teams.
+5. **Mentorship Module**: Book sessions, chat/video call with mentors, access mentor profiles.
+6. **Judge Panel**: Evaluate projects, provide feedback, automated scoring, export evaluation reports.
+7. **Event Management**: Drag-and-drop schedules, manage workshops, and publish resources.
+8. **Discussion Forum**: Find teammates, collaborate, and connect with mentors.
+9. **Notifications**: Real-time updates via email, in-app, and SMS.
+10. **Analytics**: Post-event feedback, participant insights, and exportable reports.
 
 ## Project Structure
 
 - **Backend (Spring Boot)**:
     - Handles API requests from the frontend and mobile apps.
-    - Manages user data, matches, messages, etc.
+    - Manages user data, messages, etc.
 
 - **Frontend (ReactJS)**:
-    - Provides the user interface for features like dating, match lists, messaging, etc.
+    - Provides the user interface for features like hackathon, voz, messaging, etc.
 
 - **Mobile (Flutter)**:
     - A mobile version with similar features as the web app, optimized for mobile devices.
@@ -49,7 +52,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ndtdoanh/Dating_Meeting.git
+   git clone https://github.com/ndtdoanh/Hackathon.git
    ```
 2. Install dependencies:
    ```bash
@@ -64,7 +67,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ndtdoanh/Dating_Meeting.git
+   git clone https://github.com/ndtdoanh/Hackathon.git
    ```
 2. Install dependencies:
    ```bash
@@ -79,7 +82,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ndtdoanh/Dating_Meeting.git
+   git clone https://github.com/ndtdoanh/Hackathon.git
    ```
 2. Install dependencies:
    ```bash
