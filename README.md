@@ -9,7 +9,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 ## Technologies Used
 
-- **Backend**: Spring Boot (Java)
+- **Backend**: Java Spring
 - **Frontend (Web)**: ReactJS
 - **Mobile App**: Flutter
 - **Database**: MySQL
