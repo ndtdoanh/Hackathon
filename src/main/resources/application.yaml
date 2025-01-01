@@ -1,0 +1,18 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /hackathon
+
+spring:
+  application:
+    name: Hackathon
+  datasource:
+    url: "jdbc:mysql://localhost:3306/hackathon"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: root
+    password: 12345
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
