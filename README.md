@@ -9,7 +9,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 ## Technologies Used
 
-- **Backend**: Java Spring
+- **Backend**: Java Spring Boot
 - **Frontend (Web)**: ReactJS
 - **Mobile App**: Flutter
 - **Database**: MySQL
@@ -31,10 +31,10 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 - **Backend (Spring Boot)**:
     - Handles API requests from the frontend and mobile apps.
-    - Manages user data, messages, etc.
+    - Manages user data, messages, and other core functionalities.
 
 - **Frontend (ReactJS)**:
-    - Provides the user interface for features like hackathon, voz, messaging, etc.
+    - Provides the user interface for features like hackathon management, messaging, and forums.
 
 - **Mobile (Flutter)**:
     - A mobile version with similar features as the web app, optimized for mobile devices.
