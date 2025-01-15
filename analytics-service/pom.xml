@@ -169,10 +169,10 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/devteria/identity/dto/**</exclude>
-						<exclude>com/devteria/identity/entity/**</exclude>
-						<exclude>com/devteria/identity/mapper/**</exclude>
-						<exclude>com/devteria/identity/configuration/**</exclude>
+						<exclude>com/ndtdoanh/identity/dto/**</exclude>
+						<exclude>com/ndtdoanh/identity/entity/**</exclude>
+						<exclude>com/ndtdoanh/identity/mapper/**</exclude>
+						<exclude>com/ndtdoanh/identity/configuration/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
