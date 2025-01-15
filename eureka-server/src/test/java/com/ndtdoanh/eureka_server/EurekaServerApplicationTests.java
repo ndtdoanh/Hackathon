@@ -1,11 +1,13 @@
-package com.ndtdoanh.hackathon;
+package com.ndtdoanh.eureka_server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HackathonServiceApplicationTests {
+class EurekaServerApplicationTests {
 
-    @Test
-    void contextLoads() {}
+	@Test
+	void contextLoads() {
+	}
+
 }
