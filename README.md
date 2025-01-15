@@ -12,7 +12,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 - **Backend**: Java Spring Boot
 - **Frontend (Web)**: ReactJS
 - **Database**: MySQL
-
+- **Architecture**: Microservices
   ![image](https://github.com/user-attachments/assets/af03f90b-a089-4be3-bd41-18cd5520fa85)
 
 ## Key Features
