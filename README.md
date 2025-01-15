@@ -13,6 +13,8 @@ This project is developed using modern technologies such as **Spring Boot** for 
 - **Frontend (Web)**: ReactJS
 - **Database**: MySQL
 
+  ![image](https://github.com/user-attachments/assets/af03f90b-a089-4be3-bd41-18cd5520fa85)
+
 ## Key Features
 
 1. **Authentication & Roles**: Secure login with email/Google, role-based access control (Admin, Organizer, Judge, Mentor, Participant, Guest).
