@@ -11,7 +11,6 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 - **Backend**: Java Spring Boot
 - **Frontend (Web)**: ReactJS
-- **Mobile App**: Flutter
 - **Database**: MySQL
 
 ## Key Features
@@ -76,21 +75,6 @@ This project is developed using modern technologies such as **Spring Boot** for 
 3. Run the application:
    ```bash
    npm start
-   ```
-
-### Mobile (Flutter)
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ndtdoanh/Hackathon.git
-   ```
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-3. Run the application:
-   ```bash
-   flutter run
    ```
 
 ## Contact
