@@ -10,8 +10,11 @@ This project is developed using modern technologies such as **Spring Boot** for 
 ## Technologies Used
 
 - **Backend**: Java Spring Boot
-- **Frontend (Web)**: ReactJS
-- **Database**: MySQL
+- **Frontend**: ReactJS
+- **Database/Storage**: MySQL, Redis, Firebase
+- **Messaging/Queue**: Kafka
+- **Cloud Services**: AWS
+- **Development Tools**: Docker, Github
 - **Architecture**: Microservices
   ![image](https://github.com/user-attachments/assets/af03f90b-a089-4be3-bd41-18cd5520fa85)
 
