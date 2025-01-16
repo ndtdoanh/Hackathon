@@ -1,4 +1,4 @@
-package com.ndtdoanh.gateway;
+package com.hacof.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

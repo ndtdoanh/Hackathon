@@ -1,4 +1,4 @@
-package com.ndtdoanh.analytics;
+package com.hacof.analytics;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
