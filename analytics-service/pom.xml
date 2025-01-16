@@ -8,7 +8,7 @@
 		<version>3.2.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ndtdoanh</groupId>
+	<groupId>com.hacof</groupId>
 	<artifactId>analytics-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>analytics-service</name>
@@ -169,10 +169,10 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/ndtdoanh/identity/dto/**</exclude>
-						<exclude>com/ndtdoanh/identity/entity/**</exclude>
-						<exclude>com/ndtdoanh/identity/mapper/**</exclude>
-						<exclude>com/ndtdoanh/identity/configuration/**</exclude>
+						<exclude>com/hacof/identity/dto/**</exclude>
+						<exclude>com/hacof/identity/entity/**</exclude>
+						<exclude>com/hacof/identity/mapper/**</exclude>
+						<exclude>com/hacof/identity/configuration/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
