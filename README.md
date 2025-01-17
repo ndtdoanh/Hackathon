@@ -1,11 +1,12 @@
-
-# Hackathon Project
+# HaCoF (Hackathon Collaboration Framework)
 
 ## Introduction
 
 **HaCoF (Hackathon Collaboration Framework)** is an innovative web-based platform tailored for managing university-level hackathons. It streamlines key processes such as participant registration, team collaboration, project submission, and evaluation. Designed to enhance efficiency and engagement, HaCoF provides real-time updates, intuitive tools, and data-driven insights, ensuring an exceptional experience for organizers, judges, and participants alike.
 
-This project is developed using modern technologies such as **Spring Boot** for the backend, **ReactJS** for the web frontend, and **Flutter** for the mobile app. Each team member has specific roles in the development and maintenance of the system.
+This project is developed using modern technologies such as **Spring Boot** for the backend, **ReactJS** for the frontend, and **MySQL** for the database. Each team member has specific roles in the development and maintenance of the system.
+
+---
 
 ## Technologies Used
 
@@ -16,7 +17,10 @@ This project is developed using modern technologies such as **Spring Boot** for 
 - **Cloud Services**: AWS
 - **Development Tools**: Docker, Github
 - **Architecture**: Microservices
-  ![image](https://github.com/user-attachments/assets/af03f90b-a089-4be3-bd41-18cd5520fa85)
+
+![HaCoF Architecture](https://github.com/user-attachments/assets/af03f90b-a089-4be3-bd41-18cd5520fa85)
+
+---
 
 ## Key Features
 
@@ -31,30 +35,49 @@ This project is developed using modern technologies such as **Spring Boot** for 
 9. **Notifications**: Real-time updates via email, in-app, and SMS.
 10. **Analytics**: Post-event feedback, participant insights, and exportable reports.
 
+---
+
 ## Project Structure
 
-- **Backend (Spring Boot)**:
-    - Handles API requests from the frontend and mobile apps.
-    - Manages user data, messages, and other core functionalities.
+### Backend (Spring Boot):
+- **API Gateway**: Routes client requests to appropriate microservices, handles authentication and authorization.
+- **User Service**: Manages user accounts, authentication, and role-based access control.
+- **Hackathon Service**: Handles the creation, management, and scheduling of hackathons, as well as announcements and participant registration.
+- **Team Service**: Manages team creation, joining, collaboration, and task assignments.
+- **Submission Service**: Handles project submissions, file uploads, and versioning.
+- **Mentorship Service**: Allows mentor session scheduling, chat, and video call integration.
+- **Judging Service**: Manages project evaluation, feedback collection, and scoring algorithms.
+- **Notification Service**: Sends real-time updates via email, SMS, and in-app notifications.
+- **Analytics Service**: Collects and processes event data for reports and insights.
 
-- **Frontend (ReactJS)**:
-    - Provides the user interface for features like hackathon management, messaging, and forums.
+### Frontend (ReactJS):
+- **Dashboard**: Intuitive UI for administrators, organizers, and judges to manage hackathons, evaluate projects, and view analytics.
+- **Participant Portal**: Allows participants to register, join teams, and submit projects.
+- **Mentorship & Forum**: Provides a collaborative space for discussions, mentor bookings, and connecting participants.
+- **Real-time Notifications**: Displays updates and alerts to users via a responsive design.
 
-- **Mobile (Flutter)**:
-    - A mobile version with similar features as the web app, optimized for mobile devices.
+### Shared Services:
+- **Database**: MySQL for structured data storage and Redis for caching.
+- **Messaging/Queue**: Kafka for asynchronous communication between microservices.
+- **Cloud Services**: AWS for hosting, file storage, and scaling the application.
+- **Containerization**: Docker for consistent environment setup across development and production.
+
+---
 
 ## Team Members
 
-1. **Member 1**: Backend Developer (Spring Boot)
-2. **Member 2**: Frontend Developer (ReactJS)
-3. **Member 3**: Mobile Developer (Flutter)
-4. **Member 4**: Full-stack Developer, AI Integration (Chatbot)
+1. **Nguyen Doan Trong Doanh** (Leader)
+2. **Le Quang Huy**
+3. **Nguyen Cao Trung Kien**
+4. **Bui Phan Thanh Phuc**
+
+---
 
 ## Setup and Running the Application
 
 ### Backend (Spring Boot)
 
-1. Clone the repository:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/ndtdoanh/Hackathon.git
    ```
