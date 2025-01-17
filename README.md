@@ -118,4 +118,4 @@ Ensure you have the following installed on your machine:
 If you have any questions about the project, feel free to reach out:
 
 - Email: nguyentrongdoanh202@gmail.com
-- GitHub: https://github.com/hacof
+- GitHub: https://github.com/ndtdoanh/Hackathon
