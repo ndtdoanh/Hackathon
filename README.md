@@ -1,4 +1,4 @@
-# HaCoF (Hackathon Collaboration Framework)
+# HaCoF - Platform for organizing and managing Hackathon competitions for FPT University students
 
 ## Introduction
 
@@ -75,6 +75,14 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 ## Setup and Running the Application
 
+### Prerequisites
+
+Ensure you have the following installed on your machine:
+- **Java 21**
+- **Maven 3.x**
+- **Node.js 14.x or later**
+- **npm 6.x or later**
+  
 ### Backend (Spring Boot)
 
 1. **Clone the repository**:
