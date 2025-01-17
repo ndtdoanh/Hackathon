@@ -169,10 +169,10 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/hacof/identity/dto/**</exclude>
-						<exclude>com/hacof/identity/entity/**</exclude>
-						<exclude>com/hacof/identity/mapper/**</exclude>
-						<exclude>com/hacof/identity/configuration/**</exclude>
+						<exclude>com/hacof/communication/dto/**</exclude>
+						<exclude>com/hacof/communication/entity/**</exclude>
+						<exclude>com/hacof/communication/mapper/**</exclude>
+						<exclude>com/hacof/communication/configuration/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
