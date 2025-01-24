@@ -10,8 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -34,17 +32,12 @@ public class User {
     //    @Column(name = "username", nullable = false, length = 50)
     //    private String username;
 
-    @Size(max = 255)
-    @NotNull
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Size(max = 100)
-    @NotNull
     @Column(
             name = "email",
             nullable = false,
-            length = 100,
             unique = true,
             columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     private String email;
@@ -59,12 +52,12 @@ public class User {
     @Column(name = "is_verified")
     private Boolean isVerified;
 
-    @Size(max = 255)
-    @Column(name = "refresh_token")
-    private String refreshToken;
-
-    @Column(name = "token_expires_at")
-    private Instant tokenExpiresAt;
+    //    @Size(max = 255)
+    //    @Column(name = "refresh_token")
+    //    private String refreshToken;
+    //
+    //    @Column(name = "token_expires_at")
+    //    private Instant tokenExpiresAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
