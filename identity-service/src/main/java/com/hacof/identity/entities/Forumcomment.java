@@ -19,41 +19,50 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.enums.Status;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "forumcomments")
 public class Forumcomment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "thread_id", nullable = false)
-    private Forumthread thread;
+    Forumthread thread;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    User user;
 
     @NotNull
     @Lob
     @Column(name = "comment", nullable = false)
-    private String comment;
+    String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "parent_comment_id")
-    private Forumcomment parentComment;
+    Forumcomment parentComment;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status = Status.ACTIVE;
+    Status status = Status.ACTIVE;
 }

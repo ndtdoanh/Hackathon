@@ -1,8 +1,22 @@
 package com.hacof.identity.services;
 
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.hacof.identity.dtos.request.AuthenticationRequest;
 import com.hacof.identity.dtos.request.IntrospectRequest;
 import com.hacof.identity.dtos.response.AuthenticationResponse;
 import com.hacof.identity.dtos.response.IntrospectResponse;
+import com.hacof.identity.exceptions.AppException;
+import com.hacof.identity.exceptions.ErrorCode;
+import com.hacof.identity.repositories.UserRepository;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -13,25 +27,12 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import lombok.experimental.NonFinal;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import com.hacof.identity.dtos.request.AuthenticationRequest;
-import com.hacof.identity.exceptions.AppException;
-import com.hacof.identity.exceptions.ErrorCode;
-import com.hacof.identity.repositories.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +45,7 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
 
-    public IntrospectResponse introspect(IntrospectRequest request)
-            throws JOSEException, ParseException {
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
 
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
@@ -72,11 +72,7 @@ public class AuthenticationService {
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         var token = generateToken(request.getEmail());
-        return AuthenticationResponse.builder()
-                .token(token)
-                .authenticated(true)
-                .build();
-
+        return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
     private String generateToken(String email) {
@@ -86,9 +82,7 @@ public class AuthenticationService {
                 .subject(email)
                 .issuer("ndtdoanh.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
-                ))
+                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
                 .claim("userId", "Custom")
                 .build();
 

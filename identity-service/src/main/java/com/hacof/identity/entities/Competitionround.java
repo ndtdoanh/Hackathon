@@ -22,46 +22,55 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.enums.Name;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "competitionrounds")
 public class Competitionround {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false)
-    private Name name;
+    Name name;
 
     @Lob
     @Column(name = "description")
-    private String description;
+    String description;
 
     @NotNull
     @Column(name = "start_date", nullable = false)
-    private Instant startDate;
+    Instant startDate;
 
     @NotNull
     @Column(name = "end_date", nullable = false)
-    private Instant endDate;
+    Instant endDate;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id", nullable = false)
-    private Hackathon hackathon;
+    Hackathon hackathon;
 
     @NotNull
     @Column(name = "max_team", nullable = false)
-    private Integer maxTeam;
+    Integer maxTeam;
 
     @ColumnDefault("0")
     @Column(name = "is_video_round")
-    private Boolean isVideoRound;
+    Boolean isVideoRound;
 }

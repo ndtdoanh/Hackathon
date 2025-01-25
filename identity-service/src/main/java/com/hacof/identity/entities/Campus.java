@@ -7,27 +7,33 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "campuses")
 public class Campus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
-    @Size(max = 50)
     @NotNull
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Column(name = "name", nullable = false)
+    String name;
 
-    @Size(max = 255)
     @NotNull
     @Column(name = "location", nullable = false)
-    private String location;
+    String location;
 }

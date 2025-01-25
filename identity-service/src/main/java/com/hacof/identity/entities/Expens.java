@@ -20,44 +20,53 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.enums.ExpenseType;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "expenses")
 public class Expens {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id", nullable = false)
-    private Hackathon hackathon;
+    Hackathon hackathon;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_id")
-    private Team team;
+    Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "event_id")
-    private Event event;
+    Event event;
 
     @NotNull
     @Column(name = "amount", nullable = false)
-    private Long amount;
+    Long amount;
 
     @NotNull
     @Column(name = "expense_date", nullable = false)
-    private LocalDate expenseDate;
+    LocalDate expenseDate;
 
     @NotNull
-    @Enumerated(EnumType.STRING) // Lưu enum dưới dạng chuỗi trong database
+    @Enumerated(EnumType.STRING)
     @Column(name = "expense_type", nullable = false)
-    private ExpenseType expenseType;
+    ExpenseType expenseType;
 }

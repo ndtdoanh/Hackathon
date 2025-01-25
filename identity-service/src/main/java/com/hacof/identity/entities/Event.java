@@ -15,7 +15,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
@@ -23,54 +22,62 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.enums.EventType;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "events")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
-    @Size(max = 100)
     @NotNull
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
+    @Column(name = "name", nullable = false)
+    String name;
 
     @Lob
     @Column(name = "description")
-    private String description;
+    String description;
 
     @NotNull
     @Column(name = "event_date", nullable = false)
-    private Instant eventDate;
+    Instant eventDate;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id", nullable = false)
-    private Hackathon hackathon;
+    Hackathon hackathon;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "organizer_id", nullable = false)
-    private User organizer;
+    User organizer;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "campus_id", nullable = false)
-    private Campus campus;
+    Campus campus;
 
     @ColumnDefault("0")
     @Column(name = "notification_sent")
-    private Boolean notificationSent;
+    Boolean notificationSent;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type")
-    private EventType eventType = EventType.OFFLINE;
+    EventType eventType = EventType.OFFLINE;
 }

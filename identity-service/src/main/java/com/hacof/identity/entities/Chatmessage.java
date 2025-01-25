@@ -18,48 +18,57 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "chatmessages")
 public class Chatmessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "sender_id", nullable = false)
-    private User sender;
+    User sender;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "recipient_id", nullable = false)
-    private User recipient;
+    User recipient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_id")
-    private Team team;
+    Team team;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id", nullable = false)
-    private Hackathon hackathon;
+    Hackathon hackathon;
 
     @NotNull
     @Lob
     @Column(name = "message", nullable = false)
-    private String message;
+    String message;
 
     @NotNull
     @ColumnDefault("CURRENT_TIMESTAMP(6)")
     @Column(name = "sent_at", nullable = false)
-    private Instant sentAt;
+    Instant sentAt;
 }

@@ -18,39 +18,48 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "submissionevaluations")
 public class Submissionevaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "submission_id", nullable = false)
-    private Submission submission;
+    Submission submission;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "judge_id", nullable = false)
-    private User judge;
+    User judge;
 
     @NotNull
     @Column(name = "score", nullable = false)
-    private Float score;
+    Float score;
 
     @Lob
     @Column(name = "feedback")
-    private String feedback;
+    String feedback;
 
     @ColumnDefault("CURRENT_TIMESTAMP(6)")
     @Column(name = "evaluated_at")
-    private Instant evaluatedAt;
+    Instant evaluatedAt;
 }

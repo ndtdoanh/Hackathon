@@ -15,7 +15,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -23,63 +22,69 @@ import org.hibernate.annotations.OnDeleteAction;
 import com.hacof.identity.enums.Priority;
 import com.hacof.identity.enums.Status;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
-    @Size(max = 100)
     @NotNull
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
+    @Column(name = "name", nullable = false)
+    String name;
 
     @Lob
     @Column(name = "description")
-    private String description;
+    String description;
 
     @Lob
     @Column(name = "comment")
-    private String comment;
+    String comment;
 
     @Lob
     @Column(name = "document_url")
-    private String documentUrl;
+    String documentUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status = Status.TODO;
+    Status status = Status.TODO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
-    private Priority priority = Priority.MEDIUM;
+    Priority priority = Priority.MEDIUM;
 
     @Column(name = "deadline")
-    private LocalDate deadline;
+    LocalDate deadline;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "assigned_to", nullable = false)
-    private User assignedTo;
+    User assignedTo;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "mentor_id", nullable = false)
-    private Mentor mentor;
+    Mentor mentor;
 
-    @Size(max = 255)
     @Column(name = "list_name")
-    private String listName;
+    String listName;
 
-    @Size(max = 255)
     @Column(name = "board_name")
-    private String boardName;
+    String boardName;
 }

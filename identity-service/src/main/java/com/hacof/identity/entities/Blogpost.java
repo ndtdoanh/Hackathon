@@ -13,48 +13,55 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.enums.Status;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "blogposts")
 public class Blogpost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id", nullable = false)
-    private Hackathon hackathon;
+    Hackathon hackathon;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "author_id", nullable = false)
-    private User author;
+    User author;
 
-    @Size(max = 255)
     @NotNull
     @Column(name = "title", nullable = false)
-    private String title;
+    String title;
 
     @NotNull
     @Lob
     @Column(name = "content", nullable = false)
-    private String content;
+    String content;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status = Status.PENDING;
+    Status status = Status.PENDING;
 }
