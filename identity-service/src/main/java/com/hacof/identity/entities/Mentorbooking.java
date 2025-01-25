@@ -20,35 +20,44 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.enums.Status;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "mentorbookings")
 public class Mentorbooking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "mentor_id", nullable = false)
-    private Mentor mentor;
+    Mentor mentor;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    User user;
 
     @NotNull
     @Column(name = "booking_date", nullable = false)
-    private Instant bookingDate;
+    Instant bookingDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status = Status.PENDING;
+    Status status = Status.PENDING;
 }

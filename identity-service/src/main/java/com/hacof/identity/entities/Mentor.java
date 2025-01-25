@@ -13,48 +13,55 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.enums.Availability;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "mentors")
 public class Mentor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    User user;
 
-    @Size(max = 255)
     @Column(name = "expertise")
-    private String expertise;
+    String expertise;
 
     @Lob
     @Column(name = "bio")
-    private String bio;
+    String bio;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability")
-    private Availability availability = Availability.AVAILABLE;
+    Availability availability = Availability.AVAILABLE;
 
     @Column(name = "rating")
-    private Float rating;
+    Float rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "campus_id")
-    private Campus campus;
+    Campus campus;
 }
