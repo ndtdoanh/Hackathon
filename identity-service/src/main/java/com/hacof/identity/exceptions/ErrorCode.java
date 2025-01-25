@@ -15,7 +15,11 @@ public enum ErrorCode {
     PASSWORD_IS_REQUIRED(1005, "Password is required"),
     PASSWORD_INVALID(1006, "Password invalid"),
     USER_NOT_EXISTED(1007, "User not existed"),
-    UNAUTHENTICATED(1008, "Unauthenticated");
+    UNAUTHENTICATED(1008, "Unauthenticated"),
+    INVALID_ASSIGNED_ROLE(1009, "Invalid assigned role"),
+    FORBIDDEN(1010, "Forbidden"),
+    INVALID_ROLE(1011, "Invalid role"),
+    ;
 
     private int code;
     private String message;

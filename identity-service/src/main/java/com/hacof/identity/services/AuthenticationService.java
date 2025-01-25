@@ -4,16 +4,19 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.hacof.identity.dtos.request.AuthenticationRequest;
 import com.hacof.identity.dtos.request.IntrospectRequest;
 import com.hacof.identity.dtos.response.AuthenticationResponse;
 import com.hacof.identity.dtos.response.IntrospectResponse;
+import com.hacof.identity.entities.User;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.repositories.UserRepository;
@@ -66,24 +69,24 @@ public class AuthenticationService {
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        var token = generateToken(request.getEmail());
+        var token = generateToken(user);
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
-    private String generateToken(String email) {
+    private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(email)
+                .subject(user.getEmail())
                 .issuer("ndtdoanh.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
-                .claim("userId", "Custom")
+                .claim("scope", buildScope(user))
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -97,5 +100,19 @@ public class AuthenticationService {
             log.error("Cannot create toklen", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
+                stringJoiner.add(role.getName());
+
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+            });
+
+        return stringJoiner.toString();
     }
 }
