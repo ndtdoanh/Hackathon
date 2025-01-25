@@ -1,10 +1,14 @@
 package com.hacof.identity.entities;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -31,5 +35,12 @@ public class Role {
 
     @NotNull
     @Column(name = "role_name", nullable = false)
-    String roleName;
+    String name;
+
+    @Lob
+    @Column(name = "description")
+    String description;
+
+    @ManyToMany
+    Set<Permission> permissions;
 }

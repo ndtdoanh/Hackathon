@@ -28,4 +28,5 @@ public class UserCreateRequest {
 
     String firstName;
     String lastName;
+    String assignedRole;
 }

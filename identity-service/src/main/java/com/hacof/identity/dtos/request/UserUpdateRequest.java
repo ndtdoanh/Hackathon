@@ -1,5 +1,7 @@
 package com.hacof.identity.dtos.request;
 
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,4 +18,5 @@ public class UserUpdateRequest {
     String password;
     String firstName;
     String lastName;
+    List<String> roles;
 }

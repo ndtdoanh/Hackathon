@@ -1,4 +1,4 @@
-package com.hacof.identity.dtos.response;
+package com.hacof.identity.dtos.request;
 
 import java.util.Set;
 
@@ -10,14 +10,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    long id;
-    String email;
-    String firstName;
-    String lastName;
-    Set<RoleResponse> roles;
+public class RoleRequest {
+    String name;
+    String description;
+    Set<String> permissions;
 }

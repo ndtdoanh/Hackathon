@@ -32,7 +32,7 @@ public class Permission {
 
     @NotNull
     @Column(name = "permission_name", nullable = false)
-    String permissionName;
+    String name;
 
     @Lob
     @Column(name = "description")
