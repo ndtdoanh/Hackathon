@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,14 +55,16 @@ public class UserService {
                 throw new AppException(ErrorCode.INVALID_ASSIGNED_ROLE);
             }
         } else {
-            throw new AppException(ErrorCode.FORBIDDEN);
+            throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(roles);
 
-        return userMapper.toUserResponse(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toUserResponse(savedUser);
     }
 
     public UserResponse getMyInfo() {
@@ -75,6 +80,7 @@ public class UserService {
         return roleRepository.findByName(roleType.name()).orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponse> getUsers() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
