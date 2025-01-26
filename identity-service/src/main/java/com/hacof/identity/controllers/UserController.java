@@ -4,6 +4,9 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +28,13 @@ import com.hacof.identity.services.UserService;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
-    ResponseEntity<ApiResponse<UserResponse>> createUser(
+    public ResponseEntity<ApiResponse<UserResponse>> createUser(
             @RequestBody @Valid UserCreateRequest request, @RequestHeader("Authorization") String authorizationHeader) {
         String jwtToken = authorizationHeader.replace("Bearer ", "");
         UserResponse userResponse = userService.createUser(request, jwtToken);
@@ -43,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping
-    ApiResponse<List<UserResponse>> getUsers() {
+    public ApiResponse<List<UserResponse>> getUsers() {
 
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getUsers())
@@ -51,28 +55,28 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    ApiResponse<UserResponse> getUser(@PathVariable long userId) {
+    public ApiResponse<UserResponse> getUser(@PathVariable long userId) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(userId))
                 .build();
     }
 
     @GetMapping("/myInfo")
-    ApiResponse<UserResponse> getMyInfo() {
+    public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
                 .build();
     }
 
     @PutMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable long userId, @RequestBody UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(@PathVariable long userId, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.updateUser(userId, request))
                 .build();
     }
 
     @DeleteMapping("/{userId}")
-    ApiResponse<String> deleteUser(@PathVariable long userId) {
+    public ApiResponse<String> deleteUser(@PathVariable long userId) {
         userService.deleteUser(userId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }

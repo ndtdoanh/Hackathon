@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
@@ -34,7 +35,7 @@ public class Permission {
     @Column(name = "permission_name", nullable = false)
     String name;
 
-    @Lob
-    @Column(name = "description")
-    String description;
+    String apiPath;
+    String method;
+    String module;
 }
