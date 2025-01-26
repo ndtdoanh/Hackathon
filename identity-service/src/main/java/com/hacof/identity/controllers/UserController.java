@@ -5,6 +5,8 @@ import java.util.List;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +30,16 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    ApiResponse<UserResponse> createUser(
+    ResponseEntity<ApiResponse<UserResponse>> createUser(
             @RequestBody @Valid UserCreateRequest request, @RequestHeader("Authorization") String authorizationHeader) {
         String jwtToken = authorizationHeader.replace("Bearer ", "");
         UserResponse userResponse = userService.createUser(request, jwtToken);
 
-        return ApiResponse.<UserResponse>builder().result(userResponse).build();
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .result(userResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
