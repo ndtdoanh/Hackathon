@@ -13,6 +13,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PermissionResponse {
+    long id;
     String name;
-    String description;
+    String apiPath;
+    String method;
+    String module;
 }

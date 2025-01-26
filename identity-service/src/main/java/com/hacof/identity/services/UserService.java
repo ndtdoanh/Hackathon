@@ -3,6 +3,7 @@ package com.hacof.identity.services;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +81,6 @@ public class UserService {
         return roleRepository.findByName(roleType.name()).orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponse> getUsers() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
@@ -94,6 +94,14 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         userMapper.updateUser(user, request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roleIds = request.getRoles().stream()
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+
+        var roles = roleRepository.findAllById(roleIds);
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
