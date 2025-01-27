@@ -83,8 +83,8 @@ public class GlobalExceptionHanler {
                 .collect(Collectors.toList());
 
         if (!passwordErrors.isEmpty()) {
-            apiResponse.setCode(ErrorCode.PASSWORD_INVALID.getCode());
-            apiResponse.setMessage(ErrorCode.PASSWORD_INVALID.getMessage());
+            apiResponse.setCode(ErrorCode.INVALID_PASSWORD.getCode());
+            apiResponse.setMessage(ErrorCode.INVALID_PASSWORD.getMessage());
             return ResponseEntity.badRequest().body(apiResponse);
         }
 

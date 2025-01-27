@@ -2,6 +2,8 @@ package com.hacof.identity.controllers;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,10 +34,11 @@ public class PermissionController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<PermissionResponse>> createPermission(
-            @RequestBody PermissionCreateRequest request) {
+            @RequestBody @Valid PermissionCreateRequest request) {
         PermissionResponse permissionResponse = permissionService.createPermission(request);
         ApiResponse<PermissionResponse> response = ApiResponse.<PermissionResponse>builder()
                 .result(permissionResponse)
+                .message("Permission created successfully")
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -45,6 +48,7 @@ public class PermissionController {
     public ApiResponse<List<PermissionResponse>> getPermissions() {
         return ApiResponse.<List<PermissionResponse>>builder()
                 .result(permissionService.getPermissions())
+                .message("Get all permissions")
                 .build();
     }
 
@@ -52,6 +56,7 @@ public class PermissionController {
     public ApiResponse<PermissionResponse> getPermission(@PathVariable("Id") Long Id) {
         return ApiResponse.<PermissionResponse>builder()
                 .result(permissionService.getPermission(Id))
+                .message("Get permission by Id")
                 .build();
     }
 
@@ -60,12 +65,15 @@ public class PermissionController {
             @PathVariable("Id") Long Id, @RequestBody PermissionUpdateRequest request) {
         return ApiResponse.<PermissionResponse>builder()
                 .result(permissionService.updatePermission(Id, request))
+                .message("Permission updated successfully")
                 .build();
     }
 
     @DeleteMapping("/{Id}")
     public ApiResponse<Void> deletePermission(@PathVariable("Id") Long id) {
         permissionService.deletePermission(id);
-        return ApiResponse.<Void>builder().build();
+        return ApiResponse.<Void>builder()
+                .message("Permission has been deleted")
+                .build();
     }
 }
