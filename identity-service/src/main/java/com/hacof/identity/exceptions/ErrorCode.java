@@ -20,16 +20,15 @@ public enum ErrorCode {
     EMAIL_MUST_BE_A_VALID_GMAIL_ADDRESS(1007, "Email must be a valid Gmail address", HttpStatus.BAD_REQUEST),
     EMAIL_IS_REQUIRED(1008, "Email is required", HttpStatus.BAD_REQUEST),
     PASSWORD_IS_REQUIRED(1009, "Password is required", HttpStatus.BAD_REQUEST),
+    ASSIGNED_ROLE_IS_REQUIRED(1010, "Assigned role is required", HttpStatus.BAD_REQUEST),
 
+    INVALID_PASSWORD(1011, "Password invalid", HttpStatus.BAD_REQUEST),
+    INVALID_ASSIGNED_ROLE(1012, "You do not have permission", HttpStatus.FORBIDDEN),
+    INVALID_ROLE(1013, "Invalid role", HttpStatus.BAD_REQUEST),
+    INVALID_TOKEN(1014, "Invalid token", HttpStatus.BAD_REQUEST),
 
-    INVALID_PASSWORD(1010, "Password invalid", HttpStatus.BAD_REQUEST),
-    INVALID_ASSIGNED_ROLE(1011, "You do not have permission", HttpStatus.FORBIDDEN),
-    INVALID_ROLE(1012, "Invalid role", HttpStatus.BAD_REQUEST),
-    INVALID_TOKEN(1013, "Invalid token", HttpStatus.BAD_REQUEST),
-
-    UNAUTHENTICATED(1014, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    UNAUTHORIZED(1015, "You do not have permission", HttpStatus.FORBIDDEN),
-    ;
+    UNAUTHENTICATED(1015, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1016, "You do not have permission", HttpStatus.FORBIDDEN);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
