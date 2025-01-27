@@ -2,6 +2,8 @@ package com.hacof.identity.controllers;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,10 +34,12 @@ public class RoleController {
     RoleService roleService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<RoleResponse>> createRole(@RequestBody RoleCreateRequest request) {
+    public ResponseEntity<ApiResponse<RoleResponse>> createRole(@RequestBody @Valid RoleCreateRequest request) {
         RoleResponse roleResponse = roleService.createRole(request);
-        ApiResponse<RoleResponse> response =
-                ApiResponse.<RoleResponse>builder().result(roleResponse).build();
+        ApiResponse<RoleResponse> response = ApiResponse.<RoleResponse>builder()
+                .result(roleResponse)
+                .message("Role created successfully")
+                .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -44,6 +48,7 @@ public class RoleController {
     public ApiResponse<List<RoleResponse>> getRoles() {
         return ApiResponse.<List<RoleResponse>>builder()
                 .result(roleService.getRoles())
+                .message("Get all roles")
                 .build();
     }
 
@@ -51,6 +56,7 @@ public class RoleController {
     public ApiResponse<RoleResponse> getRole(@PathVariable("Id") Long Id) {
         return ApiResponse.<RoleResponse>builder()
                 .result(roleService.getRole(Id))
+                .message("Get role by Id")
                 .build();
     }
 
@@ -58,20 +64,24 @@ public class RoleController {
     public ApiResponse<RoleResponse> getRoleFromToken(@RequestHeader("Authorization") String token) {
         RoleResponse roleResponse = roleService.getRoleFromToken(token.replace("Bearer ", ""));
 
-        return ApiResponse.<RoleResponse>builder().result(roleResponse).build();
+        return ApiResponse.<RoleResponse>builder()
+                .result(roleResponse)
+                .message("Get role from token")
+                .build();
     }
 
     @PutMapping("/{Id}")
     public ApiResponse<RoleResponse> updateRole(@PathVariable("Id") Long Id, @RequestBody RoleUpdateRequest request) {
         RoleResponse roleResponse = roleService.updateRole(Id, request);
-        return ApiResponse.<RoleResponse>builder().result(roleResponse).build();
+        return ApiResponse.<RoleResponse>builder()
+                .result(roleResponse)
+                .message("Role updated successfully")
+                .build();
     }
 
     @DeleteMapping("/{Id}")
     public ApiResponse<Void> deleteRole(@PathVariable("Id") Long id) {
         roleService.deleteRole(id);
-        return ApiResponse.<Void>builder()
-                .message("Role has been deleted")
-                .build();
+        return ApiResponse.<Void>builder().message("Role has been deleted").build();
     }
 }
