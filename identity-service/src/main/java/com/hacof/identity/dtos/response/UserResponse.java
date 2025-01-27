@@ -2,6 +2,8 @@ package com.hacof.identity.dtos.response;
 
 import java.util.Set;
 
+import com.hacof.identity.enums.Status;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +21,15 @@ public class UserResponse {
     String email;
     String firstName;
     String lastName;
+    Boolean isVerified;
+    Status status;
     Set<RoleResponse> roles;
+
+    public Boolean getIsVerified() {
+        return isVerified != null ? isVerified : false;
+    }
+
+    public String getStatus() {
+        return status != null ? status.name() : Status.ACTIVE.name();
+    }
 }

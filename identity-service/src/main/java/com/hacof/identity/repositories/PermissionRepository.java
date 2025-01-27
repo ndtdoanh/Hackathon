@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.hacof.identity.entities.Permission;
 
 @Repository
-public interface PermissionRepository extends JpaRepository<Permission, Long> {}
+public interface PermissionRepository extends JpaRepository<Permission, Long> {
+    boolean existsByName(String name);
+}

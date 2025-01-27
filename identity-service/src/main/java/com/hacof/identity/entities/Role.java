@@ -39,7 +39,7 @@ public class Role {
     long id;
 
     @NotNull
-    @Column(name = "role_name", nullable = false)
+    @Column(name = "role_name", nullable = false, unique = true)
     String name;
 
     @Lob
