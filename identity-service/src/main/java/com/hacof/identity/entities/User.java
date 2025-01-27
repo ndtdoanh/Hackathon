@@ -11,11 +11,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.hacof.identity.enums.Status;
+import com.hacof.identity.utils.SecurityUtil;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,18 +41,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    //    @Column(name = "username", nullable = false)
-    //    String username;
-
-    @Column(name = "password", nullable = false)
-    String password;
-
     @Column(
             name = "email",
             nullable = false,
             unique = true,
             columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String email;
+
+    @Column(name = "password", nullable = false)
+    String password;
 
     String firstName;
     String lastName;
@@ -61,17 +61,31 @@ public class User {
     @Column(name = "is_verified")
     Boolean isVerified;
 
-    //    @Size(max = 255)
-    //    @Column(name = "refresh_token")
-    //    String refreshToken;
-    //
-    //    @Column(name = "token_expires_at")
-    //    Instant tokenExpiresAt;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     Status status = Status.ACTIVE;
 
     @ManyToMany
     Set<Role> roles;
+
+    Instant createdAt;
+    Instant updatedAt;
+    String createdBy;
+    String updatedBy;
+
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        this.createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        this.updatedAt = Instant.now();
+    }
 }
