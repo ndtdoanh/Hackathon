@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hacof.identity.dtos.request.ApiResponse;
 import com.hacof.identity.dtos.request.AuthenticationRequest;
 import com.hacof.identity.dtos.request.IntrospectRequest;
+import com.hacof.identity.dtos.request.LogoutRequest;
+import com.hacof.identity.dtos.request.RefreshRequest;
 import com.hacof.identity.dtos.response.AuthenticationResponse;
 import com.hacof.identity.dtos.response.IntrospectResponse;
 import com.hacof.identity.services.AuthenticationService;
@@ -37,5 +39,18 @@ public class AuthenticationController {
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder().result(result).build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder().build();
     }
 }
