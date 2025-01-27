@@ -36,7 +36,7 @@ public class Permission {
     long id;
 
     @NotNull
-    @Column(name = "permission_name", nullable = false)
+    @Column(name = "permission_name", nullable = false, unique = true)
     String name;
 
     String apiPath;

@@ -35,10 +35,14 @@ public class RoleService {
     private final UserMapper userMapper;
 
     public RoleResponse createRole(RoleCreateRequest request) {
+
+        if(roleRepository.existsByName(request.getName())) {
+            throw new AppException(ErrorCode.ROLE_EXISTED);
+        }
+
         var role = roleMapper.toRole(request);
 
-        var permissionsIds =
-                request.getPermissions().stream().map(Long::valueOf).collect(Collectors.toSet());
+        var permissionsIds = request.getPermissions().stream().map(Long::valueOf).collect(Collectors.toSet());
 
         var permissions = permissionRepository.findAllById(permissionsIds);
         role.setPermissions(new HashSet<>(permissions));
@@ -128,6 +132,9 @@ public class RoleService {
     }
 
     public void deleteRole(Long roleId) {
+        if (!roleRepository.existsById(roleId)) {
+            throw new AppException(ErrorCode.ROLE_NOT_EXISTED);
+        }
         roleRepository.deleteById(roleId);
     }
 }

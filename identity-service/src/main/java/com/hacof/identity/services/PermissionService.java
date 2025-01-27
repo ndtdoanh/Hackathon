@@ -11,9 +11,7 @@ import com.hacof.identity.entities.Permission;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.mappers.PermissionMapper;
-import com.hacof.identity.mappers.RoleMapper;
 import com.hacof.identity.repositories.PermissionRepository;
-import com.hacof.identity.repositories.RoleRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +23,12 @@ import lombok.experimental.FieldDefaults;
 public class PermissionService {
     PermissionRepository permissionRepository;
     PermissionMapper permissionMapper;
-    private final RoleMapper roleMapper;
-    private final RoleRepository roleRepository;
 
     public PermissionResponse createPermission(PermissionCreateRequest request) {
+        if (permissionRepository.existsByName(request.getName())) {
+            throw new AppException(ErrorCode.PERMISSION_EXISTED);
+        }
+
         Permission permission = permissionMapper.toPermission(request);
         permissionRepository.save(permission);
         return permissionMapper.toPermissionResponse(permission);
@@ -57,6 +57,9 @@ public class PermissionService {
     }
 
     public void deletePermission(Long permissionId) {
+        if (!permissionRepository.existsById(permissionId)) {
+            throw new AppException(ErrorCode.PERMISSION_NOT_EXISTED);
+        }
         permissionRepository.deleteById(permissionId);
     }
 }

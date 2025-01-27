@@ -70,6 +70,8 @@ public class RoleController {
     @DeleteMapping("/{Id}")
     public ApiResponse<Void> deleteRole(@PathVariable("Id") Long id) {
         roleService.deleteRole(id);
-        return ApiResponse.<Void>builder().build();
+        return ApiResponse.<Void>builder()
+                .message("Role has been deleted")
+                .build();
     }
 }
