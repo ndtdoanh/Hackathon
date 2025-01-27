@@ -31,7 +31,6 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
-    SecurityConfig securityConfig;
     RoleRepository roleRepository;
 
     //    public UserResponse createUser(UserCreateRequest request, String jwtToken) {
