@@ -1,5 +1,7 @@
 package com.hacof.identity.dtos.request;
 
+import java.util.Set;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PermissionRequest {
-    String name;
+public class RoleUpdateRequest {
     String description;
+    Set<String> permissions;
 }
