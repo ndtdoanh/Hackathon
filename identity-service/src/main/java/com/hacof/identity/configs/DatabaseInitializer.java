@@ -43,23 +43,29 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         if (countPermissions == 0) {
             ArrayList<Permission> arr = new ArrayList<>();
-            arr.add(new Permission("CREATE_USER", "/identity/users", "POST", "USERS"));
-            arr.add(new Permission("GET_USERS", "/identity/users", "GET", "USERS"));
-            arr.add(new Permission("GET_USER", "/identity/users/{Id}", "GET", "USERS"));
-            arr.add(new Permission("UPDATE_USER", "/identity/users/{Id}", "PUT", "USERS"));
-            arr.add(new Permission("DELETE_USER", "/identity/users/{Id}", "DELETE", "USERS"));
 
-            arr.add(new Permission("CREATE_ROLE", "/identity/roles", "POST", "ROLES"));
-            arr.add(new Permission("GET_ROLES", "/identity/roles", "GET", "ROLES"));
-            arr.add(new Permission("GET_ROLE", "/identity/roles/{Id}", "GET", "ROLES"));
-            arr.add(new Permission("UPDATE_ROLE", "/identity/roles/{Id}", "PUT", "ROLES"));
-            arr.add(new Permission("DELETE_ROLE", "/identity/roles/{Id}", "DELETE", "ROLES"));
+            arr.add(new Permission("LOGIN", "/api/v1/auth/token", "POST", "AUTH"));
+            arr.add(new Permission("INTROSPECT_TOKEN", "/api/v1/auth/introspect", "POST", "AUTH"));
+            arr.add(new Permission("REFRESH_TOKEN", "/api/v1/auth/refresh", "POST", "AUTH"));
+            arr.add(new Permission("LOGOUT", "/api/v1/auth/logout", "POST", "AUTH"));
 
-            arr.add(new Permission("CREATE_PERMISSION", "/identity/permissions", "POST", "PERMISSIONS"));
-            arr.add(new Permission("GET_PERMISSIONS", "/identity/permissions", "GET", "PERMISSIONS"));
-            arr.add(new Permission("GET_PERMISSION", "/identity/permissions/{Id}", "GET", "PERMISSIONS"));
-            arr.add(new Permission("UPDATE_PERMISSION", "/identity/permissions/{Id}", "PUT", "PERMISSIONS"));
-            arr.add(new Permission("DELETE_PERMISSION", "/identity/permissions/{Id}", "DELETE", "PERMISSIONS"));
+            arr.add(new Permission("CREATE_USER", "/api/v1/users", "POST", "USERS"));
+            arr.add(new Permission("GET_USERS", "/api/v1/users", "GET", "USERS"));
+            arr.add(new Permission("GET_USER", "/api/v1/users/{Id}", "GET", "USERS"));
+            arr.add(new Permission("UPDATE_USER", "/api/v1/users/{Id}", "PUT", "USERS"));
+            arr.add(new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"));
+
+            arr.add(new Permission("CREATE_ROLE", "/api/v1/roles", "POST", "ROLES"));
+            arr.add(new Permission("GET_ROLES", "/api/v1/roles", "GET", "ROLES"));
+            arr.add(new Permission("GET_ROLE", "/api/v1/roles/{Id}", "GET", "ROLES"));
+            arr.add(new Permission("UPDATE_ROLE", "/api/v1/roles/{Id}", "PUT", "ROLES"));
+            arr.add(new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"));
+
+            arr.add(new Permission("CREATE_PERMISSION", "/api/v1/permissions", "POST", "PERMISSIONS"));
+            arr.add(new Permission("GET_PERMISSIONS", "/api/v1/permissions", "GET", "PERMISSIONS"));
+            arr.add(new Permission("GET_PERMISSION", "/api/v1/permissions/{Id}", "GET", "PERMISSIONS"));
+            arr.add(new Permission("UPDATE_PERMISSION", "/api/v1/permissions/{Id}", "PUT", "PERMISSIONS"));
+            arr.add(new Permission("DELETE_PERMISSION", "/api/v1/permissions/{Id}", "DELETE", "PERMISSIONS"));
 
             this.permissionRepository.saveAll(arr);
         }
