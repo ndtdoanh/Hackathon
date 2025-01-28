@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.hacof.identity.dtos.request.AuthenticationRequest;
+import com.hacof.identity.dtos.request.ExchangeTokenRequest;
 import com.hacof.identity.dtos.request.IntrospectRequest;
 import com.hacof.identity.dtos.request.LogoutRequest;
 import com.hacof.identity.dtos.request.RefreshRequest;
@@ -27,6 +28,7 @@ import com.hacof.identity.entities.User;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.repositories.InvalidatedTokenRepository;
+import com.hacof.identity.repositories.OutboundIdentityClient;
 import com.hacof.identity.repositories.UserRepository;
 import com.hacof.identity.services.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
@@ -53,6 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationServiceImpl implements AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    OutboundIdentityClient outboundIdentityClient;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -66,6 +69,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
 
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String REDIRECT_URI;
+
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
+
     @Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
@@ -78,6 +96,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         return IntrospectResponse.builder().valid(isValid).build();
+    }
+
+    @Override
+    public AuthenticationResponse outboundAuthenticate(String code) {
+        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .redirectUri(REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build());
+
+        log.info("TOKEN RESPONSE {}", response);
+
+        return AuthenticationResponse.builder().token(response.getAccessToken()).build();
     }
 
     @Override
