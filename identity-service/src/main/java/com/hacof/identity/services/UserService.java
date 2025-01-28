@@ -1,124 +1,21 @@
 package com.hacof.identity.services;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
-import com.hacof.identity.dtos.response.RoleResponse;
 import com.hacof.identity.dtos.response.UserResponse;
-import com.hacof.identity.entities.Role;
-import com.hacof.identity.entities.User;
-import com.hacof.identity.enums.Status;
-import com.hacof.identity.exceptions.AppException;
-import com.hacof.identity.exceptions.ErrorCode;
-import com.hacof.identity.mappers.UserMapper;
-import com.hacof.identity.repositories.RoleRepository;
-import com.hacof.identity.repositories.UserRepository;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+public interface UserService {
+    UserResponse createUser(String token, UserCreateRequest request);
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserService {
-    UserRepository userRepository;
-    UserMapper userMapper;
-    PasswordEncoder passwordEncoder;
-    RoleRepository roleRepository;
-    RoleService roleService;
+    UserResponse getMyInfo();
 
-    public UserResponse createUser(String token, UserCreateRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
+    List<UserResponse> getUsers();
 
-        RoleResponse creatorRole = roleService.getRoleFromToken(token);
+    UserResponse getUser(Long id);
 
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
+    UserResponse updateUser(Long userId, UserUpdateRequest request);
 
-        User user = userMapper.toUser(request);
-
-        user.setPassword(encodedPassword);
-        user.setIsVerified(false);
-        user.setStatus(Status.ACTIVE);
-
-        if (creatorRole.getName().equals("ADMIN")) {
-            if (request.getAssignedRole() != null && !request.getAssignedRole().equals("ORGANIZATION")) {
-                throw new AppException(ErrorCode.UNAUTHORIZED);
-            }
-
-            Role organizationRole = roleRepository
-                    .findByName("ORGANIZATION")
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            user.setRoles(Set.of(organizationRole));
-
-        } else if (creatorRole.getName().equals("ORGANIZATION")) {
-            if (request.getAssignedRole() == null || request.getAssignedRole().isBlank()) {
-                throw new AppException(ErrorCode.ASSIGNED_ROLE_IS_REQUIRED);
-            }
-
-            if (!request.getAssignedRole().equals("JUDGE")
-                    && !request.getAssignedRole().equals("MENTOR")) {
-                throw new AppException(ErrorCode.INVALID_ASSIGNED_ROLE);
-            }
-
-            Role assignedRole = roleRepository
-                    .findByName(request.getAssignedRole())
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            user.setRoles(Set.of(assignedRole));
-
-        } else {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-        user = userRepository.save(user);
-
-        return userMapper.toUserResponse(user);
-    }
-
-    public UserResponse getMyInfo() {
-        var context = SecurityContextHolder.getContext();
-        String email = context.getAuthentication().getName();
-
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        return userMapper.toUserResponse(user);
-    }
-
-    public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
-    }
-
-    public UserResponse getUser(Long id) {
-        return userMapper.toUserResponse(
-                userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
-    }
-
-    public UserResponse updateUser(Long userId, UserUpdateRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        userMapper.updateUser(user, request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        var roleIds = request.getRoles().stream().map(Long::valueOf).collect(Collectors.toList());
-
-        var roles = roleRepository.findAllById(roleIds);
-        user.setRoles(new HashSet<>(roles));
-
-        return userMapper.toUserResponse(userRepository.save(user));
-    }
-
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
-    }
+    void deleteUser(Long userId);
 }
