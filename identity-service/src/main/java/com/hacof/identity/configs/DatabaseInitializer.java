@@ -3,32 +3,35 @@ package com.hacof.identity.configs;
 import java.util.ArrayList;
 import java.util.Set;
 
-import com.hacof.identity.entities.Permission;
-import com.hacof.identity.exceptions.AppException;
-import com.hacof.identity.exceptions.ErrorCode;
-import com.hacof.identity.repositories.PermissionRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.hacof.identity.entities.Permission;
 import com.hacof.identity.entities.Role;
 import com.hacof.identity.entities.User;
 import com.hacof.identity.enums.Status;
+import com.hacof.identity.exceptions.AppException;
+import com.hacof.identity.exceptions.ErrorCode;
+import com.hacof.identity.repositories.PermissionRepository;
 import com.hacof.identity.repositories.RoleRepository;
 import com.hacof.identity.repositories.UserRepository;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DatabaseInitializer implements CommandLineRunner {
 
-    private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PermissionRepository permissionRepository;
+    PasswordEncoder passwordEncoder;
+    UserRepository userRepository;
+    RoleRepository roleRepository;
+    PermissionRepository permissionRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -73,14 +76,15 @@ public class DatabaseInitializer implements CommandLineRunner {
         }
 
         if (countUsers == 0) {
-            Role adminRole = roleRepository.findByName("ADMIN")
+            Role adminRole =
+                    roleRepository.findByName("ADMIN").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+            Role organizationRole = roleRepository
+                    .findByName("ORGANIZATION")
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            Role organizationRole = roleRepository.findByName("ORGANIZATION")
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            Role mentorRole = roleRepository.findByName("MENTOR")
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            Role judgeRole = roleRepository.findByName("JUDGE")
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+            Role mentorRole =
+                    roleRepository.findByName("MENTOR").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+            Role judgeRole =
+                    roleRepository.findByName("JUDGE").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
             createUser("admin@gmail.com", "12345", "Admin", "System", adminRole);
             createUser("organization@gmail.com", "12345", "Organization", "System", organizationRole);
