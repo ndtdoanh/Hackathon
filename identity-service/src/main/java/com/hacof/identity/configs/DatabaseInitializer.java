@@ -75,6 +75,9 @@ public class DatabaseInitializer implements CommandLineRunner {
             createRole("ORGANIZATION", "Organization role");
             createRole("JUDGE", "Judge role");
             createRole("MENTOR", "Mentor role");
+            createRole("GUEST", "Guest role");
+            createRole("TEAM_MEMBER", "Team member role");
+            createRole("TEAM_LEADER", "Team leader role");
 
             System.out.println("Roles created successfully!");
         } else {
