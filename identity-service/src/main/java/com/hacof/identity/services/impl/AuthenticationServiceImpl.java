@@ -143,6 +143,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             user = userRepository.save(user);
             log.info("User created with email: {}", user.getEmail());
+
         } else {
             user.setFirstName(userInfo.getGivenName());
             user.setLastName(userInfo.getFamilyName());
@@ -154,7 +155,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.info("User updated with email: {}", user.getEmail());
         }
 
-        return AuthenticationResponse.builder().token(response.getAccessToken()).build();
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder().token(token).build();
     }
 
     @Override
@@ -162,11 +165,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
                 .findByEmail(request.getEmail())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!authenticated) throw new AppException(ErrorCode.INVALID_CREDENTIALS);
 
         var token = generateToken(user);
 

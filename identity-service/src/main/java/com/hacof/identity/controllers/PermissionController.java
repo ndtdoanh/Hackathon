@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hacof.identity.dtos.request.ApiResponse;
+import com.hacof.identity.dtos.ApiResponse;
 import com.hacof.identity.dtos.request.PermissionCreateRequest;
 import com.hacof.identity.dtos.request.PermissionUpdateRequest;
 import com.hacof.identity.dtos.response.PermissionResponse;

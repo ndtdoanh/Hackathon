@@ -10,7 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.hacof.identity.dtos.request.ApiResponse;
+import com.hacof.identity.dtos.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHanler {

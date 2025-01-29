@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hacof.identity.dtos.request.ApiResponse;
+import com.hacof.identity.dtos.ApiResponse;
 import com.hacof.identity.dtos.request.AuthenticationRequest;
 import com.hacof.identity.dtos.request.IntrospectRequest;
 import com.hacof.identity.dtos.request.LogoutRequest;
