@@ -41,21 +41,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(
-            name = "email",
-            nullable = false,
-            unique = true,
-            columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
-    String email;
+    @Column(name = "username", nullable = false, unique = true)
+    String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     String password;
 
     String firstName;
     String lastName;
 
-    @Column(name = "last_login")
-    Instant lastLogin;
+    //    @Column(name = "last_login")
+    //    Instant lastLogin;
 
     @ColumnDefault("0")
     @Column(name = "is_verified")
