@@ -18,19 +18,18 @@ public enum ErrorCode {
     ROLE_NOT_EXISTED(1006, "Role not existed", HttpStatus.NOT_FOUND),
     PERMISSION_NOT_EXISTED(1007, "Permission not existed", HttpStatus.NOT_FOUND),
 
-    EMAIL_MUST_BE_A_VALID_GMAIL_ADDRESS(1008, "Email must be a valid Gmail address", HttpStatus.BAD_REQUEST),
-    EMAIL_IS_REQUIRED(1009, "Email is required", HttpStatus.BAD_REQUEST),
-    PASSWORD_IS_REQUIRED(1010, "Password is required", HttpStatus.BAD_REQUEST),
-    ASSIGNED_ROLE_IS_REQUIRED(1011, "Assigned role is required", HttpStatus.BAD_REQUEST),
+    USERNAME_IS_REQUIRED(1008, "Username is required", HttpStatus.BAD_REQUEST),
+    PASSWORD_IS_REQUIRED(1009, "Password is required", HttpStatus.BAD_REQUEST),
+    ASSIGNED_ROLE_IS_REQUIRED(1010, "Assigned role is required", HttpStatus.BAD_REQUEST),
 
-    INVALID_PASSWORD(1012, "Password invalid", HttpStatus.BAD_REQUEST),
-    INVALID_ASSIGNED_ROLE(1013, "You do not have permission", HttpStatus.FORBIDDEN),
-    INVALID_ROLE(1014, "Invalid role", HttpStatus.BAD_REQUEST),
-    INVALID_TOKEN(1015, "Invalid token", HttpStatus.BAD_REQUEST),
-    INVALID_CREDENTIALS(1016, "Invalid credentials, please try again.", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(1011, "Password invalid", HttpStatus.BAD_REQUEST),
+    INVALID_ASSIGNED_ROLE(1012, "You do not have permission", HttpStatus.FORBIDDEN),
+    INVALID_ROLE(1013, "Invalid role", HttpStatus.BAD_REQUEST),
+    INVALID_TOKEN(1014, "Invalid token", HttpStatus.BAD_REQUEST),
+    INVALID_CREDENTIALS(1015, "Invalid credentials, please try again.", HttpStatus.BAD_REQUEST),
 
-    UNAUTHENTICATED(1017, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    UNAUTHORIZED(1018, "You do not have permission", HttpStatus.FORBIDDEN);
+    UNAUTHENTICATED(1016, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1017, "You do not have permission", HttpStatus.FORBIDDEN);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

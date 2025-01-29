@@ -95,10 +95,10 @@ public class DatabaseInitializer implements CommandLineRunner {
             Role judgeRole =
                     roleRepository.findByName("JUDGE").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
-            createUser("admin@gmail.com", "12345", "Admin", "System", adminRole);
-            createUser("organization@gmail.com", "12345", "Organization", "System", organizationRole);
-            createUser("mentor@gmail.com", "12345", "Mentor", "System", mentorRole);
-            createUser("judge@gmail.com", "12345", "Judge", "System", judgeRole);
+            createUser("admin", "12345", "Admin", "System", adminRole);
+            createUser("organization", "12345", "Organization", "System", organizationRole);
+            createUser("mentor", "12345", "Mentor", "System", mentorRole);
+            createUser("judge", "12345", "Judge", "System", judgeRole);
 
             log.info("Users created successfully!");
         } else {
@@ -108,7 +108,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     private void createUser(String email, String password, String firstName, String lastName, Role role) {
         User user = new User();
-        user.setEmail(email);
+        user.setUsername(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setFirstName(firstName);
         user.setLastName(lastName);

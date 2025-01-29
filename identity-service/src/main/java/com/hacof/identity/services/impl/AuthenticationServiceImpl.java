@@ -11,7 +11,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -122,7 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
         log.info("User Info {}", userInfo);
 
-        User user = userRepository.findByEmail(userInfo.getEmail()).orElse(null);
+        User user = userRepository.findByUsername(userInfo.getEmail()).orElse(null);
 
         if (user == null) {
             Role teamMemberRole = roleRepository
@@ -130,10 +129,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
             user = User.builder()
-                    .email(userInfo.getEmail())
+                    .username(userInfo.getEmail())
                     .firstName(userInfo.getGivenName())
                     .lastName(userInfo.getFamilyName())
-                    .password(BCrypt.hashpw("defaultPassword123", BCrypt.gensalt()))
                     .isVerified(userInfo.isVerifiedEmail())
                     .status(Status.ACTIVE)
                     .createdAt(Instant.now())
@@ -142,7 +140,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build();
 
             user = userRepository.save(user);
-            log.info("User created with email: {}", user.getEmail());
+            log.info("User created with email: {}", user.getUsername());
 
         } else {
             user.setFirstName(userInfo.getGivenName());
@@ -152,7 +150,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             user.setUpdatedBy(userInfo.getEmail());
 
             userRepository.save(user);
-            log.info("User updated with email: {}", user.getEmail());
+            log.info("User updated with email: {}", user.getUsername());
         }
 
         var token = generateToken(user);
@@ -164,7 +162,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
-                .findByEmail(request.getEmail())
+                .findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
@@ -207,7 +205,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var email = signedJWT.getJWTClaimsSet().getSubject();
 
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var user = userRepository.findByUsername(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
 
@@ -224,7 +222,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .collect(Collectors.toList());
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getEmail())
+                .subject(user.getUsername())
                 .issuer("ndtdoanh.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
