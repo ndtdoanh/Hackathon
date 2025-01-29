@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hacof.identity.dtos.request.ApiResponse;
+import com.hacof.identity.dtos.ApiResponse;
+import com.hacof.identity.dtos.request.PasswordCreationRequest;
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
 import com.hacof.identity.dtos.response.UserResponse;
@@ -46,6 +47,17 @@ public class UserController {
                         .message("User created successfully")
                         .result(userResponse)
                         .build());
+    }
+
+    @PostMapping("/create-password")
+    public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
+        userService.createPassword(request);
+
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .message("Password has been created, you could use it to log-in")
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping

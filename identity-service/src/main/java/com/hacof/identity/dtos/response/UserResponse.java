@@ -23,6 +23,7 @@ public class UserResponse {
     String lastName;
     Boolean isVerified;
     Status status;
+    Boolean noPassword;
     Set<RoleResponse> roles;
 
     public Boolean getIsVerified() {

@@ -2,12 +2,15 @@ package com.hacof.identity.services;
 
 import java.util.List;
 
+import com.hacof.identity.dtos.request.PasswordCreationRequest;
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
 import com.hacof.identity.dtos.response.UserResponse;
 
 public interface UserService {
     UserResponse createUser(String token, UserCreateRequest request);
+
+    void createPassword(PasswordCreationRequest request);
 
     UserResponse getMyInfo();
 
