@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.hacof.identity.dtos.request.AuthenticationRequest;
+import com.hacof.identity.dtos.request.ExchangeTokenRequest;
 import com.hacof.identity.dtos.request.IntrospectRequest;
 import com.hacof.identity.dtos.request.LogoutRequest;
 import com.hacof.identity.dtos.request.RefreshRequest;
@@ -23,11 +25,17 @@ import com.hacof.identity.dtos.response.AuthenticationResponse;
 import com.hacof.identity.dtos.response.IntrospectResponse;
 import com.hacof.identity.entities.InvalidatedToken;
 import com.hacof.identity.entities.Permission;
+import com.hacof.identity.entities.Role;
 import com.hacof.identity.entities.User;
+import com.hacof.identity.enums.RoleType;
+import com.hacof.identity.enums.Status;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.repositories.InvalidatedTokenRepository;
+import com.hacof.identity.repositories.RoleRepository;
 import com.hacof.identity.repositories.UserRepository;
+import com.hacof.identity.repositories.httpclient.OutboundIdentityClient;
+import com.hacof.identity.repositories.httpclient.OutboundUserClient;
 import com.hacof.identity.services.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -53,6 +61,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationServiceImpl implements AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    OutboundIdentityClient outboundIdentityClient;
+    OutboundUserClient outboundUserClient;
+    RoleRepository roleRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -65,6 +76,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @NonFinal
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
+
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String REDIRECT_URI;
+
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
 
     @Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
@@ -81,15 +107,67 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public AuthenticationResponse outboundAuthenticate(String code) {
+        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .redirectUri(REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build());
+
+        log.info("TOKEN RESPONSE {}", response);
+
+        var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
+        log.info("User Info {}", userInfo);
+
+        User user = userRepository.findByUsername(userInfo.getEmail()).orElse(null);
+
+        if (user == null) {
+            Role teamMemberRole = roleRepository
+                    .findByName(RoleType.TEAM_MEMBER.name())
+                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+
+            user = User.builder()
+                    .username(userInfo.getEmail())
+                    .firstName(userInfo.getGivenName())
+                    .lastName(userInfo.getFamilyName())
+                    .isVerified(userInfo.isVerifiedEmail())
+                    .status(Status.ACTIVE)
+                    .createdAt(Instant.now())
+                    .createdBy(userInfo.getEmail())
+                    .roles(Set.of(teamMemberRole))
+                    .build();
+
+            user = userRepository.save(user);
+            log.info("User created with email: {}", user.getUsername());
+
+        } else {
+            user.setFirstName(userInfo.getGivenName());
+            user.setLastName(userInfo.getFamilyName());
+            user.setIsVerified(userInfo.isVerifiedEmail());
+            user.setUpdatedAt(Instant.now());
+            user.setUpdatedBy(userInfo.getEmail());
+
+            userRepository.save(user);
+            log.info("User updated with email: {}", user.getUsername());
+        }
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder().token(token).build();
+    }
+
+    @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
-                .findByEmail(request.getEmail())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .findByUsername(request.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!authenticated) throw new AppException(ErrorCode.INVALID_CREDENTIALS);
 
         var token = generateToken(user);
 
@@ -127,7 +205,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var email = signedJWT.getJWTClaimsSet().getSubject();
 
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var user = userRepository.findByUsername(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
 
@@ -144,7 +222,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .collect(Collectors.toList());
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getEmail())
+                .subject(user.getUsername())
                 .issuer("ndtdoanh.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(

@@ -18,11 +18,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
     long id;
-    String email;
+    String username;
     String firstName;
     String lastName;
     Boolean isVerified;
     Status status;
+    Boolean noPassword;
     Set<RoleResponse> roles;
 
     public Boolean getIsVerified() {

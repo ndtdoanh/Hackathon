@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hacof.identity.dtos.request.ApiResponse;
+import com.hacof.identity.dtos.ApiResponse;
 import com.hacof.identity.dtos.request.RoleCreateRequest;
 import com.hacof.identity.dtos.request.RoleUpdateRequest;
 import com.hacof.identity.dtos.response.RoleResponse;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleController {
