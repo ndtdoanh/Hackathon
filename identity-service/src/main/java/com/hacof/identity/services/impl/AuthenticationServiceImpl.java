@@ -5,11 +5,13 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,17 @@ import com.hacof.identity.dtos.response.AuthenticationResponse;
 import com.hacof.identity.dtos.response.IntrospectResponse;
 import com.hacof.identity.entities.InvalidatedToken;
 import com.hacof.identity.entities.Permission;
+import com.hacof.identity.entities.Role;
 import com.hacof.identity.entities.User;
+import com.hacof.identity.enums.RoleType;
+import com.hacof.identity.enums.Status;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.repositories.InvalidatedTokenRepository;
-import com.hacof.identity.repositories.OutboundIdentityClient;
+import com.hacof.identity.repositories.RoleRepository;
 import com.hacof.identity.repositories.UserRepository;
+import com.hacof.identity.repositories.httpclient.OutboundIdentityClient;
+import com.hacof.identity.repositories.httpclient.OutboundUserClient;
 import com.hacof.identity.services.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -56,6 +63,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     OutboundIdentityClient outboundIdentityClient;
+    OutboundUserClient outboundUserClient;
+    RoleRepository roleRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -109,6 +118,41 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
 
         log.info("TOKEN RESPONSE {}", response);
+
+        var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
+        log.info("User Info {}", userInfo);
+
+        User user = userRepository.findByEmail(userInfo.getEmail()).orElse(null);
+
+        if (user == null) {
+            Role teamMemberRole = roleRepository
+                    .findByName(RoleType.TEAM_MEMBER.name())
+                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+
+            user = User.builder()
+                    .email(userInfo.getEmail())
+                    .firstName(userInfo.getGivenName())
+                    .lastName(userInfo.getFamilyName())
+                    .password(BCrypt.hashpw("defaultPassword123", BCrypt.gensalt()))
+                    .isVerified(userInfo.isVerifiedEmail())
+                    .status(Status.ACTIVE)
+                    .createdAt(Instant.now())
+                    .createdBy(userInfo.getEmail())
+                    .roles(Set.of(teamMemberRole))
+                    .build();
+
+            user = userRepository.save(user);
+            log.info("User created with email: {}", user.getEmail());
+        } else {
+            user.setFirstName(userInfo.getGivenName());
+            user.setLastName(userInfo.getFamilyName());
+            user.setIsVerified(userInfo.isVerifiedEmail());
+            user.setUpdatedAt(Instant.now());
+            user.setUpdatedBy(userInfo.getEmail());
+
+            userRepository.save(user);
+            log.info("User updated with email: {}", user.getEmail());
+        }
 
         return AuthenticationResponse.builder().token(response.getAccessToken()).build();
     }

@@ -1,4 +1,4 @@
-package com.hacof.identity.repositories;
+package com.hacof.identity.repositories.httpclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

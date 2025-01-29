@@ -54,8 +54,8 @@ public class User {
     String firstName;
     String lastName;
 
-    @Column(name = "last_login")
-    Instant lastLogin;
+    //    @Column(name = "last_login")
+    //    Instant lastLogin;
 
     @ColumnDefault("0")
     @Column(name = "is_verified")
