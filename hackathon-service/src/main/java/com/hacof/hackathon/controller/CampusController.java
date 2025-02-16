@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.CampusDTO;
+import com.hacof.hackathon.entity.Campus;
 import com.hacof.hackathon.service.CampusService;
+import com.hacof.hackathon.specification.CampusSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
@@ -83,6 +86,31 @@ public class CampusController {
                 "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Campus deleted successfully"),
                 null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<CommonResponse<List<CampusDTO>>> searchCampuses(
+            @RequestParam(required = false) Long Id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String createdBy,
+            @RequestParam(required = false) String lastModifiedBy) {
+
+        Specification<Campus> spec = Specification.where(CampusSpecification.hasId(Id))
+                .and(CampusSpecification.hasName(name))
+                .and(CampusSpecification.hasLocation(location))
+                .and(CampusSpecification.createdBy(createdBy))
+                .and(CampusSpecification.lastModifiedBy(lastModifiedBy));
+
+        List<CampusDTO> campuses = campusService.searchCampuses(spec);
+        CommonResponse<List<CampusDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched campus successfully"),
+                campuses);
+
         return ResponseEntity.ok(response);
     }
 }
