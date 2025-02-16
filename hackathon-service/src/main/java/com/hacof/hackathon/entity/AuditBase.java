@@ -2,6 +2,7 @@ package com.hacof.hackathon.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 
@@ -9,19 +10,25 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
-@Data
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
-public class AuditBase {
+public abstract class AuditBase {
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
+
     @CreatedDate
-    private LocalDateTime createdAt;
+    @Column(name = "created_date", columnDefinition = "DATETIME(6)", updatable = false, nullable = false)
+    private LocalDateTime createdDate;
+
+    @Column(name = "last_modified_by")
+    private String lastModifiedBy;
 
     @LastModifiedDate
-    private LocalDateTime lastUpdatedAt;
-
-    private String createdBy;
-    private String lastUpdatedBy;
-    private LocalDateTime deletedAt;
+    @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)", nullable = false)
+    private LocalDateTime lastModifiedDate;
 }
