@@ -18,15 +18,18 @@ import com.hacof.hackathon.specification.CampusSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("api/v1/campuses")
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CampusController {
-    private final CampusService campusService;
+    final CampusService campusService;
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<CampusDTO>>> getAllCampuses() {
@@ -54,7 +57,7 @@ public class CampusController {
 
     @PostMapping
     public ResponseEntity<CommonResponse<CampusDTO>> createCampus(
-            @RequestBody @Valid CommonRequest<CampusDTO> request) {
+            @Valid @RequestBody CommonRequest<CampusDTO> request) {
         log.debug("Received request to create campus: {}", request);
         CampusDTO campusDTO = campusService.createCampus(request.getData());
         CommonResponse<CampusDTO> response = new CommonResponse<>(
@@ -68,7 +71,8 @@ public class CampusController {
     }
 
     @PutMapping
-    public ResponseEntity<CommonResponse<CampusDTO>> updateCampus(@RequestBody CommonRequest<CampusDTO> request) {
+    public ResponseEntity<CommonResponse<CampusDTO>> updateCampus(
+            @Valid @RequestBody CommonRequest<CampusDTO> request) {
         Long id = request.getData().getId();
         CampusDTO campusDTO = campusService.updateCampus(id, request.getData());
         CommonResponse<CampusDTO> response = new CommonResponse<>(
@@ -81,7 +85,7 @@ public class CampusController {
     }
 
     @DeleteMapping
-    public ResponseEntity<CommonResponse<Void>> deleteCampus(@RequestBody CommonRequest<CampusDTO> request) {
+    public ResponseEntity<CommonResponse<Void>> deleteCampus(@Valid @RequestBody CommonRequest<CampusDTO> request) {
         Long id = request.getData().getId();
         campusService.deleteCampus(id);
         CommonResponse<Void> response = new CommonResponse<>(
