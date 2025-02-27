@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PasswordCreationRequest {
+public class PasswordCreateRequest {
     @NotBlank(message = "PASSWORD_IS_REQUIRED")
     @Size(min = 3, message = "PASSWORD_INVALID")
     String password;

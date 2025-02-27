@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.identity.dtos.ApiResponse;
-import com.hacof.identity.dtos.request.PasswordCreationRequest;
+import com.hacof.identity.dtos.request.PasswordCreateRequest;
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
 import com.hacof.identity.dtos.response.UserResponse;
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/create-password")
-    public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
+    public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid PasswordCreateRequest request) {
         userService.createPassword(request);
 
         ApiResponse<Void> response = ApiResponse.<Void>builder()
@@ -61,6 +62,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_USERS')")
     public ApiResponse<List<UserResponse>> getUsers() {
 
         return ApiResponse.<List<UserResponse>>builder()
@@ -70,6 +72,7 @@ public class UserController {
     }
 
     @GetMapping("/{Id}")
+    @PreAuthorize("hasAuthority('GET_USER')")
     public ApiResponse<UserResponse> getUser(@PathVariable("Id") long userId) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(userId))
@@ -77,7 +80,8 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/myInfo")
+    @GetMapping("/my-info")
+//    @PreAuthorize("hasAuthority('GET_MY_INFO')")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
@@ -86,6 +90,7 @@ public class UserController {
     }
 
     @PutMapping("/{Id}")
+    @PreAuthorize("hasAuthority('UPDATE_USER')")
     public ApiResponse<UserResponse> updateUser(
             @PathVariable("Id") long userId, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
@@ -95,6 +100,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{Id}")
+    @PreAuthorize("hasAuthority('DELETE_USER')")
     public ApiResponse<String> deleteUser(@PathVariable("Id") long userId) {
         userService.deleteUser(userId);
         return ApiResponse.<String>builder().result("User has been deleted").build();

@@ -2,6 +2,7 @@ package com.hacof.identity.services.impl;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.hacof.identity.dtos.request.PasswordCreationRequest;
+import com.hacof.identity.dtos.request.PasswordCreateRequest;
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
 import com.hacof.identity.dtos.response.RoleResponse;
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createPassword(PasswordCreationRequest request) {
+    public void createPassword(PasswordCreateRequest request) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
@@ -131,6 +132,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse updateUser(Long userId, UserUpdateRequest request) {
+
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (!Objects.equals(currentUser.getId(), userId)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         userMapper.updateUser(user, request);

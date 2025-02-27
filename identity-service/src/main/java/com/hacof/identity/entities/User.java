@@ -44,6 +44,9 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     String username;
 
+    @Column(name = "email", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    String email;
+
     @Column(name = "password")
     String password;
 

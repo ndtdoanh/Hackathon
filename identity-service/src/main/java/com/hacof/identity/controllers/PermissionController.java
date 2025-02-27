@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class PermissionController {
     PermissionService permissionService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_PERMISSION')")
     public ResponseEntity<ApiResponse<PermissionResponse>> createPermission(
             @RequestBody @Valid PermissionCreateRequest request) {
         PermissionResponse permissionResponse = permissionService.createPermission(request);
@@ -45,6 +47,7 @@ public class PermissionController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_PERMISSIONS')")
     public ApiResponse<List<PermissionResponse>> getPermissions() {
         return ApiResponse.<List<PermissionResponse>>builder()
                 .result(permissionService.getPermissions())
@@ -53,6 +56,7 @@ public class PermissionController {
     }
 
     @GetMapping("/{Id}")
+    @PreAuthorize("hasAuthority('GET_PERMISSION')")
     public ApiResponse<PermissionResponse> getPermission(@PathVariable("Id") Long Id) {
         return ApiResponse.<PermissionResponse>builder()
                 .result(permissionService.getPermission(Id))
@@ -61,6 +65,7 @@ public class PermissionController {
     }
 
     @PutMapping("/{Id}")
+    @PreAuthorize("hasAuthority('UPDATE_PERMISSION')")
     public ApiResponse<PermissionResponse> updatePermission(
             @PathVariable("Id") Long Id, @RequestBody PermissionUpdateRequest request) {
         return ApiResponse.<PermissionResponse>builder()
@@ -70,6 +75,7 @@ public class PermissionController {
     }
 
     @DeleteMapping("/{Id}")
+    @PreAuthorize("hasAuthority('DELETE_PERMISSION')")
     public ApiResponse<Void> deletePermission(@PathVariable("Id") Long id) {
         permissionService.deletePermission(id);
         return ApiResponse.<Void>builder()
