@@ -1,36 +1,35 @@
 package com.hacof.hackathon.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
 
 import com.hacof.hackathon.constant.RoundType;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "CompetitionRounds")
 public class CompetitionRound extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long Id;
 
     @Enumerated(EnumType.STRING)
-    private RoundType name;
+    RoundType name;
 
-    private String description;
-    private Date startDate;
-    private Date endDate;
-    private Integer maxTeam;
-    private Boolean isVideoRound;
+    String description;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
+    int maxTeam;
+    boolean isVideoRound = false;
 
     @ManyToOne
     @JoinColumn(name = "hackathon_id")
@@ -42,4 +41,7 @@ public class CompetitionRound extends AuditBase {
             joinColumns = @JoinColumn(name = "round_id"),
             inverseJoinColumns = @JoinColumn(name = "judge_id"))
     private List<Judge> judges;
+
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Resource> resources;
 }
