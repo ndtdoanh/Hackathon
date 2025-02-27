@@ -1,9 +1,13 @@
 package com.hacof.hackathon.exception;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -29,6 +33,16 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(statusCode, ex.getMessage());
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CommonResponse<List<String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<String> errors = ex.getBindingResult().getAllErrors().stream()
+                .map(error -> ((FieldError) error).getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.toList());
+
+        log.error("Validation failed: {}", errors);
+        return buildResponseEntity(StatusCode.INVALID_INPUT, "Validation failed", errors);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CommonResponse<Void>> handleGenericExceptions(Exception ex) {
         log.error("Unhandled exception: {}", ex.getMessage(), ex);
@@ -42,13 +56,17 @@ public class GlobalExceptionHandler {
         return StatusCode.ERROR;
     }
 
-    private ResponseEntity<CommonResponse<Void>> buildResponseEntity(StatusCode statusCode, String message) {
-        CommonResponse<Void> response = new CommonResponse<>(
+    private <T> ResponseEntity<CommonResponse<T>> buildResponseEntity(StatusCode statusCode, String message, T data) {
+        CommonResponse<T> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
                 new CommonResponse.Result(statusCode.getCode(), message),
-                null);
-        return ResponseEntity.ok(response); // Luôn trả về HTTP 200 OK, chỉ thay đổi StatusCode
+                data);
+        return ResponseEntity.ok(response);
+    }
+
+    private ResponseEntity<CommonResponse<Void>> buildResponseEntity(StatusCode statusCode, String message) {
+        return buildResponseEntity(statusCode, message, null);
     }
 }
