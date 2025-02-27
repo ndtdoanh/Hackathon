@@ -1,5 +1,6 @@
 package com.hacof.hackathon.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,6 +65,9 @@ public class CampusServiceImpl implements CampusService {
                     "Campus name is not allowed (Quy Nhon / Da Nang / Can Tho / TP HCM / Hoa Lac)");
         }
 
+        campusDTO.setCreatedDate(LocalDateTime.now());
+        campusDTO.setLastModifiedDate(LocalDateTime.now());
+
         Campus campus = campusMapper.convertToEntity(campusDTO);
         Campus savedCampus = campusRepository.save(campus);
         CampusDTO responseDTO = campusMapper.convertToDTO(savedCampus);
@@ -90,6 +94,7 @@ public class CampusServiceImpl implements CampusService {
 
         Campus existingCampus =
                 campusRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Campus not found"));
+        campusDTO.setLastModifiedDate(LocalDateTime.now());
         existingCampus.setName(campusDTO.getName());
         existingCampus.setLocation(campusDTO.getLocation());
         existingCampus.setLastModifiedBy(campusDTO.getLastModifiedBy());

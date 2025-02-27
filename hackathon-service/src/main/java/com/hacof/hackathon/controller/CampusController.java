@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.validation.Valid;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +53,8 @@ public class CampusController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<CampusDTO>> createCampus(@RequestBody CommonRequest<CampusDTO> request) {
+    public ResponseEntity<CommonResponse<CampusDTO>> createCampus(
+            @RequestBody @Valid CommonRequest<CampusDTO> request) {
         log.debug("Received request to create campus: {}", request);
         CampusDTO campusDTO = campusService.createCampus(request.getData());
         CommonResponse<CampusDTO> response = new CommonResponse<>(
@@ -64,9 +67,9 @@ public class CampusController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<CampusDTO>> updateCampus(
-            @PathVariable Long id, @RequestBody CommonRequest<CampusDTO> request) {
+    @PutMapping
+    public ResponseEntity<CommonResponse<CampusDTO>> updateCampus(@RequestBody CommonRequest<CampusDTO> request) {
+        Long id = request.getData().getId();
         CampusDTO campusDTO = campusService.updateCampus(id, request.getData());
         CommonResponse<CampusDTO> response = new CommonResponse<>(
                 request.getRequestId(),
@@ -77,8 +80,9 @@ public class CampusController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<Void>> deleteCampus(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<CommonResponse<Void>> deleteCampus(@RequestBody CommonRequest<CampusDTO> request) {
+        Long id = request.getData().getId();
         campusService.deleteCampus(id);
         CommonResponse<Void> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),

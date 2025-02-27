@@ -25,7 +25,7 @@ public class Campus extends AuditBase {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long Id;
 
     String name; // Quy Nhon - Da Nang - Can Tho - TP HCM - Hoa Lac
     String location;
