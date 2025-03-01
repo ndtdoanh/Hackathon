@@ -8,25 +8,28 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @MappedSuperclass
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class AuditBase {
     @Column(name = "created_by", nullable = false)
-    private String createdBy;
+    String createdBy;
 
     @CreatedDate
     @Column(name = "created_date", columnDefinition = "DATETIME(6)", updatable = false, nullable = false)
-    private LocalDateTime createdDate;
+    LocalDateTime createdDate;
 
     @Column(name = "last_modified_by")
-    private String lastModifiedBy;
+    String lastModifiedBy;
 
     @LastModifiedDate
     @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)", nullable = false)
-    private LocalDateTime lastModifiedDate;
+    LocalDateTime lastModifiedDate;
 }
