@@ -37,43 +37,41 @@ public class BlogpostServiceImpl implements BlogpostService {
 
     @Override
     public BlogpostResponseDTO createBlogpost(BlogpostRequestDTO blogpostRequestDTO) {
-        // Lấy thông tin tác giả (User) từ ID
         User author = userRepository.findById(blogpostRequestDTO.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("Author not found"));
-
-        // Lấy thông tin Hackathon từ ID
+                .orElseThrow(() -> new RuntimeException("Author not found!"));
         Hackathon hackathon = hackathonRepository.findById(blogpostRequestDTO.getHackathonId())
-                .orElseThrow(() -> new RuntimeException("Hackathon not found"));
+                .orElseThrow(() -> new RuntimeException("Hackathon not found!"));
 
-        // Tạo đối tượng Blogpost từ request DTO
         Blogpost blogpost = new Blogpost();
         blogpost.setTitle(blogpostRequestDTO.getTitle());
         blogpost.setContent(blogpostRequestDTO.getContent());
-        blogpost.setAuthor(author);  // Gán tác giả
-        blogpost.setHackathon(hackathon);  // Gán hackathon
+        blogpost.setAuthor(author);
+        blogpost.setHackathon(hackathon);
         blogpost.setCreatedAt(Instant.now());
         blogpost.setUpdatedAt(Instant.now());
-        blogpost.setCreatedBy(SecurityUtil.getCurrentUserLogin().orElse("system"));  // Lấy người tạo từ Security
-        blogpost.setUpdatedBy(SecurityUtil.getCurrentUserLogin().orElse("system"));  // Lấy người cập nhật từ Security
+        blogpost.setCreatedBy(SecurityUtil.getCurrentUserLogin().orElse("system"));
+        blogpost.setUpdatedBy(SecurityUtil.getCurrentUserLogin().orElse("system"));
 
-        // Lưu vào cơ sở dữ liệu
         Blogpost savedBlogpost = blogpostRepository.save(blogpost);
 
-        // Chuyển đối tượng Blogpost thành BlogpostResponseDTO và trả về
         return blogpostMapper.toResponseDTO(savedBlogpost);
     }
 
     @Override
     public BlogpostResponseDTO getBlogpostById(Long id) {
         Optional<Blogpost> blogpostOpt = blogpostRepository.findById(id);
-        return blogpostOpt.map(blogpostMapper::toResponseDTO).orElse(null);
+        if (blogpostOpt.isPresent()) {
+            return blogpostMapper.toResponseDTO(blogpostOpt.get());
+        } else {
+            throw new RuntimeException("Blogpost not found with id: " + id);
+        }
     }
 
     @Override
     public BlogpostResponseDTO updateBlogpost(Long id, BlogpostRequestDTO blogpostRequestDTO) {
         // Lấy Blogpost từ database
         Blogpost existingBlogpost = blogpostRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Blogpost not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("Blogpost not found with ID: " + id));
 
         // Cập nhật các trường của blogpost
         existingBlogpost.setTitle(blogpostRequestDTO.getTitle());
@@ -81,18 +79,14 @@ public class BlogpostServiceImpl implements BlogpostService {
         existingBlogpost.setUpdatedAt(Instant.now());
         existingBlogpost.setUpdatedBy(SecurityUtil.getCurrentUserLogin().orElse("system"));
 
-        // Lưu lại blogpost đã cập nhật
         Blogpost updatedBlogpost = blogpostRepository.save(existingBlogpost);
-
-        // Trả về DTO
         return blogpostMapper.toResponseDTO(updatedBlogpost);
     }
 
     @Override
     public void deleteBlogpost(Long id) {
         Blogpost existingBlogpost = blogpostRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Blogpost not found with id " + id));
-
+                .orElseThrow(() -> new RuntimeException("Blogpost not found with ID: " + id));
         blogpostRepository.delete(existingBlogpost);
     }
 

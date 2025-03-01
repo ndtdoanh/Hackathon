@@ -51,10 +51,10 @@ public class BlogcommentServiceImpl implements BlogcommentService {
     @Override
     public BlogcommentResponseDTO createComment(BlogcommentRequestDTO blogcommentRequestDTO) {
         Blogpost post = blogpostRepository.findById(blogcommentRequestDTO.getPostId())
-                .orElseThrow(() -> new RuntimeException("Blog post not found"));
+                .orElseThrow(() -> new RuntimeException("Blog post not found!"));
 
         User user = userRepository.findById(blogcommentRequestDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found!"));
 
         Blogcomment blogcomment = blogcommentMapper.toEntity(blogcommentRequestDTO);
         blogcomment.setPost(post);
@@ -69,7 +69,7 @@ public class BlogcommentServiceImpl implements BlogcommentService {
     @Override
     public BlogcommentResponseDTO updateComment(Long id, BlogcommentRequestDTO blogcommentRequestDTO) {
         Blogcomment existingComment = blogcommentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new RuntimeException("Comment not found!"));
 
         existingComment.setComment(blogcommentRequestDTO.getComment());
         existingComment.setUpdatedAt(Instant.now());
@@ -82,7 +82,7 @@ public class BlogcommentServiceImpl implements BlogcommentService {
     @Override
     public void deleteComment(Long id) {
         Blogcomment comment = blogcommentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new RuntimeException("Comment not found!"));
 
         blogcommentRepository.delete(comment);
     }
@@ -90,6 +90,9 @@ public class BlogcommentServiceImpl implements BlogcommentService {
     @Override
     public List<BlogcommentResponseDTO> getCommentsByPostId(Long postId) {
         List<Blogcomment> blogcomments = blogcommentRepository.findByPostId(postId);
+        if (blogcomments.isEmpty()) {
+            throw new RuntimeException("No comments found for the post with ID: " + postId);
+        }
         return blogcomments.stream()
                 .map(blogcommentMapper::toResponseDTO)
                 .collect(Collectors.toList());

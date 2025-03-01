@@ -45,7 +45,7 @@ public class BlogcommentController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -59,6 +59,10 @@ public class BlogcommentController {
             response.setMessage("Comment created successfully!");
             response.setData(createdComment);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -77,7 +81,7 @@ public class BlogcommentController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -92,12 +96,12 @@ public class BlogcommentController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
-        @GetMapping("/byPostId/{postId}")
+    @GetMapping("/byPostId/{postId}")
     public ResponseEntity<CommonResponse<List<BlogcommentResponseDTO>>> getCommentsByPostId(@PathVariable Long postId) {
         CommonResponse<List<BlogcommentResponseDTO>> response = new CommonResponse<>();
         try {
@@ -106,6 +110,10 @@ public class BlogcommentController {
             response.setMessage("Fetched all comments for the post successfully!");
             response.setData(comments);
             return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());

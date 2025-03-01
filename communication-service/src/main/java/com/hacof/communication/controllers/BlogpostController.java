@@ -27,6 +27,10 @@ public class BlogpostController {
             response.setMessage("Blogpost created successfully!");
             response.setData(createdBlogpost);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -43,9 +47,9 @@ public class BlogpostController {
             response.setMessage("Fetched blogpost successfully!");
             response.setData(blogpost);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Blogpost not found!");
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -61,7 +65,7 @@ public class BlogpostController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
