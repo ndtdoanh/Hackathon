@@ -55,12 +55,14 @@ public class CampusServiceImpl implements CampusService {
         log.info("Creating new campus with name: {}", campusDTO.getName());
         // name is not duplicated
         if (campusRepository.existsByName(campusDTO.getName())) {
+            log.warn("Campus creation failed: Name '{}' already exists", campusDTO.getName());
             throw new InvalidInputException("Campus name already exists");
         }
 
         // create must be in allowed campuses
         List<String> allowedCampuses = List.of("Quy Nhon", "Da Nang", "Can Tho", "TP HCM", "Hoa Lac");
         if (!allowedCampuses.contains(campusDTO.getName())) {
+            log.warn("Campus creation failed: Name '{}' is not allowed", campusDTO.getName());
             throw new InvalidInputException(
                     "Campus name is not allowed (Quy Nhon / Da Nang / Can Tho / TP HCM / Hoa Lac)");
         }
@@ -89,11 +91,15 @@ public class CampusServiceImpl implements CampusService {
     public CampusDTO updateCampus(Long id, CampusDTO campusDTO) {
         log.info("Updating campus with id: {}", id);
         if (!campusRepository.existsById(id)) {
+            log.warn("Campus update failed: Campus not found with id: {}", id);
             throw new ResourceNotFoundException("Campus not found");
         }
 
-        Campus existingCampus =
-                campusRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Campus not found"));
+        Campus existingCampus = campusRepository.findById(id).orElseThrow(() -> {
+            log.warn("Campus update failed: Campus not found with id: {}", id);
+            return new ResourceNotFoundException("Campus not found");
+        });
+
         campusDTO.setLastModifiedDate(LocalDateTime.now());
         existingCampus.setName(campusDTO.getName());
         existingCampus.setLocation(campusDTO.getLocation());
@@ -106,6 +112,7 @@ public class CampusServiceImpl implements CampusService {
     public void deleteCampus(Long id) {
         log.info("Deleting campus with id: {}", id);
         if (!campusRepository.existsById(id)) {
+            log.warn("Campus deletion failed: Campus not found with id: {}", id);
             throw new ResourceNotFoundException("Campus not found");
         }
         campusRepository.deleteById(id);
@@ -114,6 +121,7 @@ public class CampusServiceImpl implements CampusService {
     @Override
     public List<CampusDTO> searchCampuses(Specification<Campus> spec) {
         if (campusRepository.findAll(spec).isEmpty()) {
+            log.warn("No campus found");
             throw new ResourceNotFoundException("No campus found");
         }
 
