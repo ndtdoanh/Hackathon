@@ -63,12 +63,14 @@ public class EvaluationCriteriaController {
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Evaluation criteria created successfully!");
             response.setData(created);
-
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
@@ -86,7 +88,6 @@ public class EvaluationCriteriaController {
         } catch (Exception e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage("Error: " + e.getMessage());
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -98,13 +99,15 @@ public class EvaluationCriteriaController {
             service.delete(id);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Evaluation criteria deleted successfully!");
-
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
-
+            response.setMessage("Evaluation criteria with id " + id + " not found!");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }
