@@ -29,12 +29,11 @@ public class ForumthreadServiceImpl implements ForumthreadService {
 
     @Override
     public ForumthreadResponseDTO createForumthread(ForumthreadRequestDTO forumthreadRequestDTO) {
-        // Kiểm tra xem hackathon_id có tồn tại không trong cơ sở dữ liệu
         Hackathon hackathon = hackathonRepository.findById(forumthreadRequestDTO.getHackathonId())
-                .orElseThrow(() -> new IllegalArgumentException("Hackathon not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Hackathon not found!"));
 
         Forumthread forumthread = ForumthreadMapper.toEntity(forumthreadRequestDTO);
-        forumthread.setHackathon(hackathon); // Gán Hackathon hợp lệ vào
+        forumthread.setHackathon(hackathon);
 
         forumthread = forumthreadRepository.save(forumthread);
         return ForumthreadMapper.toDTO(forumthread);
@@ -57,14 +56,14 @@ public class ForumthreadServiceImpl implements ForumthreadService {
     @Override
     public ForumthreadResponseDTO updateForumthread(Long id, ForumthreadRequestDTO forumthreadRequestDTO) {
         Hackathon hackathon = hackathonRepository.findById(forumthreadRequestDTO.getHackathonId())
-                .orElseThrow(() -> new IllegalArgumentException("Hackathon not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Hackathon not found!"));
 
         Forumthread forumthread = forumthreadRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Forumthread not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Forumthread not found!"));
 
         forumthread.setTitle(forumthreadRequestDTO.getTitle());
         forumthread.setStatus(forumthreadRequestDTO.getStatus());
-        forumthread.setHackathon(hackathon);  // Gán Hackathon hợp lệ vào
+        forumthread.setHackathon(hackathon);
 
         forumthread = forumthreadRepository.save(forumthread);
         return ForumthreadMapper.toDTO(forumthread);
@@ -76,7 +75,7 @@ public class ForumthreadServiceImpl implements ForumthreadService {
         if (forumthreadRepository.existsById(id)) {
             forumthreadRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Forumthread with ID " + id + " not found.");
+            throw new IllegalArgumentException("Forumthread with ID " + id + " not found!");
         }
     }
 }
