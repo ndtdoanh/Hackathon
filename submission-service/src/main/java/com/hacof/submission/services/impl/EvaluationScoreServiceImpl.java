@@ -2,10 +2,12 @@ package com.hacof.submission.services.impl;
 
 import com.hacof.submission.dtos.request.EvaluationScoreRequestDTO;
 import com.hacof.submission.dtos.response.EvaluationScoreResponseDTO;
+import com.hacof.submission.entities.EvaluationCriteria;
 import com.hacof.submission.entities.EvaluationScores;
+import com.hacof.submission.entities.Submission;
+import com.hacof.submission.entities.User;
 import com.hacof.submission.mapper.EvaluationScoreMapper;
-import com.hacof.submission.repositories.EvaluationScoreRepository;
-import com.hacof.submission.repositories.EvaluationCriteriaRepository;
+import com.hacof.submission.repositories.*;
 import com.hacof.submission.services.EvaluationScoreService;
 import com.hacof.submission.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,12 @@ public class EvaluationScoreServiceImpl implements EvaluationScoreService {
     private EvaluationCriteriaRepository criteriaRepository;
 
     @Autowired
+    private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private EvaluationScoreMapper mapper;
 
     @Override
@@ -42,6 +50,19 @@ public class EvaluationScoreServiceImpl implements EvaluationScoreService {
 
     @Override
     public EvaluationScoreResponseDTO createScore(EvaluationScoreRequestDTO scoreDTO) {
+        Submission submission = submissionRepository.findById(scoreDTO.getSubmissionId())
+                .orElseThrow(() -> new IllegalArgumentException("Submission not found with id: " + scoreDTO.getSubmissionId()));
+        User judge = userRepository.findById(scoreDTO.getJudgeId())
+                .orElseThrow(() -> new IllegalArgumentException("Judge not found with id: " + scoreDTO.getJudgeId()));
+        EvaluationCriteria criteria = criteriaRepository.findById(scoreDTO.getEvaluationCriteriaId())
+                .orElseThrow(() -> new IllegalArgumentException("Evaluation Criteria not found!"));
+
+        int scoreValue = scoreDTO.getScore();
+        int maxAllowed = criteria.getMaxScore();
+        if (scoreValue > maxAllowed) {
+            throw new RuntimeException("Score " + scoreValue + " exceeds the maximum allowed score of " + maxAllowed);
+        }
+
         EvaluationScores score = mapper.toEntity(scoreDTO);
         String currentUser = SecurityUtil.getCurrentUserLogin().orElse("system");
         Instant now = Instant.now();
@@ -55,21 +76,38 @@ public class EvaluationScoreServiceImpl implements EvaluationScoreService {
         return mapper.toResponseDTO(savedScore);
     }
 
+
     @Override
     public EvaluationScoreResponseDTO updateScore(Integer id, EvaluationScoreRequestDTO scoreDetails) {
-        return repository.findById(id).map(existingScore -> {
-            existingScore.setScore(scoreDetails.getScore());
-            existingScore.setComment(scoreDetails.getComment());
-            String currentUser = SecurityUtil.getCurrentUserLogin().orElse("system");
-            Instant now = Instant.now();
+        EvaluationScores existingScore = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("EvaluationScore not found with id: " + id));
+        Submission submission = submissionRepository.findById(scoreDetails.getSubmissionId())
+                .orElseThrow(() -> new IllegalArgumentException("Submission not found with id: " + scoreDetails.getSubmissionId()));
+        User judge = userRepository.findById(scoreDetails.getJudgeId())
+                .orElseThrow(() -> new IllegalArgumentException("Judge not found with id: " + scoreDetails.getJudgeId()));
+        EvaluationCriteria criteria = criteriaRepository.findById(scoreDetails.getEvaluationCriteriaId())
+                .orElseThrow(() -> new IllegalArgumentException("Evaluation Criteria not found!"));
 
-            existingScore.setLastUpdatedBy(currentUser);
-            existingScore.setLastUpdatedAt(now);
+        int scoreValue = scoreDetails.getScore();
+        int maxAllowed = criteria.getMaxScore();
+        if (scoreValue > maxAllowed) {
+            throw new RuntimeException("Score " + scoreValue + " exceeds the maximum allowed score of " + maxAllowed);
+        }
 
-            repository.save(existingScore);
-            return mapper.toResponseDTO(existingScore);
-        }).orElseThrow(() -> new RuntimeException("EvaluationScore not found with id: " + id));
+        existingScore.setScore(scoreDetails.getScore());
+        existingScore.setComment(scoreDetails.getComment());
+        existingScore.setSubmission(submission);
+        existingScore.setJudge(judge);
+
+        String currentUser = SecurityUtil.getCurrentUserLogin().orElse("system");
+        Instant now = Instant.now();
+        existingScore.setLastUpdatedBy(currentUser);
+        existingScore.setLastUpdatedAt(now);
+
+        EvaluationScores updatedScore = repository.save(existingScore);
+        return mapper.toResponseDTO(updatedScore);
     }
+
 
     @Override
     public boolean deleteScore(Integer id) {

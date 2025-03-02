@@ -58,19 +58,20 @@ public class EvaluationScoreController {
     public ResponseEntity<CommonResponse<EvaluationScoreResponseDTO>> createScore(@RequestBody EvaluationScoreRequestDTO scoreRequestDTO) {
         CommonResponse<EvaluationScoreResponseDTO> response = new CommonResponse<>();
         try {
-            // Gọi service để xử lý tạo EvaluationScore
             EvaluationScoreResponseDTO created = service.createScore(scoreRequestDTO);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Evaluation score created successfully!");
             response.setData(created);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
-            // Lỗi nếu dữ liệu không hợp lệ
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (RuntimeException e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("Validation Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
-            // Lỗi hệ thống
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -89,8 +90,12 @@ public class EvaluationScoreController {
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
