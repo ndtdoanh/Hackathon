@@ -45,7 +45,7 @@ public class TaskController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage("Task with id " + id + " not found!");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -59,6 +59,10 @@ public class TaskController {
             response.setMessage("Task created successfully!");
             response.setData(createdTask);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -75,12 +79,17 @@ public class TaskController {
             response.setMessage("Task updated successfully!");
             response.setData(updatedTask);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<String>> deleteTask(@PathVariable Long id) {
@@ -92,14 +101,26 @@ public class TaskController {
             response.setData(serviceResponse.getData());
             return ResponseEntity.status(serviceResponse.getStatus()).body(response);
         } catch (Exception e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage("Task with id " + id + " not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
-    @PutMapping("/{taskId}/move")
-    public CommonResponse<String> moveTask(@PathVariable Long taskId, @RequestBody MoveTaskRequest moveTaskRequest) {
-        return taskService.moveTask(taskId, moveTaskRequest);
+    @PutMapping("update/{taskId}")
+    public ResponseEntity<CommonResponse<String>> moveTask(@PathVariable Long taskId, @RequestBody MoveTaskRequest moveTaskRequest) {
+        CommonResponse<String> response = new CommonResponse<>();
+        try {
+            CommonResponse<String> serviceResponse = taskService.moveTask(taskId, moveTaskRequest);
+            response.setStatus(serviceResponse.getStatus());
+            response.setMessage(serviceResponse.getMessage());
+            response.setData(serviceResponse.getData());
+            return ResponseEntity.status(serviceResponse.getStatus()).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
+
 }
