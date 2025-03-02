@@ -37,18 +37,16 @@ public class ForumcommentServiceImpl implements ForumcommentService {
     public ForumcommentResponseDTO createForumcomment(ForumcommentRequestDTO forumcommentRequestDTO) {
         // Kiểm tra Forumthread tồn tại
         Forumthread forumthread = forumthreadRepository.findById(forumcommentRequestDTO.getThreadId())
-                .orElseThrow(() -> new IllegalArgumentException("Forumthread not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Forumthread not found!"));
 
         // Kiểm tra User tồn tại
         User user = userRepository.findById(forumcommentRequestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
-        // Tạo Forumcomment mới
         Forumcomment forumcomment = ForumcommentMapper.toEntity(forumcommentRequestDTO);
         forumcomment.setThread(forumthread);
         forumcomment.setUser(user);
 
-        // Lưu Forumcomment và trả về DTO
         forumcomment = forumcommentRepository.save(forumcomment);
         return ForumcommentMapper.toDTO(forumcomment);
     }
@@ -70,22 +68,20 @@ public class ForumcommentServiceImpl implements ForumcommentService {
     public ForumcommentResponseDTO updateForumcomment(Long id, ForumcommentRequestDTO forumcommentRequestDTO) {
         // Kiểm tra Forumcomment có tồn tại không
         Forumcomment forumcomment = forumcommentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Forumcomment not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Forumcomment not found!"));
 
         // Kiểm tra Forumthread tồn tại
         Forumthread forumthread = forumthreadRepository.findById(forumcommentRequestDTO.getThreadId())
-                .orElseThrow(() -> new IllegalArgumentException("Forumthread not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Forumthread not found!"));
 
         // Kiểm tra User tồn tại
         User user = userRepository.findById(forumcommentRequestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
-        // Cập nhật các trường trong Forumcomment
         forumcomment.setComment(forumcommentRequestDTO.getComment());
         forumcomment.setThread(forumthread);
         forumcomment.setUser(user);
 
-        // Lưu và trả về DTO
         forumcomment = forumcommentRepository.save(forumcomment);
         return ForumcommentMapper.toDTO(forumcomment);
     }
@@ -95,7 +91,7 @@ public class ForumcommentServiceImpl implements ForumcommentService {
         if (forumcommentRepository.existsById(id)) {
             forumcommentRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Forumcomment not found");
+            throw new IllegalArgumentException("Forumcomment not found!");
         }
     }
 
