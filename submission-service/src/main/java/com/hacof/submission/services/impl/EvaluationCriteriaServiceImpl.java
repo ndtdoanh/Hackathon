@@ -95,10 +95,15 @@ public class EvaluationCriteriaServiceImpl implements EvaluationCriteriaService 
 
     @Override
     public void delete(Integer id) {
-        repository.findById(id).ifPresent(criteria -> {
+        Optional<EvaluationCriteria> criteriaOptional = repository.findById(id);
+        if (criteriaOptional.isPresent()) {
+            EvaluationCriteria criteria = criteriaOptional.get();
             Instant now = Instant.now();
             criteria.setDeletedAt(now);
             repository.save(criteria);
-        });
+        } else {
+            throw new RuntimeException("Evaluation criteria with id " + id + " not found");
+        }
     }
+
 }
