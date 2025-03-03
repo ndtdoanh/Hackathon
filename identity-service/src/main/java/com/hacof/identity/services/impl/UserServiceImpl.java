@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -166,30 +167,54 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String addEmail(User user, String email) {
-        try {
-            if (user.getEmail() != null && user.getIsVerified()) {
-                throw new RuntimeException("Email đã tồn tại và được xác thực.");
-            }
-
-            String otp = otpService.generateOtp(email);
-            emailService.sendOtp(email, otp);
-
-            return "OTP đã được gửi đến email của bạn.";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi khi thêm email: " + e.getMessage());
+    public String addEmail(Long userId, String email) {
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email");
         }
+
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email has been used by another account");
+        }
+
+        User user = userRepository
+                .findByUsername(getMyInfo().getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        user.setTempEmail(email);
+        userRepository.save(user);
+
+        String otp = otpService.generateOtp(email);
+        emailService.sendOtp(email, otp);
+
+        return "OTP code has been sent to email " + email + ". Please check and verify your email.";
     }
 
     @Override
-    public String verifyEmail(User user, String otp) {
-        if (!otpService.verifyOtp(user.getEmail(), otp)) {
-            throw new RuntimeException("OTP không chính xác.");
+    public String verifyEmail(Long userId, String otp) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        String tempEmail = user.getTempEmail();
+
+        if (tempEmail == null || tempEmail.isEmpty()) {
+            throw new IllegalStateException("You have not registered email to verify");
         }
 
+        if (!otpService.verifyOtp(tempEmail, otp)) {
+            throw new IllegalArgumentException("OTP code is incorrect or expired");
+        }
+
+        user.setEmail(tempEmail);
+        user.setTempEmail(null);
         user.setIsVerified(true);
         userRepository.save(user);
-        return "Email đã được xác thực thành công!";
+
+        return "Email " + tempEmail + " has been verified successfully";
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        return pattern.matcher(email).matches();
     }
 }

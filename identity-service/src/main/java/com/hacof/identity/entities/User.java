@@ -53,9 +53,12 @@ public class User {
     String firstName;
     String lastName;
 
+    @Column(name = "temp_email")
+    String tempEmail;
+
     @ColumnDefault("0")
     @Column(name = "is_verified")
-    Boolean isVerified;
+    Boolean isVerified = false;
 
     public Boolean getIsVerified() {
         return isVerified;
