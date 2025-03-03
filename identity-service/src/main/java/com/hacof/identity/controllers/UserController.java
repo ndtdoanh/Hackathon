@@ -7,7 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,17 +26,18 @@ import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
 import com.hacof.identity.dtos.request.VerifyEmailRequest;
 import com.hacof.identity.dtos.response.UserResponse;
-import com.hacof.identity.entities.User;
 import com.hacof.identity.services.UserService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserController {
     UserService userService;
 
@@ -111,22 +113,57 @@ public class UserController {
     }
 
     @PostMapping("/add-email")
-    @PreAuthorize("hasAuthority('ADD_EMAIL')")
+    //  @PreAuthorize("hasAuthority('ADD_EMAIL')")
     public ResponseEntity<ApiResponse<String>> addEmail(
-            @RequestBody AddEmailRequest request, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        String message = userService.addEmail(user, request.getEmail());
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<String>builder().message(message).build());
+            @Valid @RequestBody AddEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
+        try {
+            Long userId = jwt.getClaim("user_id");
+
+            String message = userService.addEmail(userId, request.getEmail());
+
+            log.info("User {} requested to add email: {}", userId, request.getEmail());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.<String>builder().message(message).build());
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid email request: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.<String>builder().message(e.getMessage()).build());
+        } catch (Exception e) {
+            log.error("Error processing add email request: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.<String>builder()
+                            .message("Error occurred when processing requests")
+                            .build());
+        }
     }
 
     @PostMapping("/verify-email")
-    @PreAuthorize("hasAuthority('VERIFY_EMAIL')")
+    //  @PreAuthorize("hasAuthority('VERIFY_EMAIL')")
     public ResponseEntity<ApiResponse<String>> verifyEmail(
-            @RequestBody VerifyEmailRequest request, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        String message = userService.verifyEmail(user, request.getOtp());
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<String>builder().message(message).build());
+            @Valid @RequestBody VerifyEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
+        try {
+            Long userId = jwt.getClaim("user_id");
+            String message = userService.verifyEmail(userId, request.getOtp());
+
+            log.info("User {} successfully verified email", userId);
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.<String>builder().message(message).build());
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid OTP verification: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.<String>builder().message(e.getMessage()).build());
+        } catch (IllegalStateException e) {
+            log.warn("Email verification state error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.<String>builder().message(e.getMessage()).build());
+        } catch (Exception e) {
+            log.error("Error processing verify email request: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.<String>builder()
+                            .message("Error occurred when processing requests")
+                            .build());
+        }
     }
 }

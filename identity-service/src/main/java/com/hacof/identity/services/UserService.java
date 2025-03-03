@@ -6,7 +6,6 @@ import com.hacof.identity.dtos.request.PasswordCreateRequest;
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
 import com.hacof.identity.dtos.response.UserResponse;
-import com.hacof.identity.entities.User;
 
 public interface UserService {
     UserResponse createUser(String token, UserCreateRequest request);
@@ -23,7 +22,7 @@ public interface UserService {
 
     void deleteUser(Long userId);
 
-    String addEmail(User user, String email);
+    String addEmail(Long userId, String email);
 
-    String verifyEmail(User user, String otp);
+    String verifyEmail(Long userId, String otp);
 }
