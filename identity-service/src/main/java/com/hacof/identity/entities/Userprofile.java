@@ -1,15 +1,18 @@
 package com.hacof.identity.entities;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -48,21 +51,22 @@ public class Userprofile {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @NotNull
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 10)
     String phoneNumber;
 
-    @Lob
+    @ElementCollection
+    @CollectionTable(name = "user_skills", joinColumns = @JoinColumn(name = "user_profile_id"))
     @Column(name = "skill")
-    String skill;
+    private Set<String> skills = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "current_avatar_id")
-    Useravatar currentAvatar;
+    @Column(name = "avatar_url")
+    String avatarUrl;
+
+    @Column(name = "uploaded_at")
+    Instant uploadedAt;
 
     Instant createdAt;
     Instant updatedAt;

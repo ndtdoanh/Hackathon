@@ -6,6 +6,22 @@ server:
 spring:
   application:
     name: identity-service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: doanhndtse161935@fpt.edu.vn
+    password: xbmt tevy evrt uouh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
   datasource:
     url: "jdbc:mysql://localhost:3306/hacof"
     driverClassName: "com.mysql.cj.jdbc.Driver"

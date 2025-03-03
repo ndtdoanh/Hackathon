@@ -22,11 +22,10 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/api/v1/users",
         "/api/v1/auth/token",
         "/api/v1/auth/introspect",
-        "/api/v1/auth/logout",
         "/api/v1/auth/refresh",
+        "/api/v1/auth/logout",
         "/api/v1/auth/outbound/authentication"
     };
 
@@ -67,7 +66,8 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("permissions");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);

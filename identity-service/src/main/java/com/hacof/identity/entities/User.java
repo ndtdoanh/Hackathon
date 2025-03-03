@@ -44,18 +44,25 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     String username;
 
+    @Column(name = "email", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    String email;
+
     @Column(name = "password")
     String password;
 
     String firstName;
     String lastName;
 
-    //    @Column(name = "last_login")
-    //    Instant lastLogin;
+    @Column(name = "temp_email")
+    String tempEmail;
 
     @ColumnDefault("0")
     @Column(name = "is_verified")
-    Boolean isVerified;
+    Boolean isVerified = false;
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
