@@ -29,7 +29,13 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(1015, "Invalid credentials, please try again.", HttpStatus.BAD_REQUEST),
 
     UNAUTHENTICATED(1016, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    UNAUTHORIZED(1017, "You do not have permission", HttpStatus.FORBIDDEN);
+    UNAUTHORIZED(1017, "You do not have permission", HttpStatus.FORBIDDEN),
+
+    PROFILE_NOT_FOUND(1018, "Profile not found", HttpStatus.NOT_FOUND),
+    PROFILE_ALREADY_EXISTS(1019, "Profile already exists for this user", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED_PROFILE_ACCESS(1020, "You are not authorized to access this profile", HttpStatus.FORBIDDEN),
+    INVALID_FILE_FORMAT(1021, "Only JPG and PNG files are allowed", HttpStatus.BAD_REQUEST),
+    FILE_UPLOAD_ERROR(1022, "Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

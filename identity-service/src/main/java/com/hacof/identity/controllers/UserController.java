@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.identity.dtos.ApiResponse;
+import com.hacof.identity.dtos.request.AddEmailRequest;
 import com.hacof.identity.dtos.request.PasswordCreateRequest;
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
+import com.hacof.identity.dtos.request.VerifyEmailRequest;
 import com.hacof.identity.dtos.response.UserResponse;
+import com.hacof.identity.entities.User;
 import com.hacof.identity.services.UserService;
 
 import lombok.AccessLevel;
@@ -81,7 +85,7 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-//    @PreAuthorize("hasAuthority('GET_MY_INFO')")
+    //    @PreAuthorize("hasAuthority('GET_MY_INFO')")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
@@ -104,5 +108,25 @@ public class UserController {
     public ApiResponse<String> deleteUser(@PathVariable("Id") long userId) {
         userService.deleteUser(userId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
+    }
+
+    @PostMapping("/add-email")
+    @PreAuthorize("hasAuthority('ADD_EMAIL')")
+    public ResponseEntity<ApiResponse<String>> addEmail(
+            @RequestBody AddEmailRequest request, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        String message = userService.addEmail(user, request.getEmail());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.<String>builder().message(message).build());
+    }
+
+    @PostMapping("/verify-email")
+    @PreAuthorize("hasAuthority('VERIFY_EMAIL')")
+    public ResponseEntity<ApiResponse<String>> verifyEmail(
+            @RequestBody VerifyEmailRequest request, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        String message = userService.verifyEmail(user, request.getOtp());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.<String>builder().message(message).build());
     }
 }

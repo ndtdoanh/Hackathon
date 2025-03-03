@@ -24,6 +24,8 @@ import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.mappers.UserMapper;
 import com.hacof.identity.repositories.RoleRepository;
 import com.hacof.identity.repositories.UserRepository;
+import com.hacof.identity.services.EmailService;
+import com.hacof.identity.services.OtpService;
 import com.hacof.identity.services.RoleService;
 import com.hacof.identity.services.UserService;
 
@@ -42,6 +44,8 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
     RoleService roleService;
+    EmailService emailService;
+    OtpService otpService;
 
     @Override
     public UserResponse createUser(String token, UserCreateRequest request) {
@@ -133,8 +137,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateUser(Long userId, UserUpdateRequest request) {
 
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
+        String currentUsername =
+                SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository
+                .findByUsername(currentUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if (!Objects.equals(currentUser.getId(), userId)) {
@@ -157,5 +163,33 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public String addEmail(User user, String email) {
+        try {
+            if (user.getEmail() != null && user.getIsVerified()) {
+                throw new RuntimeException("Email đã tồn tại và được xác thực.");
+            }
+
+            String otp = otpService.generateOtp(email);
+            emailService.sendOtp(email, otp);
+
+            return "OTP đã được gửi đến email của bạn.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi thêm email: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public String verifyEmail(User user, String otp) {
+        if (!otpService.verifyOtp(user.getEmail(), otp)) {
+            throw new RuntimeException("OTP không chính xác.");
+        }
+
+        user.setIsVerified(true);
+        userRepository.save(user);
+        return "Email đã được xác thực thành công!";
     }
 }
