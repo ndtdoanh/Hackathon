@@ -53,12 +53,13 @@ public class User {
     String firstName;
     String lastName;
 
-    //    @Column(name = "last_login")
-    //    Instant lastLogin;
-
     @ColumnDefault("0")
     @Column(name = "is_verified")
     Boolean isVerified;
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

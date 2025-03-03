@@ -65,7 +65,7 @@ public class RoleController {
     }
 
     @GetMapping("/role-from-token")
-    @PreAuthorize("hasAuthority('GET_ROLE_FROM_TOKEN')")
+    //    @PreAuthorize("hasAuthority('GET_ROLE_FROM_TOKEN')")
     public ApiResponse<RoleResponse> getRoleFromToken(@RequestHeader("Authorization") String token) {
         RoleResponse roleResponse = roleService.getRoleFromToken(token.replace("Bearer ", ""));
 
@@ -76,7 +76,7 @@ public class RoleController {
     }
 
     @PutMapping("/{Id}")
-    @PreAuthorize("hasAuthority('UPDATE_ROLE')")
+    //    @PreAuthorize("hasAuthority('UPDATE_ROLE')")
     public ApiResponse<RoleResponse> updateRole(@PathVariable("Id") Long Id, @RequestBody RoleUpdateRequest request) {
         RoleResponse roleResponse = roleService.updateRole(Id, request);
         return ApiResponse.<RoleResponse>builder()
