@@ -30,7 +30,6 @@ public class MentorbookingMapper {
         entity.setMentor(mentor);
         entity.setUser(user);
         entity.setBookingDate(dto.getBookingDate());
-        entity.setStatus(Status.valueOf(dto.getStatus()));
         return entity;
     }
 

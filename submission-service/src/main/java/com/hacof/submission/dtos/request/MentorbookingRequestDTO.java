@@ -11,5 +11,4 @@ public class MentorbookingRequestDTO {
     private Long mentorId;          // Mentor ID
     private Long userId;            // User ID
     private Instant bookingDate;    // Ngày đặt lịch
-    private String status;          // Trạng thái booking (PENDING, APPROVED, etc.)
 }

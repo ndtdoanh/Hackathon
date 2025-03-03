@@ -43,6 +43,10 @@ public class MentorbookingController {
             response.setMessage("Fetched all mentor bookings by mentorId successfully!");
             response.setData(mentorbookingService.getBookingsByMentorId(mentorId));
             return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -58,6 +62,10 @@ public class MentorbookingController {
             response.setMessage("Fetched all mentor bookings by userId successfully!");
             response.setData(mentorbookingService.getBookingsByUserId(userId));
             return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -89,6 +97,10 @@ public class MentorbookingController {
             response.setMessage("Mentor booking created successfully!");
             response.setData(mentorbookingService.createBooking(requestDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -104,6 +116,10 @@ public class MentorbookingController {
             response.setMessage("Mentor booking updated successfully!");
             response.setData(mentorbookingService.updateBooking(id, requestDTO));
             return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -119,6 +135,10 @@ public class MentorbookingController {
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Mentor booking deleted successfully!");
             return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -138,7 +158,7 @@ public class MentorbookingController {
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Booking not found: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
