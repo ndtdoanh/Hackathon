@@ -57,6 +57,10 @@ public class SubmissionEvaluationController {
             response.setMessage("Submission evaluation created successfully!");
             response.setData(created);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -73,6 +77,10 @@ public class SubmissionEvaluationController {
             response.setMessage("Submission evaluation updated successfully!");
             response.setData(updatedScore);
             return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());

@@ -19,7 +19,6 @@ import com.hacof.submission.entities.User;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -52,7 +51,7 @@ public class SubmissionEvaluationServiceImpl implements SubmissionEvaluationServ
     @Override
     public SubmissionEvaluationResponseDTO getEvaluationById(Long id) {
         Submissionevaluation evaluation = submissionevaluationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evaluation not found"));
+                .orElseThrow(() -> new RuntimeException("Evaluation not found!"));
         return mapper.toResponseDTO(evaluation);
     }
 
@@ -64,28 +63,21 @@ public class SubmissionEvaluationServiceImpl implements SubmissionEvaluationServ
                 .mapToDouble(EvaluationScores::getScore)
                 .sum();
 
-        // Lấy Submission từ repository
         Submission submission = submissionRepository.findById(evaluationRequestDTO.getSubmissionId())
-                .orElseThrow(() -> new RuntimeException("Submission not found"));
-
-        // Lấy User từ repository
+                .orElseThrow(() -> new RuntimeException("Submission not found!"));
         User judge = userRepository.findById(evaluationRequestDTO.getJudgeId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found!"));
 
-        // Tạo một SubmissionEvaluation để lưu điểm tổng thể
         Submissionevaluation submissionEvaluation = new Submissionevaluation();
         submissionEvaluation.setSubmission(submission);
         submissionEvaluation.setJudge(judge);
-        submissionEvaluation.setScore(totalScore);  // Điểm tự động tính từ tổng điểm tiêu chí
-        submissionEvaluation.setFeedback(evaluationRequestDTO.getFeedback());  // Nhận xét từ giám khảo
+        submissionEvaluation.setScore(totalScore);
+        submissionEvaluation.setFeedback(evaluationRequestDTO.getFeedback());
         submissionEvaluation.setEvaluatedAt(Instant.now());
         submissionEvaluation.setCreatedAt(Instant.now());
         submissionEvaluation.setCreatedBy(SecurityUtil.getCurrentUserLogin().orElse("system"));
 
-        // Lưu vào cơ sở dữ liệu
         submissionevaluationRepository.save(submissionEvaluation);
-
-        // Chuyển đổi thành DTO và trả về
         return new SubmissionEvaluationResponseDTO(submissionEvaluation);
     }
 
@@ -93,26 +85,38 @@ public class SubmissionEvaluationServiceImpl implements SubmissionEvaluationServ
 
     @Override
     public SubmissionEvaluationResponseDTO updateEvaluation(Long id, SubmissionEvaluationRequestDTO evaluationRequestDTO) {
+        Submission submission = submissionRepository.findById(evaluationRequestDTO.getSubmissionId())
+                .orElseThrow(() -> new RuntimeException("Submission not found!"));
+        User judge = userRepository.findById(evaluationRequestDTO.getJudgeId())
+                .orElseThrow(() -> new RuntimeException("Judge not found!"));
+
+//        // Recalculate the total score from EvaluationScores for the given submission
+//        Float totalScore = (float) evaluationScoreRepository.findBySubmissionId(evaluationRequestDTO.getSubmissionId())
+//                .stream()
+//                .mapToDouble(EvaluationScores::getScore)
+//                .sum();
+//
+//        // Validate if the total score is not greater than the max score defined by the Evaluation Criteria
+//        // Assuming max score is retrieved from the EvaluationCriteria
+//        Float maxScore = getMaxScoreFromEvaluationCriteria(submission); // A method to fetch max score logic
+//        if (totalScore > maxScore) {
+//            throw new RuntimeException("Total score exceeds the maximum score!");
+//        }
         Optional<Submissionevaluation> existingEvaluation = submissionevaluationRepository.findById(id);
 
         if (existingEvaluation.isPresent()) {
             Submissionevaluation evaluation = existingEvaluation.get();
 
-            // Cập nhật feedback
             evaluation.setFeedback(evaluationRequestDTO.getFeedback());
-
             // Cập nhật điểm tổng thể nếu cần
             Float totalScore = (float) evaluationScoreRepository.findBySubmissionId(evaluationRequestDTO.getSubmissionId())
                     .stream()
                     .mapToDouble(EvaluationScores::getScore)
                     .sum();
             evaluation.setScore(totalScore);
-
-            // Cập nhật thông tin cập nhật
             evaluation.setUpdatedAt(Instant.now());
             evaluation.setUpdatedBy(SecurityUtil.getCurrentUserLogin().orElse("system"));
 
-            // Lưu và trả về kết quả
             Submissionevaluation updatedEvaluation = submissionevaluationRepository.save(evaluation);
             return mapper.toResponseDTO(updatedEvaluation);
         } else {
@@ -123,12 +127,12 @@ public class SubmissionEvaluationServiceImpl implements SubmissionEvaluationServ
 
     @Override
     public boolean deleteEvaluation(Long id) {
-        Optional<Submissionevaluation> evaluation = submissionevaluationRepository.findById(id); // Correct repository
+        Optional<Submissionevaluation> evaluation = submissionevaluationRepository.findById(id);
         if (evaluation.isPresent()) {
-            submissionevaluationRepository.delete(evaluation.get());  // Delete using the correct entity
+            submissionevaluationRepository.delete(evaluation.get());
             return true;
         }
-        return false; // If evaluation not found
+        return false;
     }
 
 
