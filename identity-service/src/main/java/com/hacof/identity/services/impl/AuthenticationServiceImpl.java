@@ -121,7 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
         log.info("User Info {}", userInfo);
 
-        User user = userRepository.findByUsername(userInfo.getEmail()).orElse(null);
+        User user = userRepository.findByEmail(userInfo.getEmail()).orElse(null);
 
         if (user == null) {
             Role teamMemberRole = roleRepository
@@ -130,6 +130,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             user = User.builder()
                     .username(userInfo.getEmail())
+                    .email(userInfo.getEmail())
                     .firstName(userInfo.getGivenName())
                     .lastName(userInfo.getFamilyName())
                     .isVerified(userInfo.isVerifiedEmail())
@@ -228,6 +229,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
+                .claim("user_id", user.getId())
                 .claim("role", role)
                 .claim("permissions", permissions)
                 .build();
