@@ -34,7 +34,7 @@ public class PermissionController {
     PermissionService permissionService;
 
     @PostMapping
-    //    @PreAuthorize("hasAuthority('CREATE_PERMISSION')")
+    @PreAuthorize("hasAuthority('CREATE_PERMISSION')")
     public ResponseEntity<ApiResponse<PermissionResponse>> createPermission(
             @RequestBody @Valid PermissionCreateRequest request) {
         PermissionResponse permissionResponse = permissionService.createPermission(request);

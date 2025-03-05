@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,14 +21,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping("/api/v1/user-profiles")
+@RequestMapping("/api/v1/profiles")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserProfileController {
     UserProfileService userProfileService;
 
     @PostMapping
-    //    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('CREATE_PROFILE')")
     public ResponseEntity<ApiResponse<UserProfileResponse>> createProfile(
             @Valid @RequestBody UserProfileCreateRequest request) {
         UserProfileResponse profileResponse = userProfileService.createProfile(request);
@@ -40,7 +41,7 @@ public class UserProfileController {
     }
 
     @PutMapping
-    //    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('UPDATE_PROFILE')")
     public ResponseEntity<ApiResponse<UserProfileResponse>> updateProfile(
             @Valid @RequestBody UserProfileUpdateRequest request) {
         UserProfileResponse profileResponse = userProfileService.updateProfile(request);
@@ -52,9 +53,10 @@ public class UserProfileController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<ApiResponse<UserProfileResponse>> getProfile(@PathVariable Long userId) {
-        UserProfileResponse profileResponse = userProfileService.getProfile(userId);
+    @GetMapping("/{Id}")
+    @PreAuthorize("hasAuthority('GET_PROFILE')")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> getProfile(@PathVariable Long Id) {
+        UserProfileResponse profileResponse = userProfileService.getProfile(Id);
         ApiResponse<UserProfileResponse> response = ApiResponse.<UserProfileResponse>builder()
                 .result(profileResponse)
                 .message("Profile retrieved successfully")
@@ -64,7 +66,7 @@ public class UserProfileController {
     }
 
     @GetMapping
-    //    @PreAuthorize("hasAuthority('GET_PROFILES')")
+    @PreAuthorize("hasAuthority('GET_PROFILES')")
     public ResponseEntity<ApiResponse<List<UserProfileResponse>>> getProfiles() {
         List<UserProfileResponse> profiles = userProfileService.getProfiles();
         ApiResponse<List<UserProfileResponse>> response = ApiResponse.<List<UserProfileResponse>>builder()
@@ -76,7 +78,7 @@ public class UserProfileController {
     }
 
     @DeleteMapping
-    //    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('DELETE_PROFILE')")
     public ResponseEntity<ApiResponse<Void>> deleteProfile() {
         userProfileService.deleteProfile();
         ApiResponse<Void> response = ApiResponse.<Void>builder()
@@ -87,7 +89,7 @@ public class UserProfileController {
     }
 
     @PostMapping("/avatar")
-    //    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('UPLOAD_AVATAR')")
     public ResponseEntity<ApiResponse<UserProfileResponse>> uploadAvatar(@RequestParam("file") MultipartFile file) {
         UserProfileResponse profileResponse = userProfileService.uploadAvatar(file);
         ApiResponse<UserProfileResponse> response = ApiResponse.<UserProfileResponse>builder()

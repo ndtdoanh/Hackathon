@@ -42,6 +42,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_USER')")
     public ResponseEntity<ApiResponse> createUser(
             @RequestHeader("Authorization") String authorizationToken, @Valid @RequestBody UserCreateRequest request) {
 
@@ -57,6 +58,7 @@ public class UserController {
     }
 
     @PostMapping("/create-password")
+    @PreAuthorize("hasAuthority('CREATE_PASSWORD')")
     public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid PasswordCreateRequest request) {
         userService.createPassword(request);
 
@@ -87,7 +89,7 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-    //    @PreAuthorize("hasAuthority('GET_MY_INFO')")
+    @PreAuthorize("hasAuthority('GET_MY_INFO')")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
@@ -113,7 +115,7 @@ public class UserController {
     }
 
     @PostMapping("/add-email")
-    //  @PreAuthorize("hasAuthority('ADD_EMAIL')")
+    @PreAuthorize("hasAuthority('ADD_EMAIL')")
     public ResponseEntity<ApiResponse<String>> addEmail(
             @Valid @RequestBody AddEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
         try {
@@ -139,7 +141,7 @@ public class UserController {
     }
 
     @PostMapping("/verify-email")
-    //  @PreAuthorize("hasAuthority('VERIFY_EMAIL')")
+    @PreAuthorize("hasAuthority('VERIFY_EMAIL')")
     public ResponseEntity<ApiResponse<String>> verifyEmail(
             @Valid @RequestBody VerifyEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
         try {

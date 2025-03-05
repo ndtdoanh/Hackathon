@@ -2,7 +2,6 @@ package com.hacof.identity.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +25,10 @@ public class SecurityConfig {
         "/api/v1/auth/introspect",
         "/api/v1/auth/refresh",
         "/api/v1/auth/logout",
-        "/api/v1/auth/outbound/authentication"
+        "/api/v1/auth/outbound/authentication",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui/index.html"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -37,7 +39,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS)
                 .permitAll()
                 .anyRequest()
                 .authenticated());
