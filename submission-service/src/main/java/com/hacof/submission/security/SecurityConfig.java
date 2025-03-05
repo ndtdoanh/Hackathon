@@ -19,6 +19,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/evaluationscores/**").permitAll()
                         .requestMatchers("/api/v1/mentorbookings/**").permitAll()
                         .requestMatchers("/api/v1/submissionevaluations/**").permitAll()
+                        .requestMatchers("/api/v1/submissions/**").permitAll()
+                        .requestMatchers("/api/v1/submissionfiles/**").permitAll()
 
                         .anyRequest().authenticated()
                 )
