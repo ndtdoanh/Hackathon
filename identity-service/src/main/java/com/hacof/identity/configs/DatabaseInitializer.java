@@ -1,6 +1,8 @@
 package com.hacof.identity.configs;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -33,77 +35,227 @@ public class DatabaseInitializer implements CommandLineRunner {
     RoleRepository roleRepository;
     PermissionRepository permissionRepository;
 
+    private static final Map<String, Set<String>> ROLE_PERMISSIONS = Map.of(
+            "ADMIN",
+                    Set.of(
+                            "CREATE_USER",
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "UPDATE_USER",
+                            "DELETE_USER",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "CREATE_ROLE",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "UPDATE_ROLE",
+                            "DELETE_ROLE",
+                            "CREATE_PERMISSION",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "UPDATE_PERMISSION",
+                            "DELETE_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR"),
+            "ORGANIZATION",
+                    Set.of(
+                            "CREATE_USER",
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR"),
+            "JUDGE",
+                    Set.of(
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR"),
+            "MENTOR",
+                    Set.of(
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR"),
+            "GUEST", Set.of(),
+            "TEAM_MEMBER",
+                    Set.of(
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR"),
+            "TEAM_LEADER",
+                    Set.of(
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR"));
+
     @Override
     public void run(String... args) throws Exception {
         log.info(">>> START INIT DATABASE");
 
         long countUsers = userRepository.count();
         long countRoles = roleRepository.count();
-        long countPermissions = this.permissionRepository.count();
+        long countPermissions = permissionRepository.count();
 
         if (countPermissions == 0) {
-            ArrayList<Permission> arr = new ArrayList<>();
-
-            arr.add(new Permission("LOGIN", "/api/v1/auth/token", "POST", "AUTH"));
-            arr.add(new Permission("INTROSPECT_TOKEN", "/api/v1/auth/introspect", "POST", "AUTH"));
-            arr.add(new Permission("REFRESH_TOKEN", "/api/v1/auth/refresh", "POST", "AUTH"));
-            arr.add(new Permission("LOGOUT", "/api/v1/auth/logout", "POST", "AUTH"));
-
-            arr.add(new Permission("CREATE_USER", "/api/v1/users", "POST", "USERS"));
-            arr.add(new Permission("GET_USERS", "/api/v1/users", "GET", "USERS"));
-            arr.add(new Permission("GET_USER", "/api/v1/users/{Id}", "GET", "USERS"));
-            arr.add(new Permission("UPDATE_USER", "/api/v1/users/{Id}", "PUT", "USERS"));
-            arr.add(new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"));
-
-            arr.add(new Permission("CREATE_ROLE", "/api/v1/roles", "POST", "ROLES"));
-            arr.add(new Permission("GET_ROLES", "/api/v1/roles", "GET", "ROLES"));
-            arr.add(new Permission("GET_ROLE", "/api/v1/roles/{Id}", "GET", "ROLES"));
-            arr.add(new Permission("UPDATE_ROLE", "/api/v1/roles/{Id}", "PUT", "ROLES"));
-            arr.add(new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"));
-
-            arr.add(new Permission("CREATE_PERMISSION", "/api/v1/permissions", "POST", "PERMISSIONS"));
-            arr.add(new Permission("GET_PERMISSIONS", "/api/v1/permissions", "GET", "PERMISSIONS"));
-            arr.add(new Permission("GET_PERMISSION", "/api/v1/permissions/{Id}", "GET", "PERMISSIONS"));
-            arr.add(new Permission("UPDATE_PERMISSION", "/api/v1/permissions/{Id}", "PUT", "PERMISSIONS"));
-            arr.add(new Permission("DELETE_PERMISSION", "/api/v1/permissions/{Id}", "DELETE", "PERMISSIONS"));
-
-            this.permissionRepository.saveAll(arr);
+            createPermissions();
         }
 
         if (countRoles == 0) {
-            createRole("ADMIN", "Admin role");
-            createRole("ORGANIZATION", "Organization role");
-            createRole("JUDGE", "Judge role");
-            createRole("MENTOR", "Mentor role");
-            createRole("GUEST", "Guest role");
-            createRole("TEAM_MEMBER", "Team member role");
-            createRole("TEAM_LEADER", "Team leader role");
-
-            System.out.println("Roles created successfully!");
+            createRoles();
         } else {
-            System.out.println(">>> SKIP INIT ROLES ~ ALREADY HAVE ROLES...");
+            log.info(">>> SKIP INIT ROLES ~ ALREADY HAVE ROLES...");
         }
 
         if (countUsers == 0) {
-            Role adminRole =
-                    roleRepository.findByName("ADMIN").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            Role organizationRole = roleRepository
-                    .findByName("ORGANIZATION")
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            Role mentorRole =
-                    roleRepository.findByName("MENTOR").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            Role judgeRole =
-                    roleRepository.findByName("JUDGE").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-
-            createUser("admin", "12345", "Admin", "System", adminRole);
-            createUser("organization", "12345", "Organization", "System", organizationRole);
-            createUser("mentor", "12345", "Mentor", "System", mentorRole);
-            createUser("judge", "12345", "Judge", "System", judgeRole);
-
-            log.info("Users created successfully!");
+            createDefaultUsers();
         } else {
             log.info(">>> SKIP INIT DATABASE ~ ALREADY HAVE USERS...");
         }
+    }
+
+    private void createPermissions() {
+        List<Permission> permissions = List.of(
+                new Permission("TOKEN", "/api/v1/auth/token", "POST", "AUTH"),
+                new Permission("INTROSPECT_TOKEN", "/api/v1/auth/introspect", "POST", "AUTH"),
+                new Permission("REFRESH_TOKEN", "/api/v1/auth/refresh", "POST", "AUTH"),
+                new Permission("LOGOUT", "/api/v1/auth/logout", "POST", "AUTH"),
+                new Permission("OUTBOUND_AUTHENTICATION", "/api/v1/auth/outbound/authentication", "POST", "AUTH"),
+                new Permission("CREATE_USER", "/api/v1/users", "POST", "USERS"),
+                new Permission("CREATE_PASSWORD", "/api/v1/users/create-password", "POST", "USERS"),
+                new Permission("GET_USERS", "/api/v1/users", "GET", "USERS"),
+                new Permission("GET_USER", "/api/v1/users/{Id}", "GET", "USERS"),
+                new Permission("GET_MY_INFO", "/api/v1/users/my-info", "GET", "USERS"),
+                new Permission("UPDATE_USER", "/api/v1/users/{Id}", "PUT", "USERS"),
+                new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"),
+                new Permission("ADD_EMAIL", "/api/v1/users/add-email", "POST", "USERS"),
+                new Permission("VERIFY_EMAIL", "/api/v1/users/verify-email", "POST", "USERS"),
+                new Permission("CREATE_ROLE", "/api/v1/roles", "POST", "ROLES"),
+                new Permission("GET_ROLES", "/api/v1/roles", "GET", "ROLES"),
+                new Permission("GET_ROLE", "/api/v1/roles/{Id}", "GET", "ROLES"),
+                new Permission("GET_ROLE_FROM_TOKEN", "/api/v1/roles/role-from-token", "GET", "ROLES"),
+                new Permission("UPDATE_ROLE", "/api/v1/roles/{Id}", "PUT", "ROLES"),
+                new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"),
+                new Permission("CREATE_PERMISSION", "/api/v1/permissions", "POST", "PERMISSIONS"),
+                new Permission("GET_PERMISSIONS", "/api/v1/permissions", "GET", "PERMISSIONS"),
+                new Permission("GET_PERMISSION", "/api/v1/permissions/{Id}", "GET", "PERMISSIONS"),
+                new Permission("UPDATE_PERMISSION", "/api/v1/permissions/{Id}", "PUT", "PERMISSIONS"),
+                new Permission("DELETE_PERMISSION", "/api/v1/permissions/{Id}", "DELETE", "PERMISSIONS"),
+                new Permission("CREATE_PROFILE", "/api/v1/profiles", "POST", "PROFILES"),
+                new Permission("UPDATE_PROFILE", "/api/v1/profiles/{Id}", "PUT", "PROFILES"),
+                new Permission("GET_PROFILES", "/api/v1/profiles", "GET", "PROFILES"),
+                new Permission("GET_PROFILE", "/api/v1/profiles/{Id}", "GET", "PROFILES"),
+                new Permission("DELETE_PROFILE", "/api/v1/profiles/{Id}", "DELETE", "PROFILES"),
+                new Permission("UPLOAD_AVATAR", "/api/v1/profiles/upload-avatar", "POST", "PROFILES"));
+
+        permissionRepository.saveAll(permissions);
+        log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
+    }
+
+    private void createRoles() {
+        for (String roleName : ROLE_PERMISSIONS.keySet()) {
+            createRole(roleName, roleName + " role");
+        }
+        log.info(">>> ROLES CREATED SUCCESSFULLY");
+    }
+
+    private void createRole(String roleName, String description) {
+        Role role = new Role();
+        role.setName(roleName);
+        role.setDescription(description);
+
+        Set<String> permissionNames = ROLE_PERMISSIONS.getOrDefault(roleName, Set.of());
+        List<Permission> permissions = permissionRepository.findByNameIn(permissionNames);
+        role.setPermissions(new HashSet<>(permissions));
+
+        roleRepository.save(role);
+    }
+
+    private void createDefaultUsers() {
+        Role adminRole = getRole("ADMIN");
+        Role organizationRole = getRole("ORGANIZATION");
+        Role mentorRole = getRole("MENTOR");
+        Role judgeRole = getRole("JUDGE");
+
+        createUser("admin", "12345", "Admin", "System", adminRole);
+        createUser("organization", "12345", "Organization", "System", organizationRole);
+        createUser("mentor", "12345", "Mentor", "System", mentorRole);
+        createUser("judge", "12345", "Judge", "System", judgeRole);
+
+        log.info(">>> DEFAULT USERS CREATED SUCCESSFULLY");
     }
 
     private void createUser(String email, String password, String firstName, String lastName, Role role) {
@@ -119,11 +271,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         userRepository.save(user);
     }
 
-    private void createRole(String roleName, String description) {
-        Role role = new Role();
-        role.setName(roleName);
-        role.setDescription(description);
-
-        roleRepository.save(role);
+    private Role getRole(String roleName) {
+        return roleRepository.findByName(roleName).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
     }
 }
