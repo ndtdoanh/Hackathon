@@ -20,7 +20,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/mentorbookings/**").permitAll()
                         .requestMatchers("/api/v1/submissionevaluations/**").permitAll()
                         .requestMatchers("/api/v1/submissions/**").permitAll()
-                        .requestMatchers("/api/v1/submissionfiles/**").permitAll()
+                        .requestMatchers("/api/v1/submissionfiles/upload").permitAll()
 
                         .anyRequest().authenticated()
                 )
