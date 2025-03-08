@@ -97,12 +97,11 @@ public class UserController {
                 .build();
     }
 
-    @PutMapping("/{Id}")
-    @PreAuthorize("hasAuthority('UPDATE_USER')")
-    public ApiResponse<UserResponse> updateUser(
-            @PathVariable("Id") long userId, @RequestBody UserUpdateRequest request) {
+    @PutMapping("/my-info")
+    @PreAuthorize("hasAuthority('UPDATE_MY_INFO')")
+    public ApiResponse<UserResponse> updateUser(@RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.updateUser(userId, request))
+                .result(userService.updateMyInfo(request))
                 .message("User updated successfully")
                 .build();
     }

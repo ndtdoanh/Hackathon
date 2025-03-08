@@ -82,4 +82,14 @@ public class PermissionController {
                 .message("Permission has been deleted")
                 .build();
     }
+
+    @DeleteMapping("/{roleId}/permissions/{permissionId}")
+    @PreAuthorize("hasAuthority('DELETE_PERMISSION_FROM_ROLE')")
+    public ApiResponse<Void> deletePermissionFromRole(
+            @PathVariable("roleId") Long roleId, @PathVariable("permissionId") Long permissionId) {
+        permissionService.deletePermissionFromRole(roleId, permissionId);
+        return ApiResponse.<Void>builder()
+                .message("Permission has been removed from role")
+                .build();
+    }
 }

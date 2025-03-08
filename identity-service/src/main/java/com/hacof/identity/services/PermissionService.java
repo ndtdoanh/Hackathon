@@ -16,4 +16,6 @@ public interface PermissionService {
     PermissionResponse updatePermission(Long id, PermissionUpdateRequest request);
 
     void deletePermission(Long permissionId);
+
+    void deletePermissionFromRole(Long roleId, Long permissionId);
 }
