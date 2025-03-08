@@ -20,6 +20,11 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
 
+  multipart:
+    enabled: true
+    max-file-size: 2MB
+    max-request-size: 2MB
+
 eureka:
   client:
     service-url:

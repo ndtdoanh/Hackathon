@@ -98,6 +98,12 @@
 			<version>2.2.224</version>
 			<scope>test</scope>
 		</dependency>
+<!--		firebase-->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>9.0.0</version>
+		</dependency>
 
     </dependencies>
 	<dependencyManagement>
