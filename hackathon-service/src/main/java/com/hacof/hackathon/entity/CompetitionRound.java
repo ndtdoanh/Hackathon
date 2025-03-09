@@ -36,11 +36,10 @@ public class CompetitionRound extends AuditBase {
     private Hackathon hackathon;
 
     @ManyToMany
-    @JoinTable(
-            name = "round_judges",
-            joinColumns = @JoinColumn(name = "round_id"),
-            inverseJoinColumns = @JoinColumn(name = "judge_id"))
     private List<Judge> judges;
+
+    @ManyToMany
+    private List<Mentor> mentors;
 
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resource> resources;
