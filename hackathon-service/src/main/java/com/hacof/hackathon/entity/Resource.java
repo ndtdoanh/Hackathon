@@ -1,11 +1,23 @@
 package com.hacof.hackathon.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import com.hacof.hackathon.constant.ResourceStatus;
 import com.hacof.hackathon.constant.ResourceType;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -28,7 +40,9 @@ public class Resource {
     @Column(name = "status")
     private ResourceStatus status;
 
+    private int quantity;
+
     @ManyToOne
-    @JoinColumn(name = "hackathon_id")
-    private Hackathon hackathon;
+    @JoinColumn(name = "competition_round_id")
+    private CompetitionRound competitionRound;
 }
