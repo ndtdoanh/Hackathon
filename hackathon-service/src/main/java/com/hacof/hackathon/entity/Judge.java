@@ -4,10 +4,8 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -15,14 +13,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Judges")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Judge extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    private String name;
-    private String email;
+    String name;
+    String email;
 
     @ManyToMany(mappedBy = "judges")
-    private List<CompetitionRound> rounds;
+    List<CompetitionRound> rounds;
 }
