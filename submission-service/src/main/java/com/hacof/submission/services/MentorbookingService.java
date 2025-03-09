@@ -1,9 +1,10 @@
 package com.hacof.submission.services;
 
+import java.util.List;
+
 import com.hacof.submission.dtos.request.MentorbookingRequestDTO;
 import com.hacof.submission.dtos.request.StatusRequestDTO;
 import com.hacof.submission.dtos.response.MentorbookingResponseDTO;
-import java.util.List;
 
 public interface MentorbookingService {
 
@@ -22,5 +23,4 @@ public interface MentorbookingService {
     void deleteBooking(Long id);
 
     MentorbookingResponseDTO updateBookingStatus(Long id, StatusRequestDTO statusRequestDTO);
-
 }

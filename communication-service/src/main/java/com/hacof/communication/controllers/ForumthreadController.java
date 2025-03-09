@@ -1,15 +1,16 @@
 package com.hacof.communication.controllers;
 
-import com.hacof.communication.dto.request.ForumthreadRequestDTO;
-import com.hacof.communication.dto.response.ForumthreadResponseDTO;
-import com.hacof.communication.responses.CommonResponse;
-import com.hacof.communication.services.ForumthreadService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.ForumthreadRequestDTO;
+import com.hacof.communication.dto.response.ForumthreadResponseDTO;
+import com.hacof.communication.responses.CommonResponse;
+import com.hacof.communication.services.ForumthreadService;
 
 @RestController
 @RequestMapping("/api/v1/forumthreads")
@@ -23,7 +24,8 @@ public class ForumthreadController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> createForumthread(@RequestBody ForumthreadRequestDTO forumthreadRequestDTO) {
+    public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> createForumthread(
+            @RequestBody ForumthreadRequestDTO forumthreadRequestDTO) {
         CommonResponse<ForumthreadResponseDTO> response = new CommonResponse<>();
         try {
             ForumthreadResponseDTO createdForumthread = forumthreadService.createForumthread(forumthreadRequestDTO);
@@ -35,7 +37,7 @@ public class ForumthreadController {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -46,7 +48,8 @@ public class ForumthreadController {
     public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> getForumthreadById(@PathVariable Long id) {
         CommonResponse<ForumthreadResponseDTO> response = new CommonResponse<>();
         try {
-            ForumthreadResponseDTO forumthread = forumthreadService.getForumthreadById(id)
+            ForumthreadResponseDTO forumthread = forumthreadService
+                    .getForumthreadById(id)
                     .orElseThrow(() -> new RuntimeException("Forum thread not found"));
 
             response.setStatus(HttpStatus.OK.value());
@@ -63,7 +66,6 @@ public class ForumthreadController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<ForumthreadResponseDTO>>> getAllForumthreads() {
@@ -82,7 +84,8 @@ public class ForumthreadController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> updateForumthread(@PathVariable Long id, @RequestBody ForumthreadRequestDTO forumthreadRequestDTO) {
+    public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> updateForumthread(
+            @PathVariable Long id, @RequestBody ForumthreadRequestDTO forumthreadRequestDTO) {
         CommonResponse<ForumthreadResponseDTO> response = new CommonResponse<>();
         try {
             ForumthreadResponseDTO updatedForumthread = forumthreadService.updateForumthread(id, forumthreadRequestDTO);

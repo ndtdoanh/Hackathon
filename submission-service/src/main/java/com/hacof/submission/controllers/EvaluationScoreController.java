@@ -1,15 +1,16 @@
 package com.hacof.submission.controllers;
 
-import com.hacof.submission.dtos.request.EvaluationScoreRequestDTO;
-import com.hacof.submission.dtos.response.EvaluationScoreResponseDTO;
-import com.hacof.submission.services.EvaluationScoreService;
-import com.hacof.submission.responses.CommonResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dtos.request.EvaluationScoreRequestDTO;
+import com.hacof.submission.dtos.response.EvaluationScoreResponseDTO;
+import com.hacof.submission.responses.CommonResponse;
+import com.hacof.submission.services.EvaluationScoreService;
 
 @RestController
 @RequestMapping("/api/v1/evaluationscores")
@@ -55,7 +56,8 @@ public class EvaluationScoreController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<EvaluationScoreResponseDTO>> createScore(@RequestBody EvaluationScoreRequestDTO scoreRequestDTO) {
+    public ResponseEntity<CommonResponse<EvaluationScoreResponseDTO>> createScore(
+            @RequestBody EvaluationScoreRequestDTO scoreRequestDTO) {
         CommonResponse<EvaluationScoreResponseDTO> response = new CommonResponse<>();
         try {
             EvaluationScoreResponseDTO created = service.createScore(scoreRequestDTO);
@@ -78,9 +80,9 @@ public class EvaluationScoreController {
         }
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<EvaluationScoreResponseDTO>> updateScore(@PathVariable Integer id, @RequestBody EvaluationScoreRequestDTO scoreDetails) {
+    public ResponseEntity<CommonResponse<EvaluationScoreResponseDTO>> updateScore(
+            @PathVariable Integer id, @RequestBody EvaluationScoreRequestDTO scoreDetails) {
         CommonResponse<EvaluationScoreResponseDTO> response = new CommonResponse<>();
         try {
             EvaluationScoreResponseDTO updatedScore = service.updateScore(id, scoreDetails);

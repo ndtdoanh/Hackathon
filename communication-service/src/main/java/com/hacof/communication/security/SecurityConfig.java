@@ -13,15 +13,17 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Tắt CSRF Protection
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/tasks/**").permitAll() // Mở toàn bộ quyền truy cập Task API
-                        .anyRequest().permitAll() // Cho phép tất cả request khác
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Không sử dụng session
-                );
+        http.csrf(AbstractHttpConfigurer::disable) // Tắt CSRF Protection
+                .authorizeHttpRequests(
+                        auth -> auth.requestMatchers("/api/v1/tasks/**")
+                                .permitAll() // Mở toàn bộ quyền truy cập Task API
+                                .anyRequest()
+                                .permitAll() // Cho phép tất cả request khác
+                        )
+                .sessionManagement(
+                        session ->
+                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Không sử dụng session
+                        );
 
         return http.build();
     }

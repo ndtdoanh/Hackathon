@@ -3,8 +3,6 @@ package com.hacof.communication.entities;
 import java.time.Instant;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,6 +22,8 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hacof.communication.enums.Priority;
 import com.hacof.communication.enums.Status;
 import com.hacof.communication.utils.SecurityUtil;

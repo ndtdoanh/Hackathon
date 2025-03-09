@@ -21,7 +21,6 @@ public class ForumthreadMapper {
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getCreatedBy(),
-                entity.getUpdatedBy()
-        );
+                entity.getUpdatedBy());
     }
 }
