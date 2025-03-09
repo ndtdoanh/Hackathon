@@ -288,6 +288,47 @@ CREATE TABLE JudgeAssignments (
     INDEX(judge_id),
     INDEX(round_id)
 );
+
+-- RESOURCES MANAGEMENT OF EACH HACKATHON COMPETITIONS --
+CREATE TABLE ResourceTypes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+
+    created_by VARCHAR(255) NOT NULL,
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    last_updated_by VARCHAR(255) NOT NULL,
+    last_updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    deleted_at DATETIME(6) DEFAULT NULL
+);
+
+CREATE TABLE ResourceStatuses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+
+    created_by VARCHAR(255) NOT NULL,
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    last_updated_by VARCHAR(255) NOT NULL,
+    last_updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    deleted_at DATETIME(6) DEFAULT NULL
+);
+
+CREATE TABLE Resources (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    resource_type_id INT,
+    status_id INT,
+    hackathon_id INT NOT NULL,
+
+    created_by VARCHAR(255) NOT NULL,
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    last_updated_by VARCHAR(255) NOT NULL,
+    last_updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    deleted_at DATETIME(6) DEFAULT NULL,
+    FOREIGN KEY (hackathon_id) REFERENCES Hackathons(id) ON DELETE CASCADE,
+    FOREIGN KEY (resource_type_id) REFERENCES ResourceTypes(id) ON DELETE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES ResourceStatuses(id) ON DELETE CASCADE
+);
 -- END OF MANAGING HACKATHON COMPETITIONS --
 -- -----------------------------------------------------------------------------------
 
@@ -547,46 +588,7 @@ CREATE TABLE Notifications (
 -- END OF MANAGING NOTIFICATIONS --
 -- -----------------------------------------------------------------------------------
 
--- RESOURCES MANAGEMENT OF EACH HACKATHON COMPETITIONS --
-CREATE TABLE ResourceTypes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
 
-    created_by VARCHAR(255) NOT NULL,
-    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    last_updated_by VARCHAR(255) NOT NULL,
-    last_updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    deleted_at DATETIME(6) DEFAULT NULL
-);
-
-CREATE TABLE ResourceStatuses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-
-    created_by VARCHAR(255) NOT NULL,
-    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    last_updated_by VARCHAR(255) NOT NULL,
-    last_updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    deleted_at DATETIME(6) DEFAULT NULL
-);
-
-CREATE TABLE Resources (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    resource_type_id INT,
-    status_id INT,
-    hackathon_id INT NOT NULL,
-
-    created_by VARCHAR(255) NOT NULL,
-    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    last_updated_by VARCHAR(255) NOT NULL,
-    last_updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    deleted_at DATETIME(6) DEFAULT NULL,
-    FOREIGN KEY (hackathon_id) REFERENCES Hackathons(id) ON DELETE CASCADE,
-    FOREIGN KEY (resource_type_id) REFERENCES ResourceTypes(id) ON DELETE CASCADE,
-    FOREIGN KEY (status_id) REFERENCES ResourceStatuses(id) ON DELETE CASCADE
-);
 -- END OF MANAGING RESOURCES --
 -- -----------------------------------------------------------------------------------
 
