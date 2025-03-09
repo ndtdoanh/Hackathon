@@ -1,21 +1,22 @@
 package com.hacof.communication.services.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.ForumcommentRequestDTO;
 import com.hacof.communication.dto.response.ForumcommentResponseDTO;
 import com.hacof.communication.entities.Forumcomment;
 import com.hacof.communication.entities.Forumthread;
 import com.hacof.communication.entities.User;
+import com.hacof.communication.mapper.ForumcommentMapper;
 import com.hacof.communication.repositories.ForumcommentRepository;
 import com.hacof.communication.repositories.ForumthreadRepository;
 import com.hacof.communication.repositories.UserRepository;
 import com.hacof.communication.services.ForumcommentService;
-import com.hacof.communication.mapper.ForumcommentMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ForumcommentServiceImpl implements ForumcommentService {
@@ -25,9 +26,10 @@ public class ForumcommentServiceImpl implements ForumcommentService {
     private final UserRepository userRepository;
 
     @Autowired
-    public ForumcommentServiceImpl(ForumcommentRepository forumcommentRepository,
-                                   ForumthreadRepository forumthreadRepository,
-                                   UserRepository userRepository) {
+    public ForumcommentServiceImpl(
+            ForumcommentRepository forumcommentRepository,
+            ForumthreadRepository forumthreadRepository,
+            UserRepository userRepository) {
         this.forumcommentRepository = forumcommentRepository;
         this.forumthreadRepository = forumthreadRepository;
         this.userRepository = userRepository;
@@ -36,11 +38,13 @@ public class ForumcommentServiceImpl implements ForumcommentService {
     @Override
     public ForumcommentResponseDTO createForumcomment(ForumcommentRequestDTO forumcommentRequestDTO) {
         // Kiểm tra Forumthread tồn tại
-        Forumthread forumthread = forumthreadRepository.findById(forumcommentRequestDTO.getThreadId())
+        Forumthread forumthread = forumthreadRepository
+                .findById(forumcommentRequestDTO.getThreadId())
                 .orElseThrow(() -> new IllegalArgumentException("Forumthread not found!"));
 
         // Kiểm tra User tồn tại
-        User user = userRepository.findById(forumcommentRequestDTO.getUserId())
+        User user = userRepository
+                .findById(forumcommentRequestDTO.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         Forumcomment forumcomment = ForumcommentMapper.toEntity(forumcommentRequestDTO);
@@ -67,15 +71,18 @@ public class ForumcommentServiceImpl implements ForumcommentService {
     @Override
     public ForumcommentResponseDTO updateForumcomment(Long id, ForumcommentRequestDTO forumcommentRequestDTO) {
         // Kiểm tra Forumcomment có tồn tại không
-        Forumcomment forumcomment = forumcommentRepository.findById(id)
+        Forumcomment forumcomment = forumcommentRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Forumcomment not found!"));
 
         // Kiểm tra Forumthread tồn tại
-        Forumthread forumthread = forumthreadRepository.findById(forumcommentRequestDTO.getThreadId())
+        Forumthread forumthread = forumthreadRepository
+                .findById(forumcommentRequestDTO.getThreadId())
                 .orElseThrow(() -> new IllegalArgumentException("Forumthread not found!"));
 
         // Kiểm tra User tồn tại
-        User user = userRepository.findById(forumcommentRequestDTO.getUserId())
+        User user = userRepository
+                .findById(forumcommentRequestDTO.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         forumcomment.setComment(forumcommentRequestDTO.getComment());
@@ -99,8 +106,6 @@ public class ForumcommentServiceImpl implements ForumcommentService {
     public List<ForumcommentResponseDTO> getAllForumcommentsByThreadId(Long threadId) {
         List<Forumcomment> forumcomments = forumcommentRepository.findByThreadId(threadId);
 
-        return forumcomments.stream()
-                .map(ForumcommentMapper::toDTO)
-                .collect(Collectors.toList());
+        return forumcomments.stream().map(ForumcommentMapper::toDTO).collect(Collectors.toList());
     }
 }

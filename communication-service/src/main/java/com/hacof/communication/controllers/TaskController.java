@@ -1,16 +1,18 @@
 package com.hacof.communication.controllers;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.hacof.communication.dto.request.MoveTaskRequest;
 import com.hacof.communication.dto.request.TaskRequestDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.responses.CommonResponse;
 import com.hacof.communication.services.TaskService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -71,10 +73,12 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO taskRequestDTO) {
+    public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTask(
+            @PathVariable Long id, @RequestBody TaskRequestDTO taskRequestDTO) {
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
         try {
-            TaskResponseDTO updatedTask = taskService.updateTask(id, taskRequestDTO).getData();
+            TaskResponseDTO updatedTask =
+                    taskService.updateTask(id, taskRequestDTO).getData();
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Task updated successfully!");
             response.setData(updatedTask);
@@ -89,7 +93,6 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<String>> deleteTask(@PathVariable Long id) {
@@ -108,7 +111,8 @@ public class TaskController {
     }
 
     @PutMapping("update/{taskId}")
-    public ResponseEntity<CommonResponse<String>> moveTask(@PathVariable Long taskId, @RequestBody MoveTaskRequest moveTaskRequest) {
+    public ResponseEntity<CommonResponse<String>> moveTask(
+            @PathVariable Long taskId, @RequestBody MoveTaskRequest moveTaskRequest) {
         CommonResponse<String> response = new CommonResponse<>();
         try {
             CommonResponse<String> serviceResponse = taskService.moveTask(taskId, moveTaskRequest);
@@ -122,5 +126,4 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
-
 }

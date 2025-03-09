@@ -1,13 +1,14 @@
 package com.hacof.communication.dto.response;
 
+import java.time.Instant;
+import java.time.LocalDate;
+
 import com.hacof.communication.entities.Task;
 import com.hacof.communication.enums.Priority;
 import com.hacof.communication.enums.Status;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @Data

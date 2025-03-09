@@ -1,9 +1,10 @@
 package com.hacof.submission.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dtos.request.EvaluationCriteriaRequestDTO;
 import com.hacof.submission.dtos.response.EvaluationCriteriaResponseDTO;
 import com.hacof.submission.entities.EvaluationCriteria;
-import org.springframework.stereotype.Component;
 
 @Component
 public class EvaluationCriteriaMapper {
@@ -28,7 +29,6 @@ public class EvaluationCriteriaMapper {
                 entity.getCreatedAt(),
                 entity.getLastUpdatedBy(),
                 entity.getLastUpdatedAt(),
-                entity.getDeletedAt()
-        );
+                entity.getDeletedAt());
     }
 }

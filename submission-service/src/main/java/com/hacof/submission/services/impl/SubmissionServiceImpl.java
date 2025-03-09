@@ -1,17 +1,17 @@
 package com.hacof.submission.services.impl;
 
-import com.hacof.submission.dtos.request.SubmissionRequestDTO;
-import com.hacof.submission.dtos.response.SubmissionResponseDTO;
-import com.hacof.submission.entities.Submission;
-import com.hacof.submission.repositories.SubmissionRepository;
-import com.hacof.submission.services.SubmissionService;
-import com.hacof.submission.mapper.SubmissionMapper;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.hacof.submission.dtos.request.SubmissionRequestDTO;
+import com.hacof.submission.dtos.response.SubmissionResponseDTO;
+import com.hacof.submission.entities.Submission;
+import com.hacof.submission.mapper.SubmissionMapper;
+import com.hacof.submission.repositories.SubmissionRepository;
+import com.hacof.submission.services.SubmissionService;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
@@ -31,8 +31,8 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionRequestDTO) {
-        Submission existingSubmission = submissionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Submission not found"));
+        Submission existingSubmission =
+                submissionRepository.findById(id).orElseThrow(() -> new RuntimeException("Submission not found"));
         submissionMapper.updateEntityFromDTO(submissionRequestDTO, existingSubmission);
         Submission updatedSubmission = submissionRepository.save(existingSubmission);
         return submissionMapper.toResponseDTO(updatedSubmission);
@@ -40,8 +40,8 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public SubmissionResponseDTO getSubmissionById(Long id) {
-        Submission submission = submissionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Submission not found"));
+        Submission submission =
+                submissionRepository.findById(id).orElseThrow(() -> new RuntimeException("Submission not found"));
         return submissionMapper.toResponseDTO(submission);
     }
 
@@ -54,8 +54,8 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public void deleteSubmission(Long id) {
-        Submission submission = submissionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Submission not found"));
+        Submission submission =
+                submissionRepository.findById(id).orElseThrow(() -> new RuntimeException("Submission not found"));
         submissionRepository.delete(submission);
     }
 }

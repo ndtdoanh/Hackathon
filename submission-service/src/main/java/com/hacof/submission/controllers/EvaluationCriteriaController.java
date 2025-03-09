@@ -1,15 +1,16 @@
 package com.hacof.submission.controllers;
 
-import com.hacof.submission.dtos.request.EvaluationCriteriaRequestDTO;
-import com.hacof.submission.dtos.response.EvaluationCriteriaResponseDTO;
-import com.hacof.submission.responses.CommonResponse;
-import com.hacof.submission.services.EvaluationCriteriaService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dtos.request.EvaluationCriteriaRequestDTO;
+import com.hacof.submission.dtos.response.EvaluationCriteriaResponseDTO;
+import com.hacof.submission.responses.CommonResponse;
+import com.hacof.submission.services.EvaluationCriteriaService;
 
 @RestController
 @RequestMapping("/api/v1/evaluationcriteria")
@@ -56,7 +57,8 @@ public class EvaluationCriteriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<EvaluationCriteriaResponseDTO>> create(@RequestBody EvaluationCriteriaRequestDTO criteria) {
+    public ResponseEntity<CommonResponse<EvaluationCriteriaResponseDTO>> create(
+            @RequestBody EvaluationCriteriaRequestDTO criteria) {
         CommonResponse<EvaluationCriteriaResponseDTO> response = new CommonResponse<>();
         try {
             EvaluationCriteriaResponseDTO created = service.create(criteria);
@@ -76,7 +78,8 @@ public class EvaluationCriteriaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<EvaluationCriteriaResponseDTO>> update(@PathVariable Integer id, @RequestBody EvaluationCriteriaRequestDTO updatedCriteria) {
+    public ResponseEntity<CommonResponse<EvaluationCriteriaResponseDTO>> update(
+            @PathVariable Integer id, @RequestBody EvaluationCriteriaRequestDTO updatedCriteria) {
         CommonResponse<EvaluationCriteriaResponseDTO> response = new CommonResponse<>();
         try {
             EvaluationCriteriaResponseDTO updated = service.update(id, updatedCriteria);

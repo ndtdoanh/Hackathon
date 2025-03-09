@@ -1,19 +1,21 @@
 package com.hacof.communication.entities;
 
-import com.hacof.communication.utils.SecurityUtil;
+import java.time.Instant;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.List;
+import com.hacof.communication.utils.SecurityUtil;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -21,7 +23,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "evaluationcriteria")
-
 public class EvaluationCriteria {
 
     @Id
@@ -81,7 +82,4 @@ public class EvaluationCriteria {
                 : "";
         this.lastUpdatedAt = Instant.now();
     }
-
 }
-
-

@@ -1,15 +1,16 @@
 package com.hacof.communication.controllers;
 
-import com.hacof.communication.dto.request.BlogpostRequestDTO;
-import com.hacof.communication.dto.response.BlogpostResponseDTO;
-import com.hacof.communication.services.BlogpostService;
-import com.hacof.communication.responses.CommonResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.BlogpostRequestDTO;
+import com.hacof.communication.dto.response.BlogpostResponseDTO;
+import com.hacof.communication.responses.CommonResponse;
+import com.hacof.communication.services.BlogpostService;
 
 @RestController
 @RequestMapping("/api/v1/blogposts")
@@ -19,7 +20,8 @@ public class BlogpostController {
     private BlogpostService blogpostService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<BlogpostResponseDTO>> createBlogpost(@RequestBody BlogpostRequestDTO blogpostRequestDTO) {
+    public ResponseEntity<CommonResponse<BlogpostResponseDTO>> createBlogpost(
+            @RequestBody BlogpostRequestDTO blogpostRequestDTO) {
         CommonResponse<BlogpostResponseDTO> response = new CommonResponse<>();
         try {
             BlogpostResponseDTO createdBlogpost = blogpostService.createBlogpost(blogpostRequestDTO);
@@ -55,7 +57,8 @@ public class BlogpostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<BlogpostResponseDTO>> updateBlogpost(@PathVariable Long id, @RequestBody BlogpostRequestDTO blogpostRequestDTO) {
+    public ResponseEntity<CommonResponse<BlogpostResponseDTO>> updateBlogpost(
+            @PathVariable Long id, @RequestBody BlogpostRequestDTO blogpostRequestDTO) {
         CommonResponse<BlogpostResponseDTO> response = new CommonResponse<>();
         try {
             BlogpostResponseDTO updatedBlogpost = blogpostService.updateBlogpost(id, blogpostRequestDTO);
