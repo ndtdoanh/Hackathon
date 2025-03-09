@@ -1,6 +1,5 @@
 package com.hacof.hackathon.dto;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,35 +7,43 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Data
-public class CampusDTO {
-    private Long id;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonPropertyOrder({
+    "id",
+    "name",
+    "location",
+    "events",
+    "mentors",
+    "trainingSessions",
+    "createdBy",
+    "createdDate",
+    "lastModifiedBy",
+    "lastModifiedDate"
+})
+public class CampusDTO extends AuditBaseDTO {
+    Long id;
 
     @NotNull(message = "Name is mandatory")
-    private String name;
+    String name;
 
     @NotBlank(message = "Invalid location for the campus")
-    private String location;
-
-    @NotNull(message = "Created by is mandatory")
-    private String createdBy;
-
-    private LocalDateTime createdDate;
-
-    @NotNull(message = "Last modified by is mandatory")
-    private String lastModifiedBy;
-
-    private LocalDateTime lastModifiedDate;
+    String location;
 
     @JsonIgnore
-    private List<EventDTO> events = new ArrayList<>();
+    List<EventDTO> events = new ArrayList<>();
 
     @JsonIgnore
-    private List<MentorDTO> mentors = new ArrayList<>();
+    List<MentorDTO> mentors = new ArrayList<>();
 
     @JsonIgnore
-    private List<TrainingSessionDTO> trainingSessions = new ArrayList<>();
+    List<TrainingSessionDTO> trainingSessions = new ArrayList<>();
 }
