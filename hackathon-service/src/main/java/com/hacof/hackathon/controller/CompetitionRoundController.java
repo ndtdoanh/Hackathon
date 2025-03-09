@@ -5,9 +5,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.CompetitionRoundDTO;
 import com.hacof.hackathon.service.CompetitionRoundService;
 import com.hacof.hackathon.util.CommonRequest;
@@ -58,9 +69,9 @@ public class CompetitionRoundController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{roundId}")
+    @PutMapping
     public ResponseEntity<CommonResponse<CompetitionRoundDTO>> updateRound(
-            @PathVariable Long roundId, @RequestBody CommonRequest<CompetitionRoundDTO> request) {
+            @RequestParam Long roundId, @RequestBody CommonRequest<CompetitionRoundDTO> request) {
         CompetitionRoundDTO roundDTO = roundService.updateRound(roundId, request.getData());
         CommonResponse<CompetitionRoundDTO> response = new CommonResponse<>(
                 request.getRequestId(),
@@ -71,28 +82,29 @@ public class CompetitionRoundController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{roundId}")
-    public ResponseEntity<CommonResponse<Void>> deleteRound(@PathVariable Long roundId) {
+    @DeleteMapping
+    public ResponseEntity<CommonResponse<Void>> deleteRound(@RequestParam Long roundId) {
         roundService.deleteRound(roundId);
         CommonResponse<Void> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Round deleted successfully"),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Round deleted successfully"),
                 null);
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping("/{roundId}/assign-judge")
-    public ResponseEntity<CommonResponse<Void>> assignJudgeToRound(
-            @PathVariable Long roundId, @RequestBody Long judgeId) {
-        roundService.assignJudgeToRound(roundId, judgeId);
-        CommonResponse<Void> response = new CommonResponse<>(
+    // assign judge
+    @PostMapping("/assign")
+    public ResponseEntity<CommonResponse<CompetitionRoundDTO>> assignJudgesAndMentors(
+            @Valid @RequestBody CompetitionRoundDTO request) {
+        CompetitionRoundDTO roundDTO =
+                roundService.assignJudgesAndMentors(request.getId(), request.getJudgeIds(), request.getMentorIds());
+        CommonResponse<CompetitionRoundDTO> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Judge assigned successfully"),
-                null);
+                new CommonResponse.Result("0000", "Judges and mentors assigned successfully"),
+                roundDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -108,6 +120,30 @@ public class CompetitionRoundController {
                 "HACOF",
                 new CommonResponse.Result("0000", "Task assigned successfully"),
                 null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{roundId}/passed-teams")
+    public ResponseEntity<CommonResponse<List<String>>> getPassedTeams(@PathVariable Long roundId) {
+        List<String> passedTeams = roundService.getPassedTeams(roundId);
+        CommonResponse<List<String>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched passed teams successfully"),
+                passedTeams);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{roundId}/judges")
+    public ResponseEntity<CommonResponse<List<String>>> getJudgeNames(@PathVariable Long roundId) {
+        List<String> judgeNames = roundService.getJudgeNames(roundId);
+        CommonResponse<List<String>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched judge names successfully"),
+                judgeNames);
         return ResponseEntity.ok(response);
     }
 }
