@@ -1,9 +1,11 @@
 package com.hacof.submission.repositories;
 
-import com.hacof.submission.entities.EvaluationScores;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.List;
+
+import com.hacof.submission.entities.EvaluationScores;
 
 @Repository
 public interface EvaluationScoreRepository extends JpaRepository<EvaluationScores, Integer> {

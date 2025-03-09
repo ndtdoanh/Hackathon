@@ -8,6 +8,6 @@ import lombok.Setter;
 public class BlogpostRequestDTO {
     private String title;
     private String content;
-    private Long authorId;     // ID của tác giả
-    private Long hackathonId;  // ID của hackathon
+    private Long authorId; // ID của tác giả
+    private Long hackathonId; // ID của hackathon
 }

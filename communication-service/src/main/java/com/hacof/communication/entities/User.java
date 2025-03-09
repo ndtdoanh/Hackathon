@@ -3,7 +3,6 @@ package com.hacof.communication.entities;
 import java.time.Instant;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,6 +17,7 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hacof.communication.enums.Status;
 import com.hacof.communication.utils.SecurityUtil;
 

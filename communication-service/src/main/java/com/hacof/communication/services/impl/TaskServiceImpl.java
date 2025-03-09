@@ -1,5 +1,12 @@
 package com.hacof.communication.services.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.MoveTaskRequest;
 import com.hacof.communication.dto.request.TaskRequestDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
@@ -9,15 +16,10 @@ import com.hacof.communication.entities.User;
 import com.hacof.communication.repositories.MentorRepository;
 import com.hacof.communication.repositories.TaskRepository;
 import com.hacof.communication.repositories.UserRepository;
-import com.hacof.communication.services.TaskService;
 import com.hacof.communication.responses.CommonResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import com.hacof.communication.services.TaskService;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +31,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public CommonResponse<List<TaskResponseDTO>> getAllTasks() {
-        List<TaskResponseDTO> tasks = taskRepository.findAll().stream()
-                .map(TaskResponseDTO::new)
-                .collect(Collectors.toList());
+        List<TaskResponseDTO> tasks =
+                taskRepository.findAll().stream().map(TaskResponseDTO::new).collect(Collectors.toList());
         return new CommonResponse<>(HttpStatus.OK.value(), "Success", tasks, null);
     }
 
@@ -41,7 +42,8 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskOptional.isPresent()) {
             Task task = taskOptional.get();
-            TaskResponseDTO taskResponseDTO = new TaskResponseDTO(task); // Assuming TaskResponseDTO has constructor taking Task
+            TaskResponseDTO taskResponseDTO =
+                    new TaskResponseDTO(task); // Assuming TaskResponseDTO has constructor taking Task
             return new CommonResponse<>(HttpStatus.OK.value(), "Success", taskResponseDTO, null);
         } else {
             throw new RuntimeException("Task with id " + id + " not found!");
@@ -50,10 +52,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public CommonResponse<TaskResponseDTO> createTask(TaskRequestDTO taskRequestDTO) {
-        User assignedUser = userRepository.findById(taskRequestDTO.getAssignedToId())
+        User assignedUser = userRepository
+                .findById(taskRequestDTO.getAssignedToId())
                 .orElseThrow(() -> new RuntimeException("Assigned user not found"));
 
-        Mentor mentor = mentorRepository.findById(taskRequestDTO.getMentorId())
+        Mentor mentor = mentorRepository
+                .findById(taskRequestDTO.getMentorId())
                 .orElseThrow(() -> new RuntimeException("Mentor not found"));
 
         Task task = new Task();
@@ -71,7 +75,8 @@ public class TaskServiceImpl implements TaskService {
 
         Task savedTask = taskRepository.save(task);
 
-        return new CommonResponse<>(HttpStatus.CREATED.value(), "Task created successfully", new TaskResponseDTO(savedTask), null);
+        return new CommonResponse<>(
+                HttpStatus.CREATED.value(), "Task created successfully", new TaskResponseDTO(savedTask), null);
     }
 
     @Override
@@ -90,7 +95,8 @@ public class TaskServiceImpl implements TaskService {
             task.setBoardName(taskRequestDTO.getBoardName());
 
             Task updatedTask = taskRepository.save(task);
-            return new CommonResponse<>(HttpStatus.OK.value(), "Task updated successfully!", new TaskResponseDTO(updatedTask), null);
+            return new CommonResponse<>(
+                    HttpStatus.OK.value(), "Task updated successfully!", new TaskResponseDTO(updatedTask), null);
         } else {
             throw new RuntimeException("Task with id " + id + " not found!");
         }
@@ -113,10 +119,13 @@ public class TaskServiceImpl implements TaskService {
             task.setListName(moveTaskRequest.getListName());
             taskRepository.save(task);
 
-            return new CommonResponse<>(HttpStatus.OK.value(), "Task moved successfully", "Task moved to: " + moveTaskRequest.getListName(), null);
+            return new CommonResponse<>(
+                    HttpStatus.OK.value(),
+                    "Task moved successfully",
+                    "Task moved to: " + moveTaskRequest.getListName(),
+                    null);
         } else {
             throw new RuntimeException("Task with id " + taskId + " not found!");
         }
     }
-
 }

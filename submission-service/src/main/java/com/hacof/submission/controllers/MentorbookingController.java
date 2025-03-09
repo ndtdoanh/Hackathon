@@ -1,16 +1,17 @@
 package com.hacof.submission.controllers;
 
-import com.hacof.submission.dtos.request.MentorbookingRequestDTO;
-import com.hacof.submission.dtos.request.StatusRequestDTO;
-import com.hacof.submission.dtos.response.MentorbookingResponseDTO;
-import com.hacof.submission.responses.CommonResponse;
-import com.hacof.submission.services.MentorbookingService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dtos.request.MentorbookingRequestDTO;
+import com.hacof.submission.dtos.request.StatusRequestDTO;
+import com.hacof.submission.dtos.response.MentorbookingResponseDTO;
+import com.hacof.submission.responses.CommonResponse;
+import com.hacof.submission.services.MentorbookingService;
 
 @RestController
 @RequestMapping("/api/v1/mentorbookings")
@@ -34,9 +35,9 @@ public class MentorbookingController {
         }
     }
 
-
     @GetMapping("/byMentorId/{mentorId}")
-    public ResponseEntity<CommonResponse<List<MentorbookingResponseDTO>>> getBookingsByMentorId(@PathVariable Long mentorId) {
+    public ResponseEntity<CommonResponse<List<MentorbookingResponseDTO>>> getBookingsByMentorId(
+            @PathVariable Long mentorId) {
         CommonResponse<List<MentorbookingResponseDTO>> response = new CommonResponse<>();
         try {
             response.setStatus(HttpStatus.OK.value());
@@ -55,7 +56,8 @@ public class MentorbookingController {
     }
 
     @GetMapping("/byUserId/{userId}")
-    public ResponseEntity<CommonResponse<List<MentorbookingResponseDTO>>> getBookingsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<CommonResponse<List<MentorbookingResponseDTO>>> getBookingsByUserId(
+            @PathVariable Long userId) {
         CommonResponse<List<MentorbookingResponseDTO>> response = new CommonResponse<>();
         try {
             response.setStatus(HttpStatus.OK.value());
@@ -90,7 +92,8 @@ public class MentorbookingController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<MentorbookingResponseDTO>> createBooking(@RequestBody MentorbookingRequestDTO requestDTO) {
+    public ResponseEntity<CommonResponse<MentorbookingResponseDTO>> createBooking(
+            @RequestBody MentorbookingRequestDTO requestDTO) {
         CommonResponse<MentorbookingResponseDTO> response = new CommonResponse<>();
         try {
             response.setStatus(HttpStatus.CREATED.value());
@@ -109,7 +112,8 @@ public class MentorbookingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<MentorbookingResponseDTO>> updateBooking(@PathVariable Long id, @RequestBody MentorbookingRequestDTO requestDTO) {
+    public ResponseEntity<CommonResponse<MentorbookingResponseDTO>> updateBooking(
+            @PathVariable Long id, @RequestBody MentorbookingRequestDTO requestDTO) {
         CommonResponse<MentorbookingResponseDTO> response = new CommonResponse<>();
         try {
             response.setStatus(HttpStatus.OK.value());
@@ -147,8 +151,8 @@ public class MentorbookingController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<CommonResponse<MentorbookingResponseDTO>> updateBookingStatus(@PathVariable Long id,
-                                                                                        @RequestBody StatusRequestDTO statusRequestDTO) {
+    public ResponseEntity<CommonResponse<MentorbookingResponseDTO>> updateBookingStatus(
+            @PathVariable Long id, @RequestBody StatusRequestDTO statusRequestDTO) {
         CommonResponse<MentorbookingResponseDTO> response = new CommonResponse<>();
         try {
             MentorbookingResponseDTO updatedBooking = mentorbookingService.updateBookingStatus(id, statusRequestDTO);
