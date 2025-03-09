@@ -1,24 +1,24 @@
 package com.hacof.communication.services.impl;
 
-
-import com.hacof.communication.dto.request.BlogpostRequestDTO;
-import com.hacof.communication.dto.response.BlogpostResponseDTO;
-import com.hacof.communication.entities.Blogpost;
-import com.hacof.communication.entities.User;
-import com.hacof.communication.entities.Hackathon;
-import com.hacof.communication.repositories.BlogpostRepository;
-import com.hacof.communication.repositories.UserRepository;
-import com.hacof.communication.repositories.HackathonRepository;
-import com.hacof.communication.services.BlogpostService;
-import com.hacof.communication.mapper.BlogpostMapper;
-import com.hacof.communication.utils.SecurityUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hacof.communication.dto.request.BlogpostRequestDTO;
+import com.hacof.communication.dto.response.BlogpostResponseDTO;
+import com.hacof.communication.entities.Blogpost;
+import com.hacof.communication.entities.Hackathon;
+import com.hacof.communication.entities.User;
+import com.hacof.communication.mapper.BlogpostMapper;
+import com.hacof.communication.repositories.BlogpostRepository;
+import com.hacof.communication.repositories.HackathonRepository;
+import com.hacof.communication.repositories.UserRepository;
+import com.hacof.communication.services.BlogpostService;
+import com.hacof.communication.utils.SecurityUtil;
 
 @Service
 public class BlogpostServiceImpl implements BlogpostService {
@@ -37,9 +37,11 @@ public class BlogpostServiceImpl implements BlogpostService {
 
     @Override
     public BlogpostResponseDTO createBlogpost(BlogpostRequestDTO blogpostRequestDTO) {
-        User author = userRepository.findById(blogpostRequestDTO.getAuthorId())
+        User author = userRepository
+                .findById(blogpostRequestDTO.getAuthorId())
                 .orElseThrow(() -> new RuntimeException("Author not found!"));
-        Hackathon hackathon = hackathonRepository.findById(blogpostRequestDTO.getHackathonId())
+        Hackathon hackathon = hackathonRepository
+                .findById(blogpostRequestDTO.getHackathonId())
                 .orElseThrow(() -> new RuntimeException("Hackathon not found!"));
 
         Blogpost blogpost = new Blogpost();
@@ -70,7 +72,8 @@ public class BlogpostServiceImpl implements BlogpostService {
     @Override
     public BlogpostResponseDTO updateBlogpost(Long id, BlogpostRequestDTO blogpostRequestDTO) {
         // Lấy Blogpost từ database
-        Blogpost existingBlogpost = blogpostRepository.findById(id)
+        Blogpost existingBlogpost = blogpostRepository
+                .findById(id)
                 .orElseThrow(() -> new RuntimeException("Blogpost not found with ID: " + id));
 
         // Cập nhật các trường của blogpost
@@ -85,7 +88,8 @@ public class BlogpostServiceImpl implements BlogpostService {
 
     @Override
     public void deleteBlogpost(Long id) {
-        Blogpost existingBlogpost = blogpostRepository.findById(id)
+        Blogpost existingBlogpost = blogpostRepository
+                .findById(id)
                 .orElseThrow(() -> new RuntimeException("Blogpost not found with ID: " + id));
         blogpostRepository.delete(existingBlogpost);
     }

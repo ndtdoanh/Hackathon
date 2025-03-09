@@ -13,5 +13,5 @@ public class EvaluationCriteriaRequestDTO {
 
     private Float weight;
 
-    private Long hackathonId;  // Trường hackathonId cần được thêm vào
+    private Long hackathonId; // Trường hackathonId cần được thêm vào
 }

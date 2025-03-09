@@ -21,8 +21,6 @@ public class ForumcommentMapper {
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getCreatedBy(),
-                entity.getUpdatedBy()
-        );
+                entity.getUpdatedBy());
     }
 }
-

@@ -1,12 +1,13 @@
 package com.hacof.communication.dto.response;
 
+import java.time.Instant;
+
 import com.hacof.communication.enums.Status;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.Instant;
 
 @Getter
 @Setter
