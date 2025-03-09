@@ -1,11 +1,8 @@
 package com.hacof.identity.services.impl;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -136,27 +133,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(Long userId, UserUpdateRequest request) {
-
+    public UserResponse updateMyInfo(UserUpdateRequest request) {
         String currentUsername =
                 SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userRepository
+        User user = userRepository
                 .findByUsername(currentUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if (!Objects.equals(currentUser.getId(), userId)) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
         userMapper.updateUser(user, request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        var roleIds = request.getRoles().stream().map(Long::valueOf).collect(Collectors.toList());
-
-        var roles = roleRepository.findAllById(roleIds);
-        user.setRoles(new HashSet<>(roles));
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

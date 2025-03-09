@@ -35,7 +35,9 @@ public enum ErrorCode {
     PROFILE_ALREADY_EXISTS(1019, "Profile already exists for this user", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED_PROFILE_ACCESS(1020, "You are not authorized to access this profile", HttpStatus.FORBIDDEN),
     INVALID_FILE_FORMAT(1021, "Only JPG and PNG files are allowed", HttpStatus.BAD_REQUEST),
-    FILE_UPLOAD_ERROR(1022, "Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR);
+    FILE_UPLOAD_ERROR(1022, "Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    PERMISSION_NOT_IN_ROLE(1023, "Permission not in role", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
