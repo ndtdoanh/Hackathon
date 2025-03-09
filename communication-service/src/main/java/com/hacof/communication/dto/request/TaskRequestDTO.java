@@ -1,11 +1,12 @@
 package com.hacof.communication.dto.request;
 
+import java.time.LocalDate;
+
 import com.hacof.communication.enums.Priority;
 import com.hacof.communication.enums.Status;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @Data

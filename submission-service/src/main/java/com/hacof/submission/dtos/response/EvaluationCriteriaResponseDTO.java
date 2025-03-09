@@ -1,8 +1,8 @@
 package com.hacof.submission.dtos.response;
 
-import lombok.Data;
-
 import java.time.Instant;
+
+import lombok.Data;
 
 @Data
 public class EvaluationCriteriaResponseDTO {
@@ -19,8 +19,17 @@ public class EvaluationCriteriaResponseDTO {
     private Instant deletedAt;
 
     // Constructor from Entity
-    public EvaluationCriteriaResponseDTO(Integer id, String name, String description, Integer maxScore, Float weight,
-                                         String createdBy, Instant createdAt, String lastUpdatedBy, Instant lastUpdatedAt, Instant deletedAt) {
+    public EvaluationCriteriaResponseDTO(
+            Integer id,
+            String name,
+            String description,
+            Integer maxScore,
+            Float weight,
+            String createdBy,
+            Instant createdAt,
+            String lastUpdatedBy,
+            Instant lastUpdatedAt,
+            Instant deletedAt) {
         this.id = id;
         this.name = name;
         this.description = description;

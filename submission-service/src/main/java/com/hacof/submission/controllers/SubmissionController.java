@@ -1,15 +1,16 @@
 package com.hacof.submission.controllers;
 
-import com.hacof.submission.dtos.request.SubmissionRequestDTO;
-import com.hacof.submission.dtos.response.SubmissionResponseDTO;
-import com.hacof.submission.services.SubmissionService;
-import com.hacof.submission.responses.CommonResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dtos.request.SubmissionRequestDTO;
+import com.hacof.submission.dtos.response.SubmissionResponseDTO;
+import com.hacof.submission.responses.CommonResponse;
+import com.hacof.submission.services.SubmissionService;
 
 @RestController
 @RequestMapping("/api/v1/submissions")
@@ -19,7 +20,8 @@ public class SubmissionController {
     private SubmissionService submissionService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<SubmissionResponseDTO>> createSubmission(@RequestBody SubmissionRequestDTO submissionRequestDTO) {
+    public ResponseEntity<CommonResponse<SubmissionResponseDTO>> createSubmission(
+            @RequestBody SubmissionRequestDTO submissionRequestDTO) {
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
             SubmissionResponseDTO createdSubmission = submissionService.createSubmission(submissionRequestDTO);
@@ -67,7 +69,8 @@ public class SubmissionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<SubmissionResponseDTO>> updateSubmission(@PathVariable Long id, @RequestBody SubmissionRequestDTO submissionRequestDTO) {
+    public ResponseEntity<CommonResponse<SubmissionResponseDTO>> updateSubmission(
+            @PathVariable Long id, @RequestBody SubmissionRequestDTO submissionRequestDTO) {
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
             SubmissionResponseDTO updatedSubmission = submissionService.updateSubmission(id, submissionRequestDTO);

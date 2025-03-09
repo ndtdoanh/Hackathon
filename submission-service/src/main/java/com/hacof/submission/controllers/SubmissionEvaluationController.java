@@ -1,15 +1,16 @@
 package com.hacof.submission.controllers;
 
-import com.hacof.submission.dtos.request.SubmissionEvaluationRequestDTO;
-import com.hacof.submission.dtos.response.SubmissionEvaluationResponseDTO;
-import com.hacof.submission.services.SubmissionEvaluationService;
-import com.hacof.submission.responses.CommonResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dtos.request.SubmissionEvaluationRequestDTO;
+import com.hacof.submission.dtos.response.SubmissionEvaluationResponseDTO;
+import com.hacof.submission.responses.CommonResponse;
+import com.hacof.submission.services.SubmissionEvaluationService;
 
 @RestController
 @RequestMapping("/api/v1/submissionevaluations")
@@ -49,7 +50,8 @@ public class SubmissionEvaluationController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<SubmissionEvaluationResponseDTO>> createEvaluation(@RequestBody SubmissionEvaluationRequestDTO evaluationRequestDTO) {
+    public ResponseEntity<CommonResponse<SubmissionEvaluationResponseDTO>> createEvaluation(
+            @RequestBody SubmissionEvaluationRequestDTO evaluationRequestDTO) {
         CommonResponse<SubmissionEvaluationResponseDTO> response = new CommonResponse<>();
         try {
             SubmissionEvaluationResponseDTO created = service.createEvaluation(evaluationRequestDTO);
@@ -69,7 +71,8 @@ public class SubmissionEvaluationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<SubmissionEvaluationResponseDTO>> updateEvaluation(@PathVariable Long id, @RequestBody SubmissionEvaluationRequestDTO evaluationRequestDTO) {
+    public ResponseEntity<CommonResponse<SubmissionEvaluationResponseDTO>> updateEvaluation(
+            @PathVariable Long id, @RequestBody SubmissionEvaluationRequestDTO evaluationRequestDTO) {
         CommonResponse<SubmissionEvaluationResponseDTO> response = new CommonResponse<>();
         try {
             SubmissionEvaluationResponseDTO updatedScore = service.updateEvaluation(id, evaluationRequestDTO);

@@ -1,9 +1,9 @@
 package com.hacof.communication.repositories;
 
-import com.hacof.communication.entities.Mentor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.hacof.communication.entities.Mentor;
+
 @Repository
-public interface MentorRepository extends JpaRepository<Mentor, Long> {
-}
+public interface MentorRepository extends JpaRepository<Mentor, Long> {}

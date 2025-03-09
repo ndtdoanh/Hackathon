@@ -1,11 +1,10 @@
 package com.hacof.submission.services;
 
-import com.hacof.submission.dtos.request.EvaluationCriteriaRequestDTO;
-import com.hacof.submission.dtos.response.EvaluationCriteriaResponseDTO;
-import com.hacof.submission.entities.EvaluationCriteria;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.hacof.submission.dtos.request.EvaluationCriteriaRequestDTO;
+import com.hacof.submission.dtos.response.EvaluationCriteriaResponseDTO;
 
 public interface EvaluationCriteriaService {
     List<EvaluationCriteriaResponseDTO> getAll();

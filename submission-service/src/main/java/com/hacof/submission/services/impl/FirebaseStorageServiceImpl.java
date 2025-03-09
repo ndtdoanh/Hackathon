@@ -1,12 +1,13 @@
 package com.hacof.submission.services.impl;
 
-import com.google.firebase.cloud.StorageClient;
-import com.hacof.submission.services.FirebaseStorageService;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.google.firebase.cloud.StorageClient;
+import com.hacof.submission.services.FirebaseStorageService;
 
 @Service
 public class FirebaseStorageServiceImpl implements FirebaseStorageService {
@@ -18,9 +19,7 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
         InputStream inputStream = file.getInputStream();
 
         // Upload file lên Firebase Storage
-        StorageClient.getInstance()
-                .bucket()
-                .create("uploads/" + fileName, inputStream, file.getContentType());
+        StorageClient.getInstance().bucket().create("uploads/" + fileName, inputStream, file.getContentType());
 
         // Trả về URL của file đã upload
         return "https://firebasestorage.googleapis.com/v0/b/"

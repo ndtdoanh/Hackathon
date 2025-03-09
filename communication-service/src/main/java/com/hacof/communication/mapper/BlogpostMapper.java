@@ -1,9 +1,10 @@
 package com.hacof.communication.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.BlogpostRequestDTO;
 import com.hacof.communication.dto.response.BlogpostResponseDTO;
 import com.hacof.communication.entities.Blogpost;
-import org.springframework.stereotype.Component;
 
 @Component
 public class BlogpostMapper {

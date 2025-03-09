@@ -1,21 +1,22 @@
 package com.hacof.submission.mapper;
 
-import com.hacof.submission.dtos.request.EvaluationScoreRequestDTO;
-import com.hacof.submission.dtos.response.EvaluationScoreResponseDTO;
-import com.hacof.submission.entities.EvaluationScores;
-import com.hacof.submission.entities.Submission;
-import com.hacof.submission.entities.EvaluationCriteria;
-import com.hacof.submission.entities.User;
-import com.hacof.submission.repositories.SubmissionRepository;
-import com.hacof.submission.repositories.EvaluationCriteriaRepository;
-import com.hacof.submission.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.hacof.submission.dtos.request.EvaluationScoreRequestDTO;
+import com.hacof.submission.dtos.response.EvaluationScoreResponseDTO;
+import com.hacof.submission.entities.EvaluationCriteria;
+import com.hacof.submission.entities.EvaluationScores;
+import com.hacof.submission.entities.Submission;
+import com.hacof.submission.entities.User;
+import com.hacof.submission.repositories.EvaluationCriteriaRepository;
+import com.hacof.submission.repositories.SubmissionRepository;
+import com.hacof.submission.repositories.UserRepository;
 
 @Component
 public class EvaluationScoreMapper {
@@ -66,8 +67,12 @@ public class EvaluationScoreMapper {
 
         // Thiết lập các trường trong ResponseDTO
         dto.setId(entity.getId());
-        dto.setSubmissionId(entity.getSubmission() != null ? entity.getSubmission().getId() : null);
-        dto.setEvaluationCriteriaId(entity.getEvaluationCriteria() != null ? entity.getEvaluationCriteria().getId() : null);
+        dto.setSubmissionId(
+                entity.getSubmission() != null ? entity.getSubmission().getId() : null);
+        dto.setEvaluationCriteriaId(
+                entity.getEvaluationCriteria() != null
+                        ? entity.getEvaluationCriteria().getId()
+                        : null);
         dto.setJudgeId(entity.getJudge() != null ? entity.getJudge().getId() : null);
         dto.setScore(entity.getScore());
         dto.setComment(entity.getComment());

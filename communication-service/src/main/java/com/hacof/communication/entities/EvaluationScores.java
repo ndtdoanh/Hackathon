@@ -1,17 +1,19 @@
 package com.hacof.communication.entities;
 
-import com.hacof.communication.utils.SecurityUtil;
+import java.time.Instant;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.communication.utils.SecurityUtil;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -35,7 +37,9 @@ public class EvaluationScores {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "criterion_id", nullable = false)
-    private EvaluationCriteria evaluationCriteria;;
+    private EvaluationCriteria evaluationCriteria;
+
+    ;
 
     @Column(name = "score", nullable = false)
     private Integer score;
