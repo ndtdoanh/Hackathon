@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.*;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -12,24 +13,25 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Mentors")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Mentor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
-    private String expertise;
-    private String bio;
-    private String availability;
-    private Float rating;
+    String expertise;
+    String bio;
+    String availability;
+    Float rating;
 
     @ManyToOne
     @JoinColumn(name = "campus_id")
-    private Campus campus;
+    Campus campus;
 
-    @ManyToMany(mappedBy = "mentors")
-    private List<Team> teams;
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Team> teams;
 }
