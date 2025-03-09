@@ -30,12 +30,12 @@ public class Campus extends AuditBase {
     String name; // Quy Nhon - Da Nang - Can Tho - TP HCM - Hoa Lac
     String location;
 
-    @OneToMany(mappedBy = "campus")
+    @OneToMany(mappedBy = "campus", orphanRemoval = true)
     List<Event> events;
 
-    @OneToMany(mappedBy = "campus")
+    @OneToMany(mappedBy = "campus", orphanRemoval = true)
     List<Mentor> mentors;
 
-    @OneToMany(mappedBy = "campus")
+    @OneToMany(mappedBy = "campus", orphanRemoval = true)
     List<TrainingSession> trainingSessions;
 }
