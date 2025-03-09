@@ -25,4 +25,8 @@ public class User extends AuditBase {
 
     @OneToMany(mappedBy = "organizer")
     private List<Hackathon> organizedHackathons;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id", unique = true)
+    private Team team;
 }
