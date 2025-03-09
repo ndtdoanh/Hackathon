@@ -15,7 +15,11 @@ public interface CompetitionRoundService {
 
     void deleteRound(Long id);
 
-    void assignJudgeToRound(Long roundId, Long judgeId);
-
     void assignTaskToMember(Long teamId, Long memberId, String task);
+
+    List<String> getPassedTeams(Long roundId);
+
+    List<String> getJudgeNames(Long roundId);
+
+    CompetitionRoundDTO assignJudgesAndMentors(Long roundId, List<Long> judgeIds, List<Long> mentorIds);
 }
