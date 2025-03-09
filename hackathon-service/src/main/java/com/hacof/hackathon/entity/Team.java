@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.*;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -12,32 +13,32 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Teams")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Team extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long Id;
 
-    private String name;
+    String name;
 
     @ManyToOne
     @JoinColumn(name = "hackathon_id")
-    private Hackathon hackathon;
+    Hackathon hackathonId;
 
     @ManyToOne
-    @JoinColumn(name = "leader_id")
+    @JoinColumn(name = "competition_round_id")
+    CompetitionRound competitionRound;
+
+    @OneToOne
+    @JoinColumn(name = "leader_id", unique = true)
     private User leader;
 
-    @ManyToMany
-    @JoinTable(
-            name = "team_membership",
-            joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToOne
+    @JoinColumn(name = "mentor_id") // each team has one mentor
+    private Mentor mentor;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<User> members;
 
-    @ManyToMany
-    @JoinTable(
-            name = "team_mentors",
-            joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "mentor_id"))
-    private List<Mentor> mentors;
+    boolean passed;
 }
