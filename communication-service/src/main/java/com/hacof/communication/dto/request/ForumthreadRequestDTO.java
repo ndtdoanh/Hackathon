@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.request;
 
 import com.hacof.communication.enums.Status;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

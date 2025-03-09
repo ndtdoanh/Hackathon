@@ -1,9 +1,9 @@
 package com.hacof.communication.dto.response;
 
+import java.time.Instant;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.Instant;
 
 @Getter
 @Setter

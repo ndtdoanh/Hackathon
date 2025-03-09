@@ -1,9 +1,9 @@
 package com.hacof.submission.dtos.response;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -20,4 +20,3 @@ public class EvaluationScoreResponseDTO {
     private LocalDateTime lastUpdatedAt;
     private LocalDateTime deletedAt;
 }
-

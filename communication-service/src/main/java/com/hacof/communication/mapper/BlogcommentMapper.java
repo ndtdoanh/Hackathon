@@ -1,12 +1,13 @@
 package com.hacof.communication.mapper;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.BlogcommentRequestDTO;
 import com.hacof.communication.dto.response.BlogcommentResponseDTO;
 import com.hacof.communication.entities.Blogcomment;
-import org.springframework.stereotype.Component;
-
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class BlogcommentMapper {

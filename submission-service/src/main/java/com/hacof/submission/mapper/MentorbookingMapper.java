@@ -1,15 +1,15 @@
 package com.hacof.submission.mapper;
 
-import com.hacof.submission.dtos.request.MentorbookingRequestDTO;
-import com.hacof.submission.dtos.response.MentorbookingResponseDTO;
-import com.hacof.submission.entities.Mentorbooking;
-import com.hacof.submission.entities.Mentor;
-import com.hacof.submission.entities.User;
-import com.hacof.submission.enums.Status;
-import com.hacof.submission.repositories.MentorRepository;
-import com.hacof.submission.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.hacof.submission.dtos.request.MentorbookingRequestDTO;
+import com.hacof.submission.dtos.response.MentorbookingResponseDTO;
+import com.hacof.submission.entities.Mentor;
+import com.hacof.submission.entities.Mentorbooking;
+import com.hacof.submission.entities.User;
+import com.hacof.submission.repositories.MentorRepository;
+import com.hacof.submission.repositories.UserRepository;
 
 @Component
 public class MentorbookingMapper {
@@ -24,7 +24,9 @@ public class MentorbookingMapper {
         Mentorbooking entity = new Mentorbooking();
 
         // Tìm Mentor và User từ cơ sở dữ liệu
-        Mentor mentor = mentorRepository.findById(dto.getMentorId()).orElseThrow(() -> new RuntimeException("Mentor not found"));
+        Mentor mentor = mentorRepository
+                .findById(dto.getMentorId())
+                .orElseThrow(() -> new RuntimeException("Mentor not found"));
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
         entity.setMentor(mentor);

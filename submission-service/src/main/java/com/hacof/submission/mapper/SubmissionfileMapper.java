@@ -1,18 +1,18 @@
 package com.hacof.submission.mapper;
 
-import com.hacof.submission.dtos.request.SubmissionfileRequestDTO;
-import com.hacof.submission.dtos.response.SubmissionfileResponseDTO;
-import com.hacof.submission.entities.Submissionfile;
-import com.hacof.submission.entities.Submission;
-import com.hacof.submission.entities.Competitionround;
-import com.hacof.submission.repositories.SubmissionRepository;
-import com.hacof.submission.repositories.CompetitionroundRepository;
-import com.hacof.submission.enums.FileType;
-import com.hacof.submission.enums.Status;
+import java.time.Instant;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import com.hacof.submission.dtos.request.SubmissionfileRequestDTO;
+import com.hacof.submission.dtos.response.SubmissionfileResponseDTO;
+import com.hacof.submission.entities.Competitionround;
+import com.hacof.submission.entities.Submission;
+import com.hacof.submission.entities.Submissionfile;
+import com.hacof.submission.enums.Status;
+import com.hacof.submission.repositories.CompetitionroundRepository;
+import com.hacof.submission.repositories.SubmissionRepository;
 
 @Component
 public class SubmissionfileMapper {
@@ -28,9 +28,11 @@ public class SubmissionfileMapper {
         Submissionfile submissionfile = new Submissionfile();
 
         // Lấy Submission và Round từ repository
-        Submission submission = submissionRepository.findById(dto.getSubmissionId())
+        Submission submission = submissionRepository
+                .findById(dto.getSubmissionId())
                 .orElseThrow(() -> new RuntimeException("Submission not found"));
-        Competitionround round = competitionroundRepository.findById(dto.getRoundId())
+        Competitionround round = competitionroundRepository
+                .findById(dto.getRoundId())
                 .orElseThrow(() -> new RuntimeException("Competition round not found"));
 
         submissionfile.setSubmission(submission);

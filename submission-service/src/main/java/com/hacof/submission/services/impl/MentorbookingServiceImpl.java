@@ -1,5 +1,12 @@
 package com.hacof.submission.services.impl;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.submission.dtos.request.MentorbookingRequestDTO;
 import com.hacof.submission.dtos.request.StatusRequestDTO;
 import com.hacof.submission.dtos.response.MentorbookingResponseDTO;
@@ -7,17 +14,11 @@ import com.hacof.submission.entities.Mentor;
 import com.hacof.submission.entities.Mentorbooking;
 import com.hacof.submission.entities.User;
 import com.hacof.submission.enums.Status;
+import com.hacof.submission.mapper.MentorbookingMapper;
 import com.hacof.submission.repositories.MentorRepository;
 import com.hacof.submission.repositories.MentorbookingRepository;
 import com.hacof.submission.repositories.UserRepository;
 import com.hacof.submission.services.MentorbookingService;
-import com.hacof.submission.mapper.MentorbookingMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MentorbookingServiceImpl implements MentorbookingService {
@@ -37,9 +38,7 @@ public class MentorbookingServiceImpl implements MentorbookingService {
     @Override
     public List<MentorbookingResponseDTO> getAllBookings() {
         List<Mentorbooking> mentorBookings = mentorbookingRepository.findAll();
-        return mentorBookings.stream()
-                .map(mentorbookingMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return mentorBookings.stream().map(mentorbookingMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -48,9 +47,7 @@ public class MentorbookingServiceImpl implements MentorbookingService {
         if (mentorBookings.isEmpty()) {
             throw new RuntimeException("No bookings found for mentor with ID: " + mentorId);
         }
-        return mentorBookings.stream()
-                .map(mentorbookingMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return mentorBookings.stream().map(mentorbookingMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -59,29 +56,29 @@ public class MentorbookingServiceImpl implements MentorbookingService {
         if (mentorBookings.isEmpty()) {
             throw new RuntimeException("No bookings found for user with ID: " + userId);
         }
-        return mentorBookings.stream()
-                .map(mentorbookingMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return mentorBookings.stream().map(mentorbookingMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
     public MentorbookingResponseDTO getBookingById(Long id) {
-        Mentorbooking mentorBooking = mentorbookingRepository.findById(id)
+        Mentorbooking mentorBooking = mentorbookingRepository
+                .findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
         return mentorbookingMapper.toResponseDTO(mentorBooking);
     }
 
     @Override
     public MentorbookingResponseDTO createBooking(MentorbookingRequestDTO requestDTO) {
-        Mentor mentor = mentorRepository.findById(requestDTO.getMentorId())
+        Mentor mentor = mentorRepository
+                .findById(requestDTO.getMentorId())
                 .orElseThrow(() -> new RuntimeException("Mentor not found with ID: " + requestDTO.getMentorId()));
-        User user = userRepository.findById(requestDTO.getUserId())
+        User user = userRepository
+                .findById(requestDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + requestDTO.getUserId()));
         if (requestDTO.getBookingDate().isBefore(Instant.now())) {
             throw new RuntimeException("Booking date cannot be in the past.");
         }
         Status status = Status.valueOf("PENDING");
-
 
         Mentorbooking mentorBooking = mentorbookingMapper.toEntity(requestDTO);
         mentorBooking.setMentor(mentor);
@@ -94,7 +91,8 @@ public class MentorbookingServiceImpl implements MentorbookingService {
 
     @Override
     public MentorbookingResponseDTO updateBooking(Long id, MentorbookingRequestDTO requestDTO) {
-        Mentorbooking existingBooking = mentorbookingRepository.findById(id)
+        Mentorbooking existingBooking = mentorbookingRepository
+                .findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
         if (requestDTO.getBookingDate().isBefore(Instant.now())) {
             throw new RuntimeException("Booking date cannot be in the past.");
@@ -105,19 +103,17 @@ public class MentorbookingServiceImpl implements MentorbookingService {
         return mentorbookingMapper.toResponseDTO(updatedBooking);
     }
 
-
-
     @Override
     public void deleteBooking(Long id) {
-        Mentorbooking mentorBooking = mentorbookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found!"));
+        Mentorbooking mentorBooking =
+                mentorbookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found!"));
         mentorbookingRepository.delete(mentorBooking);
     }
 
     @Override
     public MentorbookingResponseDTO updateBookingStatus(Long id, StatusRequestDTO statusRequestDTO) {
-        Mentorbooking existingBooking = mentorbookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found!"));
+        Mentorbooking existingBooking =
+                mentorbookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found!"));
         existingBooking.setStatus(Status.valueOf(statusRequestDTO.getStatus()));
 
         Mentorbooking updatedBooking = mentorbookingRepository.save(existingBooking);

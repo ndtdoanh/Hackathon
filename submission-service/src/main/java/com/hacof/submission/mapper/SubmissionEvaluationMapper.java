@@ -1,14 +1,15 @@
 package com.hacof.submission.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dtos.request.SubmissionEvaluationRequestDTO;
 import com.hacof.submission.dtos.response.SubmissionEvaluationResponseDTO;
-import com.hacof.submission.entities.Submissionevaluation;
 import com.hacof.submission.entities.Submission;
+import com.hacof.submission.entities.Submissionevaluation;
 import com.hacof.submission.entities.User;
 import com.hacof.submission.repositories.SubmissionRepository;
 import com.hacof.submission.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 public class SubmissionEvaluationMapper {
@@ -24,10 +25,11 @@ public class SubmissionEvaluationMapper {
         Submissionevaluation entity = new Submissionevaluation();
 
         // Lấy Submission và Judge từ Repository
-        Submission submission = submissionRepository.findById(dto.getSubmissionId())
+        Submission submission = submissionRepository
+                .findById(dto.getSubmissionId())
                 .orElseThrow(() -> new RuntimeException("Submission not found"));
-        User judge = userRepository.findById(dto.getJudgeId())
-                .orElseThrow(() -> new RuntimeException("Judge not found"));
+        User judge =
+                userRepository.findById(dto.getJudgeId()).orElseThrow(() -> new RuntimeException("Judge not found"));
 
         entity.setSubmission(submission);
         entity.setJudge(judge);
@@ -42,7 +44,8 @@ public class SubmissionEvaluationMapper {
     public SubmissionEvaluationResponseDTO toResponseDTO(Submissionevaluation entity) {
         SubmissionEvaluationResponseDTO dto = new SubmissionEvaluationResponseDTO();
         dto.setId(entity.getId());
-        dto.setSubmissionId(entity.getSubmission() != null ? entity.getSubmission().getId() : null);
+        dto.setSubmissionId(
+                entity.getSubmission() != null ? entity.getSubmission().getId() : null);
         dto.setJudgeId(entity.getJudge() != null ? entity.getJudge().getId() : null);
         dto.setScore(entity.getScore()); // Điểm sẽ được tính và gán trong service
         dto.setFeedback(entity.getFeedback());

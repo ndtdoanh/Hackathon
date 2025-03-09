@@ -3,7 +3,6 @@ package com.hacof.submission.entities;
 import java.time.Instant;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,6 +23,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.submission.enums.Status;
 import com.hacof.submission.utils.SecurityUtil;
 

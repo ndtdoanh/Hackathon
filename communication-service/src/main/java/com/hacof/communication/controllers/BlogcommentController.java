@@ -1,15 +1,16 @@
 package com.hacof.communication.controllers;
 
-import com.hacof.communication.dto.request.BlogcommentRequestDTO;
-import com.hacof.communication.dto.response.BlogcommentResponseDTO;
-import com.hacof.communication.responses.CommonResponse;
-import com.hacof.communication.services.BlogcommentService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.BlogcommentRequestDTO;
+import com.hacof.communication.dto.response.BlogcommentResponseDTO;
+import com.hacof.communication.responses.CommonResponse;
+import com.hacof.communication.services.BlogcommentService;
 
 @RestController
 @RequestMapping("/api/v1/blogcomments")
@@ -38,7 +39,8 @@ public class BlogcommentController {
     public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> getCommentById(@PathVariable Long id) {
         CommonResponse<BlogcommentResponseDTO> response = new CommonResponse<>();
         try {
-            BlogcommentResponseDTO data = blogcommentService.getCommentById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
+            BlogcommentResponseDTO data =
+                    blogcommentService.getCommentById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched comment successfully!");
             response.setData(data);
@@ -51,7 +53,8 @@ public class BlogcommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> createComment(@RequestBody BlogcommentRequestDTO blogcommentRequestDTO) {
+    public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> createComment(
+            @RequestBody BlogcommentRequestDTO blogcommentRequestDTO) {
         CommonResponse<BlogcommentResponseDTO> response = new CommonResponse<>();
         try {
             BlogcommentResponseDTO createdComment = blogcommentService.createComment(blogcommentRequestDTO);
@@ -71,7 +74,8 @@ public class BlogcommentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> updateComment(@PathVariable Long id, @RequestBody BlogcommentRequestDTO blogcommentRequestDTO) {
+    public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> updateComment(
+            @PathVariable Long id, @RequestBody BlogcommentRequestDTO blogcommentRequestDTO) {
         CommonResponse<BlogcommentResponseDTO> response = new CommonResponse<>();
         try {
             BlogcommentResponseDTO updatedComment = blogcommentService.updateComment(id, blogcommentRequestDTO);
