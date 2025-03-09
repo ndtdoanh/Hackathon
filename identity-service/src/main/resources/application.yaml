@@ -44,9 +44,9 @@ jwt:
   valid-duration: 3600
   refreshable-duration: 864000
 
-#eureka:
-#  client:
-#    services-url:
-#      defaultZone: http://localhost:8761/eureka
-#    register-with-eureka: true
-#    fetch-registry: true
+eureka:
+  client:
+    services-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
