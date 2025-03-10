@@ -1,6 +1,6 @@
 # HaCoF - Platform for organizing and managing Hackathon competitions for FPT University students
 
-## Introduction
+## Introduction of this capstone project
 
 **HaCoF (Hackathon Collaboration Framework)** is an innovative web-based platform tailored for managing university-level hackathons. It streamlines key processes such as participant registration, team collaboration, project submission, and evaluation. Designed to enhance efficiency and engagement, HaCoF provides real-time updates, intuitive tools, and data-driven insights, ensuring an exceptional experience for organizers, judges, and participants alike.
 
