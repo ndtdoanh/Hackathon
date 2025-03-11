@@ -1,6 +1,5 @@
 package com.hacof.hackathon.exception;
 
-import com.hacof.communication.exceptions.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
