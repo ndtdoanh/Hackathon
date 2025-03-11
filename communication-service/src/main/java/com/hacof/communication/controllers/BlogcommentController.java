@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.BlogcommentRequestDTO;
@@ -20,6 +21,7 @@ public class BlogcommentController {
     private BlogcommentService blogcommentService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_BLOGCOMMENTS')")
     public ResponseEntity<CommonResponse<List<BlogcommentResponseDTO>>> getAllComments() {
         CommonResponse<List<BlogcommentResponseDTO>> response = new CommonResponse<>();
         try {
@@ -36,6 +38,7 @@ public class BlogcommentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_BLOGCOMMENT')")
     public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> getCommentById(@PathVariable Long id) {
         CommonResponse<BlogcommentResponseDTO> response = new CommonResponse<>();
         try {
@@ -53,6 +56,7 @@ public class BlogcommentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_BLOGCOMMENT')")
     public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> createComment(
             @RequestBody BlogcommentRequestDTO blogcommentRequestDTO) {
         CommonResponse<BlogcommentResponseDTO> response = new CommonResponse<>();
@@ -74,6 +78,7 @@ public class BlogcommentController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_BLOGCOMMENT')")
     public ResponseEntity<CommonResponse<BlogcommentResponseDTO>> updateComment(
             @PathVariable Long id, @RequestBody BlogcommentRequestDTO blogcommentRequestDTO) {
         CommonResponse<BlogcommentResponseDTO> response = new CommonResponse<>();
@@ -91,6 +96,7 @@ public class BlogcommentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_BLOGCOMMENT')")
     public ResponseEntity<CommonResponse<Void>> deleteComment(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
@@ -106,6 +112,7 @@ public class BlogcommentController {
     }
 
     @GetMapping("/byPostId/{postId}")
+    @PreAuthorize("hasAuthority('GET_BLOGCOMMENTS_BY_POST')")
     public ResponseEntity<CommonResponse<List<BlogcommentResponseDTO>>> getCommentsByPostId(@PathVariable Long postId) {
         CommonResponse<List<BlogcommentResponseDTO>> response = new CommonResponse<>();
         try {
