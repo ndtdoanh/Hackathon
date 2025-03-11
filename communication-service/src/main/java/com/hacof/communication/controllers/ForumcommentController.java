@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.ForumcommentRequestDTO;
@@ -24,6 +25,7 @@ public class ForumcommentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_FORUMCOMMENT')")
     public ResponseEntity<CommonResponse<ForumcommentResponseDTO>> createForumcomment(
             @RequestBody ForumcommentRequestDTO forumcommentRequestDTO) {
         CommonResponse<ForumcommentResponseDTO> response = new CommonResponse<>();
@@ -46,6 +48,7 @@ public class ForumcommentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_FORUMCOMMENT')")
     public ResponseEntity<CommonResponse<ForumcommentResponseDTO>> getForumcommentById(@PathVariable Long id) {
         CommonResponse<ForumcommentResponseDTO> response = new CommonResponse<>();
         try {
@@ -64,6 +67,7 @@ public class ForumcommentController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_FORUMCOMMENTS')")
     public ResponseEntity<CommonResponse<List<ForumcommentResponseDTO>>> getAllForumcomments() {
         CommonResponse<List<ForumcommentResponseDTO>> response = new CommonResponse<>();
         try {
@@ -80,6 +84,7 @@ public class ForumcommentController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_FORUMCOMMENT')")
     public ResponseEntity<CommonResponse<ForumcommentResponseDTO>> updateForumcomment(
             @PathVariable Long id, @RequestBody ForumcommentRequestDTO forumcommentRequestDTO) {
         CommonResponse<ForumcommentResponseDTO> response = new CommonResponse<>();
@@ -106,6 +111,7 @@ public class ForumcommentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_FORUMCOMMENT')")
     public ResponseEntity<CommonResponse<Void>> deleteForumcomment(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
@@ -121,6 +127,7 @@ public class ForumcommentController {
     }
 
     @GetMapping("/thread/{threadId}")
+    @PreAuthorize("hasAuthority('GET_FORUMCOMMENTS_BY_THREAD')")
     public ResponseEntity<CommonResponse<List<ForumcommentResponseDTO>>> getAllForumcommentsByThreadId(
             @PathVariable Long threadId) {
         CommonResponse<List<ForumcommentResponseDTO>> response = new CommonResponse<>();

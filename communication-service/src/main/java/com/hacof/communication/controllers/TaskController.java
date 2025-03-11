@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.MoveTaskRequest;
@@ -21,6 +22,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_TASKS')")
     public ResponseEntity<CommonResponse<List<TaskResponseDTO>>> getAllTasks() {
         CommonResponse<List<TaskResponseDTO>> response = new CommonResponse<>();
         try {
@@ -37,6 +39,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_TASK')")
     public ResponseEntity<CommonResponse<TaskResponseDTO>> getTaskById(@PathVariable Long id) {
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
         try {
@@ -53,6 +56,7 @@ public class TaskController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_TASK')")
     public ResponseEntity<CommonResponse<TaskResponseDTO>> createTask(@RequestBody TaskRequestDTO taskRequestDTO) {
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
         try {
@@ -73,6 +77,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_TASK')")
     public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTask(
             @PathVariable Long id, @RequestBody TaskRequestDTO taskRequestDTO) {
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
@@ -95,6 +100,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_TASK')")
     public ResponseEntity<CommonResponse<String>> deleteTask(@PathVariable Long id) {
         CommonResponse<String> response = new CommonResponse<>();
         try {
@@ -111,6 +117,7 @@ public class TaskController {
     }
 
     @PutMapping("update/{taskId}")
+    @PreAuthorize("hasAuthority('MOVE_TASK')")
     public ResponseEntity<CommonResponse<String>> moveTask(
             @PathVariable Long taskId, @RequestBody MoveTaskRequest moveTaskRequest) {
         CommonResponse<String> response = new CommonResponse<>();

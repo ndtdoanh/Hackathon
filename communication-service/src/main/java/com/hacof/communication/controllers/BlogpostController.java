@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.BlogpostRequestDTO;
@@ -20,6 +21,7 @@ public class BlogpostController {
     private BlogpostService blogpostService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_BLOGPOST')")
     public ResponseEntity<CommonResponse<BlogpostResponseDTO>> createBlogpost(
             @RequestBody BlogpostRequestDTO blogpostRequestDTO) {
         CommonResponse<BlogpostResponseDTO> response = new CommonResponse<>();
@@ -41,6 +43,7 @@ public class BlogpostController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_BLOGPOST')")
     public ResponseEntity<CommonResponse<BlogpostResponseDTO>> getBlogpostById(@PathVariable Long id) {
         CommonResponse<BlogpostResponseDTO> response = new CommonResponse<>();
         try {
@@ -57,6 +60,7 @@ public class BlogpostController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_BLOGPOST')")
     public ResponseEntity<CommonResponse<BlogpostResponseDTO>> updateBlogpost(
             @PathVariable Long id, @RequestBody BlogpostRequestDTO blogpostRequestDTO) {
         CommonResponse<BlogpostResponseDTO> response = new CommonResponse<>();
@@ -74,6 +78,7 @@ public class BlogpostController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_BLOGPOST')")
     public ResponseEntity<CommonResponse<Void>> deleteBlogpost(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
@@ -89,6 +94,7 @@ public class BlogpostController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_BLOGPOSTS')")
     public ResponseEntity<CommonResponse<List<BlogpostResponseDTO>>> getAllBlogposts() {
         CommonResponse<List<BlogpostResponseDTO>> response = new CommonResponse<>();
         try {

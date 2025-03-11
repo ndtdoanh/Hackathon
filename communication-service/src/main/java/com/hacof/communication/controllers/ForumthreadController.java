@@ -25,6 +25,7 @@ public class ForumthreadController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_FORUMTHREAD')")
     public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> createForumthread(
             @RequestBody ForumthreadRequestDTO forumthreadRequestDTO) {
         CommonResponse<ForumthreadResponseDTO> response = new CommonResponse<>();
@@ -46,6 +47,7 @@ public class ForumthreadController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_FORUMTHREAD')")
     public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> getForumthreadById(@PathVariable Long id) {
         CommonResponse<ForumthreadResponseDTO> response = new CommonResponse<>();
         try {
@@ -86,6 +88,7 @@ public class ForumthreadController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_FORUMTHREAD')")
     public ResponseEntity<CommonResponse<ForumthreadResponseDTO>> updateForumthread(
             @PathVariable Long id, @RequestBody ForumthreadRequestDTO forumthreadRequestDTO) {
         CommonResponse<ForumthreadResponseDTO> response = new CommonResponse<>();
@@ -111,6 +114,7 @@ public class ForumthreadController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_FORUMTHREAD')")
     public ResponseEntity<CommonResponse<Void>> deleteForumthread(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
