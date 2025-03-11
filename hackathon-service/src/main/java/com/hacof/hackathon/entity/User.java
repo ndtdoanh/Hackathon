@@ -25,6 +25,7 @@ public class User extends AuditBase {
     private String email;
     private Boolean isVerified;
     private String status;
+
     @ManyToMany
     Set<Role> roles;
 
