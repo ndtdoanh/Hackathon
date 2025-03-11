@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.dto.TaskDTO;
@@ -21,6 +22,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ASSIGN_TASK')")
     public ResponseEntity<CommonResponse<TaskDTO>> assignTask(@RequestBody CommonRequest<TaskDTO> request) {
         TaskDTO taskDTO = taskService.assignTask(request.getData());
         CommonResponse<TaskDTO> response = new CommonResponse<>(
@@ -33,6 +35,7 @@ public class TaskController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_TASKS')")
     public ResponseEntity<CommonResponse<List<TaskDTO>>> getAllTasks() {
         List<TaskDTO> tasks = taskService.getAllTasks();
         CommonResponse<List<TaskDTO>> response = new CommonResponse<>(
@@ -45,6 +48,7 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
+    @PreAuthorize("hasAuthority('GET_TASK')")
     public ResponseEntity<CommonResponse<TaskDTO>> getTaskById(@PathVariable Long taskId) {
         TaskDTO task = taskService.getTaskById(taskId);
         CommonResponse<TaskDTO> response = new CommonResponse<>(
@@ -57,6 +61,7 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}")
+    @PreAuthorize("hasAuthority('UPDATE_TASK')")
     public ResponseEntity<CommonResponse<TaskDTO>> updateTask(
             @PathVariable Long taskId, @RequestBody CommonRequest<TaskDTO> request) {
         TaskDTO taskDTO = taskService.updateTask(taskId, request.getData());
@@ -70,6 +75,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
+    @PreAuthorize("hasAuthority('DELETE_TASK')")
     public ResponseEntity<CommonResponse<Void>> deleteTask(@PathVariable Long taskId) {
         taskService.deleteTask(taskId);
         CommonResponse<Void> response = new CommonResponse<>(

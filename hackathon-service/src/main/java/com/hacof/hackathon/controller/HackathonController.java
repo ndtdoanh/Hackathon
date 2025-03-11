@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.dto.HackathonDTO;
@@ -21,6 +22,7 @@ public class HackathonController {
     private final HackathonService hackathonService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_HACKATHONS')")
     public ResponseEntity<CommonResponse<List<HackathonDTO>>> getAllHackathons() {
         List<HackathonDTO> hackathons = hackathonService.getAllHackathons();
         CommonResponse<List<HackathonDTO>> response = new CommonResponse<>(
@@ -33,6 +35,7 @@ public class HackathonController {
     }
 
     @GetMapping("/{hackathonId}")
+    @PreAuthorize("hasAuthority('GET_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> getHackathonById(@PathVariable Long hackathonId) {
         HackathonDTO hackathon = hackathonService.getHackathonById(hackathonId);
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
@@ -45,6 +48,7 @@ public class HackathonController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
             @RequestBody CommonRequest<HackathonDTO> request) {
         HackathonDTO hackathonDTO = hackathonService.createHackathon(request.getData());
@@ -58,6 +62,7 @@ public class HackathonController {
     }
 
     @PutMapping("/{hackathonId}")
+    @PreAuthorize("hasAuthority('UPDATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(
             @PathVariable Long hackathonId, @RequestBody CommonRequest<HackathonDTO> request) {
         HackathonDTO hackathonDTO = hackathonService.updateHackathon(hackathonId, request.getData());
@@ -71,6 +76,7 @@ public class HackathonController {
     }
 
     @DeleteMapping("/{hackathonId}")
+    @PreAuthorize("hasAuthority('DELETE_HACKATHON')")
     public ResponseEntity<CommonResponse<Void>> deleteHackathon(@PathVariable Long hackathonId) {
         hackathonService.deleteHackathon(hackathonId);
         CommonResponse<Void> response = new CommonResponse<>(

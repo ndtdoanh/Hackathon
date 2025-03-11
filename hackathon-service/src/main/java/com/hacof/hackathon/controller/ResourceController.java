@@ -7,6 +7,7 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.constant.StatusCode;
@@ -24,6 +25,7 @@ public class ResourceController {
     private final ResourceService resourceService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_RESOURCES')")
     public ResponseEntity<CommonResponse<List<ResourceDTO>>> getAllResources() {
         List<ResourceDTO> resources = resourceService.getAllResources();
         CommonResponse<List<ResourceDTO>> response = new CommonResponse<>(
@@ -50,6 +52,7 @@ public class ResourceController {
     //    }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_RESOURCE')")
     public ResponseEntity<CommonResponse<ResourceDTO>> createResource(
             @Valid @RequestBody CommonRequest<ResourceDTO> request) {
         ResourceDTO resourceDTO = resourceService.createResource(request.getData());
@@ -63,6 +66,7 @@ public class ResourceController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_RESOURCE')")
     public ResponseEntity<CommonResponse<ResourceDTO>> updateResource(
             @Valid @RequestBody CommonRequest<ResourceDTO> request) {
         Long resourceId = request.getData().getId();
@@ -77,6 +81,7 @@ public class ResourceController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAuthority('DELETE_RESOURCE')")
     public ResponseEntity<CommonResponse<Void>> deleteResource(@Valid @RequestBody CommonRequest<ResourceDTO> request) {
         Long resourceId = request.getData().getId();
         resourceService.deleteResource(resourceId);
@@ -90,6 +95,7 @@ public class ResourceController {
     }
 
     @GetMapping("/round")
+    @PreAuthorize("hasAuthority('GET_RESOURCES_BY_ROUND')")
     public ResponseEntity<CommonResponse<List<ResourceDTO>>> getResourcesByRoundId(
             @Valid @RequestBody CommonRequest<ResourceDTO> request) {
         Long roundId = request.getData().getCompetitionRoundId();

@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('CREATE_TEAM')")
     public ResponseEntity<CommonResponse<TeamDTO>> createTeam(@RequestBody CommonRequest<TeamDTO> request) {
         Long userId = request.getData().getLeaderId();
         TeamDTO teamDTO = teamService.createTeam(request.getData(), userId);
@@ -42,6 +44,7 @@ public class TeamController {
     }
 
     @PostMapping("/add-member")
+    @PreAuthorize("hasAuthority('ADD_MEMBER_TO_TEAM')")
     public ResponseEntity<CommonResponse<TeamDTO>> addMemberToTeam(
             @RequestBody CommonRequest<Map<String, Long>> request) {
         Long teamId = request.getData().get("teamId");
@@ -57,6 +60,7 @@ public class TeamController {
     }
 
     @PostMapping("/assign-mentor")
+    @PreAuthorize("hasAuthority('ASSIGN_MENTOR_TO_TEAM')")
     public ResponseEntity<CommonResponse<TeamDTO>> assignMentorToTeam(
             @RequestBody CommonRequest<Map<String, Long>> request) {
         Long teamId = request.getData().get("teamId");
@@ -72,6 +76,7 @@ public class TeamController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('UPDATE_TEAM')")
     public ResponseEntity<CommonResponse<TeamDTO>> updateTeam(@RequestBody CommonRequest<TeamDTO> request) {
         Long teamId = request.getData().getId();
         TeamDTO teamDTO = teamService.updateTeam(teamId, request.getData());
@@ -85,6 +90,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/remove-member")
+    @PreAuthorize("hasAuthority('REMOVE_MEMBER_FROM_TEAM')")
     public ResponseEntity<CommonResponse<Void>> removeMemberFromTeam(
             @RequestBody CommonRequest<Map<String, Long>> request) {
         Long teamId = request.getData().get("teamId");
@@ -100,6 +106,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('DELETE_TEAM')")
     public ResponseEntity<CommonResponse<Void>> deleteTeam(@RequestBody CommonRequest<Map<String, Long>> request) {
         Long teamId = request.getData().get("teamId");
         teamService.deleteTeam(teamId);
@@ -113,6 +120,7 @@ public class TeamController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_TEAMS')")
     public ResponseEntity<CommonResponse<List<TeamDTO>>> getAllTeams() {
         List<TeamDTO> teams = teamService.getAllTeams();
         CommonResponse<List<TeamDTO>> response = new CommonResponse<>(

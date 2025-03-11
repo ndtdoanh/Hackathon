@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ public class JudgeController {
     private final JudgeService judgeService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_JUDGE')")
     public ResponseEntity<CommonResponse<JudgeDTO>> createJudge(@RequestBody CommonRequest<JudgeDTO> request) {
         JudgeDTO judgeDTO = judgeService.createJudge(request.getData());
         CommonResponse<JudgeDTO> response = new CommonResponse<>(
@@ -35,6 +37,7 @@ public class JudgeController {
     }
 
     @PostMapping("/assign")
+    @PreAuthorize("hasAuthority('ASSIGN_JUDGE_TO_ROUND')")
     public ResponseEntity<CommonResponse<Void>> assignJudgeToRound(
             @RequestBody CommonRequest<Map<String, Long>> request) {
         Long judgeId = request.getData().get("judgeId");

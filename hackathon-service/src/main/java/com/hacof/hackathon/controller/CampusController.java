@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.constant.StatusCode;
@@ -32,6 +33,7 @@ public class CampusController {
     final CampusService campusService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('GET_CAMPUSES')")
     public ResponseEntity<CommonResponse<List<CampusDTO>>> getAllCampuses() {
         List<CampusDTO> campuses = campusService.getAllCampuses();
         CommonResponse<List<CampusDTO>> response = new CommonResponse<>(
@@ -44,6 +46,7 @@ public class CampusController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('GET_CAMPUS')")
     public ResponseEntity<CommonResponse<CampusDTO>> getCampusById(@PathVariable Long id) {
         CampusDTO campus = campusService.getCampusById(id);
         CommonResponse<CampusDTO> response = new CommonResponse<>(
@@ -56,6 +59,7 @@ public class CampusController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_CAMPUS')")
     public ResponseEntity<CommonResponse<CampusDTO>> createCampus(
             @Valid @RequestBody CommonRequest<CampusDTO> request) {
         log.debug("Received request to create campus: {}", request);
@@ -71,6 +75,7 @@ public class CampusController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_CAMPUS')")
     public ResponseEntity<CommonResponse<CampusDTO>> updateCampus(
             @Valid @RequestBody CommonRequest<CampusDTO> request) {
         Long id = request.getData().getId();
@@ -85,6 +90,7 @@ public class CampusController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAuthority('DELETE_CAMPUS')")
     public ResponseEntity<CommonResponse<Void>> deleteCampus(@Valid @RequestBody CommonRequest<CampusDTO> request) {
         Long id = request.getData().getId();
         campusService.deleteCampus(id);
@@ -98,6 +104,7 @@ public class CampusController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('SEARCH_CAMPUSES')")
     public ResponseEntity<CommonResponse<List<CampusDTO>>> searchCampuses(
             @RequestParam(required = false) Long Id,
             @RequestParam(required = false) String name,
