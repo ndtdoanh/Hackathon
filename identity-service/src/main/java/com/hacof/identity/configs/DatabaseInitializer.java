@@ -64,7 +64,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "GET_PROFILES",
                             "GET_PROFILE",
                             "DELETE_PROFILE",
-                            "UPLOAD_AVATAR"),
+                            "UPLOAD_AVATAR",
+                            "GET_FORUMTHREADS"),
             "ORGANIZATION",
                     Set.of(
                             "CREATE_USER",
@@ -225,7 +226,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_PROFILES", "/api/v1/profiles", "GET", "PROFILES"),
                 new Permission("GET_PROFILE", "/api/v1/profiles/{Id}", "GET", "PROFILES"),
                 new Permission("DELETE_PROFILE", "/api/v1/profiles/{Id}", "DELETE", "PROFILES"),
-                new Permission("UPLOAD_AVATAR", "/api/v1/profiles/upload-avatar", "POST", "PROFILES"));
+                new Permission("UPLOAD_AVATAR", "/api/v1/profiles/upload-avatar", "POST", "PROFILES"),
+                new Permission("GET_FORUMTHREADS", "/api/v1/forumthreads", "GET", "FORUM"));
 
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
