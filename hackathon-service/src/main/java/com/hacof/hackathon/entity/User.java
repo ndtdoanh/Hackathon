@@ -1,6 +1,7 @@
 package com.hacof.hackathon.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.*;
 
@@ -19,9 +20,13 @@ public class User extends AuditBase {
 
     private String username;
     private String password;
+    String firstName;
+    String lastName;
     private String email;
     private Boolean isVerified;
     private String status;
+    @ManyToMany
+    Set<Role> roles;
 
     @OneToMany(mappedBy = "organizer")
     private List<Hackathon> organizedHackathons;
