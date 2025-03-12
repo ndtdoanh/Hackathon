@@ -32,9 +32,13 @@ public class Round {
     @Column(name = "end_time", nullable = false)
     LocalDateTime endTime;
 
+    int roundNumber;
+
+    String roundTitle;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    RoundStatus status;
+    RoundStatus status; //  status enum("upcoming", "ongoing", "completed", "cancelled")
 
     // Submissions related to this round
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -52,27 +52,6 @@ public class Submission extends AuditBase {
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JudgeSubmission> judgeSubmissions;
 
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "team_id", nullable = false)
-//    Team team;
-
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "hackathon_id", nullable = false)
-//    Hackathon hackathon;
-
-//    @Column(name = "submission_url")
-//    String submissionUrl;
-
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "round_id", nullable = false)
-//    CompetitionRound round;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     Status status = Status.PENDING;

@@ -24,4 +24,6 @@ public class TeamRequest extends AuditBase {
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     User createdBy;
+
+    status enum("pending", "approved", "rejected")
 }

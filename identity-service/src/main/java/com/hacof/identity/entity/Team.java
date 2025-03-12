@@ -56,17 +56,9 @@ public class Team extends AuditBase {
     @JoinColumn(name = "hackathon_id", nullable = false)
     Hackathon hackathon;
 
-    @ManyToOne
-    @JoinColumn(name = "competition_round_id")
-    CompetitionRound competitionRound;
-
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "team_leader_id", nullable = false)
-//    User teamLeader;
-
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_leader_id", nullable = false)
     User teamLeader;
 
@@ -89,10 +81,6 @@ public class Team extends AuditBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     Status status = Status.ACTIVE;
-
-    @ManyToOne
-    @JoinColumn(name = "mentor_id") // each team has one mentor
-    Mentor mentor;
 
     boolean passed;
 }

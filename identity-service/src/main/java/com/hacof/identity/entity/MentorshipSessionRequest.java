@@ -43,7 +43,7 @@ public class MentorshipSessionRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.PENDING;
+    Status status = Status.PENDING; //status enum("pending", "rejected", "approved", "deleted", "completed")
 
     @ManyToOne
     @JoinColumn(name = "evaluated_by")

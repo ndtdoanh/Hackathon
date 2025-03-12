@@ -24,6 +24,12 @@ public class RoundMarkCriterion extends AuditBase {
     @JoinColumn(name = "round_id", nullable = false)
     Round round;
 
+    String name;
+
+    int maxScore;
+
+    String note;
+
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     User createdBy;

@@ -39,7 +39,7 @@ public class MentorshipRequest extends AuditBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    MentorshipStatus status;
+    MentorshipStatus status; // status enum("pending", "rejected", "approved", "deleted", "completed")
 
     @Column(name = "created_at", nullable = false, updatable = false)
     Instant createdAt;
