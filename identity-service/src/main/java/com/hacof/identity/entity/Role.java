@@ -1,0 +1,43 @@
+package com.hacof.identity.entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "roles")
+public class Role extends AuditBase {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
+
+    @NotNull
+    @Column(name = "role_name", nullable = false, unique = true)
+    String name;
+
+    @Lob
+    @Column(name = "description")
+    String description;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<UserRole> userRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<RolePermission> rolePermissions = new HashSet<>();
+}
