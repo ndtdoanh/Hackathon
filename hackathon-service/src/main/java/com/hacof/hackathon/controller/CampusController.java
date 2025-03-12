@@ -31,27 +31,29 @@ import lombok.extern.slf4j.Slf4j;
 public class CampusController {
     final CampusService campusService;
 
-    @GetMapping
-    public ResponseEntity<CommonResponse<List<CampusDTO>>> getAllCampuses() {
-        List<CampusDTO> campuses = campusService.getAllCampuses();
+    // getByAllCriteria
+    @GetMapping()
+    public ResponseEntity<CommonResponse<List<CampusDTO>>> searchCampuses(
+            @RequestParam(required = false) Long Id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String createdBy,
+            @RequestParam(required = false) String lastModifiedBy) {
+
+        Specification<Campus> spec = Specification.where(CampusSpecification.hasId(Id))
+                .and(CampusSpecification.hasName(name))
+                .and(CampusSpecification.hasLocation(location))
+                .and(CampusSpecification.createdBy(createdBy))
+                .and(CampusSpecification.lastModifiedBy(lastModifiedBy));
+
+        List<CampusDTO> campuses = campusService.searchCampuses(spec);
         CommonResponse<List<CampusDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched all campuses successfully"),
-                campuses);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<CampusDTO>> getCampusById(@PathVariable Long id) {
-        CampusDTO campus = campusService.getCampusById(id);
-        CommonResponse<CampusDTO> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched campus successfully"),
-                campus);
+                campuses);
+
         return ResponseEntity.ok(response);
     }
 
@@ -85,7 +87,7 @@ public class CampusController {
     }
 
     @DeleteMapping
-    public ResponseEntity<CommonResponse<Void>> deleteCampus(@Valid @RequestBody CommonRequest<CampusDTO> request) {
+    public ResponseEntity<CommonResponse<Void>> deleteCampus(@RequestBody CommonRequest<CampusDTO> request) {
         Long id = request.getData().getId();
         campusService.deleteCampus(id);
         CommonResponse<Void> response = new CommonResponse<>(
@@ -94,31 +96,6 @@ public class CampusController {
                 "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Campus deleted successfully"),
                 null);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<CommonResponse<List<CampusDTO>>> searchCampuses(
-            @RequestParam(required = false) Long Id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) String createdBy,
-            @RequestParam(required = false) String lastModifiedBy) {
-
-        Specification<Campus> spec = Specification.where(CampusSpecification.hasId(Id))
-                .and(CampusSpecification.hasName(name))
-                .and(CampusSpecification.hasLocation(location))
-                .and(CampusSpecification.createdBy(createdBy))
-                .and(CampusSpecification.lastModifiedBy(lastModifiedBy));
-
-        List<CampusDTO> campuses = campusService.searchCampuses(spec);
-        CommonResponse<List<CampusDTO>> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched campus successfully"),
-                campuses);
-
         return ResponseEntity.ok(response);
     }
 }
