@@ -3,6 +3,7 @@ package com.hacof.hackathon.entity;
 import java.util.List;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -25,9 +27,14 @@ public class Campus extends AuditBase {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
+    long id;
 
-    String name; // Quy Nhon - Da Nang - Can Tho - TP HCM - Hoa Lac
+    @NotNull
+    @Column(name = "name", nullable = false)
+    String name;
+
+    @NotNull
+    @Column(name = "location", nullable = false)
     String location;
 
     @OneToMany(mappedBy = "campus", orphanRemoval = true)

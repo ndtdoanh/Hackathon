@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.hacof.identity.constants.RoleType;
+import com.hacof.identity.constants.Status;
 import com.hacof.identity.dtos.request.AuthenticationRequest;
 import com.hacof.identity.dtos.request.ExchangeTokenRequest;
 import com.hacof.identity.dtos.request.IntrospectRequest;
@@ -27,8 +29,6 @@ import com.hacof.identity.entities.InvalidatedToken;
 import com.hacof.identity.entities.Permission;
 import com.hacof.identity.entities.Role;
 import com.hacof.identity.entities.User;
-import com.hacof.identity.enums.RoleType;
-import com.hacof.identity.enums.Status;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.repositories.InvalidatedTokenRepository;
@@ -135,10 +135,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .lastName(userInfo.getFamilyName())
                     .isVerified(userInfo.isVerifiedEmail())
                     .status(Status.ACTIVE)
-                    .createdAt(Instant.now())
-                    .createdBy(userInfo.getEmail())
                     .roles(Set.of(teamMemberRole))
                     .build();
+            user.setCreatedBy(userInfo.getEmail());
 
             user = userRepository.save(user);
             log.info("User created with email: {}", user.getUsername());
@@ -146,10 +145,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } else {
             user.setFirstName(userInfo.getGivenName());
             user.setLastName(userInfo.getFamilyName());
-            user.setIsVerified(userInfo.isVerifiedEmail());
-            user.setUpdatedAt(Instant.now());
-            user.setUpdatedBy(userInfo.getEmail());
+            user.setVerified(userInfo.isVerifiedEmail());
 
+            user.setLastModifiedBy(userInfo.getEmail());
             userRepository.save(user);
             log.info("User updated with email: {}", user.getUsername());
         }

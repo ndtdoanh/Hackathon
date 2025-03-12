@@ -1,6 +1,6 @@
 package com.hacof.identity.dtos.response;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.AccessLevel;
@@ -16,10 +16,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileResponse {
-    Long id;
+    long id;
     String name;
     String phoneNumber;
     Set<String> skills;
     String avatarUrl;
-    Instant uploadedAt;
+    LocalDateTime uploadedAt;
 }

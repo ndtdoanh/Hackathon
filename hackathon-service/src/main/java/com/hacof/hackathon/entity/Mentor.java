@@ -3,6 +3,12 @@ package com.hacof.hackathon.entity;
 import java.util.List;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.hackathon.constant.Availability;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,25 +16,38 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Mentors")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Mentor {
+@Table(name = "Mentors")
+public class Mentor extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
     User user;
 
+    @Column(name = "expertise")
     String expertise;
+
+    @Lob
+    @Column(name = "bio")
     String bio;
-    String availability;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "availability")
+    Availability availability = Availability.AVAILABLE;
+
+    @Column(name = "rating")
     Float rating;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "campus_id")
     Campus campus;
 

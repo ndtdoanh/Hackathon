@@ -4,8 +4,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import com.hacof.hackathon.constant.ResourceStatus;
-import com.hacof.hackathon.constant.ResourceType;
+import com.hacof.hackathon.entity.ResourceStatus;
+import com.hacof.hackathon.entity.ResourceType;
 
 import lombok.Data;
 import lombok.Setter;

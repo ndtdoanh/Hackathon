@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ import com.hacof.identity.dtos.request.UserProfileCreateRequest;
 import com.hacof.identity.dtos.request.UserProfileUpdateRequest;
 import com.hacof.identity.dtos.response.UserProfileResponse;
 import com.hacof.identity.entities.User;
-import com.hacof.identity.entities.Userprofile;
+import com.hacof.identity.entities.UserProfile;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.mappers.UserProfileMapper;
@@ -65,7 +65,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Userprofile userProfile = userProfileMapper.toEntity(request);
+        UserProfile userProfile = userProfileMapper.toEntity(request);
         userProfile.setUser(user);
 
         String fullName = (user.getFirstName() != null ? user.getFirstName() : "") + " "
@@ -81,7 +81,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserProfileResponse updateProfile(UserProfileUpdateRequest request) {
         Long userId = getCurrentUserId();
 
-        Userprofile userProfile = userProfileRepository
+        UserProfile userProfile = userProfileRepository
                 .findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
 
@@ -92,7 +92,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfileResponse getProfile(Long userId) {
-        Userprofile userProfile = userProfileRepository
+        UserProfile userProfile = userProfileRepository
                 .findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
         return userProfileMapper.toResponse(userProfile);
@@ -110,7 +110,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public void deleteProfile() {
         Long userId = getCurrentUserId();
 
-        Userprofile userProfile = userProfileRepository
+        UserProfile userProfile = userProfileRepository
                 .findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
         userProfileRepository.delete(userProfile);
@@ -125,7 +125,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             throw new AppException(ErrorCode.INVALID_FILE_FORMAT);
         }
 
-        Userprofile userProfile = userProfileRepository
+        UserProfile userProfile = userProfileRepository
                 .findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
 
@@ -151,7 +151,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             }
 
             userProfile.setAvatarUrl("/" + UPLOAD_DIR + fileName);
-            userProfile.setUploadedAt(Instant.now());
+            userProfile.setUploadedAt(LocalDateTime.now());
             userProfileRepository.save(userProfile);
 
             return userProfileMapper.toResponse(userProfile);

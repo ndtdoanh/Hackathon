@@ -3,6 +3,12 @@ package com.hacof.hackathon.entity;
 import java.util.List;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.hackathon.constant.Status;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,35 +16,56 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Teams")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "Teams")
 public class Team extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
+    long id;
 
+    @NotNull
+    @Column(name = "name", nullable = false)
     String name;
 
-    @ManyToOne
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathonId;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    Hackathon hackathon;
 
     @ManyToOne
     @JoinColumn(name = "competition_round_id")
     CompetitionRound competitionRound;
 
-    @OneToOne
-    @JoinColumn(name = "leader_id", unique = true)
-    private User leader;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "team_leader_id", nullable = false)
+    User teamLeader;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "campus_id", nullable = false)
+    Campus campus;
+
+    @Lob
+    @Column(name = "bio")
+    String bio;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    Status status = Status.ACTIVE;
 
     @ManyToOne
     @JoinColumn(name = "mentor_id") // each team has one mentor
-    private Mentor mentor;
+    Mentor mentor;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private List<User> members;
+    List<User> members;
 
     boolean passed;
 }

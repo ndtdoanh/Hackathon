@@ -1,6 +1,6 @@
 package com.hacof.identity.entities;
 
-import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -10,15 +10,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.hacof.identity.enums.Status;
-import com.hacof.identity.utils.SecurityUtil;
+import com.hacof.identity.constants.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,15 +28,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+@Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "users")
-public class User {
+@Table(name = "Users")
+public class User extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -58,7 +58,7 @@ public class User {
 
     @ColumnDefault("0")
     @Column(name = "is_verified")
-    Boolean isVerified = false;
+    boolean isVerified = false;
 
     public Boolean getIsVerified() {
         return isVerified;
@@ -71,24 +71,10 @@ public class User {
     @ManyToMany
     Set<Role> roles;
 
-    Instant createdAt;
-    Instant updatedAt;
-    String createdBy;
-    String updatedBy;
+    @OneToMany(mappedBy = "organizer")
+    List<Hackathon> organizedHackathons;
 
-    @PrePersist
-    public void handleBeforeCreate() {
-        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.createdAt = Instant.now();
-    }
-
-    @PreUpdate
-    public void handleBeforeUpdate() {
-        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.updatedAt = Instant.now();
-    }
+    @ManyToOne
+    @JoinColumn(name = "team_id", unique = true)
+    Team team;
 }

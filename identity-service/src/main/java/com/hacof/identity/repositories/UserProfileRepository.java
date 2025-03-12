@@ -5,12 +5,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.hacof.identity.entities.Userprofile;
+import com.hacof.identity.entities.UserProfile;
 
-public interface UserProfileRepository extends JpaRepository<Userprofile, Long> {
-    Optional<Userprofile> findByUserId(Long userId);
+public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
+    Optional<UserProfile> findByUserId(Long userId);
 
     boolean existsByUserId(Long userId);
 
-    List<Userprofile> findAll();
+    List<UserProfile> findAll();
 }

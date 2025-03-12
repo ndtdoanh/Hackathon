@@ -1,6 +1,5 @@
 package com.hacof.hackathon.entity;
 
-import java.time.Instant;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -10,12 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-
-import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,15 +20,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+@Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "Roles")
+public class Role extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -48,25 +43,4 @@ public class Role {
 
     @ManyToMany
     Set<Permission> permissions;
-
-    Instant createdAt;
-    Instant updatedAt;
-    String createdBy;
-    String updatedBy;
-
-    @PrePersist
-    public void handleBeforeCreate() {
-        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.createdAt = Instant.now();
-    }
-
-    @PreUpdate
-    public void handleBeforeUpdate() {
-        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.updatedAt = Instant.now();
-    }
 }

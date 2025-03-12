@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.hacof.identity.constants.Status;
 import com.hacof.identity.dtos.request.PasswordCreateRequest;
 import com.hacof.identity.dtos.request.UserCreateRequest;
 import com.hacof.identity.dtos.request.UserUpdateRequest;
@@ -16,7 +17,6 @@ import com.hacof.identity.dtos.response.RoleResponse;
 import com.hacof.identity.dtos.response.UserResponse;
 import com.hacof.identity.entities.Role;
 import com.hacof.identity.entities.User;
-import com.hacof.identity.enums.Status;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.mappers.UserMapper;
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(request);
 
         user.setPassword(encodedPassword);
-        user.setIsVerified(false);
+        user.setVerified(false);
         user.setStatus(Status.ACTIVE);
 
         if (creatorRole.getName().equals("ADMIN")) {
@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
 
         user.setEmail(tempEmail);
         user.setTempEmail(null);
-        user.setIsVerified(true);
+        user.setVerified(true);
         userRepository.save(user);
 
         return "Email " + tempEmail + " has been verified successfully";

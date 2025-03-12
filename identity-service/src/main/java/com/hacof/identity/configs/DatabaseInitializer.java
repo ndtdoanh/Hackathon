@@ -9,10 +9,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.hacof.identity.constants.Status;
 import com.hacof.identity.entities.Permission;
 import com.hacof.identity.entities.Role;
 import com.hacof.identity.entities.User;
-import com.hacof.identity.enums.Status;
 import com.hacof.identity.exceptions.AppException;
 import com.hacof.identity.exceptions.ErrorCode;
 import com.hacof.identity.repositories.PermissionRepository;
@@ -38,179 +38,400 @@ public class DatabaseInitializer implements CommandLineRunner {
     private static final Map<String, Set<String>> ROLE_PERMISSIONS = Map.of(
             "ADMIN",
                     Set.of(
-                            "CREATE_USER", "CREATE_PASSWORD", "GET_USERS", "GET_USER", "GET_MY_INFO", "UPDATE_MY_INFO", "DELETE_USER", "ADD_EMAIL", "VERIFY_EMAIL",
-
-                            "CREATE_ROLE", "GET_ROLES", "GET_ROLE", "GET_ROLE_FROM_TOKEN", "UPDATE_ROLE", "DELETE_ROLE",
-
-                            "CREATE_PERMISSION", "GET_PERMISSIONS", "GET_PERMISSION", "UPDATE_PERMISSION", "DELETE_PERMISSION", "DELETE_PERMISSION_FROM_ROLE",
-
-                            "CREATE_PROFILE", "UPDATE_PROFILE", "GET_PROFILES", "GET_PROFILE", "DELETE_PROFILE", "UPLOAD_AVATAR",
-
-                            "GET_CAMPUSES", "GET_CAMPUS", "CREATE_CAMPUS", "UPDATE_CAMPUS", "DELETE_CAMPUS", "SEARCH_CAMPUSES",
-
-                            "GET_ROUNDS", "GET_ROUND", "CREATE_ROUND", "UPDATE_ROUND", "DELETE_ROUND",
-
-                            "ASSIGN_JUDGES_AND_MENTORS", "ASSIGN_TASK_TO_MEMBER", "GET_PASSED_TEAMS", "GET_JUDGE_NAMES",
-
-                            "GET_HACKATHONS", "GET_HACKATHON", "CREATE_HACKATHON", "UPDATE_HACKATHON", "DELETE_HACKATHON",
-
-                            "CREATE_JUDGE", "ASSIGN_JUDGE_TO_ROUND",
-
-                            "GET_RESOURCES", "CREATE_RESOURCE", "UPDATE_RESOURCE", "DELETE_RESOURCE", "GET_RESOURCES_BY_ROUND",
-
-                            "ASSIGN_TASK", "GET_TASKS", "GET_TASK", "UPDATE_TASK", "DELETE_TASK", "CREATE_TASK", "MOVE_TASK",
-
-                            "CREATE_TEAM", "ADD_MEMBER_TO_TEAM", "ASSIGN_MENTOR_TO_TEAM", "UPDATE_TEAM", "REMOVE_MEMBER_FROM_TEAM", "DELETE_TEAM", "GET_TEAMS",
-
-                            "CREATE_BLOGCOMMENT", "GET_BLOGCOMMENTS", "GET_BLOGCOMMENT", "UPDATE_BLOGCOMMENT", "DELETE_BLOGCOMMENT", "GET_BLOGCOMMENTS_BY_POST",
-
-                            "CREATE_BLOGPOST", "GET_BLOGPOST", "UPDATE_BLOGPOST", "DELETE_BLOGPOST", "GET_BLOGPOSTS",
-
-                            "CREATE_FORUMCOMMENT", "GET_FORUMCOMMENT", "GET_FORUMCOMMENTS", "UPDATE_FORUMCOMMENT", "DELETE_FORUMCOMMENT", "GET_FORUMCOMMENTS_BY_THREAD",
-
-                            "CREATE_FORUMTHREAD", "GET_FORUMTHREAD", "GET_FORUMTHREADS", "UPDATE_FORUMTHREAD", "DELETE_FORUMTHREAD"),
+                            "CREATE_USER",
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "UPDATE_MY_INFO",
+                            "DELETE_USER",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "CREATE_ROLE",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "UPDATE_ROLE",
+                            "DELETE_ROLE",
+                            "CREATE_PERMISSION",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "UPDATE_PERMISSION",
+                            "DELETE_PERMISSION",
+                            "DELETE_PERMISSION_FROM_ROLE",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR",
+                            "GET_CAMPUSES",
+                            "GET_CAMPUS",
+                            "CREATE_CAMPUS",
+                            "UPDATE_CAMPUS",
+                            "DELETE_CAMPUS",
+                            "SEARCH_CAMPUSES",
+                            "GET_ROUNDS",
+                            "GET_ROUND",
+                            "CREATE_ROUND",
+                            "UPDATE_ROUND",
+                            "DELETE_ROUND",
+                            "ASSIGN_JUDGES_AND_MENTORS",
+                            "ASSIGN_TASK_TO_MEMBER",
+                            "GET_PASSED_TEAMS",
+                            "GET_JUDGE_NAMES",
+                            "GET_HACKATHONS",
+                            "GET_HACKATHON",
+                            "CREATE_HACKATHON",
+                            "UPDATE_HACKATHON",
+                            "DELETE_HACKATHON",
+                            "CREATE_JUDGE",
+                            "ASSIGN_JUDGE_TO_ROUND",
+                            "GET_RESOURCES",
+                            "CREATE_RESOURCE",
+                            "UPDATE_RESOURCE",
+                            "DELETE_RESOURCE",
+                            "GET_RESOURCES_BY_ROUND",
+                            "ASSIGN_TASK",
+                            "GET_TASKS",
+                            "GET_TASK",
+                            "UPDATE_TASK",
+                            "DELETE_TASK",
+                            "CREATE_TASK",
+                            "MOVE_TASK",
+                            "CREATE_TEAM",
+                            "ADD_MEMBER_TO_TEAM",
+                            "ASSIGN_MENTOR_TO_TEAM",
+                            "UPDATE_TEAM",
+                            "REMOVE_MEMBER_FROM_TEAM",
+                            "DELETE_TEAM",
+                            "GET_TEAMS",
+                            "CREATE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS",
+                            "GET_BLOGCOMMENT",
+                            "UPDATE_BLOGCOMMENT",
+                            "DELETE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS_BY_POST",
+                            "CREATE_BLOGPOST",
+                            "GET_BLOGPOST",
+                            "UPDATE_BLOGPOST",
+                            "DELETE_BLOGPOST",
+                            "GET_BLOGPOSTS",
+                            "CREATE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS",
+                            "UPDATE_FORUMCOMMENT",
+                            "DELETE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS_BY_THREAD",
+                            "CREATE_FORUMTHREAD",
+                            "GET_FORUMTHREAD",
+                            "GET_FORUMTHREADS",
+                            "UPDATE_FORUMTHREAD",
+                            "DELETE_FORUMTHREAD"),
             "ORGANIZATION",
                     Set.of(
-                            "CREATE_USER", "CREATE_PASSWORD", "GET_USERS", "GET_USER", "GET_MY_INFO", "UPDATE_MY_INFO", "ADD_EMAIL", "VERIFY_EMAIL",
-
-                            "GET_ROLES", "GET_ROLE", "GET_ROLE_FROM_TOKEN",
-
-                            "GET_PERMISSIONS", "GET_PERMISSION",
-
-                            "CREATE_PROFILE", "UPDATE_PROFILE", "GET_PROFILES", "GET_PROFILE", "DELETE_PROFILE", "UPLOAD_AVATAR",
-
-                            "GET_CAMPUSES", "GET_CAMPUS", "SEARCH_CAMPUSES",
-
-                            "GET_ROUNDS", "GET_ROUND",
-
-                            "ASSIGN_JUDGES_AND_MENTORS", "ASSIGN_TASK_TO_MEMBER", "GET_PASSED_TEAMS", "GET_JUDGE_NAMES",
-
-                            "GET_HACKATHONS", "GET_HACKATHON", "CREATE_HACKATHON", "UPDATE_HACKATHON", "DELETE_HACKATHON",
-
-                            "CREATE_JUDGE", "ASSIGN_JUDGE_TO_ROUND",
-
-                            "GET_RESOURCES", "GET_RESOURCES_BY_ROUND",
-
-                            "ASSIGN_TASK", "GET_TASKS", "GET_TASK", "UPDATE_TASK", "DELETE_TASK", "CREATE_TASK", "MOVE_TASK",
-
-                            "CREATE_TEAM", "ADD_MEMBER_TO_TEAM", "ASSIGN_MENTOR_TO_TEAM", "UPDATE_TEAM", "REMOVE_MEMBER_FROM_TEAM", "DELETE_TEAM", "GET_TEAMS",
-
-                            "CREATE_BLOGCOMMENT", "GET_BLOGCOMMENTS", "GET_BLOGCOMMENT", "UPDATE_BLOGCOMMENT", "DELETE_BLOGCOMMENT", "GET_BLOGCOMMENTS_BY_POST",
-
-                            "CREATE_BLOGPOST", "GET_BLOGPOST", "UPDATE_BLOGPOST", "DELETE_BLOGPOST", "GET_BLOGPOSTS",
-
-                            "CREATE_FORUMCOMMENT", "GET_FORUMCOMMENT", "GET_FORUMCOMMENTS", "UPDATE_FORUMCOMMENT", "DELETE_FORUMCOMMENT", "GET_FORUMCOMMENTS_BY_THREAD",
-
-                            "CREATE_FORUMTHREAD", "GET_FORUMTHREAD", "GET_FORUMTHREADS", "UPDATE_FORUMTHREAD", "DELETE_FORUMTHREAD"),
+                            "CREATE_USER",
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "UPDATE_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR",
+                            "GET_CAMPUSES",
+                            "GET_CAMPUS",
+                            "SEARCH_CAMPUSES",
+                            "GET_ROUNDS",
+                            "GET_ROUND",
+                            "ASSIGN_JUDGES_AND_MENTORS",
+                            "ASSIGN_TASK_TO_MEMBER",
+                            "GET_PASSED_TEAMS",
+                            "GET_JUDGE_NAMES",
+                            "GET_HACKATHONS",
+                            "GET_HACKATHON",
+                            "CREATE_HACKATHON",
+                            "UPDATE_HACKATHON",
+                            "DELETE_HACKATHON",
+                            "CREATE_JUDGE",
+                            "ASSIGN_JUDGE_TO_ROUND",
+                            "GET_RESOURCES",
+                            "GET_RESOURCES_BY_ROUND",
+                            "ASSIGN_TASK",
+                            "GET_TASKS",
+                            "GET_TASK",
+                            "UPDATE_TASK",
+                            "DELETE_TASK",
+                            "CREATE_TASK",
+                            "MOVE_TASK",
+                            "CREATE_TEAM",
+                            "ADD_MEMBER_TO_TEAM",
+                            "ASSIGN_MENTOR_TO_TEAM",
+                            "UPDATE_TEAM",
+                            "REMOVE_MEMBER_FROM_TEAM",
+                            "DELETE_TEAM",
+                            "GET_TEAMS",
+                            "CREATE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS",
+                            "GET_BLOGCOMMENT",
+                            "UPDATE_BLOGCOMMENT",
+                            "DELETE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS_BY_POST",
+                            "CREATE_BLOGPOST",
+                            "GET_BLOGPOST",
+                            "UPDATE_BLOGPOST",
+                            "DELETE_BLOGPOST",
+                            "GET_BLOGPOSTS",
+                            "CREATE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS",
+                            "UPDATE_FORUMCOMMENT",
+                            "DELETE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS_BY_THREAD",
+                            "CREATE_FORUMTHREAD",
+                            "GET_FORUMTHREAD",
+                            "GET_FORUMTHREADS",
+                            "UPDATE_FORUMTHREAD",
+                            "DELETE_FORUMTHREAD"),
             "JUDGE",
                     Set.of(
-                            "CREATE_PASSWORD", "GET_USERS", "GET_USER", "GET_MY_INFO", "UPDATE_MY_INFO", "ADD_EMAIL", "VERIFY_EMAIL",
-
-                            "GET_ROLES", "GET_ROLE", "GET_ROLE_FROM_TOKEN",
-
-                            "GET_PERMISSIONS", "GET_PERMISSION",
-
-                            "CREATE_PROFILE", "UPDATE_PROFILE", "GET_PROFILES", "GET_PROFILE", "DELETE_PROFILE", "UPLOAD_AVATAR",
-
-                            "GET_CAMPUSES", "GET_CAMPUS", "SEARCH_CAMPUSES",
-
-                            "GET_ROUNDS", "GET_ROUND",
-
-                            "GET_HACKATHONS", "GET_HACKATHON",
-
-                            "GET_RESOURCES", "GET_RESOURCES_BY_ROUND",
-
-                            "GET_TASKS", "GET_TASK", "UPDATE_TASK", "DELETE_TASK", "CREATE_TASK", "MOVE_TASK",
-
-                            "CREATE_BLOGCOMMENT", "GET_BLOGCOMMENTS", "GET_BLOGCOMMENT", "UPDATE_BLOGCOMMENT", "DELETE_BLOGCOMMENT", "GET_BLOGCOMMENTS_BY_POST",
-
-                            "CREATE_BLOGPOST", "GET_BLOGPOST", "UPDATE_BLOGPOST", "DELETE_BLOGPOST", "GET_BLOGPOSTS",
-
-                            "CREATE_FORUMCOMMENT", "GET_FORUMCOMMENT", "GET_FORUMCOMMENTS", "UPDATE_FORUMCOMMENT", "DELETE_FORUMCOMMENT", "GET_FORUMCOMMENTS_BY_THREAD",
-
-                            "CREATE_FORUMTHREAD", "GET_FORUMTHREAD", "GET_FORUMTHREADS", "UPDATE_FORUMTHREAD", "DELETE_FORUMTHREAD"),
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "UPDATE_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR",
+                            "GET_CAMPUSES",
+                            "GET_CAMPUS",
+                            "SEARCH_CAMPUSES",
+                            "GET_ROUNDS",
+                            "GET_ROUND",
+                            "GET_HACKATHONS",
+                            "GET_HACKATHON",
+                            "GET_RESOURCES",
+                            "GET_RESOURCES_BY_ROUND",
+                            "GET_TASKS",
+                            "GET_TASK",
+                            "UPDATE_TASK",
+                            "DELETE_TASK",
+                            "CREATE_TASK",
+                            "MOVE_TASK",
+                            "CREATE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS",
+                            "GET_BLOGCOMMENT",
+                            "UPDATE_BLOGCOMMENT",
+                            "DELETE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS_BY_POST",
+                            "CREATE_BLOGPOST",
+                            "GET_BLOGPOST",
+                            "UPDATE_BLOGPOST",
+                            "DELETE_BLOGPOST",
+                            "GET_BLOGPOSTS",
+                            "CREATE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS",
+                            "UPDATE_FORUMCOMMENT",
+                            "DELETE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS_BY_THREAD",
+                            "CREATE_FORUMTHREAD",
+                            "GET_FORUMTHREAD",
+                            "GET_FORUMTHREADS",
+                            "UPDATE_FORUMTHREAD",
+                            "DELETE_FORUMTHREAD"),
             "MENTOR",
                     Set.of(
-                            "CREATE_PASSWORD", "GET_USERS", "GET_USER", "GET_MY_INFO", "UPDATE_MY_INFO", "ADD_EMAIL", "VERIFY_EMAIL",
-
-                            "GET_ROLES", "GET_ROLE", "GET_ROLE_FROM_TOKEN",
-
-                            "GET_PERMISSIONS", "GET_PERMISSION",
-
-                            "CREATE_PROFILE", "UPDATE_PROFILE", "GET_PROFILES", "GET_PROFILE", "DELETE_PROFILE", "UPLOAD_AVATAR",
-
-                            "GET_CAMPUSES", "GET_CAMPUS", "SEARCH_CAMPUSES",
-
-                            "GET_ROUNDS", "GET_ROUND",
-
-                            "GET_HACKATHONS", "GET_HACKATHON",
-
-                            "GET_RESOURCES", "GET_RESOURCES_BY_ROUND",
-
-                            "GET_TASKS", "GET_TASK", "UPDATE_TASK", "DELETE_TASK", "CREATE_TASK", "MOVE_TASK",
-
-                            "CREATE_BLOGCOMMENT", "GET_BLOGCOMMENTS", "GET_BLOGCOMMENT", "UPDATE_BLOGCOMMENT", "DELETE_BLOGCOMMENT", "GET_BLOGCOMMENTS_BY_POST",
-
-                            "CREATE_BLOGPOST", "GET_BLOGPOST", "UPDATE_BLOGPOST", "DELETE_BLOGPOST", "GET_BLOGPOSTS",
-
-                            "CREATE_FORUMCOMMENT", "GET_FORUMCOMMENT", "GET_FORUMCOMMENTS", "UPDATE_FORUMCOMMENT", "DELETE_FORUMCOMMENT", "GET_FORUMCOMMENTS_BY_THREAD",
-
-                            "CREATE_FORUMTHREAD", "GET_FORUMTHREAD", "GET_FORUMTHREADS", "UPDATE_FORUMTHREAD", "DELETE_FORUMTHREAD"),
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "UPDATE_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR",
+                            "GET_CAMPUSES",
+                            "GET_CAMPUS",
+                            "SEARCH_CAMPUSES",
+                            "GET_ROUNDS",
+                            "GET_ROUND",
+                            "GET_HACKATHONS",
+                            "GET_HACKATHON",
+                            "GET_RESOURCES",
+                            "GET_RESOURCES_BY_ROUND",
+                            "GET_TASKS",
+                            "GET_TASK",
+                            "UPDATE_TASK",
+                            "DELETE_TASK",
+                            "CREATE_TASK",
+                            "MOVE_TASK",
+                            "CREATE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS",
+                            "GET_BLOGCOMMENT",
+                            "UPDATE_BLOGCOMMENT",
+                            "DELETE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS_BY_POST",
+                            "CREATE_BLOGPOST",
+                            "GET_BLOGPOST",
+                            "UPDATE_BLOGPOST",
+                            "DELETE_BLOGPOST",
+                            "GET_BLOGPOSTS",
+                            "CREATE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS",
+                            "UPDATE_FORUMCOMMENT",
+                            "DELETE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS_BY_THREAD",
+                            "CREATE_FORUMTHREAD",
+                            "GET_FORUMTHREAD",
+                            "GET_FORUMTHREADS",
+                            "UPDATE_FORUMTHREAD",
+                            "DELETE_FORUMTHREAD"),
             "GUEST", Set.of(),
             "TEAM_MEMBER",
                     Set.of(
-                            "CREATE_PASSWORD", "GET_USERS", "GET_USER", "GET_MY_INFO", "UPDATE_MY_INFO", "ADD_EMAIL", "VERIFY_EMAIL",
-
-                            "GET_ROLES", "GET_ROLE", "GET_ROLE_FROM_TOKEN",
-
-                            "GET_PERMISSIONS", "GET_PERMISSION",
-
-                            "CREATE_PROFILE", "UPDATE_PROFILE", "GET_PROFILES", "GET_PROFILE", "DELETE_PROFILE", "UPLOAD_AVATAR",
-
-                            "GET_CAMPUSES", "GET_CAMPUS", "SEARCH_CAMPUSES",
-
-                            "GET_ROUNDS", "GET_ROUND",
-
-                            "GET_HACKATHONS", "GET_HACKATHON",
-
-                            "GET_RESOURCES", "GET_RESOURCES_BY_ROUND",
-
-                            "GET_TASKS", "GET_TASK", "UPDATE_TASK", "DELETE_TASK", "CREATE_TASK", "MOVE_TASK",
-
-                            "CREATE_BLOGCOMMENT", "GET_BLOGCOMMENTS", "GET_BLOGCOMMENT", "UPDATE_BLOGCOMMENT", "DELETE_BLOGCOMMENT", "GET_BLOGCOMMENTS_BY_POST",
-
-                            "CREATE_BLOGPOST", "GET_BLOGPOST", "UPDATE_BLOGPOST", "DELETE_BLOGPOST", "GET_BLOGPOSTS",
-
-                            "CREATE_FORUMCOMMENT", "GET_FORUMCOMMENT", "GET_FORUMCOMMENTS", "UPDATE_FORUMCOMMENT", "DELETE_FORUMCOMMENT", "GET_FORUMCOMMENTS_BY_THREAD",
-
-                            "CREATE_FORUMTHREAD", "GET_FORUMTHREAD", "GET_FORUMTHREADS", "UPDATE_FORUMTHREAD", "DELETE_FORUMTHREAD"),
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "UPDATE_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR",
+                            "GET_CAMPUSES",
+                            "GET_CAMPUS",
+                            "SEARCH_CAMPUSES",
+                            "GET_ROUNDS",
+                            "GET_ROUND",
+                            "GET_HACKATHONS",
+                            "GET_HACKATHON",
+                            "GET_RESOURCES",
+                            "GET_RESOURCES_BY_ROUND",
+                            "GET_TASKS",
+                            "GET_TASK",
+                            "UPDATE_TASK",
+                            "DELETE_TASK",
+                            "CREATE_TASK",
+                            "MOVE_TASK",
+                            "CREATE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS",
+                            "GET_BLOGCOMMENT",
+                            "UPDATE_BLOGCOMMENT",
+                            "DELETE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS_BY_POST",
+                            "CREATE_BLOGPOST",
+                            "GET_BLOGPOST",
+                            "UPDATE_BLOGPOST",
+                            "DELETE_BLOGPOST",
+                            "GET_BLOGPOSTS",
+                            "CREATE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS",
+                            "UPDATE_FORUMCOMMENT",
+                            "DELETE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS_BY_THREAD",
+                            "CREATE_FORUMTHREAD",
+                            "GET_FORUMTHREAD",
+                            "GET_FORUMTHREADS",
+                            "UPDATE_FORUMTHREAD",
+                            "DELETE_FORUMTHREAD"),
             "TEAM_LEADER",
                     Set.of(
-                            "CREATE_PASSWORD", "GET_USERS", "GET_USER", "GET_MY_INFO", "UPDATE_MY_INFO", "ADD_EMAIL", "VERIFY_EMAIL",
-
-                            "GET_ROLES", "GET_ROLE", "GET_ROLE_FROM_TOKEN",
-
-                            "GET_PERMISSIONS", "GET_PERMISSION",
-
-                            "CREATE_PROFILE", "UPDATE_PROFILE", "GET_PROFILES", "GET_PROFILE", "DELETE_PROFILE", "UPLOAD_AVATAR",
-
-                            "GET_CAMPUSES", "GET_CAMPUS", "SEARCH_CAMPUSES",
-
-                            "GET_ROUNDS", "GET_ROUND",
-
-                            "GET_HACKATHONS", "GET_HACKATHON",
-
-                            "GET_RESOURCES", "GET_RESOURCES_BY_ROUND",
-
-                            "GET_TASKS", "GET_TASK", "UPDATE_TASK", "DELETE_TASK", "CREATE_TASK", "MOVE_TASK",
-
-                            "CREATE_BLOGCOMMENT", "GET_BLOGCOMMENTS", "GET_BLOGCOMMENT", "UPDATE_BLOGCOMMENT", "DELETE_BLOGCOMMENT", "GET_BLOGCOMMENTS_BY_POST",
-
-                            "CREATE_BLOGPOST", "GET_BLOGPOST", "UPDATE_BLOGPOST", "DELETE_BLOGPOST", "GET_BLOGPOSTS",
-
-                            "CREATE_FORUMCOMMENT", "GET_FORUMCOMMENT", "GET_FORUMCOMMENTS", "UPDATE_FORUMCOMMENT", "DELETE_FORUMCOMMENT", "GET_FORUMCOMMENTS_BY_THREAD",
-
-                            "CREATE_FORUMTHREAD", "GET_FORUMTHREAD", "GET_FORUMTHREADS", "UPDATE_FORUMTHREAD", "DELETE_FORUMTHREAD"));
+                            "CREATE_PASSWORD",
+                            "GET_USERS",
+                            "GET_USER",
+                            "GET_MY_INFO",
+                            "UPDATE_MY_INFO",
+                            "ADD_EMAIL",
+                            "VERIFY_EMAIL",
+                            "GET_ROLES",
+                            "GET_ROLE",
+                            "GET_ROLE_FROM_TOKEN",
+                            "GET_PERMISSIONS",
+                            "GET_PERMISSION",
+                            "CREATE_PROFILE",
+                            "UPDATE_PROFILE",
+                            "GET_PROFILES",
+                            "GET_PROFILE",
+                            "DELETE_PROFILE",
+                            "UPLOAD_AVATAR",
+                            "GET_CAMPUSES",
+                            "GET_CAMPUS",
+                            "SEARCH_CAMPUSES",
+                            "GET_ROUNDS",
+                            "GET_ROUND",
+                            "GET_HACKATHONS",
+                            "GET_HACKATHON",
+                            "GET_RESOURCES",
+                            "GET_RESOURCES_BY_ROUND",
+                            "GET_TASKS",
+                            "GET_TASK",
+                            "UPDATE_TASK",
+                            "DELETE_TASK",
+                            "CREATE_TASK",
+                            "MOVE_TASK",
+                            "CREATE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS",
+                            "GET_BLOGCOMMENT",
+                            "UPDATE_BLOGCOMMENT",
+                            "DELETE_BLOGCOMMENT",
+                            "GET_BLOGCOMMENTS_BY_POST",
+                            "CREATE_BLOGPOST",
+                            "GET_BLOGPOST",
+                            "UPDATE_BLOGPOST",
+                            "DELETE_BLOGPOST",
+                            "GET_BLOGPOSTS",
+                            "CREATE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS",
+                            "UPDATE_FORUMCOMMENT",
+                            "DELETE_FORUMCOMMENT",
+                            "GET_FORUMCOMMENTS_BY_THREAD",
+                            "CREATE_FORUMTHREAD",
+                            "GET_FORUMTHREAD",
+                            "GET_FORUMTHREADS",
+                            "UPDATE_FORUMTHREAD",
+                            "DELETE_FORUMTHREAD"));
 
     @Override
     public void run(String... args) throws Exception {
@@ -259,7 +480,11 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_PERMISSION", "/api/v1/permissions/{Id}", "GET", "PERMISSIONS"),
                 new Permission("UPDATE_PERMISSION", "/api/v1/permissions/{Id}", "PUT", "PERMISSIONS"),
                 new Permission("DELETE_PERMISSION", "/api/v1/permissions/{Id}", "DELETE", "PERMISSIONS"),
-                new Permission("DELETE_PERMISSION_FROM_ROLE", "/api/v1/permissions/{roleId}/permissions/{permissionId}","DELETE","PERMISSIONS"),
+                new Permission(
+                        "DELETE_PERMISSION_FROM_ROLE",
+                        "/api/v1/permissions/{roleId}/permissions/{permissionId}",
+                        "DELETE",
+                        "PERMISSIONS"),
                 new Permission("CREATE_PROFILE", "/api/v1/profiles", "POST", "PROFILES"),
                 new Permission("UPDATE_PROFILE", "/api/v1/profiles/{Id}", "PUT", "PROFILES"),
                 new Permission("GET_PROFILES", "/api/v1/profiles", "GET", "PROFILES"),
@@ -278,7 +503,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("UPDATE_ROUND", "/api/v1/competition-rounds", "PUT", "ROUND"),
                 new Permission("DELETE_ROUND", "/api/v1/competition-rounds", "DELETE", "ROUND"),
                 new Permission("ASSIGN_JUDGES_AND_MENTORS", "/api/v1/competition-rounds/assign", "POST", "ROUND"),
-                new Permission("ASSIGN_TASK_TO_MEMBER", "/api/v1/competition-rounds/{teamId}/assign-task", "POST", "ROUND"),
+                new Permission(
+                        "ASSIGN_TASK_TO_MEMBER", "/api/v1/competition-rounds/{teamId}/assign-task", "POST", "ROUND"),
                 new Permission("GET_PASSED_TEAMS", "/api/v1/competition-rounds/{roundId}/passed-teams", "GET", "ROUND"),
                 new Permission("GET_JUDGE_NAMES", "/api/v1/competition-rounds/{roundId}/judges", "GET", "ROUND"),
                 new Permission("GET_HACKATHONS", "/api/v1/hackathons", "GET", "HACKATHONS"),
@@ -312,7 +538,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_BLOGCOMMENT", "/api/v1/blogcomments/{id}", "GET", "BLOG_COMMENTS"),
                 new Permission("UPDATE_BLOGCOMMENT", "/api/v1/blogcomments/{id}", "PUT", "BLOG_COMMENTS"),
                 new Permission("DELETE_BLOGCOMMENT", "/api/v1/blogcomments/{id}", "DELETE", "BLOG_COMMENTS"),
-                new Permission("GET_BLOGCOMMENTS_BY_POST", "/api/v1/blogcomments/byPostId/{postId}", "GET", "BLOG_COMMENTS"),
+                new Permission(
+                        "GET_BLOGCOMMENTS_BY_POST", "/api/v1/blogcomments/byPostId/{postId}", "GET", "BLOG_COMMENTS"),
                 new Permission("CREATE_BLOGPOST", "/api/v1/blogposts", "POST", "BLOG_POSTS"),
                 new Permission("GET_BLOGPOST", "/api/v1/blogposts/{id}", "GET", "BLOG_POSTS"),
                 new Permission("UPDATE_BLOGPOST", "/api/v1/blogposts/{id}", "PUT", "BLOG_POSTS"),
@@ -323,13 +550,18 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_FORUMCOMMENTS", "/api/v1/forumcomments", "GET", "FORUMCOMMENTS"),
                 new Permission("UPDATE_FORUMCOMMENT", "/api/v1/forumcomments/{id}", "PUT", "FORUMCOMMENTS"),
                 new Permission("DELETE_FORUMCOMMENT", "/api/v1/forumcomments/{id}", "DELETE", "FORUMCOMMENTS"),
-                new Permission("GET_FORUMCOMMENTS_BY_THREAD", "/api/v1/forumcomments/thread/{threadId}", "GET", "FORUMCOMMENTS"),
+                new Permission(
+                        "GET_FORUMCOMMENTS_BY_THREAD",
+                        "/api/v1/forumcomments/thread/{threadId}",
+                        "GET",
+                        "FORUMCOMMENTS"),
                 new Permission("CREATE_FORUMTHREAD", "/api/v1/forumthreads", "POST", "FORUMTHREADS"),
                 new Permission("GET_FORUMTHREAD", "/api/v1/forumthreads/{id}", "GET", "FORUMTHREADS"),
                 new Permission("GET_FORUMTHREADS", "/api/v1/forumthreads", "GET", "FORUMTHREADS"),
                 new Permission("UPDATE_FORUMTHREAD", "/api/v1/forumthreads/{id}", "PUT", "FORUMTHREADS"),
                 new Permission("DELETE_FORUMTHREAD", "/api/v1/forumthreads/{id}", "DELETE", "FORUMTHREADS"));
 
+        permissions.forEach(permission -> permission.setCreatedBy("ADMIN"));
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
     }
@@ -349,6 +581,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         Set<String> permissionNames = ROLE_PERMISSIONS.getOrDefault(roleName, Set.of());
         List<Permission> permissions = permissionRepository.findByNameIn(permissionNames);
         role.setPermissions(new HashSet<>(permissions));
+        role.setCreatedBy("ADMIN");
 
         roleRepository.save(role);
     }
@@ -373,9 +606,10 @@ public class DatabaseInitializer implements CommandLineRunner {
         user.setPassword(passwordEncoder.encode(password));
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setIsVerified(false);
+        user.setVerified(false);
         user.setStatus(Status.ACTIVE);
         user.setRoles(Set.of(role));
+        user.setCreatedBy("ADMIN");
 
         userRepository.save(user);
     }

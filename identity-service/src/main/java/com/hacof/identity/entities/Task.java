@@ -1,7 +1,6 @@
 package com.hacof.identity.entities;
 
-import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,17 +13,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.hacof.identity.enums.Priority;
-import com.hacof.identity.enums.Status;
-import com.hacof.identity.utils.SecurityUtil;
+import com.hacof.identity.constants.Priority;
+import com.hacof.identity.constants.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,15 +30,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+@Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "tasks")
-public class Task {
+@Table(name = "Tasks")
+public class Task extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -72,7 +68,7 @@ public class Task {
     Priority priority = Priority.MEDIUM;
 
     @Column(name = "deadline")
-    LocalDate deadline;
+    LocalDateTime deadline;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -91,25 +87,4 @@ public class Task {
 
     @Column(name = "board_name")
     String boardName;
-
-    Instant createdAt;
-    Instant updatedAt;
-    String createdBy;
-    String updatedBy;
-
-    @PrePersist
-    public void handleBeforeCreate() {
-        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.createdAt = Instant.now();
-    }
-
-    @PreUpdate
-    public void handleBeforeUpdate() {
-        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.updatedAt = Instant.now();
-    }
 }

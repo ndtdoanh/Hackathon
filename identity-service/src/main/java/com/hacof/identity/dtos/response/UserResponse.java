@@ -2,7 +2,7 @@ package com.hacof.identity.dtos.response;
 
 import java.util.Set;
 
-import com.hacof.identity.enums.Status;
+import com.hacof.identity.constants.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

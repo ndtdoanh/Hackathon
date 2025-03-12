@@ -1,29 +1,43 @@
 package com.hacof.hackathon.entity;
 
-import java.util.Date;
+import java.time.Instant;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "TeamAwards")
-public class TeamAward {
+public class TeamAward extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    long id;
 
-    @ManyToOne
-    @JoinColumn(name = "award_id")
-    private Award award;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "award_id", nullable = false)
+    Award award;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "team_id", nullable = false)
+    Team team;
 
-    private Date awardedAt;
+    @ColumnDefault("CURRENT_TIMESTAMP(6)")
+    @Column(name = "awarded_at")
+    Instant awardedAt;
 }

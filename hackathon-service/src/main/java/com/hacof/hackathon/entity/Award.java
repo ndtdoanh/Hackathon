@@ -1,25 +1,46 @@
 package com.hacof.hackathon.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "Awards")
 public class Award extends AuditBase {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
 
-    private String name;
-    private String description;
-    private Double prizeAmount;
+    @NotNull
+    @Column(name = "name", nullable = false)
+    String name;
 
-    @ManyToOne
-    @JoinColumn(name = "hackathon_id")
-    private Hackathon hackathon;
+    @Lob
+    @Column(name = "description")
+    String description;
+
+    @NotNull
+    @Column(name = "amount_prize", nullable = false)
+    int amountPrize;
+
+    @NotNull
+    @Column(name = "prize_money", nullable = false)
+    Long prizeMoney;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    Hackathon hackathon;
 }

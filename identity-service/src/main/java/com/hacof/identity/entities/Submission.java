@@ -1,6 +1,6 @@
 package com.hacof.identity.entities;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,8 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,8 +20,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.hacof.identity.enums.Status;
-import com.hacof.identity.utils.SecurityUtil;
+import com.hacof.identity.constants.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -40,8 +37,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "submissions")
-public class Submission {
+@Table(name = "Submissions")
+public class Submission extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -65,7 +62,7 @@ public class Submission {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "round_id", nullable = false)
-    Competitionround round;
+    CompetitionRound round;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -77,26 +74,5 @@ public class Submission {
 
     @ColumnDefault("CURRENT_TIMESTAMP(6)")
     @Column(name = "submitted_at")
-    Instant submittedAt;
-
-    Instant createdAt;
-    Instant updatedAt;
-    String createdBy;
-    String updatedBy;
-
-    @PrePersist
-    public void handleBeforeCreate() {
-        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.createdAt = Instant.now();
-    }
-
-    @PreUpdate
-    public void handleBeforeUpdate() {
-        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        this.updatedAt = Instant.now();
-    }
+    LocalDateTime submittedAt;
 }

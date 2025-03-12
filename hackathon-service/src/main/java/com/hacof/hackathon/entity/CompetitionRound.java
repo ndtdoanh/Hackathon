@@ -1,11 +1,16 @@
 package com.hacof.hackathon.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
-import com.hacof.hackathon.constant.RoundType;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.hackathon.constant.Name;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,27 +26,45 @@ import lombok.experimental.FieldDefaults;
 public class CompetitionRound extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
+    long id;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    RoundType name;
+    @Column(name = "name", nullable = false)
+    Name name;
 
+    @Lob
+    @Column(name = "description")
     String description;
-    LocalDateTime startDate;
-    LocalDateTime endDate;
-    int maxTeam;
-    boolean isVideoRound = false;
 
-    @ManyToOne
-    @JoinColumn(name = "hackathon_id")
-    private Hackathon hackathon;
+    @NotNull
+    @Column(name = "start_date", nullable = false)
+    Instant startDate;
+
+    @NotNull
+    @Column(name = "end_date", nullable = false)
+    Instant endDate;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    Hackathon hackathon;
+
+    @NotNull
+    @Column(name = "max_team", nullable = false)
+    Integer maxTeam;
+
+    @ColumnDefault("0")
+    @Column(name = "is_video_round")
+    Boolean isVideoRound;
 
     @ManyToMany
-    private List<Judge> judges;
+    List<Judge> judges;
 
     @ManyToMany
-    private List<Mentor> mentors;
+    List<Mentor> mentors;
 
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Resource> resources;
+    List<Resource> resources;
 }

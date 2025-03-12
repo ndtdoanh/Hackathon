@@ -1,32 +1,52 @@
 package com.hacof.hackathon.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.hackathon.constant.Status;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "ForumComments")
 public class ForumComment extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    long id;
 
-    private String comment;
-    private String status;
+    @NotNull
+    @Lob
+    @Column(name = "comment", nullable = false)
+    String comment;
 
-    @ManyToOne
-    @JoinColumn(name = "thread_id")
-    private ForumThread thread;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "parent_comment_id")
-    private ForumComment parentComment;
+    ForumComment parentComment;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    Status status = Status.ACTIVE;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "thread_id", nullable = false)
+    ForumThread thread;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 }

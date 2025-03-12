@@ -2,47 +2,56 @@ package com.hacof.hackathon.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
-import com.hacof.hackathon.constant.ResourceStatus;
-import com.hacof.hackathon.constant.ResourceType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "Resources")
-public class Resource {
+public class Resource extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    long id;
 
-    private String name;
+    @NotNull
+    @Column(name = "name", nullable = false)
+    String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "resource_type")
-    private ResourceType resourceType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "resource_type_id")
+    ResourceType resourceType;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private ResourceStatus status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "status_id")
+    ResourceStatus status;
 
-    private int quantity;
+    int quantity;
 
     @ManyToOne
     @JoinColumn(name = "competition_round_id")
-    private CompetitionRound competitionRound;
+    CompetitionRound competitionRound;
 }

@@ -6,8 +6,6 @@ import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import com.hacof.hackathon.constant.RoundType;
-
 import lombok.Data;
 import lombok.Setter;
 

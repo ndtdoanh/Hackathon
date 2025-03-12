@@ -47,7 +47,7 @@ public class AwardServiceImpl implements AwardService {
                 awardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Award not found"));
         existingAward.setName(awardDTO.getName());
         existingAward.setDescription(awardDTO.getDescription());
-        existingAward.setPrizeAmount(awardDTO.getPrizeAmount());
+        existingAward.setAmountPrize(awardDTO.getPrizeAmount());
         Award updatedAward = awardRepository.save(existingAward);
         return awardMapper.convertToDTO(updatedAward);
     }
