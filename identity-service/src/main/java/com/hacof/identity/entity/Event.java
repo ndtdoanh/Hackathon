@@ -37,7 +37,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Events")
+@Table(name = "events")
 public class Event extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,10 +74,4 @@ public class Event extends AuditBase {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "organizer_id", nullable = false)
     User organizer;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "campus_id", nullable = false)
-    Campus campus;
 }

@@ -34,7 +34,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "BlogComments")
+@Table(name = "blog_comments")
 public class BlogComment extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

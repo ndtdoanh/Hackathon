@@ -1,7 +1,10 @@
 package com.hacof.identity.entity;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 @Entity
 @Getter
 @Setter
@@ -22,4 +25,9 @@ public class UserRole extends AuditBase {
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     Role role;
+
+    public UserRole(User user, Role role) {
+        this.user = user;
+        this.role = role;
+    }
 }

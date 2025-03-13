@@ -23,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "ResourceTypes")
+@Table(name = "resource_types")
 public class ResourceType extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

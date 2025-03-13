@@ -33,8 +33,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "TeamProgress")
-public class TeamProgress {
+@Table(name = "team_progress")
+public class TeamProgress extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -49,7 +49,7 @@ public class TeamProgress {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "round_id", nullable = false)
-    CompetitionRound round;
+    Round round;
 
     @NotNull
     @Enumerated(EnumType.STRING)

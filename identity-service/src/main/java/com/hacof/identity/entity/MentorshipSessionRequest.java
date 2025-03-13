@@ -1,10 +1,13 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.Status;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
+
+import com.hacof.identity.constant.Status;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -14,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "mentorship_session_requests")
-public class MentorshipSessionRequest {
+public class MentorshipSessionRequest extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +35,6 @@ public class MentorshipSessionRequest {
     @JoinColumn(name = "team_id", nullable = false)
     Team team;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    User createdBy;
-
     LocalDateTime startTime;
     LocalDateTime endTime;
     String location;
@@ -43,15 +42,11 @@ public class MentorshipSessionRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.PENDING; //status enum("pending", "rejected", "approved", "deleted", "completed")
+    Status status = Status.PENDING;
 
     @ManyToOne
     @JoinColumn(name = "evaluated_by")
     User evaluatedBy;
 
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
     LocalDateTime evaluatedAt;
-
-
 }

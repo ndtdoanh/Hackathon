@@ -1,11 +1,13 @@
 package com.hacof.identity.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import java.time.Instant;
 
 import com.hacof.identity.constant.MentorshipStatus;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -15,7 +17,7 @@ import com.hacof.identity.constant.MentorshipStatus;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "mentorship_requests")
-public class MentorshipRequest extends AuditBase {
+public class MentorshipRequest extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,35 +35,14 @@ public class MentorshipRequest extends AuditBase {
     @JoinColumn(name = "team_id")
     Team team;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    User createdBy;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    MentorshipStatus status; // status enum("pending", "rejected", "approved", "deleted", "completed")
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    Instant createdAt;
-
-    @Column(name = "updated_at")
-    Instant updatedAt;
+    MentorshipStatus status = MentorshipStatus.PENDING;
 
     @Column(name = "evaluated_at")
-    Instant evaluatedAt;
+    LocalDateTime evaluatedAt;
 
     @ManyToOne
     @JoinColumn(name = "evaluated_by")
     User evaluatedBy;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-        status = MentorshipStatus.PENDING;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
-    }
 }

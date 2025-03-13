@@ -1,7 +1,6 @@
 package com.hacof.identity.entity;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,20 +9,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.identity.constant.Status;
 
@@ -43,7 +37,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "hackathons")
-public class Hackathon extends AuditBase {
+public class Hackathon extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -76,36 +70,31 @@ public class Hackathon extends AuditBase {
     @Column(name = "max_team_size")
     int maxTeamSize;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by_user_id", nullable = false)
-    private User createdBy;
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Round> rounds;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Round> rounds;
+    Set<UserHackathon> participants;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserHackathon> participants;
+    List<TeamRequest> teamRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TeamRequest> teamRequests;
+    List<IndividualRegistrationRequest> individualRegistrationRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IndividualRegistrationRequest> individualRegistrationRequests;
+    List<MentorshipRequest> mentorshipRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MentorshipRequest> mentorshipRequests;
+    List<MentorshipSessionRequest> mentorshipSessionRequests;
 
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MentorshipSessionRequest> mentorshipSessionRequests;
-
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "organizer_id", nullable = false)
-//    User organizer;
+    //    @NotNull
+    //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    //    @OnDelete(action = OnDeleteAction.CASCADE)
+    //    @JoinColumn(name = "organizer_id", nullable = false)
+    //    User organizer;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     Status status = Status.UPCOMING;
-
 }

@@ -28,7 +28,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "submissions")
-public class Submission extends AuditBase {
+public class Submission extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -38,13 +38,6 @@ public class Submission extends AuditBase {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "round_id", nullable = false)
     Round round;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    User createdBy;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     List<FileUrl> fileUrls;

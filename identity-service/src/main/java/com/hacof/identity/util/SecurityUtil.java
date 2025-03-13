@@ -7,10 +7,24 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+import com.hacof.identity.entity.User;
+import com.hacof.identity.repository.UserRepository;
+
+@Component
 public class SecurityUtil {
+
+    private static UserRepository userRepository;
+
+    public SecurityUtil(UserRepository userRepository) {
+        SecurityUtil.userRepository = userRepository;
+    }
+
+    public static Optional<User> getCurrentUser() {
+        return getCurrentUserLogin().flatMap(userRepository::findByUsername);
+    }
+
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));

@@ -30,7 +30,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "feedback")
+@Table(name = "feedbacks")
 public class Feedback extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

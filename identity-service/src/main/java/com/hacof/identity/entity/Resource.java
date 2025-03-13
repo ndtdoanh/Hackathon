@@ -29,7 +29,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Resources")
+@Table(name = "resources")
 public class Resource extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,5 +53,5 @@ public class Resource extends AuditBase {
 
     @ManyToOne
     @JoinColumn(name = "competition_round_id")
-    CompetitionRound competitionRound;
+    Round round;
 }

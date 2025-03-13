@@ -2,6 +2,7 @@ package com.hacof.identity.entity;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -40,4 +41,8 @@ public class Role extends AuditBase {
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<RolePermission> rolePermissions = new HashSet<>();
+
+    public Set<Permission> getPermissions() {
+        return rolePermissions.stream().map(RolePermission::getPermission).collect(Collectors.toSet());
+    }
 }

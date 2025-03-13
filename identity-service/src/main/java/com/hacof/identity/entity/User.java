@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-// src/main/java/com/hacof/identity/entity/User.java
 @Entity
 @Getter
 @Setter
@@ -27,7 +26,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "users")
-public class User extends AuditBase {
+public class User extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -59,10 +58,6 @@ public class User extends AuditBase {
     @Column(name = "status")
     Status status = Status.ACTIVE;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by_user_id")
-    User createdBy;
-
     @OneToMany(mappedBy = "createdBy")
     List<User> createdUsers;
 
@@ -84,7 +79,7 @@ public class User extends AuditBase {
 
     // Team Leader of multiple teams
     @OneToMany(mappedBy = "teamLeader", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Team> ledTeams;
+    List<Team> leadTeams;
 
     // Mentorship Requests
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -120,4 +115,18 @@ public class User extends AuditBase {
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     List<IndividualRegistrationRequest> individualRegistrationRequests;
+
+    public void addRole(Role role) {
+        if (this.userRoles == null) {
+            this.userRoles = new HashSet<>();
+        }
+
+        boolean alreadyHasRole =
+                this.userRoles.stream().anyMatch(userRole -> userRole.getRole().equals(role));
+
+        if (!alreadyHasRole) {
+            UserRole userRole = new UserRole(this, role);
+            this.userRoles.add(userRole);
+        }
+    }
 }

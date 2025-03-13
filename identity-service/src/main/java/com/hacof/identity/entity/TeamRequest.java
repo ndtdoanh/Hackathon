@@ -1,6 +1,10 @@
 package com.hacof.identity.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import com.hacof.identity.constant.Status;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_requests")
-public class TeamRequest extends AuditBase {
+public class TeamRequest extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -21,9 +25,8 @@ public class TeamRequest extends AuditBase {
     @JoinColumn(name = "hackathon_id", nullable = false)
     Hackathon hackathon;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    User createdBy;
-
-    status enum("pending", "approved", "rejected")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    Status status = Status.PENDING;
 }

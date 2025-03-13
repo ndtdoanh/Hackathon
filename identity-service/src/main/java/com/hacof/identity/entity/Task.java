@@ -37,7 +37,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Tasks")
+@Table(name = "tasks")
 public class Task extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,11 +76,11 @@ public class Task extends AuditBase {
     @JoinColumn(name = "assigned_to", nullable = false)
     User assignedTo;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "mentor_id", nullable = false)
-    Mentor mentor;
+    //    @NotNull
+    //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    //    @OnDelete(action = OnDeleteAction.CASCADE)
+    //    @JoinColumn(name = "mentor_id", nullable = false)
+    //    Mentor mentor;
 
     @Column(name = "list_name")
     String listName;

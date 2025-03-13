@@ -1,6 +1,7 @@
 package com.hacof.identity.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "file_urls")
-public class FileUrl {
+public class FileUrl extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +30,6 @@ public class FileUrl {
 
     @Column(name = "file_size", nullable = false)
     int fileSize;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    User createdBy;
 
     @ManyToOne
     @JoinColumn(name = "submission_id", nullable = false)

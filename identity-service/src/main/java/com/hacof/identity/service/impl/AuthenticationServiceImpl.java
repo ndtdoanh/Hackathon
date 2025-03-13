@@ -5,7 +5,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,9 +25,9 @@ import com.hacof.identity.dto.request.RefreshRequest;
 import com.hacof.identity.dto.response.AuthenticationResponse;
 import com.hacof.identity.dto.response.IntrospectResponse;
 import com.hacof.identity.entity.InvalidatedToken;
-import com.hacof.identity.entity.Permission;
 import com.hacof.identity.entity.Role;
 import com.hacof.identity.entity.User;
+import com.hacof.identity.entity.UserRole;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.repository.InvalidatedTokenRepository;
@@ -135,9 +134,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .lastName(userInfo.getFamilyName())
                     .isVerified(userInfo.isVerifiedEmail())
                     .status(Status.ACTIVE)
-                    .roles(Set.of(teamMemberRole))
                     .build();
-            user.setCreatedBy(userInfo.getEmail());
+            user.setCreatedBy(user);
+
+            UserRole userRole =
+                    UserRole.builder().user(user).role(teamMemberRole).build();
+
+            user.getUserRoles().add(userRole);
 
             user = userRepository.save(user);
             log.info("User created with email: {}", user.getUsername());
@@ -147,7 +150,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             user.setLastName(userInfo.getFamilyName());
             user.setVerified(userInfo.isVerifiedEmail());
 
-            user.setLastModifiedBy(userInfo.getEmail());
+            user.setLastModifiedBy(user);
             userRepository.save(user);
             log.info("User updated with email: {}", user.getUsername());
         }
@@ -214,10 +217,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
-        String role = user.getRoles().iterator().next().getName();
-        List<String> permissions = user.getRoles().stream()
-                .flatMap(roleObj -> roleObj.getPermissions().stream())
-                .map(Permission::getName)
+        String role = user.getUserRoles().iterator().next().getRole().getName();
+
+        List<String> permissions = user.getUserRoles().stream()
+                .flatMap(userRole -> userRole.getRole().getRolePermissions().stream())
+                .map(rolePermission -> rolePermission.getPermission().getName())
                 .collect(Collectors.toList());
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -272,12 +276,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
 
-        if (!CollectionUtils.isEmpty(user.getRoles()))
-            user.getRoles().forEach(role -> {
-                stringJoiner.add(role.getName());
+        if (!CollectionUtils.isEmpty(user.getUserRoles()))
+            user.getUserRoles().forEach(userRole -> {
+                stringJoiner.add(userRole.getRole().getName());
 
-                if (!CollectionUtils.isEmpty(role.getPermissions()))
-                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+                if (!CollectionUtils.isEmpty(userRole.getRole().getRolePermissions()))
+                    userRole.getRole()
+                            .getRolePermissions()
+                            .forEach(rolePermission -> stringJoiner.add(
+                                    rolePermission.getPermission().getName()));
             });
 
         return stringJoiner.toString();

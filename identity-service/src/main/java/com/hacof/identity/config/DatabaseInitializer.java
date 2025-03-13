@@ -1,6 +1,5 @@
 package com.hacof.identity.config;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.entity.Permission;
 import com.hacof.identity.entity.Role;
+import com.hacof.identity.entity.RolePermission;
 import com.hacof.identity.entity.User;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
@@ -561,7 +561,6 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("UPDATE_FORUMTHREAD", "/api/v1/forumthreads/{id}", "PUT", "FORUMTHREADS"),
                 new Permission("DELETE_FORUMTHREAD", "/api/v1/forumthreads/{id}", "DELETE", "FORUMTHREADS"));
 
-        permissions.forEach(permission -> permission.setCreatedBy("ADMIN"));
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
     }
@@ -580,8 +579,13 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         Set<String> permissionNames = ROLE_PERMISSIONS.getOrDefault(roleName, Set.of());
         List<Permission> permissions = permissionRepository.findByNameIn(permissionNames);
-        role.setPermissions(new HashSet<>(permissions));
-        role.setCreatedBy("ADMIN");
+
+        for (Permission permission : permissions) {
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setRole(role);
+            rolePermission.setPermission(permission);
+            role.getRolePermissions().add(rolePermission);
+        }
 
         roleRepository.save(role);
     }
@@ -608,8 +612,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         user.setLastName(lastName);
         user.setVerified(false);
         user.setStatus(Status.ACTIVE);
-        user.setRoles(Set.of(role));
-        user.setCreatedBy("ADMIN");
+        user.addRole(role);
 
         userRepository.save(user);
     }

@@ -1,6 +1,5 @@
 package com.hacof.identity.service.impl;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +9,9 @@ import com.hacof.identity.dto.request.RoleCreateRequest;
 import com.hacof.identity.dto.request.RoleUpdateRequest;
 import com.hacof.identity.dto.response.PermissionResponse;
 import com.hacof.identity.dto.response.RoleResponse;
+import com.hacof.identity.entity.Permission;
 import com.hacof.identity.entity.Role;
+import com.hacof.identity.entity.RolePermission;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.RoleMapper;
@@ -43,25 +44,37 @@ public class RoleServiceImpl implements RoleService {
         }
 
         var role = roleMapper.toRole(request);
-
         var permissionsIds =
                 request.getPermissions().stream().map(Long::valueOf).collect(Collectors.toSet());
 
         var permissions = permissionRepository.findAllById(permissionsIds);
-        role.setPermissions(new HashSet<>(permissions));
 
+        role = roleRepository.save(role);
+        final Role finalRole = role;
+
+        var rolePermissions = permissions.stream()
+                .map(permission -> RolePermission.builder()
+                        .role(finalRole)
+                        .permission(permission)
+                        .build())
+                .collect(Collectors.toSet());
+
+        role.setRolePermissions(rolePermissions);
         role = roleRepository.save(role);
 
         RoleResponse roleResponse = roleMapper.toRoleResponse(role);
 
-        roleResponse.setPermissions(role.getPermissions().stream()
-                .map(permission -> PermissionResponse.builder()
-                        .id(permission.getId())
-                        .name(permission.getName())
-                        .apiPath(permission.getApiPath())
-                        .method(permission.getMethod())
-                        .module(permission.getModule())
-                        .build())
+        roleResponse.setPermissions(role.getRolePermissions().stream()
+                .map(rolePermission -> {
+                    Permission permission = rolePermission.getPermission();
+                    return PermissionResponse.builder()
+                            .id(permission.getId())
+                            .name(permission.getName())
+                            .apiPath(permission.getApiPath())
+                            .method(permission.getMethod())
+                            .module(permission.getModule())
+                            .build();
+                })
                 .collect(Collectors.toSet()));
 
         return roleResponse;
@@ -93,8 +106,16 @@ public class RoleServiceImpl implements RoleService {
 
             var validPermissions = permissionRepository.findAllById(permissions);
 
-            if (!validPermissions.isEmpty()) {
-                role.setPermissions(new HashSet<>(validPermissions));
+            for (Permission permission : validPermissions) {
+                boolean alreadyExists = role.getRolePermissions().stream()
+                        .anyMatch(rp -> rp.getPermission().getId() == permission.getId());
+
+                if (!alreadyExists) {
+                    RolePermission rolePermission = new RolePermission();
+                    rolePermission.setRole(role);
+                    rolePermission.setPermission(permission);
+                    role.getRolePermissions().add(rolePermission);
+                }
             }
         }
 

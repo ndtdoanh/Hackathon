@@ -33,7 +33,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "ChatMessages")
+@Table(name = "chat_messages")
 public class ChatMessage extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

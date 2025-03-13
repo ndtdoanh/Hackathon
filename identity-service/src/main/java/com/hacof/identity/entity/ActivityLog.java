@@ -38,7 +38,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "ActivityLogs")
+@Table(name = "activity_logs")
 public class ActivityLog extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

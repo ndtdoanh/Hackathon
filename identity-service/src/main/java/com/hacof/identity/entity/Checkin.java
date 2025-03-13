@@ -32,7 +32,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Checkins")
+@Table(name = "checkins")
 public class Checkin extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

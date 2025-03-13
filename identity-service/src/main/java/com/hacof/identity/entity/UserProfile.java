@@ -35,7 +35,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "UserProfiles")
+@Table(name = "user_profiles")
 public class UserProfile extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,7 +9,7 @@ import com.hacof.identity.entity.Role;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
-    @Mapping(target = "permissions", ignore = true)
+    @Mapping(target = "rolePermissions", ignore = true)
     Role toRole(RoleCreateRequest request);
 
     RoleResponse toRoleResponse(Role role);

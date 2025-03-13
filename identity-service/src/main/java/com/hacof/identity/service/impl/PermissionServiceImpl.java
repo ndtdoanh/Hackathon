@@ -9,6 +9,7 @@ import com.hacof.identity.dto.request.PermissionUpdateRequest;
 import com.hacof.identity.dto.response.PermissionResponse;
 import com.hacof.identity.entity.Permission;
 import com.hacof.identity.entity.Role;
+import com.hacof.identity.entity.RolePermission;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.PermissionMapper;
@@ -80,11 +81,12 @@ public class PermissionServiceImpl implements PermissionService {
                 .findById(permissionId)
                 .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_EXISTED));
 
-        if (!role.getPermissions().contains(permission)) {
-            throw new AppException(ErrorCode.PERMISSION_NOT_IN_ROLE);
-        }
+        RolePermission rolePermission = role.getRolePermissions().stream()
+                .filter(rp -> rp.getPermission().equals(permission))
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_IN_ROLE));
 
-        role.getPermissions().remove(permission);
+        role.getRolePermissions().remove(rolePermission);
         roleRepository.save(role);
     }
 }

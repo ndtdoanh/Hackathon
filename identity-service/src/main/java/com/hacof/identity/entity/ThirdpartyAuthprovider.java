@@ -33,7 +33,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "ThirdpartyAuthproviders")
+@Table(name = "thirdparty_authproviders")
 public class ThirdpartyAuthprovider extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -33,7 +33,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "ForumThreads")
+@Table(name = "forum_threads")
 public class ForumThread extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

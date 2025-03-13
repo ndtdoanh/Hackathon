@@ -1,12 +1,14 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.RoundStatus;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.*;
+
+import com.hacof.identity.constant.RoundStatus;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -52,4 +54,3 @@ public class Round {
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JudgeRound> judgeRounds;
 }
-

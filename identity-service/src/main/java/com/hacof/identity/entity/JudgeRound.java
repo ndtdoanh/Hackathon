@@ -1,6 +1,7 @@
 package com.hacof.identity.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "judge_rounds")
-public class JudgeRound {
+public class JudgeRound extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +26,4 @@ public class JudgeRound {
     @ManyToOne
     @JoinColumn(name = "round_id", nullable = false)
     Round round;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    User createdBy;
 }

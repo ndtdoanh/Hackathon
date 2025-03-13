@@ -1,6 +1,5 @@
 package com.hacof.identity.entity;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -68,11 +67,11 @@ public class Team extends AuditBase {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<MentorshipSessionRequest> mentorshipSessionRequests;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "campus_id", nullable = false)
-    Campus campus;
+    //    @NotNull
+    //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    //    @OnDelete(action = OnDeleteAction.CASCADE)
+    //    @JoinColumn(name = "campus_id", nullable = false)
+    //    Campus campus;
 
     @Lob
     @Column(name = "bio")

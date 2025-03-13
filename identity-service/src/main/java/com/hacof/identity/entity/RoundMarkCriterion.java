@@ -1,10 +1,11 @@
 package com.hacof.identity.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Entity
 @Getter
@@ -13,8 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "round_mark_criteria")
-public class RoundMarkCriterion extends AuditBase {
+@Table(name = "round_mark_criterions")
+public class RoundMarkCriterion extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +30,6 @@ public class RoundMarkCriterion extends AuditBase {
     int maxScore;
 
     String note;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    User createdBy;
 
     @OneToMany(mappedBy = "roundMarkCriterion", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<JudgeSubmissionDetail> judgeSubmissionDetails;

@@ -1,7 +1,6 @@
 package com.hacof.identity.service.impl;
 
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,20 +55,20 @@ public class UserServiceImpl implements UserService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         User user = userMapper.toUser(request);
-
         user.setPassword(encodedPassword);
         user.setVerified(false);
         user.setStatus(Status.ACTIVE);
+
+        Role assignedRole = null;
 
         if (creatorRole.getName().equals("ADMIN")) {
             if (request.getAssignedRole() != null && !request.getAssignedRole().equals("ORGANIZATION")) {
                 throw new AppException(ErrorCode.UNAUTHORIZED);
             }
 
-            Role organizationRole = roleRepository
+            assignedRole = roleRepository
                     .findByName("ORGANIZATION")
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            user.setRoles(Set.of(organizationRole));
 
         } else if (creatorRole.getName().equals("ORGANIZATION")) {
             if (request.getAssignedRole() == null || request.getAssignedRole().isBlank()) {
@@ -81,17 +80,19 @@ public class UserServiceImpl implements UserService {
                 throw new AppException(ErrorCode.INVALID_ASSIGNED_ROLE);
             }
 
-            Role assignedRole = roleRepository
+            assignedRole = roleRepository
                     .findByName(request.getAssignedRole())
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-            user.setRoles(Set.of(assignedRole));
 
         } else {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
+
+        user.addRole(assignedRole);
         user = userRepository.save(user);
 
-        return userMapper.toUserResponse(user);
+        UserResponse userResponse = userMapper.toUserResponse(user);
+        return userResponse;
     }
 
     @Override
@@ -136,6 +137,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateMyInfo(UserUpdateRequest request) {
         String currentUsername =
                 SecurityContextHolder.getContext().getAuthentication().getName();
+
         User user = userRepository
                 .findByUsername(currentUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
