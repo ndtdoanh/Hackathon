@@ -18,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "rounds")
-public class Round {
+public class Round extends AuditBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,7 @@ public class Round {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    RoundStatus status; //  status enum("upcoming", "ongoing", "completed", "cancelled")
+    RoundStatus status = RoundStatus.UPCOMING;
 
     // Submissions related to this round
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -53,4 +53,8 @@ public class Round {
     // Judges assigned to this round
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JudgeRound> judgeRounds;
+
+    // Teams that participated in this round
+    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRound> teamRounds;
 }

@@ -49,10 +49,6 @@ public class Submission extends AuditUserBase {
     @Column(name = "status")
     Status status = Status.PENDING;
 
-    @Lob
-    @Column(name = "feedback")
-    String feedback;
-
     @ColumnDefault("CURRENT_TIMESTAMP(6)")
     @Column(name = "submitted_at")
     LocalDateTime submittedAt;

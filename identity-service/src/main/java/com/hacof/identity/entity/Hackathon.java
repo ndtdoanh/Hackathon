@@ -2,7 +2,6 @@ package com.hacof.identity.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -70,11 +69,21 @@ public class Hackathon extends AuditUserBase {
     @Column(name = "max_team_size")
     int maxTeamSize;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    Status status = Status.UPCOMING;
+
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Round> rounds;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<UserHackathon> participants;
+    List<TeamHackathon> teamHackathons;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<HackathonResult> hackathonResults;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<UserHackathon> userHackathons;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TeamRequest> teamRequests;
@@ -88,13 +97,9 @@ public class Hackathon extends AuditUserBase {
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     List<MentorshipSessionRequest> mentorshipSessionRequests;
 
-    //    @NotNull
-    //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    //    @OnDelete(action = OnDeleteAction.CASCADE)
-    //    @JoinColumn(name = "organizer_id", nullable = false)
-    //    User organizer;
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SponsorshipHackathon> sponsorshipHackathons;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    Status status = Status.UPCOMING;
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Device> devices;
 }

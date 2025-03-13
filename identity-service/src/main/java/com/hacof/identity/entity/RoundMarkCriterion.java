@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "round_mark_criterions")
+@Table(name = "round_mark_criteria")
 public class RoundMarkCriterion extends AuditUserBase {
 
     @Id

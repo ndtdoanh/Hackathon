@@ -1,7 +1,5 @@
 package com.hacof.identity.entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,29 +16,28 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "forum_threads")
-public class ForumThread extends AuditUserBase {
+@Table(name = "thread_posts")
+public class ThreadPost extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
-    String title;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "forum_category_id", nullable = false)
-    ForumCategory forumCategory;
+    @JoinColumn(name = "forum_thread_id", nullable = false)
+    ForumThread forumThread;
 
-    @Column(name = "is_locked", nullable = false)
-    boolean isLocked = false;
+    @Lob
+    @NotNull
+    @Column(name = "content", nullable = false)
+    String content;
 
-    @Column(name = "is_pinned", nullable = false)
-    boolean isPinned = false;
+    @Column(name = "is_deleted", nullable = false)
+    boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ThreadPost> threadPosts;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deleted_by")
+    User deletedBy;
 }

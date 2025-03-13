@@ -57,7 +57,7 @@ public class Event extends AuditBase {
 
     @ColumnDefault("0")
     @Column(name = "notification_sent")
-    Boolean notificationSent;
+    boolean notificationSent;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type")

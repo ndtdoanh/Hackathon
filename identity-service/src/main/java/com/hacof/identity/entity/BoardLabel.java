@@ -1,7 +1,5 @@
 package com.hacof.identity.entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,29 +16,24 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "forum_threads")
-public class ForumThread extends AuditUserBase {
+@Table(name = "board_labels")
+public class BoardLabel extends AuditBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
-    String title;
+    @Column(name = "name", nullable = false)
+    String name;
+
+    @NotNull
+    @Column(name = "color", nullable = false)
+    String color;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "forum_category_id", nullable = false)
-    ForumCategory forumCategory;
-
-    @Column(name = "is_locked", nullable = false)
-    boolean isLocked = false;
-
-    @Column(name = "is_pinned", nullable = false)
-    boolean isPinned = false;
-
-    @OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ThreadPost> threadPosts;
+    @JoinColumn(name = "board_id", nullable = false)
+    Board board;
 }

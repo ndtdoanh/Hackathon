@@ -1,7 +1,5 @@
 package com.hacof.identity.entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,29 +16,29 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "forum_threads")
-public class ForumThread extends AuditUserBase {
-
+@Table(name = "hackathon_results")
+public class HackathonResult extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
-    String title;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    Hackathon hackathon;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "forum_category_id", nullable = false)
-    ForumCategory forumCategory;
+    @JoinColumn(name = "team_id", nullable = false)
+    Team team;
 
-    @Column(name = "is_locked", nullable = false)
-    boolean isLocked = false;
+    @Column(nullable = false)
+    int totalScore;
 
-    @Column(name = "is_pinned", nullable = false)
-    boolean isPinned = false;
+    @Column(nullable = false)
+    int rank;
 
-    @OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ThreadPost> threadPosts;
+    String award;
 }

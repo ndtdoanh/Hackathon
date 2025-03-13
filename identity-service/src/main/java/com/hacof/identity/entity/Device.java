@@ -1,12 +1,12 @@
 package com.hacof.identity.entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.identity.constant.DeviceStatus;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,29 +18,29 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "forum_threads")
-public class ForumThread extends AuditUserBase {
+@Table(name = "devices")
+public class Device extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
-    String title;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "forum_category_id", nullable = false)
-    ForumCategory forumCategory;
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    Hackathon hackathon;
 
-    @Column(name = "is_locked", nullable = false)
-    boolean isLocked = false;
+    @NotNull
+    @Column(name = "name", nullable = false)
+    String name;
 
-    @Column(name = "is_pinned", nullable = false)
-    boolean isPinned = false;
+    @Lob
+    @Column(name = "description")
+    String description;
 
-    @OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ThreadPost> threadPosts;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    DeviceStatus status;
 }

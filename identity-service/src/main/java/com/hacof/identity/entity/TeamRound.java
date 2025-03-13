@@ -1,29 +1,14 @@
 package com.hacof.identity.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.hacof.identity.constant.Status;
+import com.hacof.identity.constant.TeamRoundStatus;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
@@ -33,8 +18,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "team_progress")
-public class TeamProgress extends AuditBase {
+@Table(name = "team_rounds")
+public class TeamRound extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -51,8 +36,10 @@ public class TeamProgress extends AuditBase {
     @JoinColumn(name = "round_id", nullable = false)
     Round round;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    Status status;
+    @Column(nullable = false)
+    TeamRoundStatus status;
+
+    @Column(nullable = false)
+    String description;
 }

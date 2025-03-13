@@ -34,4 +34,32 @@ public class FileUrl extends AuditUserBase {
     @ManyToOne
     @JoinColumn(name = "submission_id", nullable = false)
     Submission submission;
+
+    @ManyToOne
+    @JoinColumn(name = "message_id")
+    Message message;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    Task task;
+
+    @ManyToOne
+    @JoinColumn(name = "schedule_event_id")
+    ScheduleEvent scheduleEvent;
+
+    @ManyToOne
+    @JoinColumn(name = "sponsorship_hackathon_detail_id")
+    SponsorshipHackathonDetail sponsorshipHackathonDetail;
+
+    @ManyToOne
+    @JoinColumn(name = "device_id")
+    Device device;
+
+    @ManyToOne
+    @JoinColumn(name = "user_device_id")
+    UserDevice userDevice;
+
+    @ManyToOne
+    @JoinColumn(name = "user_device_track_id")
+    UserDeviceTrack userDeviceTrack;
 }
