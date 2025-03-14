@@ -25,6 +25,7 @@ import com.hacof.identity.service.EmailService;
 import com.hacof.identity.service.OtpService;
 import com.hacof.identity.service.RoleService;
 import com.hacof.identity.service.UserService;
+import com.hacof.identity.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -166,9 +167,10 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Email has been used by another account");
         }
 
-        User user = userRepository
-                .findByUsername(getMyInfo().getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user = AuditContext.getCurrentUser();
+        if (user == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
 
         user.setTempEmail(email);
         userRepository.save(user);

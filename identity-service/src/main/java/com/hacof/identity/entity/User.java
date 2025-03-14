@@ -62,6 +62,7 @@ public class User extends AuditUserBase {
     List<User> createdUsers;
 
     // User Roles
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<UserRole> userRoles = new HashSet<>();
 

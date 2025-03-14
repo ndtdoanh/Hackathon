@@ -135,7 +135,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .isVerified(userInfo.isVerifiedEmail())
                     .status(Status.ACTIVE)
                     .build();
-            user.setCreatedBy(user);
 
             UserRole userRole =
                     UserRole.builder().user(user).role(teamMemberRole).build();

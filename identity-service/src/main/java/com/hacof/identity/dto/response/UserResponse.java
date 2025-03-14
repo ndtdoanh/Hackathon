@@ -31,6 +31,6 @@ public class UserResponse {
     }
 
     public String getStatus() {
-        return status != null ? status.name() : Status.ACTIVE.name();
+        return status != null ? status.name() : "ACTIVE";
     }
 }
