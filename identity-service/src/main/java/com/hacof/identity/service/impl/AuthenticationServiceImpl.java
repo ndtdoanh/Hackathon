@@ -9,6 +9,9 @@ import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.hacof.identity.constant.ProviderName;
+import com.hacof.identity.entity.ThirdpartyAuthprovider;
+import com.hacof.identity.repository.ThirdpartyAuthproviderRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,6 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     OutboundIdentityClient outboundIdentityClient;
     OutboundUserClient outboundUserClient;
     RoleRepository roleRepository;
+    ThirdpartyAuthproviderRepository thirdpartyAuthproviderRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -152,6 +156,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             user.setLastModifiedBy(user);
             userRepository.save(user);
             log.info("User updated with email: {}", user.getUsername());
+        }
+
+        boolean exists = thirdpartyAuthproviderRepository.existsByUserAndProviderName(user, ProviderName.GOOGLE);
+        if (!exists) {
+            ThirdpartyAuthprovider authProvider = ThirdpartyAuthprovider.builder()
+                    .user(user)
+                    .providerName(ProviderName.GOOGLE)
+                    .providerUserId(userInfo.getId())
+                    .build();
+            thirdpartyAuthproviderRepository.save(authProvider);
         }
 
         var token = generateToken(user);
