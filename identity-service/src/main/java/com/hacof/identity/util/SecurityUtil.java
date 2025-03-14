@@ -15,13 +15,13 @@ import com.hacof.identity.repository.UserRepository;
 @Component
 public class SecurityUtil {
 
-    private static UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public SecurityUtil(UserRepository userRepository) {
-        SecurityUtil.userRepository = userRepository;
+        this.userRepository = userRepository;
     }
 
-    public static Optional<User> getCurrentUser() {
+    public Optional<User> getCurrentUser() {
         return getCurrentUserLogin().flatMap(userRepository::findByUsername);
     }
 
@@ -41,5 +41,9 @@ public class SecurityUtil {
             return s;
         }
         return null;
+    }
+
+    public void setAuditUser() {
+        getCurrentUser().ifPresent(AuditContext::setCurrentUser);
     }
 }

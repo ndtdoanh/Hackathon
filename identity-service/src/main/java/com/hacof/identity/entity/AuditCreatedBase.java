@@ -15,7 +15,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.hacof.identity.util.SecurityUtil;
+import com.hacof.identity.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,6 +28,7 @@ import lombok.experimental.FieldDefaults;
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class AuditCreatedBase {
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_user_id", nullable = true, updatable = false)
     User createdBy;
@@ -42,7 +43,7 @@ public abstract class AuditCreatedBase {
 
     @PrePersist
     public void handleBeforeCreate() {
-        this.createdBy = SecurityUtil.getCurrentUser().orElse(null);
+        this.createdBy = AuditContext.getCurrentUser();
         this.createdDate = LocalDateTime.now();
     }
 

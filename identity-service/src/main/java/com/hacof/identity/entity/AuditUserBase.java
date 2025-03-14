@@ -15,7 +15,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.hacof.identity.util.SecurityUtil;
+import com.hacof.identity.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,13 +46,13 @@ public abstract class AuditUserBase {
 
     @PrePersist
     public void handleBeforeCreate() {
-        this.createdBy = SecurityUtil.getCurrentUser().orElse(null);
+        this.createdBy = AuditContext.getCurrentUser();
         this.createdDate = LocalDateTime.now();
     }
 
     @PreUpdate
     public void handleBeforeUpdate() {
-        this.lastModifiedBy = SecurityUtil.getCurrentUser().orElse(null);
+        this.lastModifiedBy = AuditContext.getCurrentUser();
         this.lastModifiedDate = LocalDateTime.now();
     }
 }
