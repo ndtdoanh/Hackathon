@@ -38,7 +38,7 @@ public class HackathonResult extends AuditBase {
     int totalScore;
 
     @Column(nullable = false)
-    int ranking;
+    int placement;
 
     String award;
 }
