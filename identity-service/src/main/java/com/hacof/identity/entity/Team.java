@@ -36,7 +36,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "teams")
-public class Team extends AuditUserBase {
+public class Team extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -74,6 +74,9 @@ public class Team extends AuditUserBase {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<MentorshipRequest> mentorshipRequests;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Feedback> feedbacks;
 
     @Lob
     @Column(name = "bio")

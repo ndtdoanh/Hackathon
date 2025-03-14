@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "message_reactions")
-public class MessageReaction extends AuditUserBase {
+public class MessageReaction extends AuditCreatedBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

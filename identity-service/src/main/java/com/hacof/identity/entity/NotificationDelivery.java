@@ -1,12 +1,12 @@
 package com.hacof.identity.entity;
 
+import com.hacof.identity.constant.NotificationMethod;
+import com.hacof.identity.constant.NotificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
-import com.hacof.identity.constant.ThreadPostReportStatus;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -15,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "thread_post_reports")
-public class ThreadPostReport extends AuditCreatedBase {
+@Table(name = "notification_deliveries")
+public class NotificationDelivery extends AuditBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,18 +24,16 @@ public class ThreadPostReport extends AuditCreatedBase {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "thread_post_id", nullable = false)
-    ThreadPost threadPost;
+    @JoinColumn(name = "notification_id", nullable = false)
+    Notification notification;
 
-    @Lob
-    @Column(name = "reason", nullable = false)
-    String reason;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "method", nullable = false)
+    NotificationMethod method;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    ThreadPostReportStatus status = ThreadPostReportStatus.PENDING;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewed_by")
-    User reviewedBy;
+    NotificationStatus status;
 }

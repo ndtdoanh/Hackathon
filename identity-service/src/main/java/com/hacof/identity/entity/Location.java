@@ -2,11 +2,10 @@ package com.hacof.identity.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,8 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "board_lists")
-public class BoardList extends AuditCreatedBase {
+@Table(name = "locations")
+public class Location extends AuditCreatedBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +25,15 @@ public class BoardList extends AuditCreatedBase {
     @Column(name = "name", nullable = false)
     String name;
 
-    @NotNull
-    @Column(name = "position", nullable = false)
-    int position;
+    @Column(name = "address")
+    String address;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "board_id", nullable = false)
-    Board board;
+    @Column(name = "latitude")
+    Double latitude;
 
-    @OneToMany(mappedBy = "boardList", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Task> tasks;
+    @Column(name = "longitude")
+    Double longitude;
+
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<RoundLocation> roundLocations;
 }

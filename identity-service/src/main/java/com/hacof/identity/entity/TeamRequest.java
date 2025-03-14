@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_requests")
-public class TeamRequest extends AuditUserBase {
+public class TeamRequest extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -29,4 +29,8 @@ public class TeamRequest extends AuditUserBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     Status status = Status.PENDING;
+
+    @ManyToOne
+    @JoinColumn(name = "reviewed_by")
+    User reviewedBy;
 }

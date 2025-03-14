@@ -125,6 +125,9 @@ public class User extends AuditUserBase {
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Board> boards;
 
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<BoardList> boardLists;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<BoardUser> boardUsers;
 
@@ -163,6 +166,15 @@ public class User extends AuditUserBase {
 
     @OneToMany(mappedBy = "reviewedBy", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ThreadPostReport> reviewedThreadReports;
+
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Feedback> receivedFeedbacks;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Feedback> createdFeedbacks;
+
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Notification> receivedNotifications;
 
     public void addRole(Role role) {
         if (this.userRoles == null) {

@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "conversations")
-public class Conversation extends AuditUserBase {
+public class Conversation extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -38,7 +38,7 @@ public class Conversation extends AuditUserBase {
     String name;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<ConversationUser> participants;
+    Set<ConversationUser> conversationUsers;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Message> messages;

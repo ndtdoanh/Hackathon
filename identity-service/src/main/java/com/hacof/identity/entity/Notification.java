@@ -1,36 +1,14 @@
 package com.hacof.identity.entity;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.hacof.identity.constant.NotificationType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
-import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import com.hacof.identity.constant.Audience;
-import com.hacof.identity.constant.Priority;
-import com.hacof.identity.constant.Type;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,55 +18,41 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "notifications")
-public class Notification extends AuditUserBase {
+public class Notification extends AuditBase{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
-    String title;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "sender_id", nullable = false)
+    User sender; //Phuc note: should not be replaced by AuditCreatedBase
 
     @NotNull
-    @Lob
-    @Column(name = "content", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    User recipient;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    NotificationType type;
+
+    @NotNull
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
-    User user;
+    @Lob
+    @Column(name = "metadata", columnDefinition = "JSON")
+    String metadata; // JSON string for extra data
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "team_id")
-    Team team;
+    @NotNull
+    @Column(name = "is_read", nullable = false)
+    Boolean isRead = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "audience")
-    Audience audience = Audience.ALL;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    Type type = Type.IN_APP;
-
-    @ColumnDefault("0")
-    @Column(name = "is_read")
-    boolean isRead;
-
-    @ColumnDefault("CURRENT_TIMESTAMP(6)")
-    @Column(name = "sent_at")
-    LocalDateTime sentAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "priority")
-    Priority priority = Priority.MEDIUM;
-
-    @Column(name = "expiry_date")
-    LocalDateTime expiryDate;
+    @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<NotificationDelivery> notificationDeliveries;
 }

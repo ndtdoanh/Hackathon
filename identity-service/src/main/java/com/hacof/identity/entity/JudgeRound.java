@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "judge_rounds")
-public class JudgeRound extends AuditUserBase {
+public class JudgeRound extends AuditCreatedBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +26,7 @@ public class JudgeRound extends AuditUserBase {
     @ManyToOne
     @JoinColumn(name = "round_id", nullable = false)
     Round round;
+
+    @Column(name = "is_deleted", nullable = false)
+    boolean isDeleted = false;
 }

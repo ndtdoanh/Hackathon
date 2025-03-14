@@ -2,14 +2,12 @@ package com.hacof.identity.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.hacof.identity.constant.TeamRoundStatus;
-
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,8 +16,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "team_rounds")
-public class TeamRound extends AuditCreatedBase {
+@Table(name = "feedbacks")
+public class Feedback extends AuditCreatedBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -27,19 +26,21 @@ public class TeamRound extends AuditCreatedBase {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "team_id", nullable = false)
-    Team team;
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    Hackathon hackathon;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "round_id", nullable = false)
-    Round round;
+    @JoinColumn(name = "mentor_id", nullable = false)
+    User mentor;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    TeamRoundStatus status;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "team_id", nullable = false)
+    Team team;
 
-    @Column(nullable = false)
-    String description;
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FeedbackDetail> feedbackDetails;
 }

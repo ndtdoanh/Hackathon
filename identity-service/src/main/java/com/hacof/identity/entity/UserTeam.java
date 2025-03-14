@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "user_teams")
-public class UserTeam {
+public class UserTeam extends AuditBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

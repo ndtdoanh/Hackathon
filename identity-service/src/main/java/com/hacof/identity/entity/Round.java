@@ -57,4 +57,7 @@ public class Round extends AuditBase {
     // Teams that participated in this round
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TeamRound> teamRounds;
+
+    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<RoundLocation> roundLocations;
 }
