@@ -1,14 +1,17 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.NotificationType;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import java.time.Instant;
-import java.util.List;
+
+import com.hacof.identity.constant.NotificationType;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -18,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "notifications")
-public class Notification extends AuditBase{
+public class Notification extends AuditBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +31,7 @@ public class Notification extends AuditBase{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "sender_id", nullable = false)
-    User sender; //Phuc note: should not be replaced by AuditCreatedBase
+    User sender; // Phuc note: should not be replaced by AuditCreatedBase
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

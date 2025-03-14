@@ -1,9 +1,10 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.Status;
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.NotNull;
+
+import com.hacof.identity.constant.Status;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

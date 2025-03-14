@@ -1,12 +1,12 @@
 package com.hacof.identity.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Entity
 @Getter

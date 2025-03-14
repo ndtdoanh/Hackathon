@@ -1,8 +1,10 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.RoundLocationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
+import com.hacof.identity.constant.RoundLocationType;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

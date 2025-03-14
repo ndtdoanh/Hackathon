@@ -1,13 +1,15 @@
 package com.hacof.identity.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.List;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter

@@ -1,12 +1,13 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.NotificationMethod;
-import com.hacof.identity.constant.NotificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
+import com.hacof.identity.constant.NotificationMethod;
+import com.hacof.identity.constant.NotificationStatus;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.time.Instant;
 
 @Entity
 @Getter
