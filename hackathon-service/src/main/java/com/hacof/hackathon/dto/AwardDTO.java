@@ -1,9 +1,11 @@
 package com.hacof.hackathon.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class AwardDTO {
+@Getter
+@Setter
+public class AwardDTO extends AuditBaseDTO {
     private Long id;
     private String name;
     private String description;
