@@ -7,12 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import com.hacof.hackathon.constant.ResourceStatus;
 import com.hacof.hackathon.constant.ResourceType;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
-@Data
+@Getter
 @Setter
-public class ResourceDTO {
+public class ResourceDTO extends AuditBaseDTO {
     private Long id;
 
     @NotBlank(message = "Name is mandatory")
