@@ -3,61 +3,51 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import com.hacof.hackathon.constant.RoundType;
 
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Data
 @Setter
-public class CompetitionRoundDTO {
-    private Long id;
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class CompetitionRoundDTO extends AuditBaseDTO {
+    Long id;
 
     @NotNull(message = "Round name is mandatory (QUALIFYING, SEMIFINAL, FINAL)")
-    private RoundType name;
+    RoundType name;
 
-    private String description;
+    String description;
 
     @NotNull(message = "Start date is mandatory")
-    private LocalDateTime startDate;
+    LocalDateTime startDate;
 
     @NotNull(message = "End date is mandatory")
-    private LocalDateTime endDate;
+    LocalDateTime endDate;
 
     @NotNull(message = "Max team is mandatory")
-    private int maxTeam;
+    @Min(value = 1, message = "Max team must be at least 1")
+    int maxTeam;
 
-    @NotNull(message = "Is video round is mandatory")
-    private boolean isVideoRound = false;
+    boolean isVideoRound = false;
 
-    @NotBlank(message = "Created by is mandatory")
-    private String createdBy;
+    @NotNull(message = "Hackathon ID is mandatory")
+    Long hackathonId;
 
-    @NotNull(message = "Created date is mandatory")
-    private LocalDateTime createdDate;
+    List<Long> judgeIds;
 
-    @NotBlank(message = "Last modified by is mandatory")
-    private String lastModifiedBy;
+    List<Long> mentorIds;
 
-    @NotNull(message = "Last modified date is mandatory")
-    private LocalDateTime lastModifiedDate;
-
-    private Long hackathonId;
-
-    private String hackathonName;
-
-    private List<Long> judgeIds;
-
-    private List<Long> teamIds;
-
-    private List<Long> mentorIds;
-
-    private String location;
-
-    private String status;
-
-    private List<String> passedTeams;
+    //    private List<Long> teamIds;
+    //
+    //    private String location;
+    //
+    //    private String status;
+    //
+    //    private List<String> passedTeams;
 }
