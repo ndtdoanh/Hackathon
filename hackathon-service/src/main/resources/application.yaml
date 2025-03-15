@@ -20,4 +20,12 @@ spring:
 #    service-url:
 #      defaultZone: http://localhost:8761/eureka
 #    register-with-eureka: true
+logging:
+  level:
+    root: info
+    com:
+      hacof:
+        controller: debug
+  file:
+    name: logs/hackathon-service.log
 #    fetch-registry: true
