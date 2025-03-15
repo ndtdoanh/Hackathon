@@ -7,18 +7,23 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.util.CustomLocalDateTimeDeserialized;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class HackathonDTO {
+@Getter
+@Setter
+public class HackathonDTO extends AuditBaseDTO {
     private Long id;
 
     @NotBlank(message = "Name is mandatory")
     private String name;
 
+    @NotBlank(message = "Banner image URL is mandatory")
     private String bannerImageUrl;
+
     private String description;
 
     @NotNull(message = "Start date is mandatory")
@@ -29,23 +34,24 @@ public class HackathonDTO {
     @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     private LocalDateTime endDate;
 
-    private Long organizerId;
-    private String organizerName;
-    private List<CompetitionRoundDTO> rounds;
-    private List<EventDTO> events;
-    private List<JudgeDTO> judges;
-    // private List<CheckInDTO> checkIns;
-    private List<ResourceDTO> resources;
+    private int maxTeams;
 
-    @NotBlank(message = "Created by is mandatory")
-    private String createdBy;
+    private int minTeamSize;
 
-    @NotNull(message = "Created date is mandatory")
-    private LocalDateTime createdDate;
+    private int maxTeamSize;
 
-    @NotBlank(message = "Last modified by is mandatory")
-    private String lastModifiedBy;
+    @NotNull(message = "Organizer ID is mandatory")
+    private User organizerId;
 
-    @NotNull(message = "Last modified date is mandatory")
-    private LocalDateTime lastModifiedDate;
+    private String status;
+
+    private List<Long> eventIds;
+
+    //    private Long organizerId;
+    //    private String organizerName;
+    //    private List<CompetitionRoundDTO> rounds;
+    //    private List<EventDTO> events;
+    //    private List<JudgeDTO> judges;
+    //    // private List<CheckInDTO> checkIns;
+    //    private List<ResourceDTO> resources;
 }
