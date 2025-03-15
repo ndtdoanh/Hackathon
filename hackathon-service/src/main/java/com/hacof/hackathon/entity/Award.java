@@ -23,7 +23,7 @@ public class Award extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Lob
@@ -31,16 +31,16 @@ public class Award extends AuditBase {
     String description;
 
     @NotNull
-    @Column(name = "amount_prize", nullable = false)
+    @Column(name = "amount_prize")
     int amountPrize;
 
     @NotNull
-    @Column(name = "prize_money", nullable = false)
+    @Column(name = "prize_money")
     Long prizeMoney;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 }

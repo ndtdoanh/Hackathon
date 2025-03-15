@@ -30,11 +30,11 @@ public class Campus extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @NotNull
-    @Column(name = "location", nullable = false)
+    @Column(name = "location")
     String location;
 
     @OneToMany(mappedBy = "campus", orphanRemoval = true)

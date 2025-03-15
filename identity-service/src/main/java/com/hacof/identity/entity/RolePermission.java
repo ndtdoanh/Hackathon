@@ -19,10 +19,10 @@ public class RolePermission extends AuditBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id")
     Role role;
 
     @ManyToOne
-    @JoinColumn(name = "permission_id", nullable = false)
+    @JoinColumn(name = "permission_id")
     Permission permission;
 }

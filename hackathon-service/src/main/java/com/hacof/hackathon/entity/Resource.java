@@ -36,7 +36,7 @@ public class Resource extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

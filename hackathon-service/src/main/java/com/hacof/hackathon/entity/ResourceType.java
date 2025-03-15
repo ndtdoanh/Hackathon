@@ -30,6 +30,6 @@ public class ResourceType extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 }

@@ -30,7 +30,7 @@ public class CompetitionRound extends AuditBase {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     Name name;
 
     @Lob
@@ -38,21 +38,21 @@ public class CompetitionRound extends AuditBase {
     String description;
 
     @NotNull
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     Instant startDate;
 
     @NotNull
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     Instant endDate;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @NotNull
-    @Column(name = "max_team", nullable = false)
+    @Column(name = "max_team")
     Integer maxTeam;
 
     @ColumnDefault("0")

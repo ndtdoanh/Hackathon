@@ -34,7 +34,7 @@ public class Role extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "role_name", nullable = false, unique = true)
+    @Column(name = "role_name", unique = true)
     String name;
 
     @Lob

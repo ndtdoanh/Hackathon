@@ -14,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
@@ -44,18 +43,15 @@ public class ActivityLog extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 
-    @NotNull
-    @Column(name = "action", nullable = false)
+    @Column(name = "action")
     String action;
 
-    @NotNull
-    @Column(name = "target", nullable = false)
+    @Column(name = "target")
     String target;
 
     @Column(name = "changed_fields")
@@ -64,7 +60,7 @@ public class ActivityLog extends AuditBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.SUCCESS;
+    Status status;
 
     @Column(name = "ip_address")
     String ipAddress;

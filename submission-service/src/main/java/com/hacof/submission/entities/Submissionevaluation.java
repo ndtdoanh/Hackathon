@@ -44,19 +44,19 @@ public class Submissionevaluation {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "submission_id", nullable = false)
+    @JoinColumn(name = "submission_id")
     Submission submission;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "judge_id", nullable = false)
+    @JoinColumn(name = "judge_id")
     User judge;
 
     @NotNull
-    @Column(name = "score", nullable = false)
+    @Column(name = "score")
     Float score;
 
     @Lob

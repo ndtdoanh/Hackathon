@@ -43,18 +43,18 @@ public class Useravatar {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 
     @NotNull
-    @Column(name = "avatar_url", nullable = false)
+    @Column(name = "avatar_url")
     String avatarUrl;
 
     @NotNull
     @ColumnDefault("CURRENT_TIMESTAMP(6)")
-    @Column(name = "uploaded_at", nullable = false)
+    @Column(name = "uploaded_at")
     Instant uploadedAt;
 
     @ColumnDefault("0")

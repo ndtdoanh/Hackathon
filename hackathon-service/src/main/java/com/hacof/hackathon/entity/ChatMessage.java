@@ -40,15 +40,15 @@ public class ChatMessage extends AuditBase {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "sender_id", nullable = false)
+    @JoinColumn(name = "sender_id")
     User sender;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "recipient_id", nullable = false)
+    @JoinColumn(name = "recipient_id")
     User recipient;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -57,18 +57,18 @@ public class ChatMessage extends AuditBase {
     Team team;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @NotNull
     @Lob
-    @Column(name = "message", nullable = false)
+    @Column(name = "message")
     String message;
 
     @NotNull
     @ColumnDefault("CURRENT_TIMESTAMP(6)")
-    @Column(name = "sent_at", nullable = false)
+    @Column(name = "sent_at")
     Instant sentAt;
 }

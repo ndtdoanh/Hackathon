@@ -45,29 +45,29 @@ public class SubmissionFile extends AuditBase {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "submission_id", nullable = false)
+    @JoinColumn(name = "submission_id")
     Submission submission;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "round_id", nullable = false)
+    @JoinColumn(name = "round_id")
     CompetitionRound round;
 
     @NotNull
-    @Column(name = "file_name", nullable = false)
+    @Column(name = "file_name")
     String fileName;
 
     @NotNull
     @Lob
-    @Column(name = "file_url", nullable = false)
+    @Column(name = "file_url")
     String fileUrl;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "file_type", nullable = false)
+    @Column(name = "file_type")
     FileType fileType;
 
     @Enumerated(EnumType.STRING)

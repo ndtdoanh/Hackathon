@@ -127,7 +127,17 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "GET_FORUMTHREAD",
                             "GET_FORUMTHREADS",
                             "UPDATE_FORUMTHREAD",
-                            "DELETE_FORUMTHREAD"),
+                            "DELETE_FORUMTHREAD",
+                            "CREATE_DEVICE",
+                            "GET_DEVICES",
+                            "GET_DEVICE",
+                            "UPDATE_DEVICE",
+                            "DELETE_DEVICE",
+                            "ASSIGN_DEVICE",
+                            "GET_USER_DEVICE",
+                            "GET_USER_DEVICES",
+                            "CREATE_USER_DEVICE_TRACK",
+                            "GET_USER_DEVICE_TRACKS"),
             "ORGANIZATION",
                     Set.of(
                             "CREATE_USER",
@@ -559,7 +569,17 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_FORUMTHREAD", "/api/v1/forumthreads/{id}", "GET", "FORUMTHREADS"),
                 new Permission("GET_FORUMTHREADS", "/api/v1/forumthreads", "GET", "FORUMTHREADS"),
                 new Permission("UPDATE_FORUMTHREAD", "/api/v1/forumthreads/{id}", "PUT", "FORUMTHREADS"),
-                new Permission("DELETE_FORUMTHREAD", "/api/v1/forumthreads/{id}", "DELETE", "FORUMTHREADS"));
+                new Permission("DELETE_FORUMTHREAD", "/api/v1/forumthreads/{id}", "DELETE", "FORUMTHREADS"),
+                new Permission("CREATE_DEVICE", "/api/v1/devices", "POST", "DEVICES"),
+                new Permission("GET_DEVICE", "/api/v1/devices/{Id}", "GET", "DEVICES"),
+                new Permission("GET_DEVICES", "/api/v1/devices", "GET", "DEVICES"),
+                new Permission("UPDATE_DEVICE", "/api/v1/devices/{Id}", "PUT", "DEVICES"),
+                new Permission("DELETE_DEVICE", "/api/v1/devices/{Id}", "DELETE", "DEVICES"),
+                new Permission("ASSIGN_DEVICE", "/api/v1/user-devices", "POST", "USER_DEVICES"),
+                new Permission("GET_USER_DEVICE", "/api/v1/user-devices/{Id}", "GET", "USER_DEVICES"),
+                new Permission("GET_USER_DEVICES", "/api/v1/user-devices", "GET", "USER_DEVICES"),
+                new Permission("CREATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks", "POST", "USER_DEVICE_TRACKS"),
+                new Permission("GET_USER_DEVICE_TRACKS", "/api/v1/user-device-tracks", "GET", "USER_DEVICE_TRACKS"));
 
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");

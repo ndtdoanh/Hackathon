@@ -22,13 +22,11 @@ public class RoundMarkCriterion extends AuditCreatedBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "round_id", nullable = false)
+    @JoinColumn(name = "round_id")
     Round round;
 
     String name;
-
     int maxScore;
-
     String note;
 
     @OneToMany(mappedBy = "roundMarkCriterion", cascade = CascadeType.ALL, orphanRemoval = true)

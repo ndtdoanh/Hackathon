@@ -25,13 +25,13 @@ public class ForumThread extends AuditBase {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     String title;
 
     @Enumerated(EnumType.STRING)

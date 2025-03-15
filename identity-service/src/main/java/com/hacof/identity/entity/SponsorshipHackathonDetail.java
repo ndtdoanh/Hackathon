@@ -3,7 +3,6 @@ package com.hacof.identity.entity;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -27,14 +26,12 @@ public class SponsorshipHackathonDetail extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "sponsorship_hackathon_id", nullable = false)
+    @JoinColumn(name = "sponsorship_hackathon_id")
     SponsorshipHackathon sponsorshipHackathon;
 
-    @NotNull
-    @Column(name = "money_spent", nullable = false)
+    @Column(name = "money_spent")
     double moneySpent;
 
     @Lob
@@ -42,14 +39,12 @@ public class SponsorshipHackathonDetail extends AuditBase {
     String content;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     SponsorshipDetailStatus status;
 
-    @NotNull
-    @Column(name = "time_from", nullable = false)
+    @Column(name = "time_from")
     LocalDateTime timeFrom;
 
-    @NotNull
-    @Column(name = "time_to", nullable = false)
+    @Column(name = "time_to")
     LocalDateTime timeTo;
 }

@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -39,18 +38,15 @@ public class ThirdpartyAuthprovider extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "provider_name", nullable = false)
+    @Column(name = "provider_name")
     ProviderName providerName;
 
-    @NotNull
-    @Column(name = "provider_user_id", nullable = false)
+    @Column(name = "provider_user_id")
     String providerUserId;
 }

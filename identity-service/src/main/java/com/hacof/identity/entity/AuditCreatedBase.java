@@ -30,15 +30,15 @@ import lombok.experimental.FieldDefaults;
 public abstract class AuditCreatedBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_id", nullable = true, updatable = false)
+    @JoinColumn(name = "created_by_user_id")
     User createdBy;
 
     @CreatedDate
-    @Column(name = "created_date", columnDefinition = "DATETIME(6)", updatable = false, nullable = false)
+    @Column(name = "created_date", columnDefinition = "DATETIME(6)")
     LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)", nullable = false)
+    @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)")
     LocalDateTime lastModifiedDate;
 
     @PrePersist

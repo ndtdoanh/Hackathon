@@ -22,17 +22,14 @@ public class JudgeSubmission extends AuditBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "judge_id", nullable = false)
+    @JoinColumn(name = "judge_id")
     User judge;
 
     @ManyToOne
-    @JoinColumn(name = "submission_id", nullable = false)
+    @JoinColumn(name = "submission_id")
     Submission submission;
 
-    @Column(nullable = false)
     int score;
-
-    @Column(length = 500)
     String note;
 
     @OneToMany(mappedBy = "judgeSubmission", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -19,20 +19,20 @@ public class FileUrl extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(name = "file_name", nullable = false)
+    @Column(name = "file_name")
     String fileName;
 
-    @Column(name = "file_url", nullable = false)
+    @Column(name = "file_url")
     String fileUrl;
 
-    @Column(name = "file_type", nullable = false)
+    @Column(name = "file_type")
     String fileType;
 
-    @Column(name = "file_size", nullable = false)
+    @Column(name = "file_size")
     int fileSize;
 
     @ManyToOne
-    @JoinColumn(name = "submission_id", nullable = false)
+    @JoinColumn(name = "submission_id")
     Submission submission;
 
     @ManyToOne

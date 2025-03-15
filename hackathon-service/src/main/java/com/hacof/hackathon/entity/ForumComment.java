@@ -26,7 +26,7 @@ public class ForumComment extends AuditBase {
 
     @NotNull
     @Lob
-    @Column(name = "comment", nullable = false)
+    @Column(name = "comment")
     String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,14 +39,14 @@ public class ForumComment extends AuditBase {
     Status status = Status.ACTIVE;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "thread_id", nullable = false)
+    @JoinColumn(name = "thread_id")
     ForumThread thread;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 }

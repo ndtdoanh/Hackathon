@@ -42,9 +42,9 @@ public class Expens extends AuditBase {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -58,15 +58,15 @@ public class Expens extends AuditBase {
     Event event;
 
     @NotNull
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount")
     Long amount;
 
     @NotNull
-    @Column(name = "expense_date", nullable = false)
+    @Column(name = "expense_date")
     LocalDate expenseDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "expense_type", nullable = false)
+    @Column(name = "expense_type")
     ExpenseType expenseType;
 }

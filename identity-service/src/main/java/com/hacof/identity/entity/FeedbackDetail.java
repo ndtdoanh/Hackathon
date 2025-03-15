@@ -3,7 +3,6 @@ package com.hacof.identity.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,25 +24,21 @@ public class FeedbackDetail extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "feedback_id", nullable = false)
+    @JoinColumn(name = "feedback_id")
     Feedback feedback;
 
-    @NotNull
     @Lob
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     String content;
 
-    @NotNull
-    @Column(name = "max_rating", nullable = false)
+    @Column(name = "max_rating")
     int maxRating;
 
-    @NotNull
     @Min(0)
     @Max(10)
-    @Column(name = "rate", nullable = false)
+    @Column(name = "rate")
     int rate;
 
     @Lob

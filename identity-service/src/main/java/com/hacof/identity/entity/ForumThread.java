@@ -3,7 +3,6 @@ package com.hacof.identity.entity;
 import java.util.List;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,20 +24,18 @@ public class ForumThread extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     String title;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "forum_category_id", nullable = false)
+    @JoinColumn(name = "forum_category_id")
     ForumCategory forumCategory;
 
-    @Column(name = "is_locked", nullable = false)
+    @Column(name = "is_locked")
     boolean isLocked = false;
 
-    @Column(name = "is_pinned", nullable = false)
+    @Column(name = "is_pinned")
     boolean isPinned = false;
 
     @OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL, orphanRemoval = true)

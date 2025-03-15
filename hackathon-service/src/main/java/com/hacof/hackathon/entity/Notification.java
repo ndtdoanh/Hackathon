@@ -46,12 +46,12 @@ public class Notification extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     String title;
 
     @NotNull
     @Lob
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

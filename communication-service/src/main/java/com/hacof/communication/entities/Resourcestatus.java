@@ -37,7 +37,7 @@ public class Resourcestatus {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Lob

@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -33,10 +31,9 @@ public class Submission extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "round_id", nullable = false)
+    @JoinColumn(name = "round_id")
     Round round;
 
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,9 +44,8 @@ public class Submission extends AuditCreatedBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.PENDING;
+    Status status;
 
-    @ColumnDefault("CURRENT_TIMESTAMP(6)")
     @Column(name = "submitted_at")
     LocalDateTime submittedAt;
 }

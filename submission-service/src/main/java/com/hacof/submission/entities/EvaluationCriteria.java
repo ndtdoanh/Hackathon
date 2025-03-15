@@ -30,29 +30,29 @@ public class EvaluationCriteria {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     private Hackathon hackathon;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", length = 255)
     private String name;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @ColumnDefault("10")
-    @Column(name = "max_score", nullable = false)
+    @Column(name = "max_score")
     private Integer maxScore;
 
     @ColumnDefault("1")
-    @Column(name = "weight", nullable = false)
+    @Column(name = "weight")
     private Float weight;
 
     @Column(name = "created_by", length = 255)
     private String createdBy;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @Column(name = "last_updated_by", length = 255)

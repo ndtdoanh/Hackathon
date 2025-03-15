@@ -3,7 +3,6 @@ package com.hacof.identity.entity;
 import java.util.Set;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,17 +21,14 @@ public class BoardList extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
-    @NotNull
-    @Column(name = "position", nullable = false)
+    @Column(name = "position")
     int position;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "board_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
     Board board;
 
     @OneToMany(mappedBy = "boardList", cascade = CascadeType.ALL, orphanRemoval = true)
