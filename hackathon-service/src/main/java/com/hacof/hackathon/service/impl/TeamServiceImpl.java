@@ -34,7 +34,7 @@ public class TeamServiceImpl implements TeamService {
         User leader =
                 userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Team team = teamMapper.convertToEntity(teamDTO);
-        team.setLeader(leader);
+        //  team.setLeader(leader);
 
         if (team.getMembers() == null) {
             team.setMembers(new ArrayList<>());

@@ -12,7 +12,7 @@ import com.hacof.hackathon.util.CustomLocalDateTimeDeserialized;
 import lombok.Data;
 
 @Data
-public class HackathonDTO {
+public class HackathonDTO extends AuditBaseDTO {
     private Long id;
 
     @NotBlank(message = "Name is mandatory")
@@ -36,16 +36,4 @@ public class HackathonDTO {
     private List<JudgeDTO> judges;
     // private List<CheckInDTO> checkIns;
     private List<ResourceDTO> resources;
-
-    @NotBlank(message = "Created by is mandatory")
-    private String createdBy;
-
-    @NotNull(message = "Created date is mandatory")
-    private LocalDateTime createdDate;
-
-    @NotBlank(message = "Last modified by is mandatory")
-    private String lastModifiedBy;
-
-    @NotNull(message = "Last modified date is mandatory")
-    private LocalDateTime lastModifiedDate;
 }

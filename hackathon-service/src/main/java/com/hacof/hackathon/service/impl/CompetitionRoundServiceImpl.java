@@ -13,7 +13,6 @@ import com.hacof.hackathon.entity.Mentor;
 import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.CompetitionRoundMapper;
 import com.hacof.hackathon.repository.CompetitionRoundRepository;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.JudgeRepository;
@@ -32,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class CompetitionRoundServiceImpl implements CompetitionRoundService {
-    final CompetitionRoundMapper roundMapper;
+    // final CompetitionRoundMapper roundMapper;
     final CompetitionRoundRepository roundRepository;
     final JudgeRepository judgeRepository;
     final TeamRepository teamRepository;
@@ -47,16 +46,18 @@ public class CompetitionRoundServiceImpl implements CompetitionRoundService {
         if (competitionRoundRepository.findAll().isEmpty()) {
             throw new ResourceNotFoundException("No competition round found");
         }
-        return roundRepository.findAll().stream().map(roundMapper::convertToDTO).toList();
+        // return roundRepository.findAll().stream().map(roundMapper::convertToDTO).toList();
+        return null;
     }
 
     @Override
     public CompetitionRoundDTO getRoundById(Long id) {
         log.info("Fetching competition round with id: {}", id);
-        return roundRepository
-                .findById(id)
-                .map(roundMapper::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
+        return null;
+        //        return roundRepository
+        //                .findById(id)
+        //                .map(roundMapper::convertToDTO)
+        //                .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
     }
 
     @Override
@@ -64,9 +65,10 @@ public class CompetitionRoundServiceImpl implements CompetitionRoundService {
         if (roundDTO.getHackathonId() == null || !hackathonRepository.existsById(roundDTO.getHackathonId())) {
             throw new ResourceNotFoundException("Hackathon not found with id: " + roundDTO.getHackathonId());
         }
-        CompetitionRound round = roundMapper.convertToEntity(roundDTO);
-        CompetitionRound savedRound = roundRepository.save(round);
-        return roundMapper.convertToDTO(savedRound);
+        //        CompetitionRound round = roundMapper.convertToEntity(roundDTO);
+        //        CompetitionRound savedRound = roundRepository.save(round);
+        //        return roundMapper.convertToDTO(savedRound);
+        return null;
     }
 
     @Override
@@ -80,7 +82,8 @@ public class CompetitionRoundServiceImpl implements CompetitionRoundService {
         existingRound.setDescription(roundDTO.getDescription());
         existingRound.setMaxTeam(roundDTO.getMaxTeam());
         CompetitionRound updatedRound = roundRepository.save(existingRound);
-        return roundMapper.convertToDTO(updatedRound);
+        // return roundMapper.convertToDTO(updatedRound);
+        return null;
     }
 
     @Override
@@ -103,7 +106,7 @@ public class CompetitionRoundServiceImpl implements CompetitionRoundService {
         round.setMentors(mentors);
 
         CompetitionRound updatedRound = roundRepository.save(round);
-        return roundMapper.convertToDTO(updatedRound);
+        return null;
     }
 
     @Override

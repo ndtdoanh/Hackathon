@@ -9,7 +9,6 @@ import com.hacof.hackathon.dto.ResourceDTO;
 import com.hacof.hackathon.entity.CompetitionRound;
 import com.hacof.hackathon.entity.Resource;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.CompetitionRoundMapper;
 import com.hacof.hackathon.mapper.ResourceMapper;
 import com.hacof.hackathon.repository.CompetitionRoundRepository;
 import com.hacof.hackathon.repository.ResourceRepository;
@@ -23,7 +22,7 @@ public class ResourceServiceImpl implements ResourceService {
     private final ResourceRepository resourceRepository;
     private final CompetitionRoundRepository roundRepository;
     private final ResourceMapper resourceMapper;
-    private final CompetitionRoundMapper roundMapper;
+    // private final CompetitionRoundMapper roundMapper;
 
     @Override
     public List<ResourceDTO> getAllResources() {

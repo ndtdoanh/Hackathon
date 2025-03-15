@@ -3,19 +3,20 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import lombok.Data;
+import com.hacof.hackathon.constant.Name;
+
+import lombok.Getter;
 import lombok.Setter;
 
-@Data
+@Getter
 @Setter
-public class CompetitionRoundDTO {
+public class CompetitionRoundDTO extends AuditBaseDTO {
     private Long id;
 
     @NotNull(message = "Round name is mandatory (QUALIFYING, SEMIFINAL, FINAL)")
-    private RoundType name;
+    private Name name;
 
     private String description;
 
@@ -30,18 +31,6 @@ public class CompetitionRoundDTO {
 
     @NotNull(message = "Is video round is mandatory")
     private boolean isVideoRound = false;
-
-    @NotBlank(message = "Created by is mandatory")
-    private String createdBy;
-
-    @NotNull(message = "Created date is mandatory")
-    private LocalDateTime createdDate;
-
-    @NotBlank(message = "Last modified by is mandatory")
-    private String lastModifiedBy;
-
-    @NotNull(message = "Last modified date is mandatory")
-    private LocalDateTime lastModifiedDate;
 
     private Long hackathonId;
 
