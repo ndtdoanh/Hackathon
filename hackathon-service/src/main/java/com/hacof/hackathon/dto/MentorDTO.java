@@ -2,10 +2,12 @@ package com.hacof.hackathon.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class MentorDTO {
+@Getter
+@Setter
+public class MentorDTO extends AuditBaseDTO {
     private Long id;
 
     @NotBlank(message = "Name is mandatory")
