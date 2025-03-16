@@ -41,7 +41,10 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
     @Override
     public JudgeSubmissionDetailResponseDTO getDetailById(Long id) {
         Optional<JudgeSubmissionDetail> detail = detailRepository.findById(id);
-        return detail.map(mapper::toResponseDTO).orElse(null);
+        if (!detail.isPresent()) {
+            throw new IllegalArgumentException("Judge Submission Detail with ID " + id + " not found.");
+        }
+        return mapper.toResponseDTO(detail.get());
     }
 
     @Override
@@ -50,7 +53,9 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
                 .orElseThrow(() -> new IllegalArgumentException("Judge Submission not found"));
         RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository.findById(requestDTO.getRoundMarkCriterionId())
                 .orElseThrow(() -> new IllegalArgumentException("Round Mark Criterion not found"));
-
+        if (requestDTO.getScore() > roundMarkCriterion.getMaxScore()) {
+            throw new IllegalArgumentException("Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
+        }
         JudgeSubmissionDetail entity = mapper.toEntity(requestDTO);
         entity.setJudgeSubmission(judgeSubmission);
         entity.setRoundMarkCriterion(roundMarkCriterion);
@@ -68,6 +73,9 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
                 .orElseThrow(() -> new IllegalArgumentException("Judge Submission not found"));
         RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository.findById(requestDTO.getRoundMarkCriterionId())
                 .orElseThrow(() -> new IllegalArgumentException("Round Mark Criterion not found"));
+        if (requestDTO.getScore() > roundMarkCriterion.getMaxScore()) {
+            throw new IllegalArgumentException("Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
+        }
 
         existingDetail.setScore(requestDTO.getScore());
         existingDetail.setNote(requestDTO.getNote());
@@ -80,11 +88,10 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
 
     @Override
     public boolean deleteDetail(Long id) {
-        return detailRepository.findById(id)
-                .map(existingDetail -> {
-                    detailRepository.delete(existingDetail);
-                    return true;
-                })
-                .orElse(false);
+        JudgeSubmissionDetail existingDetail = detailRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Judge Submission Detail with ID " + id + " not found"));
+
+        detailRepository.delete(existingDetail);
+        return true;
     }
 }

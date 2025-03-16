@@ -47,6 +47,10 @@ public class JudgeSubmissionDetailController {
             response.setMessage("Judge Submission Detail fetched successfully");
             response.setData(detail);
             return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
@@ -63,6 +67,10 @@ public class JudgeSubmissionDetailController {
             response.setMessage("Judge Submission Detail created successfully");
             response.setData(createdDetail);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
@@ -79,6 +87,10 @@ public class JudgeSubmissionDetailController {
             response.setMessage("Judge Submission Detail updated successfully");
             response.setData(updatedDetail);
             return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
@@ -99,6 +111,10 @@ public class JudgeSubmissionDetailController {
             response.setStatus(HttpStatus.NO_CONTENT.value());
             response.setMessage("Judge Submission Detail deleted successfully");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
