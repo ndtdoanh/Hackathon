@@ -1,12 +1,9 @@
 package com.hacof.hackathon.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import com.hacof.hackathon.constant.Status;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,26 +15,20 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "TeamProgress")
-public class TeamProgress {
+@Table(name = "task_assignees")
+public class TaskAssignee extends AuditBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "team_id")
-    Team team;
+    @JoinColumn(name = "task_id")
+    Task task;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "round_id")
-    CompetitionRound round;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    Status status;
+    @JoinColumn(name = "user_id")
+    User user;
 }

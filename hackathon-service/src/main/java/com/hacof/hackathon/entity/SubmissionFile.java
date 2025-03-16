@@ -54,7 +54,7 @@ public class SubmissionFile extends AuditBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "round_id")
-    CompetitionRound round;
+    Round round;
 
     @NotNull
     @Column(name = "file_name")

@@ -1,14 +1,12 @@
 package com.hacof.hackathon.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import com.hacof.hackathon.constant.Status;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,52 +18,47 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Teams")
-public class Team extends AuditBase {
+@Table(name = "teams")
+public class Team extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
     @Column(name = "name")
     String name;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
-    @ManyToOne
-    @JoinColumn(name = "competition_round_id")
-    CompetitionRound competitionRound;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_leader_id")
     User teamLeader;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "campus_id")
-    Campus campus;
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<UserTeam> teamMembers;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<MentorshipSessionRequest> mentorshipSessionRequests;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamHackathon> teamHackathons;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRound> teamRounds;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<HackathonResult> hackathonResults;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<MentorshipRequest> mentorshipRequests;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Feedback> feedbacks;
 
     @Lob
     @Column(name = "bio")
     String bio;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    Status status = Status.ACTIVE;
-
-    @ManyToOne
-    @JoinColumn(name = "mentor_id") // each team has one mentor
-    Mentor mentor;
-
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    List<User> members;
-
-    boolean passed;
 }

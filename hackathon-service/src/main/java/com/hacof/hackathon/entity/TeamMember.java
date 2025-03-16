@@ -1,46 +1,26 @@
 package com.hacof.hackathon.entity;
 
-import java.time.Instant;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Table(name = "team_members")
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "TeamMembers")
-public class TeamMember extends AuditBase {
+public class TeamMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
-    User user;
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "team_id")
-    Team team;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @ColumnDefault("CURRENT_TIMESTAMP(6)")
-    @Column(name = "joined_at")
-    Instant joinedAt;
-
-    @Column(name = "left_at")
-    Instant leftAt;
+    // Getters và Setters
 }
