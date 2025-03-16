@@ -1,7 +1,6 @@
 package com.hacof.identity.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -23,18 +22,16 @@ public class ThreadPost extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "forum_thread_id", nullable = false)
+    @JoinColumn(name = "forum_thread_id")
     ForumThread forumThread;
 
     @Lob
-    @NotNull
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     String content;
 
-    @Column(name = "is_deleted", nullable = false)
+    @Column(name = "is_deleted")
     boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)

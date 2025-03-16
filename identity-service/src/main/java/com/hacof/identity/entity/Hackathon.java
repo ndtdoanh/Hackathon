@@ -14,9 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-
-import org.hibernate.annotations.ColumnDefault;
 
 import com.hacof.identity.constant.Status;
 
@@ -41,8 +38,7 @@ public class Hackathon extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Column(name = "banner_image_url")
@@ -52,26 +48,24 @@ public class Hackathon extends AuditCreatedBase {
     @Column(name = "description")
     String description;
 
-    @Column(name = "start_date", columnDefinition = "datetime(6)", nullable = false)
+    @Column(name = "start_date", columnDefinition = "datetime(6)")
     LocalDateTime startDate; // example:  2024-02-16 12:34:56.123456. -> datetime(6)
 
-    @Column(name = "end_date", columnDefinition = "datetime(6)", nullable = false)
+    @Column(name = "end_date", columnDefinition = "datetime(6)")
     LocalDateTime endDate;
 
     @Column(name = "max_teams")
     int maxTeams;
 
-    @ColumnDefault("1")
     @Column(name = "min_team_size")
     int minTeamSize;
 
-    @ColumnDefault("10")
     @Column(name = "max_team_size")
     int maxTeamSize;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.UPCOMING;
+    Status status;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Round> rounds;

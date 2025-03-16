@@ -24,11 +24,11 @@ public class MentorshipRequest extends AuditCreatedBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @ManyToOne
-    @JoinColumn(name = "mentor_id", nullable = false)
+    @JoinColumn(name = "mentor_id")
     User mentor;
 
     @ManyToOne
@@ -36,8 +36,8 @@ public class MentorshipRequest extends AuditCreatedBase {
     Team team;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    MentorshipStatus status = MentorshipStatus.PENDING;
+    @Column(name = "status")
+    MentorshipStatus status;
 
     @Column(name = "evaluated_at")
     LocalDateTime evaluatedAt;

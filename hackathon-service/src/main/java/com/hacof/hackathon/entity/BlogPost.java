@@ -25,24 +25,24 @@ public class BlogPost extends AuditBase {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "author_id")
     User author;
 
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     String title;
 
     @NotNull
     @Lob
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     String content;
 
     @Enumerated(EnumType.STRING)

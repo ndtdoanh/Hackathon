@@ -45,18 +45,18 @@ public class Thirdpartyauthprovider {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "provider_name", nullable = false)
+    @Column(name = "provider_name")
     ProviderName providerName;
 
     @NotNull
-    @Column(name = "provider_user_id", nullable = false)
+    @Column(name = "provider_user_id")
     String providerUserId;
 
     Instant createdAt;

@@ -45,17 +45,17 @@ public class ActivityLog extends AuditBase {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 
     @NotNull
-    @Column(name = "action", nullable = false)
+    @Column(name = "action")
     String action;
 
     @NotNull
-    @Column(name = "target", nullable = false)
+    @Column(name = "target")
     String target;
 
     @Column(name = "changed_fields")

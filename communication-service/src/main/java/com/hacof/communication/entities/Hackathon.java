@@ -49,7 +49,7 @@ public class Hackathon {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Column(name = "banner_image_url")
@@ -60,11 +60,11 @@ public class Hackathon {
     String description;
 
     @NotNull
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     LocalDate startDate;
 
     @NotNull
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     LocalDate endDate;
 
     @Column(name = "max_teams")
@@ -79,9 +79,9 @@ public class Hackathon {
     Integer maxTeamSize;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "organizer_id", nullable = false)
+    @JoinColumn(name = "organizer_id")
     @JsonIgnore
     User organizer;
 

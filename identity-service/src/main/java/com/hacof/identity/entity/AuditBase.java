@@ -25,11 +25,11 @@ import lombok.experimental.FieldDefaults;
 public abstract class AuditBase {
 
     @CreatedDate
-    @Column(name = "created_date", columnDefinition = "DATETIME(6)", updatable = false, nullable = false)
+    @Column(name = "created_date", columnDefinition = "DATETIME(6)")
     LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)", nullable = false)
+    @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)")
     LocalDateTime lastModifiedDate;
 
     @PrePersist

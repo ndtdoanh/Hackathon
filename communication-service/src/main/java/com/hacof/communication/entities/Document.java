@@ -46,17 +46,17 @@ public class Document {
     long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     String title;
 
     @NotNull
-    @Column(name = "document_url", nullable = false)
+    @Column(name = "document_url")
     String documentUrl;
 
     @Enumerated(EnumType.STRING)

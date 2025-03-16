@@ -25,13 +25,13 @@ public class Round extends AuditBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start_time")
     LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time")
     LocalDateTime endTime;
 
     int roundNumber;
@@ -39,8 +39,8 @@ public class Round extends AuditBase {
     String roundTitle;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    RoundStatus status = RoundStatus.UPCOMING;
+    @Column(name = "status")
+    RoundStatus status;
 
     // Submissions related to this round
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)

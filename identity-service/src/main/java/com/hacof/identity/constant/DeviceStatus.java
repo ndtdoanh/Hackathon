@@ -5,5 +5,6 @@ public enum DeviceStatus {
     IN_USE,
     DAMAGED,
     LOST,
-    RETIRED
+    RETIRED,
+    PENDING
 }

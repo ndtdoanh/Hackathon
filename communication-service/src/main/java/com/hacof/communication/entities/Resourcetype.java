@@ -36,7 +36,7 @@ public class Resourcetype {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     Instant createdAt;

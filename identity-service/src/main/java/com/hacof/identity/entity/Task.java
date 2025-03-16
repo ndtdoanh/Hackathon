@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,20 +21,18 @@ public class Task extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     String title;
 
     @Lob
     @Column(name = "description")
     String description;
 
-    @NotNull
-    @Column(name = "position", nullable = false)
+    @Column(name = "position")
     int position;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "board_list_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_list_id")
     BoardList boardList;
 
     @Column(name = "due_date")

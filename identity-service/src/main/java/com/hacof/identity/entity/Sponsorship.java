@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import com.hacof.identity.constant.SponsorshipStatus;
 
@@ -25,32 +24,27 @@ public class Sponsorship extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
-    @NotNull
-    @Column(name = "brand", nullable = false)
+    @Column(name = "brand")
     String brand;
 
     @Lob
     @Column(name = "content")
     String content;
 
-    @NotNull
-    @Column(name = "money", nullable = false)
+    @Column(name = "money")
     double money;
 
-    @NotNull
-    @Column(name = "time_from", nullable = false)
+    @Column(name = "time_from")
     LocalDateTime timeFrom;
 
-    @NotNull
-    @Column(name = "time_to", nullable = false)
+    @Column(name = "time_to")
     LocalDateTime timeTo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     SponsorshipStatus status;
 
     @OneToMany(mappedBy = "sponsorship", cascade = CascadeType.ALL, orphanRemoval = true)

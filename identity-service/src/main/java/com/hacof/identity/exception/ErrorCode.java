@@ -37,7 +37,12 @@ public enum ErrorCode {
     INVALID_FILE_FORMAT(1021, "Only JPG and PNG files are allowed", HttpStatus.BAD_REQUEST),
     FILE_UPLOAD_ERROR(1022, "Failed to upload file", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    PERMISSION_NOT_IN_ROLE(1023, "Permission not in role", HttpStatus.BAD_REQUEST);
+    PERMISSION_NOT_IN_ROLE(1023, "Permission not in role", HttpStatus.BAD_REQUEST),
+
+    DEVICE_EXISTED(1024, "Device existed", HttpStatus.BAD_REQUEST),
+
+    DEVICE_NOT_EXISTED(1025, "Device not existed", HttpStatus.NOT_FOUND),
+    USER_DEVICE_NOT_EXISTED(1026, "User device not existed", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

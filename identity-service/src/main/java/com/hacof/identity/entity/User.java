@@ -6,8 +6,6 @@ import java.util.Set;
 
 import jakarta.persistence.*;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.hacof.identity.constant.Status;
 
 import lombok.AccessLevel;
@@ -31,7 +29,7 @@ public class User extends AuditUserBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", unique = true)
     String username;
 
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
@@ -46,7 +44,6 @@ public class User extends AuditUserBase {
     @Column(name = "temp_email")
     String tempEmail;
 
-    @ColumnDefault("0")
     @Column(name = "is_verified")
     boolean isVerified = false;
 
@@ -56,7 +53,7 @@ public class User extends AuditUserBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.ACTIVE;
+    Status status;
 
     @OneToMany(mappedBy = "createdBy")
     List<User> createdUsers;

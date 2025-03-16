@@ -28,42 +28,42 @@ public class EvaluationScores {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "submission_id", nullable = false)
+    @JoinColumn(name = "submission_id")
     private Submission submission;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "criterion_id", nullable = false)
+    @JoinColumn(name = "criterion_id")
     private EvaluationCriteria evaluationCriteria;
 
     ;
 
-    @Column(name = "score", nullable = false)
+    @Column(name = "score")
     private Integer score;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "judge_id", nullable = false)
+    @JoinColumn(name = "judge_id")
     private User judge;
 
     @Lob
     @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
-    @Column(name = "created_by", length = 255, nullable = false)
+    @Column(name = "created_by", length = 255)
     private String createdBy;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
-    @Column(name = "last_updated_by", length = 255, nullable = false)
+    @Column(name = "last_updated_by", length = 255)
     private String lastUpdatedBy;
 
-    @Column(name = "last_updated_at", nullable = false)
+    @Column(name = "last_updated_at")
     private Instant lastUpdatedAt;
 
     @Column(name = "deleted_at")

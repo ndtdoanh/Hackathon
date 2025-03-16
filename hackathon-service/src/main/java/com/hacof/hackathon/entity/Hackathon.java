@@ -34,7 +34,7 @@ public class Hackathon extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Column(name = "banner_image_url")
@@ -44,10 +44,10 @@ public class Hackathon extends AuditBase {
     @Column(name = "description")
     String description;
 
-    @Column(name = "start_date", columnDefinition = "datetime(6)", nullable = false)
+    @Column(name = "start_date", columnDefinition = "datetime(6)")
     LocalDateTime startDate; // example:  2024-02-16 12:34:56.123456. -> datetime(6)
 
-    @Column(name = "end_date", columnDefinition = "datetime(6)", nullable = false)
+    @Column(name = "end_date", columnDefinition = "datetime(6)")
     LocalDateTime endDate;
 
     @Column(name = "max_teams")
@@ -62,9 +62,9 @@ public class Hackathon extends AuditBase {
     int maxTeamSize;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "organizer_id", nullable = false)
+    @JoinColumn(name = "organizer_id")
     User organizer;
 
     @Enumerated(EnumType.STRING)

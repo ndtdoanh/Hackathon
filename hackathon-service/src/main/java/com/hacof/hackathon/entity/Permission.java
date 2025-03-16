@@ -30,7 +30,7 @@ public class Permission extends AuditBase {
     long id;
 
     @NotNull
-    @Column(name = "permission_name", nullable = false, unique = true)
+    @Column(name = "permission_name", unique = true)
     String name;
 
     String apiPath;
