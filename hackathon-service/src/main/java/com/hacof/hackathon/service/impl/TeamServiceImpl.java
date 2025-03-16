@@ -8,11 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.TeamDTO;
 import com.hacof.hackathon.entity.Team;
-import com.hacof.hackathon.entity.TeamMember;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamMapper;
-import com.hacof.hackathon.repository.TeamMemberRepository;
 import com.hacof.hackathon.repository.TeamRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.TeamService;
@@ -22,9 +20,6 @@ public class TeamServiceImpl implements TeamService {
 
     @Autowired
     private TeamRepository teamRepository;
-
-    @Autowired
-    private TeamMemberRepository teamMemberRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -39,11 +34,6 @@ public class TeamServiceImpl implements TeamService {
         Team team = teamMapper.convertToEntity(teamDTO);
         team = teamRepository.save(team);
 
-        TeamMember member = new TeamMember();
-        member.setTeam(team);
-        member.setUser(creator);
-        teamMemberRepository.save(member);
-
         return teamMapper.convertToDTO(team);
     }
 
@@ -52,11 +42,6 @@ public class TeamServiceImpl implements TeamService {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new ResourceNotFoundException("Team not found"));
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        TeamMember member = new TeamMember();
-        member.setTeam(team);
-        member.setUser(user);
-        teamMemberRepository.save(member);
-
         return teamMapper.convertToDTO(team);
     }
 
@@ -64,11 +49,6 @@ public class TeamServiceImpl implements TeamService {
     public TeamDTO requestToJoinTeam(Long teamId, Long userId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new ResourceNotFoundException("Team not found"));
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        TeamMember member = new TeamMember();
-        member.setTeam(team);
-        member.setUser(user);
-        teamMemberRepository.save(member);
 
         return teamMapper.convertToDTO(team);
     }

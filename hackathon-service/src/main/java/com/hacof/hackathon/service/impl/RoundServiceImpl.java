@@ -48,11 +48,12 @@ public class RoundServiceImpl implements RoundService {
     public RoundDTO updateRound(Long id, RoundDTO roundDTO) {
         Round existingRound =
                 roundRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Round not found"));
-        existingRound.setRoundName(roundDTO.getRoundName());
-        existingRound.setDescription(roundDTO.getDescription());
-        existingRound.setStartTime(roundDTO.getStartDate());
-        existingRound.setEndTime(roundDTO.getEndDate());
-        existingRound.setMaxTeam(roundDTO.getMaxTeam()); //        existingRound.setVideoRound(roundDTO.getIsVideo());
+        //        existingRound.setRoundName(roundDTO.getRoundName());
+        //        existingRound.setDescription(roundDTO.getDescription());
+        //        existingRound.setStartTime(roundDTO.getStartDate());
+        //        existingRound.setEndTime(roundDTO.getEndDate());
+        //        existingRound.setMaxTeam(roundDTO.getMaxTeam()); //
+        // existingRound.setVideoRound(roundDTO.getIsVideo());
 
         Round updatedRound = roundRepository.save(existingRound);
         return roundMapper.convertToDTO(updatedRound);
