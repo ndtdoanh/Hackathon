@@ -5,26 +5,27 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
-import com.hacof.hackathon.constant.Name;
+import com.hacof.hackathon.constant.RoundName;
+import com.hacof.hackathon.entity.*;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CompetitionRoundDTO extends AuditBaseDTO {
+public class RoundDTO extends AuditBaseDTO {
     private Long id;
 
     @NotNull(message = "Round name is mandatory (QUALIFYING, SEMIFINAL, FINAL)")
-    private Name name;
-
-    private String description;
+    private RoundName roundName;
 
     @NotNull(message = "Start date is mandatory")
     private LocalDateTime startDate;
 
     @NotNull(message = "End date is mandatory")
     private LocalDateTime endDate;
+
+    String description;
 
     @NotNull(message = "Max team is mandatory")
     private int maxTeam;
@@ -34,17 +35,13 @@ public class CompetitionRoundDTO extends AuditBaseDTO {
 
     private Long hackathonId;
 
-    private String hackathonName;
+    List<Submission> submissions;
 
-    private List<Long> judgeIds;
+    List<RoundMarkCriterion> roundMarkCriteria;
 
-    private List<Long> teamIds;
+    List<JudgeRound> judgeRounds;
 
-    private List<Long> mentorIds;
+    List<TeamRound> teamRounds;
 
-    private String location;
-
-    private String status;
-
-    private List<String> passedTeams;
+    List<RoundCampus> roundCampuses;
 }
