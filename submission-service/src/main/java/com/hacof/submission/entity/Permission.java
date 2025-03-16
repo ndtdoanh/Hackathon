@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,8 +26,7 @@ public class Permission extends AuditUserBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "permission_name", nullable = false, unique = true)
+    @Column(name = "permission_name", unique = true)
     String name;
 
     String apiPath;

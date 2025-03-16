@@ -1,7 +1,6 @@
 package com.hacof.submission.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,15 +24,13 @@ public class UserDeviceTrack extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_device_id", nullable = false)
+    @JoinColumn(name = "user_device_id")
     UserDevice userDevice;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "device_quality_status", nullable = false)
+    @Column(name = "device_quality_status")
     DeviceQualityStatus deviceQualityStatus;
 
     @Lob

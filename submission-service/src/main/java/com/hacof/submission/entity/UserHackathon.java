@@ -20,13 +20,13 @@ public class UserHackathon extends AuditBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 
     @ManyToOne
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     String role;
 }

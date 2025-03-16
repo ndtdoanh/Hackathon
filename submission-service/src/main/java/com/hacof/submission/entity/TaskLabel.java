@@ -18,11 +18,11 @@ public class TaskLabel extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "task_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
     Task task;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "board_label_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_label_id")
     BoardLabel boardLabel;
 }

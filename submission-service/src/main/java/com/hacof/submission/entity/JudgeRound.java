@@ -20,13 +20,13 @@ public class JudgeRound extends AuditCreatedBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "judge_id", nullable = false)
+    @JoinColumn(name = "judge_id")
     User judge;
 
     @ManyToOne
-    @JoinColumn(name = "round_id", nullable = false)
+    @JoinColumn(name = "round_id")
     Round round;
 
-    @Column(name = "is_deleted", nullable = false)
+    @Column(name = "is_deleted")
     boolean isDeleted = false;
 }

@@ -1,7 +1,6 @@
 package com.hacof.submission.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -22,23 +21,17 @@ public class HackathonResult extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id")
     Team team;
 
-    @Column(nullable = false)
     int totalScore;
-
-    @Column(nullable = false)
     int placement;
-
     String award;
 }

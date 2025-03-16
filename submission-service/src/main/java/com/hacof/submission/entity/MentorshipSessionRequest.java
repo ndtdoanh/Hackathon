@@ -24,25 +24,26 @@ public class MentorshipSessionRequest extends AuditCreatedBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @ManyToOne
-    @JoinColumn(name = "mentor_id", nullable = false)
+    @JoinColumn(name = "mentor_id")
     User mentor;
 
     @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id")
     Team team;
 
     LocalDateTime startTime;
     LocalDateTime endTime;
+
     String location;
     String description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.PENDING;
+    Status status;
 
     @ManyToOne
     @JoinColumn(name = "evaluated_by")

@@ -1,7 +1,6 @@
 package com.hacof.submission.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import com.hacof.submission.constant.ScheduleEventStatus;
 
@@ -22,18 +21,15 @@ public class ScheduleEventAttendee extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "schedule_event_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_event_id")
     ScheduleEvent scheduleEvent;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     User user;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    ScheduleEventStatus status = ScheduleEventStatus.INVITED;
+    @Column(name = "status")
+    ScheduleEventStatus statusD;
 }

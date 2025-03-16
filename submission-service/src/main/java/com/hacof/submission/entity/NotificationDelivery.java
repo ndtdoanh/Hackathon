@@ -1,7 +1,6 @@
 package com.hacof.submission.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import com.hacof.submission.constant.NotificationMethod;
 import com.hacof.submission.constant.NotificationStatus;
@@ -23,18 +22,15 @@ public class NotificationDelivery extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "notification_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notification_id")
     Notification notification;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "method", nullable = false)
+    @Column(name = "method")
     NotificationMethod method;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     NotificationStatus status;
 }

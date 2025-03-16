@@ -1,7 +1,6 @@
 package com.hacof.submission.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import com.hacof.submission.constant.ThreadPostReportStatus;
 
@@ -22,18 +21,17 @@ public class ThreadPostReport extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "thread_post_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "thread_post_id")
     ThreadPost threadPost;
 
     @Lob
-    @Column(name = "reason", nullable = false)
+    @Column(name = "reason")
     String reason;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    ThreadPostReportStatus status = ThreadPostReportStatus.PENDING;
+    @Column(name = "status")
+    ThreadPostReportStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewed_by")

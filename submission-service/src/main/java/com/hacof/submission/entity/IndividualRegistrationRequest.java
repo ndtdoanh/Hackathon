@@ -1,7 +1,6 @@
 package com.hacof.submission.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import com.hacof.submission.constant.Status;
 
@@ -23,13 +22,12 @@ public class IndividualRegistrationRequest extends AuditCreatedBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "hackathon_id", nullable = false)
+    @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.PENDING;
+    Status status;
 
     @ManyToOne
     @JoinColumn(name = "reviewed_by")

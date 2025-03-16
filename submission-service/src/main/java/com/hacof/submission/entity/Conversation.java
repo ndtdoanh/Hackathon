@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import com.hacof.submission.constant.ConversationType;
 
@@ -24,14 +23,12 @@ public class Conversation extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "team_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
     Team team;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
+    @Column(name = "type")
     ConversationType type;
 
     @Column(name = "name")

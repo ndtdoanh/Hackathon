@@ -3,7 +3,6 @@ package com.hacof.submission.entity;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,33 +21,27 @@ public class ScheduleEvent extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "schedule_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id")
     Schedule schedule;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Lob
     @Column(name = "description")
     String description;
 
-    @NotNull
-    @Column(name = "location", nullable = false)
+    @Column(name = "location")
     String location;
 
-    @NotNull
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start_time")
     LocalDateTime startTime;
 
-    @NotNull
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time")
     LocalDateTime endTime;
 
-    @NotNull
-    @Column(name = "is_recurring", nullable = false)
+    @Column(name = "is_recurring")
     boolean isRecurring;
 
     @Column(name = "recurrence_rule")

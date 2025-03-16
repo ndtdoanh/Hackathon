@@ -24,12 +24,9 @@ public class JudgeSubmissionDetail extends AuditBase {
     JudgeSubmission judgeSubmission;
 
     @ManyToOne
-    @JoinColumn(name = "round_mark_criterion_id", nullable = false)
+    @JoinColumn(name = "round_mark_criterion_id")
     RoundMarkCriterion roundMarkCriterion;
 
-    @Column(nullable = false)
     int score;
-
-    @Column(length = 500)
     String note;
 }

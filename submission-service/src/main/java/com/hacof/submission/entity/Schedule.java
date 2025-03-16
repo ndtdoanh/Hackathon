@@ -3,7 +3,6 @@ package com.hacof.submission.entity;
 import java.util.List;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,13 +21,11 @@ public class Schedule extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "team_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
     Team team;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Lob

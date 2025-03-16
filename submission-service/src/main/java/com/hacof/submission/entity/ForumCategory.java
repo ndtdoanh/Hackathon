@@ -3,7 +3,6 @@ package com.hacof.submission.entity;
 import java.util.List;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,8 +21,7 @@ public class ForumCategory extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     String name;
 
     @Lob
