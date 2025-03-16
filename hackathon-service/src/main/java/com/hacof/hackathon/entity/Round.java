@@ -5,7 +5,6 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
-import com.hacof.hackathon.constant.RoundName;
 import com.hacof.hackathon.constant.RoundStatus;
 
 import lombok.*;
@@ -25,9 +24,9 @@ public class Round extends AuditBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "name")
-    RoundName roundName;
+    @ManyToOne
+    @JoinColumn(name = "hackathon_id")
+    Hackathon hackathon;
 
     @Column(name = "start_time")
     LocalDateTime startTime;
@@ -35,19 +34,13 @@ public class Round extends AuditBase {
     @Column(name = "end_time")
     LocalDateTime endTime;
 
-    String description;
+    int roundNumber;
 
-    int maxTeam;
-
-    boolean isVideoRound = false;
+    String roundTitle;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     RoundStatus status;
-
-    @ManyToOne
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
 
     // Submissions related to this round
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -66,5 +59,5 @@ public class Round extends AuditBase {
     List<TeamRound> teamRounds;
 
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<RoundCampus> roundCampuses;
+    List<RoundLocation> roundLocations;
 }
