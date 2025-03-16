@@ -43,5 +43,5 @@ public class RoundDTO extends AuditBaseDTO {
 
     List<TeamRound> teamRounds;
 
-    List<RoundCampus> roundCampuses;
+    List<RoundLocation> roundLocations;
 }
