@@ -37,7 +37,7 @@ public class Device extends AuditCreatedBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "round_location_id")
-    RoundCampus roundCampus;
+    RoundLocation roundLocation;
 
     @Column(name = "name")
     String name;
