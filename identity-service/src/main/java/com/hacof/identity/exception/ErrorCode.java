@@ -51,7 +51,9 @@ public enum ErrorCode {
     INVALID_OTP(1031, "OTP is incorrect or has expired", HttpStatus.BAD_REQUEST),
     PASSWORD_MISMATCH(1032, "New password and confirmation password do not match", HttpStatus.BAD_REQUEST),
     INVALID_CURRENT_PASSWORD(1033, "Current password is incorrect", HttpStatus.BAD_REQUEST),
-    NEW_PASSWORD_SAME_AS_OLD(1034, "New password must not be the same as the old password", HttpStatus.BAD_REQUEST);
+    NEW_PASSWORD_SAME_AS_OLD(1034, "New password must not be the same as the old password", HttpStatus.BAD_REQUEST),
+
+    LOG_NOT_FOUND(1035, "Log not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
