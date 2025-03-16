@@ -27,27 +27,13 @@ public class CampusServiceImpl implements CampusService {
     private final CampusRepository campusRepository;
 
     @Override
-    public List<CampusDTO> getAllCampuses() {
-        log.info("Fetching all campuses");
-        if (campusRepository.findAll().isEmpty()) {
+    public List<CampusDTO> getByAllCriteria(Specification<Campus> spec) {
+        List<Campus> campuses = campusRepository.findAll(spec);
+        if (campuses.isEmpty()) {
+            log.warn("No campus found");
             throw new ResourceNotFoundException("No campus found");
         }
-        return campusRepository.findAll().stream()
-                .map(campusMapper::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public CampusDTO getCampusById(Long id) {
-        log.info("Fetching campus with id: {}", id);
-        if (!campusRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Campus not found");
-        }
-
-        return campusRepository
-                .findById(id)
-                .map(campusMapper::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Campus not found"));
+        return campuses.stream().map(campusMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -84,6 +70,13 @@ public class CampusServiceImpl implements CampusService {
         if (responseDTO.getTrainingSessions() == null) {
             responseDTO.setTrainingSessions(new ArrayList<>());
         }
+        if (responseDTO.getCreatedBy() == null) {
+            responseDTO.setCreatedBy(campusDTO.getCreatedBy());
+        }
+
+        if (responseDTO.getLastModifiedBy() == null) {
+            responseDTO.setLastModifiedBy(campusDTO.getLastModifiedBy());
+        }
         return responseDTO;
     }
 
@@ -100,10 +93,10 @@ public class CampusServiceImpl implements CampusService {
             return new ResourceNotFoundException("Campus not found");
         });
 
-        campusDTO.setLastModifiedDate(LocalDateTime.now());
         existingCampus.setName(campusDTO.getName());
         existingCampus.setLocation(campusDTO.getLocation());
-        existingCampus.setLastModifiedBy(campusDTO.getLastModifiedBy());
+        existingCampus.setLastModifiedDate(LocalDateTime.now());
+
         Campus updatedCampus = campusRepository.save(existingCampus);
         return campusMapper.convertToDTO(updatedCampus);
     }
@@ -116,17 +109,5 @@ public class CampusServiceImpl implements CampusService {
             throw new ResourceNotFoundException("Campus not found");
         }
         campusRepository.deleteById(id);
-    }
-
-    @Override
-    public List<CampusDTO> searchCampuses(Specification<Campus> spec) {
-        if (campusRepository.findAll(spec).isEmpty()) {
-            log.warn("No campus found");
-            throw new ResourceNotFoundException("No campus found");
-        }
-
-        return campusRepository.findAll(spec).stream()
-                .map(campusMapper::convertToDTO)
-                .collect(Collectors.toList());
     }
 }
