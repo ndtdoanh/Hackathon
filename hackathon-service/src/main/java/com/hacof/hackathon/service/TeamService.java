@@ -5,17 +5,11 @@ import java.util.List;
 import com.hacof.hackathon.dto.TeamDTO;
 
 public interface TeamService {
-    TeamDTO createTeam(TeamDTO teamDTO, Long userId);
+    TeamDTO createTeam(TeamDTO teamDTO, Long creatorId);
 
-    TeamDTO addMemberToTeam(Long teamId, Long memberId);
+    TeamDTO inviteMemberToTeam(Long teamId, Long userId);
 
-    TeamDTO assignMentorToTeam(Long teamId, Long mentorId);
+    TeamDTO requestToJoinTeam(Long teamId, Long userId);
 
     List<TeamDTO> getAllTeams();
-
-    TeamDTO updateTeam(Long teamId, TeamDTO teamDTO);
-
-    void removeMemberFromTeam(Long teamId, Long memberId);
-
-    void deleteTeam(Long teamId);
 }

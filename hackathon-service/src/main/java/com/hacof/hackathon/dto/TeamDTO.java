@@ -1,6 +1,5 @@
 package com.hacof.hackathon.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,14 +11,6 @@ import lombok.Data;
 public class TeamDTO {
     private Long id;
     private String name;
-    private Long leaderId;
+    private Long hackathonId;
     private List<Long> memberIds;
-
-    private String createdBy;
-
-    private LocalDateTime createdDate;
-
-    private String lastModifiedBy;
-
-    private LocalDateTime lastModifiedDate;
 }
