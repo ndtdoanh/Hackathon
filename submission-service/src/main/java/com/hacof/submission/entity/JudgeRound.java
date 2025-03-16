@@ -27,6 +27,6 @@ public class JudgeRound extends AuditCreatedBase {
     @JoinColumn(name = "round_id")
     Round round;
 
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted", nullable = false)
     boolean isDeleted = false;
 }

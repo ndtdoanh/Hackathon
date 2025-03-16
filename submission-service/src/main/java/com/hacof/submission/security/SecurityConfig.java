@@ -21,6 +21,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/judge-submissions/**")
                         .permitAll()
+                        .requestMatchers("/api/v1/judge-rounds/**")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
