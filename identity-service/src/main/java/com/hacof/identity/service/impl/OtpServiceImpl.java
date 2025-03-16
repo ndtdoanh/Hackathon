@@ -33,4 +33,9 @@ public class OtpServiceImpl implements OtpService {
         String storedOtp = redisTemplate.opsForValue().get(email);
         return storedOtp != null && storedOtp.equals(inputOtp);
     }
+
+    @Override
+    public void removeOtp(String key) {
+        redisTemplate.delete(key);
+    }
 }

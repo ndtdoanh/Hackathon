@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.hacof.identity.constant.Status;
+import com.hacof.identity.dto.request.ChangePasswordRequest;
+import com.hacof.identity.dto.request.ForgotPasswordRequest;
 import com.hacof.identity.dto.request.PasswordCreateRequest;
+import com.hacof.identity.dto.request.ResetPasswordRequest;
 import com.hacof.identity.dto.request.UserCreateRequest;
 import com.hacof.identity.dto.request.UserUpdateRequest;
 import com.hacof.identity.dto.response.RoleResponse;
@@ -158,7 +161,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String addEmail(Long userId, String email) {
+    public String addEmail(String email) {
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email");
         }
@@ -202,6 +205,74 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return "Email " + tempEmail + " has been verified successfully";
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequest request) {
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_MISMATCH);
+        }
+
+        User user = AuditContext.getCurrentUser();
+        if (user == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.INVALID_CURRENT_PASSWORD);
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.NEW_PASSWORD_SAME_AS_OLD);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        return "Change the password successfully";
+    }
+
+    @Override
+    public String forgotPassword(ForgotPasswordRequest request) {
+
+        String email = request.getEmail();
+
+        if (!isValidEmail(email)) {
+            throw new AppException(ErrorCode.INVALID_EMAIL_FORMAT);
+        }
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (!user.getIsVerified()) {
+            throw new AppException(ErrorCode.EMAIL_NOT_VERIFIED);
+        }
+
+        String otp = otpService.generateOtp("reset_password_" + email);
+        emailService.sendPasswordResetOtp(email, otp);
+
+        return "OTP code reset password has been sent to email " + email + ". Please check your email.";
+    }
+
+    @Override
+    public String resetPassword(ResetPasswordRequest request) {
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_MISMATCH);
+        }
+
+        User user = userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (!otpService.verifyOtp("reset_password_" + request.getEmail(), request.getOtp())) {
+            throw new AppException(ErrorCode.INVALID_OTP);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        otpService.removeOtp("reset_password_" + request.getEmail());
+
+        return "Reset password successfully";
     }
 
     private boolean isValidEmail(String email) {
