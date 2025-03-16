@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
+import com.hacof.identity.dto.request.ChangePasswordRequest;
+import com.hacof.identity.dto.request.ForgotPasswordRequest;
 import com.hacof.identity.dto.request.PasswordCreateRequest;
+import com.hacof.identity.dto.request.ResetPasswordRequest;
 import com.hacof.identity.dto.request.UserCreateRequest;
 import com.hacof.identity.dto.request.UserUpdateRequest;
 import com.hacof.identity.dto.request.VerifyEmailRequest;
@@ -118,11 +121,10 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> addEmail(
             @Valid @RequestBody AddEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
         try {
-            Long userId = jwt.getClaim("user_id");
 
-            String message = userService.addEmail(userId, request.getEmail());
+            String message = userService.addEmail(request.getEmail());
 
-            log.info("User {} requested to add email: {}", userId, request.getEmail());
+            log.info("User {} requested to add email: {}", request.getEmail());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(ApiResponse.<String>builder().message(message).build());
@@ -166,5 +168,27 @@ public class UserController {
                             .message("Error occurred when processing requests")
                             .build());
         }
+    }
+
+    @PostMapping("/change-password")
+    @PreAuthorize("hasAuthority('CHANGE_PASSWORD')")
+    public ApiResponse<String> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        return ApiResponse.<String>builder()
+                .message(userService.changePassword(request))
+                .build();
+    }
+
+    @PostMapping("/forgot-password")
+    public ApiResponse<String> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
+        return ApiResponse.<String>builder()
+                .message(userService.forgotPassword(request))
+                .build();
+    }
+
+    @PostMapping("/reset-password")
+    public ApiResponse<String> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        return ApiResponse.<String>builder()
+                .message(userService.resetPassword(request))
+                .build();
     }
 }
