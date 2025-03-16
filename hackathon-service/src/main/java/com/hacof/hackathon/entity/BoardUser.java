@@ -1,11 +1,11 @@
 package com.hacof.hackathon.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.hackathon.constant.BoardUserRole;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,25 +17,32 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "checkins")
-public class Checkin extends AuditBase {
+@Table(name = "board_users")
+public class BoardUser extends AuditBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
-    User user;
+    @JoinColumn(name = "board_id")
+    Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "event_id")
-    Event event;
+    @JoinColumn(name = "user_id")
+    User user;
 
-    @Column(name = "check_in_time")
-    LocalDateTime checkInTime;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    BoardUserRole role; // Enum: ADMIN, MEMBER
 
-    @Column(name = "check_out_time")
-    LocalDateTime checkOutTime;
+    @Column(name = "is_deleted")
+    boolean isDeleted = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "deleted_by")
+    User deletedBy;
 }

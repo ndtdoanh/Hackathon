@@ -1,13 +1,12 @@
 package com.hacof.hackathon.entity;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import com.hacof.hackathon.constant.ExpenseType;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,34 +18,35 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "expenses")
-public class Expens extends AuditBase {
+@Table(name = "boards")
+public class Board extends AuditCreatedBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
+    @Column(name = "name")
+    String name;
+
+    @Column(name = "description")
+    String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
+    @JoinColumn(name = "owner_id")
+    User owner;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_id")
     Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "event_id")
-    Event event;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<BoardUser> boardUsers;
 
-    @Column(name = "amount")
-    long amount;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<BoardList> boardLists;
 
-    @Column(name = "expense_date")
-    LocalDateTime expenseDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "expense_type")
-    ExpenseType expenseType;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<BoardLabel> boardLabels;
 }

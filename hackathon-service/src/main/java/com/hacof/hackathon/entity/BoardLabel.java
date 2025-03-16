@@ -1,7 +1,5 @@
 package com.hacof.hackathon.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -17,25 +15,21 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "checkins")
-public class Checkin extends AuditBase {
+@Table(name = "board_labels")
+public class BoardLabel extends AuditBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
-    User user;
+    @Column(name = "name")
+    String name;
+
+    @Column(name = "color")
+    String color;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "event_id")
-    Event event;
-
-    @Column(name = "check_in_time")
-    LocalDateTime checkInTime;
-
-    @Column(name = "check_out_time")
-    LocalDateTime checkOutTime;
+    @JoinColumn(name = "board_id")
+    Board board;
 }

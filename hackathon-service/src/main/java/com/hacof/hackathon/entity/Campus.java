@@ -39,10 +39,4 @@ public class Campus extends AuditBase {
 
     @OneToMany(mappedBy = "campus", orphanRemoval = true)
     List<Event> events;
-
-    @OneToMany(mappedBy = "campus", orphanRemoval = true)
-    List<Mentor> mentors;
-
-    @OneToMany(mappedBy = "campus", orphanRemoval = true)
-    List<TrainingSession> trainingSessions;
 }

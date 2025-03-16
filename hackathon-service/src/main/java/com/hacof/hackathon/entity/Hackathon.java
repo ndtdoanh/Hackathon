@@ -4,20 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.hackathon.constant.Status;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
@@ -27,13 +18,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Hackathons")
-public class Hackathon extends AuditBase {
+@Table(name = "hackathons")
+public class Hackathon extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
     @Column(name = "name")
     String name;
 
@@ -50,27 +40,53 @@ public class Hackathon extends AuditBase {
     @Column(name = "end_date", columnDefinition = "datetime(6)")
     LocalDateTime endDate;
 
+    @Column(name = "number_round")
+    int numberRound;
+
     @Column(name = "max_teams")
     int maxTeams;
 
-    @ColumnDefault("1")
     @Column(name = "min_team_size")
     int minTeamSize;
 
-    @ColumnDefault("10")
     @Column(name = "max_team_size")
     int maxTeamSize;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "organizer_id")
-    User organizer;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.UPCOMING;
+    Status status;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CompetitionRound> rounds;
+    @JsonIgnore
+    List<Round> rounds;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamHackathon> teamHackathons;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<HackathonResult> hackathonResults;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<UserHackathon> userHackathons;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRequest> teamRequests;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<IndividualRegistrationRequest> individualRegistrationRequests;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<MentorshipRequest> mentorshipRequests;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<MentorshipSessionRequest> mentorshipSessionRequests;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SponsorshipHackathon> sponsorshipHackathons;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Device> devices;
+
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Feedback> feedbacks;
 }

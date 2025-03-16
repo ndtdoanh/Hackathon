@@ -1,13 +1,11 @@
 package com.hacof.hackathon.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.hacof.hackathon.constant.ExpenseType;
+import com.hacof.hackathon.constant.DeviceStatus;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,8 +17,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "expenses")
-public class Expens extends AuditBase {
+@Table(name = "devices")
+public class Device extends AuditCreatedBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -32,21 +31,22 @@ public class Expens extends AuditBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "team_id")
-    Team team;
+    @JoinColumn(name = "round_id")
+    Round round;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "event_id")
-    Event event;
+    @JoinColumn(name = "round_location_id")
+    RoundCampus roundCampus;
 
-    @Column(name = "amount")
-    long amount;
+    @Column(name = "name")
+    String name;
 
-    @Column(name = "expense_date")
-    LocalDateTime expenseDate;
+    @Lob
+    @Column(name = "description")
+    String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "expense_type")
-    ExpenseType expenseType;
+    @Column(name = "status")
+    DeviceStatus status;
 }
