@@ -1,7 +1,5 @@
 package com.hacof.hackathon.entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -14,17 +12,21 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Judges")
-public class Judge extends AuditBase {
+@Table(name = "judge_rounds")
+public class JudgeRound extends AuditCreatedBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    String name;
+    @ManyToOne
+    @JoinColumn(name = "judge_id")
+    User judge;
 
-    @Column(name = "email", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
-    String email;
+    @ManyToOne
+    @JoinColumn(name = "round_id")
+    Round round;
 
-    @ManyToMany(mappedBy = "judges")
-    List<CompetitionRound> rounds;
+    @Column(name = "is_deleted")
+    boolean isDeleted = false;
 }
