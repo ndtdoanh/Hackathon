@@ -42,7 +42,16 @@ public enum ErrorCode {
     DEVICE_EXISTED(1024, "Device existed", HttpStatus.BAD_REQUEST),
 
     DEVICE_NOT_EXISTED(1025, "Device not existed", HttpStatus.NOT_FOUND),
-    USER_DEVICE_NOT_EXISTED(1026, "User device not existed", HttpStatus.NOT_FOUND);
+    USER_DEVICE_NOT_EXISTED(1026, "User device not existed", HttpStatus.NOT_FOUND),
+
+    INVALID_EMAIL_FORMAT(1027, "Invalid email format", HttpStatus.BAD_REQUEST),
+    EMAIL_ALREADY_EXISTS(1028, "Email is already used by another account", HttpStatus.BAD_REQUEST),
+    EMAIL_NOT_REGISTERED(1029, "Email is not registered for verification", HttpStatus.BAD_REQUEST),
+    EMAIL_NOT_VERIFIED(1030, "Email is not verified", HttpStatus.BAD_REQUEST),
+    INVALID_OTP(1031, "OTP is incorrect or has expired", HttpStatus.BAD_REQUEST),
+    PASSWORD_MISMATCH(1032, "New password and confirmation password do not match", HttpStatus.BAD_REQUEST),
+    INVALID_CURRENT_PASSWORD(1033, "Current password is incorrect", HttpStatus.BAD_REQUEST),
+    NEW_PASSWORD_SAME_AS_OLD(1034, "New password must not be the same as the old password", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
