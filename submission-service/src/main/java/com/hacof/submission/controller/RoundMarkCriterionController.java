@@ -42,17 +42,20 @@ public class RoundMarkCriterionController {
         CommonResponse<RoundMarkCriterionResponseDTO> response = new CommonResponse<>();
         try {
             RoundMarkCriterionResponseDTO criterion = service.getById(id)
-                    .orElseThrow(() -> new RuntimeException("RoundMarkCriterion not found with id " + id));
+                    .orElseThrow(() -> new IllegalArgumentException("RoundMarkCriterion not found with id " + id));
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched round mark criterion by ID successfully!");
             response.setData(criterion);
 
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
-
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -66,7 +69,7 @@ public class RoundMarkCriterionController {
             response.setMessage("Round mark criterion created successfully!");
             response.setData(created);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -88,10 +91,14 @@ public class RoundMarkCriterionController {
             response.setData(updated);
 
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -103,6 +110,10 @@ public class RoundMarkCriterionController {
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Round mark criterion deleted successfully!");
             return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage("Error: " + e.getMessage());

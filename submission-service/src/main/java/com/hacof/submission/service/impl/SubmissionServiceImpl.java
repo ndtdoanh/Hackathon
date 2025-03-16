@@ -38,8 +38,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files) throws IOException {
-        // Convert DTO to entity
-        Submission submission = SubmissionMapper.toEntity(submissionDTO, roundRepository); // Now passing roundRepository
+        Submission submission = SubmissionMapper.toEntity(submissionDTO, roundRepository);
 
         // Save the submission
         submission = submissionRepository.save(submission);
@@ -87,8 +86,11 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public SubmissionResponseDTO getSubmissionById(Long id) {
-        Submission submission = submissionRepository.findById(id).orElse(null);
-        return submission != null ? SubmissionMapper.toResponseDTO(submission) : null;
+        Optional<Submission> submissionOpt = submissionRepository.findById(id);
+        if (!submissionOpt.isPresent()) {
+            throw new IllegalArgumentException("Submission not found with ID " + id);
+        }
+        return SubmissionMapper.toResponseDTO(submissionOpt.get());
     }
 
     @Override
@@ -124,10 +126,11 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public boolean deleteSubmission(Long id) {
-        if (submissionRepository.existsById(id)) {
-            submissionRepository.deleteById(id);
-            return true;
+        Optional<Submission> submissionOpt = submissionRepository.findById(id);
+        if (!submissionOpt.isPresent()) {
+             throw new IllegalArgumentException("Submission not found with ID " + id);
         }
-        return false;
+        submissionRepository.deleteById(id);
+        return true;
     }
 }

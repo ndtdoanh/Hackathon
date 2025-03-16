@@ -52,9 +52,6 @@ public class SubmissionController {
         }
     }
 
-    /**
-     * Endpoint to get a specific submission by ID.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> getSubmissionById(@PathVariable Long id) {
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
@@ -71,9 +68,6 @@ public class SubmissionController {
         }
     }
 
-    /**
-     * Endpoint to get all submissions.
-     */
     @GetMapping
     public ResponseEntity<CommonResponse<List<SubmissionResponseDTO>>> getAllSubmissions() {
         CommonResponse<List<SubmissionResponseDTO>> response = new CommonResponse<>();
@@ -90,9 +84,6 @@ public class SubmissionController {
         }
     }
 
-    /**
-     * Endpoint to update an existing submission by ID.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> updateSubmission(
             @PathVariable Long id, @RequestBody SubmissionRequestDTO submissionRequestDTO) {
@@ -110,9 +101,7 @@ public class SubmissionController {
         }
     }
 
-    /**
-     * Endpoint to delete a submission by ID.
-     */
+
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteSubmission(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
