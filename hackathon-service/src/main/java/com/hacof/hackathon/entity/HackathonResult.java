@@ -1,7 +1,6 @@
 package com.hacof.hackathon.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -16,25 +15,23 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "JudgeAssignments")
-public class JudgeAssignment extends AuditBase {
+@Table(name = "hackathon_results")
+public class HackathonResult extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "judge_id")
-    User judge;
+    @JoinColumn(name = "hackathon_id")
+    Hackathon hackathon;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "round_id")
-    CompetitionRound round;
+    @JoinColumn(name = "team_id")
+    Team team;
 
-    @NotNull
-    @Column(name = "assigned_by")
-    String assignedBy;
+    int totalScore;
+    int placement;
+    String award;
 }

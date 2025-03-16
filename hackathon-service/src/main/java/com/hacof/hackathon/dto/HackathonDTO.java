@@ -6,34 +6,55 @@ import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.hacof.hackathon.util.CustomLocalDateTimeDeserialized;
+import com.hacof.hackathon.constant.Status;
+import com.hacof.hackathon.entity.*;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class HackathonDTO extends AuditBaseDTO {
     private Long id;
 
     @NotBlank(message = "Name is mandatory")
     private String name;
 
+    @NotBlank(message = "Banner image url is mandatory")
     private String bannerImageUrl;
+
     private String description;
 
     @NotNull(message = "Start date is mandatory")
-    @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     private LocalDateTime startDate;
 
     @NotNull(message = "Start date is mandatory")
-    @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     private LocalDateTime endDate;
 
-    private Long organizerId;
-    private String organizerName;
-    private List<CompetitionRoundDTO> rounds;
-    private List<EventDTO> events;
-    private List<JudgeDTO> judges;
-    // private List<CheckInDTO> checkIns;
-    private List<ResourceDTO> resources;
+    @NotNull(message = "Number round is mandatory")
+    int numberRound;
+
+    @NotNull(message = "Max teams is mandatory")
+    int maxTeams;
+
+    @NotNull(message = "Min team size is mandatory")
+    int minTeamSize;
+
+    @NotNull(message = "Max team size is mandatory")
+    int maxTeamSize;
+
+    @NotNull(message = "Status is mandatory")
+    Status status;
+
+    List<RoundDTO> rounds;
+    List<TeamHackathon> teamHackathons;
+    List<HackathonResult> hackathonResults;
+    List<UserHackathon> userHackathons;
+    List<TeamRequest> teamRequests;
+    List<IndividualRegistrationRequest> individualRegistrationRequests;
+    List<MentorshipRequest> mentorshipRequests;
+    List<MentorshipSessionRequest> mentorshipSessionRequests;
+    List<SponsorshipHackathon> sponsorshipHackathons;
+    List<Device> devices;
+    List<Feedback> feedbacks;
 }
