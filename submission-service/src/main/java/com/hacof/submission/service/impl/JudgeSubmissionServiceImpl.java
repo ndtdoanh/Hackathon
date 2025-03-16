@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
@@ -52,7 +53,7 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         judgeSubmission = judgeSubmissionRepository.save(judgeSubmission);
 
         // Return response DTO
-        return new JudgeSubmissionResponseDTO(judgeSubmission); // Includes AuditBase fields
+        return new JudgeSubmissionResponseDTO(judgeSubmission);
     }
 
     @Override
@@ -86,5 +87,60 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
         // Update the total score in JudgeSubmission
         judgeSubmission.setScore(totalScore);
+    }
+
+    public JudgeSubmissionResponseDTO getJudgeSubmissionBySubmissionId(Long submissionId) {
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findBySubmissionId(submissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
+
+        return new JudgeSubmissionResponseDTO(judgeSubmission);
+    }
+
+    @Override
+    public List<JudgeSubmissionResponseDTO> getAllJudgeSubmissions() {
+        List<JudgeSubmission> judgeSubmissions = judgeSubmissionRepository.findAll();
+        return judgeSubmissions.stream()
+                .map(JudgeSubmissionResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean deleteJudgeSubmission(Long submissionId) {
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findBySubmissionId(submissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
+
+        judgeSubmissionRepository.delete(judgeSubmission);
+        return true;
+    }
+
+    @Override
+    public List<JudgeSubmissionResponseDTO> getSubmissionsByJudgeId(Long judgeId) {
+        List<JudgeSubmission> judgeSubmissions = judgeSubmissionRepository.findByJudgeId(judgeId);
+        if (judgeSubmissions.isEmpty()) {
+            throw new IllegalArgumentException("No submissions found for judgeId: " + judgeId);
+        }
+        return judgeSubmissions.stream()
+                .map(JudgeSubmissionResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JudgeSubmissionResponseDTO> getSubmissionsByRoundId(Long roundId) {
+        List<JudgeSubmission> judgeSubmissions = judgeSubmissionRepository.findByRoundId(roundId);
+
+        if (judgeSubmissions.isEmpty()) {
+            throw new IllegalArgumentException("No submissions found for roundId: " + roundId);
+        }
+        return judgeSubmissions.stream()
+                .map(JudgeSubmissionResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId) {
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findBySubmissionId(submissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
+
+        return new JudgeSubmissionResponseDTO(judgeSubmission);
     }
 }

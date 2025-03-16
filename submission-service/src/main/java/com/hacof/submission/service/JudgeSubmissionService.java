@@ -10,4 +10,10 @@ import java.util.List;
 public interface JudgeSubmissionService {
     JudgeSubmissionResponseDTO assignJudgeToSubmission(AssignJudgeRequest assignJudgeDTO);
     JudgeSubmissionResponseDTO updateScoreAndNoteForSubmission(UpdateScoreRequest updateScoreDTO);
+    JudgeSubmissionResponseDTO getJudgeSubmissionBySubmissionId(Long submissionId);
+    List<JudgeSubmissionResponseDTO> getAllJudgeSubmissions();
+    boolean deleteJudgeSubmission(Long submissionId);
+    List<JudgeSubmissionResponseDTO> getSubmissionsByJudgeId(Long judgeId);
+    List<JudgeSubmissionResponseDTO> getSubmissionsByRoundId(Long roundId);
+    JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId);
 }
