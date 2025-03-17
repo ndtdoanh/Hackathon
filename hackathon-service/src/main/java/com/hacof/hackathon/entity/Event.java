@@ -53,8 +53,4 @@ public class Event extends AuditBase {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "organizer_id")
     User organizer;
-
-    @ManyToOne
-    @JoinColumn(name = "campus_id")
-    private Campus campus;
 }
