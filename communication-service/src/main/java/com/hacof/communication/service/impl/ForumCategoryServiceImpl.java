@@ -49,6 +49,11 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
             throw new IllegalArgumentException("Forum category not found with id " + id);
         }
 
+        ForumCategory forumCategory = optionalForumCategory.get();
+
+        if (forumCategory.getForumThreads() != null && !forumCategory.getForumThreads().isEmpty()) {
+            throw new IllegalArgumentException("Cannot delete ForumCategory because it contains forum threads!");
+        }
         forumCategoryRepository.deleteById(id);
     }
 
