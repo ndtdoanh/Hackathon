@@ -18,6 +18,8 @@ import com.hacof.hackathon.specification.LocationSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,31 +30,44 @@ import lombok.extern.slf4j.Slf4j;
 public class LocationController {
     private final LocationService locationService;
 
+    @Operation(summary = "Get locations with filters")
     @GetMapping
-    public ResponseEntity<CommonResponse<List<LocationDTO>>> getByAllCriteria(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String address,
-            @RequestParam(required = false) Double latitude,
-            @RequestParam(required = false) Double longitude,
-            @RequestParam(required = false) String createdBy,
-            @RequestParam(required = false) String lastModifiedBy) {
+    public ResponseEntity<CommonResponse<List<LocationDTO>>> getLocations(
+            @Parameter(description = "Location ID") @RequestParam(required = false) Long id,
+            @Parameter(description = "Location name") @RequestParam(required = false) String name,
+            @Parameter(description = "Location address") @RequestParam(required = false) String address,
+            @Parameter(description = "Minimum latitude") @RequestParam(required = false) Double minLat,
+            @Parameter(description = "Maximum latitude") @RequestParam(required = false) Double maxLat,
+            @Parameter(description = "Minimum longitude") @RequestParam(required = false) Double minLng,
+            @Parameter(description = "Maximum longitude") @RequestParam(required = false) Double maxLng) {
 
-        Specification<Location> spec = Specification.where(LocationSpecification.hasId(id))
-                .and(LocationSpecification.hasName(name))
-                .and(LocationSpecification.hasAddress(address))
-                .and(LocationSpecification.hasLatitude(latitude))
-                .and(LocationSpecification.hasLongitude(longitude))
-                .and(LocationSpecification.createdBy(createdBy))
-                .and(LocationSpecification.lastModifiedBy(lastModifiedBy));
+        log.info("REST request to get Locations with filters: id={}, name={}, address={}", id, name, address);
 
-        List<LocationDTO> locations = locationService.getAllLocations(spec);
+        Specification<Location> spec = Specification.where(null);
+
+        if (id != null) {
+            spec = spec.and(LocationSpecification.hasId(id));
+        }
+        if (name != null) {
+            spec = spec.and(LocationSpecification.hasName(name));
+        }
+        if (address != null) {
+            spec = spec.and(LocationSpecification.hasAddress(address));
+        }
+        if (minLat != null && maxLat != null) {
+            spec = spec.and(LocationSpecification.hasLatitudeBetween(minLat, maxLat));
+        }
+        if (minLng != null && maxLng != null) {
+            spec = spec.and(LocationSpecification.hasLongitudeBetween(minLng, maxLng));
+        }
+
+        List<LocationDTO> result = locationService.getLocations(spec);
         CommonResponse<List<LocationDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched locations successfully"),
-                locations);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Locations fetched successfully"),
+                result);
         return ResponseEntity.ok(response);
     }
 
