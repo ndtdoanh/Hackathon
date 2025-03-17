@@ -3,7 +3,10 @@ package com.hacof.analytics.entity;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +18,8 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.hacof.analytics.constant.FeedbackType;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -52,6 +57,10 @@ public class Feedback extends AuditCreatedBase {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_id")
     Team team;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "feedback_type")
+    FeedbackType feedbackType;
 
     @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
     List<FeedbackDetail> feedbackDetails;
