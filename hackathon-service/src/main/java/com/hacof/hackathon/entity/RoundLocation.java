@@ -2,6 +2,8 @@ package com.hacof.hackathon.entity;
 
 import jakarta.persistence.*;
 
+import com.hacof.hackathon.constant.RoundLocationType;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
