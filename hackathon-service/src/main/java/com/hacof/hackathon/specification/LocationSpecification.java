@@ -6,31 +6,38 @@ import com.hacof.hackathon.entity.Location;
 
 public class LocationSpecification {
     public static Specification<Location> hasId(Long id) {
-        return (root, query, criteriaBuilder) ->
-                id == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("id"), id);
+        return (root, query, cb) -> {
+            if (id == null) return null;
+            return cb.equal(root.get("id"), id);
+        };
     }
 
     public static Specification<Location> hasName(String name) {
-        return (root, query, criteriaBuilder) ->
-                name == null ? criteriaBuilder.conjunction() : criteriaBuilder.like(root.get("name"), "%" + name + "%");
+        return (root, query, cb) -> {
+            if (name == null) return null;
+            return cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
+        };
     }
 
     public static Specification<Location> hasAddress(String address) {
-        return (root, query, criteriaBuilder) -> address == null
-                ? criteriaBuilder.conjunction()
-                : criteriaBuilder.like(root.get("address"), "%" + address + "%");
+        return (root, query, cb) -> {
+            if (address == null) return null;
+            return cb.like(cb.lower(root.get("address")), "%" + address.toLowerCase() + "%");
+        };
     }
 
-    public static Specification<Location> hasLatitude(Double latitude) {
-        return (root, query, criteriaBuilder) -> latitude == null
-                ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("latitude"), latitude);
+    public static Specification<Location> hasLatitudeBetween(Double minLat, Double maxLat) {
+        return (root, query, cb) -> {
+            if (minLat == null || maxLat == null) return null;
+            return cb.between(root.get("latitude"), minLat, maxLat);
+        };
     }
 
-    public static Specification<Location> hasLongitude(Double longitude) {
-        return (root, query, criteriaBuilder) -> longitude == null
-                ? criteriaBuilder.conjunction()
-                : criteriaBuilder.equal(root.get("longitude"), longitude);
+    public static Specification<Location> hasLongitudeBetween(Double minLng, Double maxLng) {
+        return (root, query, cb) -> {
+            if (minLng == null || maxLng == null) return null;
+            return cb.between(root.get("longitude"), minLng, maxLng);
+        };
     }
 
     public static Specification<Location> createdBy(String createdBy) {
