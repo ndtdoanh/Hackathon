@@ -24,20 +24,20 @@ public class LocationServiceImpl implements LocationService {
     private final LocationMapper locationMapper;
 
     @Override
-    public List<LocationDTO> getAllLocations(Specification<Location> spec) {
+    public List<LocationDTO> getLocations(Specification<Location> spec) {
         if (locationRepository.findAll(spec).isEmpty()) {
             throw new ResourceNotFoundException("Location not found");
         }
         return locationRepository.findAll(spec).stream()
-                .map(locationMapper::convertToDTO)
+                .map(locationMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public LocationDTO createLocation(LocationDTO locationDTO) {
-        Location location = locationMapper.convertToEntity(locationDTO);
+        Location location = locationMapper.toEntity(locationDTO);
         Location savedLocation = locationRepository.save(location);
-        return locationMapper.convertToDTO(savedLocation);
+        return locationMapper.toDTO(savedLocation);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LocationServiceImpl implements LocationService {
         existingLocation.setLatitude(locationDTO.getLatitude());
         existingLocation.setLongitude(locationDTO.getLongitude());
         Location updatedLocation = locationRepository.save(existingLocation);
-        return locationMapper.convertToDTO(updatedLocation);
+        return locationMapper.toDTO(updatedLocation);
     }
 
     @Override
