@@ -1,7 +1,7 @@
 server:
   port: 8084
-  servlet:
-    context-path: /analytics
+#  servlet:
+#    context-path: /analytics
 
 spring:
   application:

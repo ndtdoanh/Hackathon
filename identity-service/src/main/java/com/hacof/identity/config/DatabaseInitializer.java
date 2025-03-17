@@ -141,7 +141,22 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "GET_USER_DEVICE",
                             "GET_USER_DEVICES",
                             "CREATE_USER_DEVICE_TRACK",
-                            "GET_USER_DEVICE_TRACKS"),
+                            "GET_USER_DEVICE_TRACKS",
+                            "CREATE_FEEDBACK",
+                            "GET_FEEDBACKS",
+                            "GET_FEEDBACK",
+                            "DELETE_FEEDBACK",
+                            "GET_FEEDBACKS_BY_TEAM",
+                            "GET_FEEDBACKS_BY_HACKATHON",
+                            "GET_FEEDBACKS_BY_MENTOR",
+                            "CREATE_FEEDBACK_DETAIL",
+                            "GET_FEEDBACK_DETAILS",
+                            "GET_FEEDBACK_DETAIL",
+                            "UPDATE_FEEDBACK_DETAIL",
+                            "DELETE_FEEDBACK_DETAIL",
+                            "GET_FEEDBACK_DETAILS_BY_FEEDBACK",
+                            "GET_FEEDBACK_DETAILS_BY_MENTOR",
+                            "GET_FEEDBACK_DETAILS_BY_HACKATHON"),
             "ORGANIZATION",
                     Set.of(
                             "CREATE_USER",
@@ -587,9 +602,25 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_USER_DEVICE", "/api/v1/user-devices/{Id}", "GET", "USER_DEVICES"),
                 new Permission("GET_USER_DEVICES", "/api/v1/user-devices", "GET", "USER_DEVICES"),
                 new Permission("CREATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks", "POST", "USER_DEVICE_TRACKS"),
-                new Permission("GET_USER_DEVICE_TRACKS", "/api/v1/user-device-tracks", "GET", "USER_DEVICE_TRACKS"));
+                new Permission("GET_USER_DEVICE_TRACKS", "/api/v1/user-device-tracks", "GET", "USER_DEVICE_TRACKS"),
+                new Permission("CREATE_FEEDBACK", "/api/v1/feedbacks", "POST", "FEEDBACKS"),
+                new Permission("GET_FEEDBACKS", "/api/v1/feedbacks", "GET", "FEEDBACKS"),
+                new Permission("GET_FEEDBACK", "/api/v1/feedbacks/{id}", "GET", "FEEDBACKS"),
+                new Permission("DELETE_FEEDBACK", "/api/v1/feedbacks/{id}", "DELETE", "FEEDBACKS"),
+                new Permission("GET_FEEDBACKS_BY_TEAM", "/api/v1/feedbacks/by-team", "GET", "FEEDBACKS"),
+                new Permission("GET_FEEDBACKS_BY_HACKATHON", "/api/v1/feedbacks/by-hackathon", "GET", "FEEDBACKS"),
+                new Permission("GET_FEEDBACKS_BY_MENTOR", "/api/v1/feedbacks/by-mentor", "GET", "FEEDBACKS"),
+                new Permission("CREATE_FEEDBACK_DETAIL", "/api/v1/feedback-details", "POST", "FEEDBACK_DETAILS"),
+                new Permission("GET_FEEDBACK_DETAILS", "/api/v1/feedback-details", "GET", "FEEDBACK_DETAILS"),
+                new Permission("GET_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "GET", "FEEDBACK_DETAILS"),
+                new Permission("UPDATE_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "PUT", "FEEDBACK_DETAILS"),
+                new Permission("DELETE_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "DELETE", "FEEDBACK_DETAILS"),
+                new Permission("GET_FEEDBACK_DETAILS_BY_FEEDBACK", "/api/v1/feedback-details/by-feedback", "GET", "FEEDBACK_DETAILS"),
+                new Permission("GET_FEEDBACK_DETAILS_BY_MENTOR", "/api/v1/feedback-details/by-mentor", "GET", "FEEDBACK_DETAILS"),
+                new Permission("GET_FEEDBACK_DETAILS_BY_HACKATHON", "/api/v1/feedback-details/by-hackathon", "GET", "FEEDBACK_DETAILS"));
 
-        permissionRepository.saveAll(permissions);
+
+                permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
     }
 
