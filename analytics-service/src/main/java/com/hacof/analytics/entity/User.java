@@ -3,6 +3,7 @@ package com.hacof.analytics.entity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -71,6 +72,10 @@ public class User extends AuditUserBase {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<UserRole> userRoles = new HashSet<>();
+
+    public Set<Role> getRoles() {
+        return userRoles.stream().map(UserRole::getRole).collect(Collectors.toSet());
+    }
 
     // User-Hackathon mapping
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

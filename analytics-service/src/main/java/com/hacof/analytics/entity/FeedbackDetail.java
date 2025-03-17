@@ -58,4 +58,12 @@ public class FeedbackDetail extends AuditBase {
     @Lob
     @Column(name = "note")
     String note;
+
+    public FeedbackDetail(Feedback feedback, String content, int maxRating, int rate, String note) {
+        this.feedback = feedback;
+        this.content = content;
+        this.maxRating = maxRating;
+        this.rate = rate;
+        this.note = note;
+    }
 }
