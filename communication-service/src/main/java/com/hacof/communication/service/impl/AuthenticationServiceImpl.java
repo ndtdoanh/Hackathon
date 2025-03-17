@@ -1,4 +1,4 @@
-package com.hacof.communication.services.impl;
+package com.hacof.communication.service.impl;
 
 import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
@@ -11,11 +11,11 @@ import org.springframework.util.CollectionUtils;
 
 import com.hacof.communication.dto.request.IntrospectRequest;
 import com.hacof.communication.dto.response.IntrospectResponse;
-import com.hacof.communication.entities.User;
-import com.hacof.communication.exceptions.AppException;
-import com.hacof.communication.exceptions.ErrorCode;
-import com.hacof.communication.repositories.InvalidatedTokenRepository;
-import com.hacof.communication.services.AuthenticationService;
+import com.hacof.communication.entity.User;
+import com.hacof.communication.exception.AppException;
+import com.hacof.communication.exception.ErrorCode;
+import com.hacof.communication.repository.InvalidatedTokenRepository;
+import com.hacof.communication.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -68,11 +68,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         Date expiryTime = (isRefresh)
                 ? new Date(signedJWT
-                        .getJWTClaimsSet()
-                        .getIssueTime()
-                        .toInstant()
-                        .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
-                        .toEpochMilli())
+                .getJWTClaimsSet()
+                .getIssueTime()
+                .toInstant()
+                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
@@ -88,12 +88,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
 
-        if (!CollectionUtils.isEmpty(user.getRoles()))
-            user.getRoles().forEach(role -> {
-                stringJoiner.add(role.getName());
+        if (!CollectionUtils.isEmpty(user.getUserRoles()))
+            user.getUserRoles().forEach(userRole -> {
+                stringJoiner.add(userRole.getRole().getName());
 
-                if (!CollectionUtils.isEmpty(role.getPermissions()))
-                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+                if (!CollectionUtils.isEmpty(userRole.getRole().getRolePermissions()))
+                    userRole.getRole()
+                            .getRolePermissions()
+                            .forEach(rolePermission -> stringJoiner.add(
+                                    rolePermission.getPermission().getName()));
             });
 
         return stringJoiner.toString();

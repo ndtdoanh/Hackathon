@@ -1,4 +1,4 @@
-package com.hacof.communication.exceptions;
+package com.hacof.communication.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

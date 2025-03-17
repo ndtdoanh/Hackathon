@@ -1,4 +1,4 @@
-package com.hacof.communication.configs;
+package com.hacof.communication.config;
 
 import java.text.ParseException;
 import java.util.Objects;
@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import com.hacof.communication.dto.request.IntrospectRequest;
-import com.hacof.communication.services.AuthenticationService;
+import com.hacof.communication.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 
 @Component

@@ -1,4 +1,4 @@
-package com.hacof.communication.responses;
+package com.hacof.communication.response;
 
 import java.util.List;
 

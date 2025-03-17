@@ -1,4 +1,4 @@
-package com.hacof.communication.services;
+package com.hacof.communication.service;
 
 import java.text.ParseException;
 

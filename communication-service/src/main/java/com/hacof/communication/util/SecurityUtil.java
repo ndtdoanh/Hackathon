@@ -1,4 +1,4 @@
-package com.hacof.communication.utils;
+package com.hacof.communication.util;
 
 import java.util.Optional;
 
@@ -7,10 +7,24 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+import com.hacof.communication.entity.User;
+import com.hacof.communication.repository.UserRepository;
+
+@Component
 public class SecurityUtil {
+
+    private final UserRepository userRepository;
+
+    public SecurityUtil(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public Optional<User> getCurrentUser() {
+        return getCurrentUserLogin().flatMap(userRepository::findByUsername);
+    }
+
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
@@ -27,5 +41,9 @@ public class SecurityUtil {
             return s;
         }
         return null;
+    }
+
+    public void setAuditUser() {
+        getCurrentUser().ifPresent(AuditContext::setCurrentUser);
     }
 }

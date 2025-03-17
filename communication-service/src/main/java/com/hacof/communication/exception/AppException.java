@@ -1,4 +1,4 @@
-package com.hacof.communication.exceptions;
+package com.hacof.communication.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

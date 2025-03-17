@@ -1,4 +1,4 @@
-package com.hacof.communication.configs;
+package com.hacof.communication.config;
 
 import java.util.List;
 

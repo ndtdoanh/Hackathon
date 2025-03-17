@@ -1,4 +1,4 @@
-package com.hacof.communication.configs;
+package com.hacof.communication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
