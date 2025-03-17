@@ -2,29 +2,28 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.hacof.hackathon.constant.EventType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventDTO {
     private Long id;
-
-    @NotBlank(message = "Name is mandatory")
     private String name;
-
     private String description;
+    private LocalDateTime eventDate;
+    private boolean notificationSent;
+    private EventType eventType;
+    private Long hackathonId;
+    private Long organizerId;
 
-    @NotBlank(message = "Created by is mandatory")
-    private String createdBy;
-
-    @NotNull(message = "Created date is mandatory")
-    private LocalDateTime createdDate;
-
-    @NotBlank(message = "Last updated by is mandatory")
-    private String lastUpdatedBy;
-
-    @NotNull(message = "Last updated date is mandatory")
-    private LocalDateTime lastUpdatedDate;
+    // Additional fields for response
+    private String organizerName;
+    private String hackathonName;
 }
