@@ -1,18 +1,20 @@
 package com.hacof.hackathon.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.LocationMapper;
 import com.hacof.hackathon.repository.LocationRepository;
 import com.hacof.hackathon.service.LocationService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<LocationDTO> getAllLocations(Specification<Location> spec) {
-        if(locationRepository.findAll(spec).isEmpty()){
+        if (locationRepository.findAll(spec).isEmpty()) {
             throw new ResourceNotFoundException("Location not found");
         }
         return locationRepository.findAll(spec).stream()
@@ -40,8 +42,8 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDTO updateLocation(Long id, LocationDTO locationDTO) {
-        Location existingLocation = locationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+        Location existingLocation =
+                locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
         existingLocation.setName(locationDTO.getName());
         existingLocation.setAddress(locationDTO.getAddress());
         existingLocation.setLatitude(locationDTO.getLatitude());

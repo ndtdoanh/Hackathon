@@ -1,5 +1,15 @@
 package com.hacof.hackathon.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import jakarta.validation.Valid;
+
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
@@ -7,16 +17,9 @@ import com.hacof.hackathon.service.LocationService;
 import com.hacof.hackathon.specification.LocationSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
-import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/locations")
