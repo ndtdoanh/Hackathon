@@ -156,7 +156,15 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "DELETE_FEEDBACK_DETAIL",
                             "GET_FEEDBACK_DETAILS_BY_FEEDBACK",
                             "GET_FEEDBACK_DETAILS_BY_MENTOR",
-                            "GET_FEEDBACK_DETAILS_BY_HACKATHON"),
+                            "GET_FEEDBACK_DETAILS_BY_HACKATHON",
+                            "CREATE_BLOG_POST",
+                            "GET_BLOG_POSTS",
+                            "GET_BLOG_POST",
+                            "UPDATE_BLOG_POST",
+                            "DELETE_BLOG_POST",
+                            "SUBMIT_BLOG_POST",
+                            "APPROVE_BLOG_POST",
+                            "REJECT_BLOG_POST"),
             "ORGANIZATION",
                     Set.of(
                             "CREATE_USER",
@@ -617,7 +625,15 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("DELETE_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "DELETE", "FEEDBACK_DETAILS"),
                 new Permission("GET_FEEDBACK_DETAILS_BY_FEEDBACK", "/api/v1/feedback-details/by-feedback", "GET", "FEEDBACK_DETAILS"),
                 new Permission("GET_FEEDBACK_DETAILS_BY_MENTOR", "/api/v1/feedback-details/by-mentor", "GET", "FEEDBACK_DETAILS"),
-                new Permission("GET_FEEDBACK_DETAILS_BY_HACKATHON", "/api/v1/feedback-details/by-hackathon", "GET", "FEEDBACK_DETAILS"));
+                new Permission("GET_FEEDBACK_DETAILS_BY_HACKATHON", "/api/v1/feedback-details/by-hackathon", "GET", "FEEDBACK_DETAILS"),
+                new Permission("CREATE_BLOG_POST", "/api/v1/blog-posts", "POST", "BLOG_POSTS"),
+                new Permission("GET_BLOG_POSTS", "/api/v1/blog-posts", "GET", "BLOG_POSTS"),
+                new Permission("GET_BLOG_POST", "/api/v1/blog-posts/{id}", "GET", "BLOG_POSTS"),
+                new Permission("UPDATE_BLOG_POST", "/api/v1/blog-posts/{id}", "PUT", "BLOG_POSTS"),
+                new Permission("DELETE_BLOG_POST", "/api/v1/blog-posts/{id}", "DELETE", "BLOG_POSTS"),
+                new Permission("SUBMIT_BLOG_POST", "/api/v1/blog-posts/{id}/submit", "PUT", "BLOG_POSTS"),
+                new Permission("APPROVE_BLOG_POST", "/api/v1/blog-posts/{id}/approve", "PUT", "BLOG_POSTS"),
+                new Permission("REJECT_BLOG_POST", "/api/v1/blog-posts/{id}/reject", "PUT", "BLOG_POSTS"));
 
 
                 permissionRepository.saveAll(permissions);
