@@ -20,7 +20,7 @@ public class SubmissionMapper {
 
         // Fetch the round by ID from the database
         Round round = roundRepository.findById(dto.getRoundId())
-                .orElseThrow(() -> new RuntimeException("Round not found with ID " + dto.getRoundId()));
+                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + dto.getRoundId()));
 
         submission.setRound(round); // Set the fetched round
         submission.setStatus(Status.valueOf(dto.getStatus().toUpperCase())); // Assuming Status is an enum

@@ -16,7 +16,6 @@ public interface SubmissionService {
 
     List<SubmissionResponseDTO> getAllSubmissions();
 
-    SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionDTO);
-
+    SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files);
     boolean deleteSubmission(Long id);
 }

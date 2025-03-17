@@ -21,13 +21,10 @@ public class SubmissionController {
     @Autowired
     private SubmissionService submissionService;
 
-    /**
-     * Endpoint to create a submission.
-     */
     @PostMapping
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> createSubmission(
-            @RequestParam("files") List<MultipartFile> files,
-            @RequestParam("roundId") Long roundId,
+            @RequestParam(value = "files", required = true) List<MultipartFile> files,
+            @RequestParam(value = "roundId", required = false) Long roundId,
             @RequestParam("status") String status) {
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
@@ -35,12 +32,16 @@ public class SubmissionController {
             submissionRequestDTO.setRoundId(roundId);
             submissionRequestDTO.setStatus(status);
 
-            // Call the service to create the submission
             SubmissionResponseDTO createdSubmission = submissionService.createSubmission(submissionRequestDTO, files);
+
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Submission created successfully!");
             response.setData(createdSubmission);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (IOException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error uploading files: " + e.getMessage());
@@ -86,18 +87,31 @@ public class SubmissionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> updateSubmission(
-            @PathVariable Long id, @RequestBody SubmissionRequestDTO submissionRequestDTO) {
+            @PathVariable Long id,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
+            @RequestParam("roundId") Long roundId,
+            @RequestParam("status") String status) {
+
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            SubmissionResponseDTO updatedSubmission = submissionService.updateSubmission(id, submissionRequestDTO);
+            SubmissionRequestDTO submissionRequestDTO = new SubmissionRequestDTO();
+            submissionRequestDTO.setRoundId(roundId);
+            submissionRequestDTO.setStatus(status);
+
+            SubmissionResponseDTO updatedSubmission = submissionService.updateSubmission(id, submissionRequestDTO, files);
+
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Submission updated successfully!");
             response.setData(updatedSubmission);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage("Submission not found!");
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
