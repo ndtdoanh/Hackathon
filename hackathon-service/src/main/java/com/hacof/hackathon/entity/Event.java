@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.hacof.hackathon.constant.EventType;
 
 import lombok.*;
@@ -21,15 +18,14 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "events")
-public class Event extends AuditBase {
+public class Event extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     String name;
 
-    @Lob
     @Column(name = "description")
     String description;
 
@@ -45,12 +41,10 @@ public class Event extends AuditBase {
     EventType eventType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "organizer_id")
     User organizer;
 }
