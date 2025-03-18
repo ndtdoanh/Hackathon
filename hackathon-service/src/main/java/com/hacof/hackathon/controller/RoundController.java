@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/rounds")
 @RequiredArgsConstructor
 public class RoundController {
-    private final RoundService roundService;
+    final RoundService roundService;
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<RoundDTO>>> getAllRounds(
@@ -43,7 +43,7 @@ public class RoundController {
         spec = spec.and(maxTeam != null ? RoundSpecification.hasMaxTeam(maxTeam) : null);
         spec = spec.and(isVideoRound != null ? RoundSpecification.hasIsVideoRound(isVideoRound) : null);
 
-        List<RoundDTO> rounds = roundService.getRoundByAllCriteria(spec);
+        List<RoundDTO> rounds = roundService.getRounds(spec);
         CommonResponse<List<RoundDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
@@ -91,61 +91,4 @@ public class RoundController {
                 null);
         return ResponseEntity.ok(response);
     }
-    //    // assign judge
-    //    @PostMapping("/assign")
-    //    // @PreAuthorize("hasAuthority('ASSIGN_JUDGES_AND_MENTORS')")
-    //    public ResponseEntity<CommonResponse<RoundDTO>> assignJudgesAndMentors(@Valid @RequestBody RoundDTO request) {
-    //        RoundDTO roundDTO =
-    //                roundService.assignJudgesAndMentors(request.getId(), request.getJudgeIds(),
-    // request.getMentorIds());
-    //        CommonResponse<RoundDTO> response = new CommonResponse<>(
-    //                UUID.randomUUID().toString(),
-    //                LocalDateTime.now(),
-    //                "HACOF",
-    //                new CommonResponse.Result("0000", "Judges and mentors assigned successfully"),
-    //                roundDTO);
-    //        return ResponseEntity.ok(response);
-    //    }
-    //
-    //    @PostMapping("/{teamId}/assign-task")
-    //    // @PreAuthorize("hasAuthority('ASSIGN_TASK_TO_MEMBER')")
-    //    public ResponseEntity<CommonResponse<Void>> assignTaskToMember(
-    //            @PathVariable Long teamId, @RequestBody Map<String, Object> request) {
-    //        Long memberId = Long.valueOf(request.get("memberId").toString());
-    //        String task = request.get("task").toString();
-    //        roundService.assignTaskToMember(teamId, memberId, task);
-    //        CommonResponse<Void> response = new CommonResponse<>(
-    //                UUID.randomUUID().toString(),
-    //                LocalDateTime.now(),
-    //                "HACOF",
-    //                new CommonResponse.Result("0000", "Task assigned successfully"),
-    //                null);
-    //        return ResponseEntity.ok(response);
-    //    }
-    //
-    //    @GetMapping("/{roundId}/passed-teams")
-    //    // @PreAuthorize("hasAuthority('GET_PASSED_TEAMS')")
-    //    public ResponseEntity<CommonResponse<List<String>>> getPassedTeams(@PathVariable Long roundId) {
-    //        List<String> passedTeams = roundService.getPassedTeams(roundId);
-    //        CommonResponse<List<String>> response = new CommonResponse<>(
-    //                UUID.randomUUID().toString(),
-    //                LocalDateTime.now(),
-    //                "HACOF",
-    //                new CommonResponse.Result("0000", "Fetched passed teams successfully"),
-    //                passedTeams);
-    //        return ResponseEntity.ok(response);
-    //    }
-    //
-    //    @GetMapping("/{roundId}/judges")
-    //    // @PreAuthorize("hasAuthority('GET_JUDGE_NAMES')")
-    //    public ResponseEntity<CommonResponse<List<String>>> getJudgeNames(@PathVariable Long roundId) {
-    //        List<String> judgeNames = roundService.getJudgeNames(roundId);
-    //        CommonResponse<List<String>> response = new CommonResponse<>(
-    //                UUID.randomUUID().toString(),
-    //                LocalDateTime.now(),
-    //                "HACOF",
-    //                new CommonResponse.Result("0000", "Fetched judge names successfully"),
-    //                judgeNames);
-    //        return ResponseEntity.ok(response);
-    //    }
 }
