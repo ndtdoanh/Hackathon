@@ -7,6 +7,9 @@ import com.hacof.identity.constant.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -28,7 +31,16 @@ public class TeamRequest extends AuditCreatedBase {
     @Column(name = "status")
     Status status;
 
+    @JoinColumn(name = "confirmation_deadline")
+    LocalDateTime confirmationDeadline;
+
+    @JoinColumn(name = "note")
+    String note;
+
     @ManyToOne
     @JoinColumn(name = "reviewed_by")
     User reviewedBy;
+
+    @OneToMany(mappedBy = "teamRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRequestMember> teamRequestMembers;
 }
