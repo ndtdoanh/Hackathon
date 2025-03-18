@@ -11,5 +11,4 @@ public class FileUrlResponseDTO {
     private String fileUrl;
     private String fileType;
     private int fileSize;
-
 }
