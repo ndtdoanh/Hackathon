@@ -32,4 +32,9 @@ public class RoundSpecification {
     public static Specification<Round> hasIsVideoRound(boolean isVideoRound) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isVideoRound"), isVideoRound);
     }
+
+    public static Specification<Round> hasHackathonId(long hackathonId) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("hackathon").get("id"), hackathonId);
+    }
 }
