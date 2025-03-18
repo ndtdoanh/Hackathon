@@ -4,14 +4,14 @@
 
 **HaCoF (Hackathon Collaboration Framework)** is an innovative web-based platform tailored for managing university-level hackathons. It streamlines key processes such as participant registration, team collaboration, project submission, and evaluation. Designed to enhance efficiency and engagement, HaCoF provides real-time updates, intuitive tools, and data-driven insights, ensuring an exceptional experience for organizers, judges, and participants alike.
 
-This project is developed using modern technologies such as **Spring Boot** for the backend, **ReactJS** for the frontend, and **MySQL** for the database. Each team member has specific roles in the development and maintenance of the system.
+This project is developed using modern technologies such as **Spring Boot** for the backend, **NextJS** for the frontend, and **MySQL** for the database. Each team member has specific roles in the development and maintenance of the system.
 
 --- ---
 
 ## Technologies Used
 
 - **Backend**: Java Spring Boot
-- **Frontend**: ReactJS
+- **Frontend**: NextJS
 - **Database/Storage**: MySQL, Redis, Firebase
 - **Messaging/Queue**: Kafka
 - **Cloud Services**: AWS
@@ -68,16 +68,31 @@ This project is developed using modern technologies such as **Spring Boot** for 
 - Enables load balancing and fault tolerance across microservices.
 
 ### Frontend (ReactJS):
-- **Dashboard**: Intuitive UI for administrators, organizers, and judges to manage hackathons, evaluate projects, and view analytics.
-- **Participant Portal**: Allows participants to register, join teams, and submit projects.
-- **Mentorship & Forum**: Provides a collaborative space for discussions, mentor bookings, and connecting participants.
-- **Real-time Notifications**: Displays updates and alerts to users via a responsive design.
+1. **Dashboard (Admin, Organizer, Judge)**:
+- Provides an intuitive UI for managing hackathons, evaluating projects, and viewing analytics.
+- Fetches real-time data from backend services via API Gateway.
+2. **Participant Portal**:
+- Allows users to register, join teams, and submit projects.
+- Integrated with Hackathon Service and Submission Service.
+3. **Mentorship & Forum**:
+- Enables mentorship requests, booking sessions, and discussions.
+- Connected to Communication Service for real-time chat, discussions, and mentor scheduling.
+4. **Submission Service**:
+- Displays system alerts, mentorship updates, event changes, and deadline reminders.
+- Fetches data from Notification Service (Kafka-based event-driven architecture).
 
 ### Shared Services:
-- **Database**: MySQL for structured data storage and Redis for caching.
-- **Messaging/Queue**: Kafka for asynchronous communication between microservices.
-- **Cloud Services**: AWS for hosting, file storage, and scaling the application.
-- **Containerization**: Docker for consistent environment setup across development and production.
+1. **Database**:
+- MySQL: Structured data storage for all core microservices.
+- Redis: Caching frequently accessed data (e.g., user sessions, event schedules).
+2. **Messaging/Queue**:
+- Kafka: Asynchronous event-driven communication (e.g., notifications, mentorship requests, submissions).
+3. **Cloud Services - AWS (EC2, S3, RDS)**:
+- EC2: Deploy API Gateway & microservices.
+- S3: Store project submissions, images, and resources.
+- RDS (MySQL): Managed database service for scalability.
+4. **Containerization & Orchestration**:
+- Docker: Ensures consistent environment setup for backend & frontend.
 
 ---
 
