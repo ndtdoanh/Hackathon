@@ -32,6 +32,13 @@ public class MentorshipSessionRequest extends AuditCreatedBase {
     User mentor;
 
     @ManyToOne
+    @JoinColumn(name = "mentorship_request_id")
+    MentorshipRequest mentorshipRequest;
+
+    @Column(name = "session_details")
+    String sessionDetails;
+
+    @ManyToOne
     @JoinColumn(name = "team_id")
     Team team;
 
