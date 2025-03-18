@@ -74,7 +74,17 @@ public class Team extends AuditCreatedBase {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Feedback> feedbacks;
 
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRequest> teamRequests;
+
     @Lob
     @Column(name = "bio")
     String bio;
+
+    @Column(name = "is_deleted")
+    boolean isDeleted = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deleted_by")
+    User deletedBy;
 }
