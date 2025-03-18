@@ -67,7 +67,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 - Manages dynamic service registration and discovery.
 - Enables load balancing and fault tolerance across microservices.
 
-### Frontend (ReactJS):
+### Frontend (NextJS):
 1. **Dashboard (Admin, Organizer, Judge)**:
 - Provides an intuitive UI for managing hackathons, evaluating projects, and viewing analytics.
 - Fetches real-time data from backend services via API Gateway.
