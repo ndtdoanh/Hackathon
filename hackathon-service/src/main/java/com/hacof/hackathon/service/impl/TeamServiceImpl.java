@@ -43,6 +43,16 @@ public class TeamServiceImpl implements TeamService {
     private final UserTeamRequestMapper userTeamRequestMapper;
 
     @Override
+    public List<TeamDTO> getAll() {
+        log.info("Getting all teams");
+        List<Team> teams = teamRepository.findAll();
+        if (teams.isEmpty()) {
+            throw new ResourceNotFoundException("No teams found");
+        }
+        return teams.stream().map(teamMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public TeamRequestDTO createTeamRequest(TeamRequestDTO request) {
         log.info("Creating team request for team: {}", request.getTeamName());
 
@@ -88,18 +98,13 @@ public class TeamServiceImpl implements TeamService {
                 .findById(reviewerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reviewer not found"));
 
-        // Create team
-        Team team = Team.builder()
-                .name(request.getTeamName())
-                .bio(request.getDescription())
-                .hackathon(request.getHackathon())
-                .teamLeader(request.getLeader())
-                .build();
-        team = teamRepository.save(team);
+        // Create team from request
+        TeamDTO teamDTO = createTeamFromRequest(teamRequestMapper.toDTO(request));
 
-        // Add leader as team member
-        UserTeam leaderMembership =
-                UserTeam.builder().team(team).user(request.getLeader()).build();
+        UserTeam leaderMembership = UserTeam.builder()
+                .team(teamMapper.toEntity(teamDTO))
+                .user(request.getLeader())
+                .build();
         userTeamRepository.save(leaderMembership);
 
         // Update request status
@@ -109,6 +114,18 @@ public class TeamServiceImpl implements TeamService {
 
         request = teamRequestRepository.save(request);
         return teamRequestMapper.toDTO(request);
+    }
+
+    @Override
+    public TeamDTO createTeamFromRequest(TeamRequestDTO teamRequestDTO) {
+        Team team = Team.builder()
+                .name(teamRequestDTO.getTeamName())
+                .bio(teamRequestDTO.getDescription())
+                .hackathon(new Hackathon(teamRequestDTO.getHackathonId()))
+                .teamLeader(new User(teamRequestDTO.getLeaderId()))
+                .build();
+        team = teamRepository.save(team);
+        return teamMapper.toDTO(team);
     }
 
     @Override

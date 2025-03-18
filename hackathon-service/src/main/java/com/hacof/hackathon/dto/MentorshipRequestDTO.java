@@ -8,6 +8,4 @@ public class MentorshipRequestDTO {
     private Long teamId;
     private Long mentorId;
     private String status;
-
-    // Getters và Setters
 }

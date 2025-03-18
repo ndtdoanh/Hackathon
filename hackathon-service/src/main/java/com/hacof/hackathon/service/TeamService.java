@@ -18,6 +18,8 @@ public interface TeamService {
 
     TeamRequestDTO rejectTeamRequest(Long requestId, Long reviewerId);
 
+    TeamDTO createTeamFromRequest(TeamRequestDTO teamRequestDTO);
+
     // Team Member Management
     UserTeamRequestDTO inviteMember(Long teamId, Long userId, Long inviterId);
 
@@ -41,4 +43,6 @@ public interface TeamService {
     void removeMember(UserTeamDTO memberDTO);
 
     TeamDTO registerForHackathon(TeamDTO teamDTO);
+
+    List<TeamDTO> getAll();
 }
