@@ -8,7 +8,7 @@ import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.entity.Round;
 
 public interface RoundService {
-    List<RoundDTO> getRoundByAllCriteria(Specification<Round> spec);
+    List<RoundDTO> getRounds(Specification<Round> spec);
 
     RoundDTO createRound(RoundDTO roundDTO);
 
