@@ -1,21 +1,22 @@
 package com.hacof.submission.service.impl;
 
-import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
-import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
-import com.hacof.submission.entity.JudgeSubmissionDetail;
-import com.hacof.submission.entity.JudgeSubmission;
-import com.hacof.submission.entity.RoundMarkCriterion;
-import com.hacof.submission.repository.JudgeSubmissionDetailRepository;
-import com.hacof.submission.repository.JudgeSubmissionRepository;
-import com.hacof.submission.repository.RoundMarkCriterionRepository;
-import com.hacof.submission.mapper.JudgeSubmissionDetailMapper;
-import com.hacof.submission.service.JudgeSubmissionDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
+import com.hacof.submission.entity.JudgeSubmission;
+import com.hacof.submission.entity.JudgeSubmissionDetail;
+import com.hacof.submission.entity.RoundMarkCriterion;
+import com.hacof.submission.mapper.JudgeSubmissionDetailMapper;
+import com.hacof.submission.repository.JudgeSubmissionDetailRepository;
+import com.hacof.submission.repository.JudgeSubmissionRepository;
+import com.hacof.submission.repository.RoundMarkCriterionRepository;
+import com.hacof.submission.service.JudgeSubmissionDetailService;
 
 @Service
 public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailService {
@@ -49,12 +50,15 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
 
     @Override
     public JudgeSubmissionDetailResponseDTO createDetail(JudgeSubmissionDetailRequestDTO requestDTO) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findById(requestDTO.getJudgeSubmissionId())
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findById(requestDTO.getJudgeSubmissionId())
                 .orElseThrow(() -> new IllegalArgumentException("Judge Submission not found"));
-        RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository.findById(requestDTO.getRoundMarkCriterionId())
+        RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository
+                .findById(requestDTO.getRoundMarkCriterionId())
                 .orElseThrow(() -> new IllegalArgumentException("Round Mark Criterion not found"));
         if (requestDTO.getScore() > roundMarkCriterion.getMaxScore()) {
-            throw new IllegalArgumentException("Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
+            throw new IllegalArgumentException(
+                    "Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
         }
         JudgeSubmissionDetail entity = mapper.toEntity(requestDTO);
         entity.setJudgeSubmission(judgeSubmission);
@@ -66,15 +70,19 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
 
     @Override
     public JudgeSubmissionDetailResponseDTO updateDetail(Long id, JudgeSubmissionDetailRequestDTO requestDTO) {
-        JudgeSubmissionDetail existingDetail = detailRepository.findById(id)
+        JudgeSubmissionDetail existingDetail = detailRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Judge Submission Detail not found"));
 
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findById(requestDTO.getJudgeSubmissionId())
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findById(requestDTO.getJudgeSubmissionId())
                 .orElseThrow(() -> new IllegalArgumentException("Judge Submission not found"));
-        RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository.findById(requestDTO.getRoundMarkCriterionId())
+        RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository
+                .findById(requestDTO.getRoundMarkCriterionId())
                 .orElseThrow(() -> new IllegalArgumentException("Round Mark Criterion not found"));
         if (requestDTO.getScore() > roundMarkCriterion.getMaxScore()) {
-            throw new IllegalArgumentException("Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
+            throw new IllegalArgumentException(
+                    "Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
         }
 
         existingDetail.setScore(requestDTO.getScore());
@@ -88,8 +96,10 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
 
     @Override
     public boolean deleteDetail(Long id) {
-        JudgeSubmissionDetail existingDetail = detailRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Judge Submission Detail with ID " + id + " not found"));
+        JudgeSubmissionDetail existingDetail = detailRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Judge Submission Detail with ID " + id + " not found"));
 
         detailRepository.delete(existingDetail);
         return true;
