@@ -6,15 +6,12 @@ import java.util.UUID;
 
 import jakarta.validation.Valid;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.*;
-import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.service.TeamService;
-import com.hacof.hackathon.specification.TeamSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
@@ -64,6 +61,7 @@ public class TeamController {
         log.debug("Received request to approve team request: {}", request);
         TeamRequestDTO result = teamService.approveTeamRequest(
                 request.getData().getRequestId(), request.getData().getReviewerId());
+
         return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
@@ -198,20 +196,29 @@ public class TeamController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<TeamDTO>>> getTeams(
-            @RequestParam(required = false) Long id, @RequestParam(required = false) String name) {
-        Specification<Team> spec =
-                Specification.where(TeamSpecification.hasId(id)).and(TeamSpecification.hasName(name));
-
-        List<TeamDTO> teams = teamService.getTeams(spec);
-        CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
+    public ResponseEntity<CommonResponse<List<TeamDTO>>> getTeams() {
+        List<TeamDTO> teams = teamService.getAll();
+        return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched teams successfully"),
-                teams);
-        return ResponseEntity.ok(response);
+                teams));
     }
+    //    public ResponseEntity<CommonResponse<List<TeamDTO>>> getTeams(
+    //            @RequestParam(required = false) Long id, @RequestParam(required = false) String name) {
+    //        Specification<Team> spec =
+    //                Specification.where(TeamSpecification.hasId(id)).and(TeamSpecification.hasName(name));
+    //
+    //        List<TeamDTO> teams = teamService.getTeams(spec);
+    //        CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
+    //                UUID.randomUUID().toString(),
+    //                LocalDateTime.now(),
+    //                "HACOF",
+    //                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched teams successfully"),
+    //                teams);
+    //        return ResponseEntity.ok(response);
+    //    }
 
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<TeamDTO>> getTeam(@PathVariable long id) {
