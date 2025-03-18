@@ -19,17 +19,22 @@ import lombok.experimental.FieldDefaults;
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class AuditBase {
-    @Column(name = "created_by")
-    String createdBy;
 
     @CreatedDate
-    @Column(name = "created_date", columnDefinition = "DATETIME(6)", updatable = false)
+    @Column(name = "created_date", columnDefinition = "DATETIME(6)")
     LocalDateTime createdDate;
-
-    @Column(name = "last_modified_by")
-    String lastModifiedBy;
 
     @LastModifiedDate
     @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)")
     LocalDateTime lastModifiedDate;
+
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.lastModifiedDate = LocalDateTime.now();
+    }
 }

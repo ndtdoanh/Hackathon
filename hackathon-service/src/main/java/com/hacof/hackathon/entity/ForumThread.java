@@ -1,12 +1,11 @@
 package com.hacof.hackathon.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import com.hacof.hackathon.constant.Status;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,23 +17,27 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "ForumThreads")
-public class ForumThread extends AuditBase {
+@Table(name = "forum_threads")
+public class ForumThread extends AuditCreatedBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
-
-    @NotNull
     @Column(name = "title")
     String title;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    Status status = Status.ACTIVE;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "forum_category_id")
+    ForumCategory forumCategory;
+
+    @Column(name = "is_locked")
+    boolean isLocked = false;
+
+    @Column(name = "is_pinned")
+    boolean isPinned = false;
+
+    @OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ThreadPost> threadPosts;
 }
