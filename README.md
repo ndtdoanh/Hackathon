@@ -40,15 +40,29 @@ This project is developed using modern technologies such as **Spring Boot** for 
 ## Project Structure
 
 ### Backend (Spring Boot):
-- **API Gateway**: Routes client requests to appropriate microservices, handles authentication and authorization.
-- **User Service**: Manages user accounts, authentication, and role-based access control.
-- **Hackathon Service**: Handles the creation, management, and scheduling of hackathons, as well as announcements and participant registration.
-- **Team Service**: Manages team creation, joining, collaboration, and task assignments.
-- **Submission Service**: Handles project submissions, file uploads, and versioning.
-- **Mentorship Service**: Allows mentor session scheduling, chat, and video call integration.
-- **Judging Service**: Manages project evaluation, feedback collection, and scoring algorithms.
-- **Notification Service**: Sends real-time updates via email, SMS, and in-app notifications.
-- **Analytics Service**: Collects and processes event data for reports and insights.
+1. **API Gateway**:
+- Routes client requests to appropriate microservices.
+2. **Identity Service**:
+- Manages user accounts, authentication, and role-based access control.
+- Handles user tracking and activity logging.
+- Key entities: User, UserProfile, Role, Permission, ActivityLog, etc.
+- Handles authentication and authorization via Identity Service.
+3. **Hackathon Service**:
+- Manages hackathon creation, rounds, locations, and event scheduling.
+- Handles team formation, mentorship requests, and sponsorship management.
+- Key entities: Hackathon, Team, Event, MentorshipRequest, Sponsorship, etc.
+4. **Submission Service**:
+- Handles project submissions and file uploads.
+- Manages judge rounds, evaluation, and scoring criteria.
+- Key entities: Submission, JudgeSubmission, RoundMarkCriterion, etc.
+5. **Communication Service**:
+- Provides messaging, notifications, discussion forums, and task management.
+- Manages event scheduling and reminders.
+- Key entities: Notification, Conversation, Task, ForumThread, ScheduleEvent, etc.
+6. **Analytics Service**:
+- Collects and processes event data for reports and insights.
+- Manages feedback and post-event evaluations.
+- Key entities: Feedback, FeedbackDetail, BlogPost.
 
 ### Frontend (ReactJS):
 - **Dashboard**: Intuitive UI for administrators, organizers, and judges to manage hackathons, evaluate projects, and view analytics.
