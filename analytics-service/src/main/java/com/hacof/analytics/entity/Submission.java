@@ -1,6 +1,7 @@
 package com.hacof.analytics.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -49,7 +50,7 @@ public class Submission extends AuditCreatedBase {
     Round round;
 
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<FileUrl> fileUrls;
+    List<FileUrl> fileUrls = new ArrayList<>();
 
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JudgeSubmission> judgeSubmissions;
