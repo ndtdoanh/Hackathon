@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDTO {
-    private Long id;
+    private long id;
     private String name;
     private String description;
     private LocalDateTime eventDate;
