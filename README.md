@@ -24,16 +24,16 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 ## Key Features
 
-1. **Authentication & Roles**: Secure login with email/Google, role-based access control (Admin, Organizer, Judge, Mentor, Participant, Guest).
-2. **Hackathon Management**: Create/manage hackathons, schedules, and registrations; broadcast announcements.
-3. **Participant Tools**: Register for hackathons, create/join teams, submit projects with file uploads.
-4. **Team Collaboration**: Integrated chat, task boards, and file sharing for teams.
-5. **Mentorship Module**: Book sessions, chat/video call with mentors, access mentor profiles.
-6. **Judge Panel**: Evaluate projects, provide feedback, automated scoring, export evaluation reports.
-7. **Event Management**: Drag-and-drop schedules, manage workshops, and publish resources.
-8. **Discussion Forum**: Find teammates, collaborate, and connect with mentors.
-9. **Notifications**: Real-time updates via email, in-app, and SMS.
-10. **Analytics**: Post-event feedback, participant insights, and exportable reports.
+1. **Authentication & Roles**: Secure login via email/password or third-party authentication (Google, Facebook); role-based access control with predefined roles (Admin, Organizer, Judge, Mentor, Team Leader, Team Member, Guest).
+2. **Hackathon Management**: Create, manage, and edit hackathons, schedules, and registrations; broadcast real-time announcements for updates.
+3. **Participant Tools**: Register for hackathons via an intuitive form, create or join teams, submit project proposals and final deliverables with file uploads (PDF, images, video links).
+4. **Team Collaboration**: Dedicated team workspaces with built-in chat, task boards for tracking progress, and file-sharing support.
+5. **Mentorship Module**: Request mentorship, book consultation slots (virtual or in-person), chat/video call with mentors, and access mentor profiles. Automatic mentor assignment if no mentor is selected before the deadline.
+6. **Judge Panel**: Judges access a dashboard to evaluate projects based on predefined criteria, provide feedback, and assign scores; automated score calculation and ranking; export evaluation reports.
+7. **Event Management**: Drag-and-drop scheduling for sessions, workshops, and ceremonies; manage venue reservations, equipment, and other resources.
+8. **Discussion Forum**: Engage with other participants, find teammates, discuss hackathon-related topics, and connect with mentors.
+9. **Notifications**: Real-time announcements and updates via email, in-app alerts, and SMS notifications.
+10. **Analytics**: Generate post-event reports with participant insights, feedback analysis, and exportable event data for future improvements.
 
 ---
 
