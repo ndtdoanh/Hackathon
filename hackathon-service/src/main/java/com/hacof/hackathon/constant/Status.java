@@ -20,5 +20,6 @@ public enum Status {
     DONE,
     DISTRIBUTED,
     PUBLISHED,
-    DELETED
+    DELETED,
+    DRAFT,
 }
