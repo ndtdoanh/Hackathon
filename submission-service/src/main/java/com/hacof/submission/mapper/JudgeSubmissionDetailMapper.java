@@ -1,17 +1,17 @@
 package com.hacof.submission.mapper;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
-import com.hacof.submission.entity.JudgeSubmissionDetail;
 import com.hacof.submission.entity.JudgeSubmission;
+import com.hacof.submission.entity.JudgeSubmissionDetail;
 import com.hacof.submission.entity.RoundMarkCriterion;
 import com.hacof.submission.repository.JudgeSubmissionRepository;
 import com.hacof.submission.repository.RoundMarkCriterionRepository;
-
-import java.util.Optional;
 
 @Component
 public class JudgeSubmissionDetailMapper {
@@ -37,11 +37,13 @@ public class JudgeSubmissionDetailMapper {
             throw new IllegalArgumentException("Judge Submission not found with ID " + dto.getJudgeSubmissionId());
         }
 
-        Optional<RoundMarkCriterion> roundMarkCriterion = roundMarkCriterionRepository.findById(dto.getRoundMarkCriterionId());
+        Optional<RoundMarkCriterion> roundMarkCriterion =
+                roundMarkCriterionRepository.findById(dto.getRoundMarkCriterionId());
         if (roundMarkCriterion.isPresent()) {
             entity.setRoundMarkCriterion(roundMarkCriterion.get());
         } else {
-            throw new IllegalArgumentException("Round Mark Criterion not found with ID " + dto.getRoundMarkCriterionId());
+            throw new IllegalArgumentException(
+                    "Round Mark Criterion not found with ID " + dto.getRoundMarkCriterionId());
         }
 
         return entity;
@@ -52,8 +54,14 @@ public class JudgeSubmissionDetailMapper {
 
         // Thiết lập các trường trong ResponseDTO
         dto.setId(entity.getId());
-        dto.setJudgeSubmissionId(entity.getJudgeSubmission() != null ? entity.getJudgeSubmission().getId() : null);
-        dto.setRoundMarkCriterionId(entity.getRoundMarkCriterion() != null ? entity.getRoundMarkCriterion().getId() : null);
+        dto.setJudgeSubmissionId(
+                entity.getJudgeSubmission() != null
+                        ? entity.getJudgeSubmission().getId()
+                        : null);
+        dto.setRoundMarkCriterionId(
+                entity.getRoundMarkCriterion() != null
+                        ? entity.getRoundMarkCriterion().getId()
+                        : null);
         dto.setScore(entity.getScore());
         dto.setNote(entity.getNote());
         dto.setCreatedDate(entity.getCreatedDate());
