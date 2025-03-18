@@ -1,5 +1,11 @@
 package com.hacof.submission.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.submission.dto.request.AssignJudgeRequest;
 import com.hacof.submission.dto.request.UpdateScoreRequest;
 import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
@@ -12,11 +18,6 @@ import com.hacof.submission.repository.JudgeSubmissionRepository;
 import com.hacof.submission.repository.SubmissionRepository;
 import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.service.JudgeSubmissionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
@@ -36,9 +37,11 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
     @Override
     public JudgeSubmissionResponseDTO assignJudgeToSubmission(AssignJudgeRequest assignJudgeDTO) {
         // Fetch submission and judge
-        Submission submission = submissionRepository.findById(assignJudgeDTO.getSubmissionId())
+        Submission submission = submissionRepository
+                .findById(assignJudgeDTO.getSubmissionId())
                 .orElseThrow(() -> new IllegalArgumentException("Submission not found"));
-        User judge = userRepository.findById(assignJudgeDTO.getJudgeId())
+        User judge = userRepository
+                .findById(assignJudgeDTO.getJudgeId())
                 .orElseThrow(() -> new IllegalArgumentException("Judge not found"));
 
         // Create JudgeSubmission (without score and note)
@@ -59,7 +62,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
     @Override
     public JudgeSubmissionResponseDTO updateScoreAndNoteForSubmission(UpdateScoreRequest updateScoreDTO) {
         // Fetch JudgeSubmission by ID
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findById(updateScoreDTO.getJudgeSubmissionId())
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findById(updateScoreDTO.getJudgeSubmissionId())
                 .orElseThrow(() -> new IllegalArgumentException("JudgeSubmission not found"));
 
         // Update the note
@@ -78,7 +82,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
     private void recalculateTotalScore(JudgeSubmission judgeSubmission) {
         // Get all JudgeSubmissionDetail entries associated with this judgeSubmission
         Long judgeSubmissionId = judgeSubmission.getId();
-        List<JudgeSubmissionDetail> judgeSubmissionDetails = judgeSubmissionDetailRepository.findByJudgeSubmissionId(judgeSubmissionId);
+        List<JudgeSubmissionDetail> judgeSubmissionDetails =
+                judgeSubmissionDetailRepository.findByJudgeSubmissionId(judgeSubmissionId);
 
         // Calculate the total score by summing individual scores from JudgeSubmissionDetails
         int totalScore = judgeSubmissionDetails.stream()
@@ -90,7 +95,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
     }
 
     public JudgeSubmissionResponseDTO getJudgeSubmissionBySubmissionId(Long submissionId) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findBySubmissionId(submissionId)
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findBySubmissionId(submissionId)
                 .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
 
         return new JudgeSubmissionResponseDTO(judgeSubmission);
@@ -99,14 +105,13 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
     @Override
     public List<JudgeSubmissionResponseDTO> getAllJudgeSubmissions() {
         List<JudgeSubmission> judgeSubmissions = judgeSubmissionRepository.findAll();
-        return judgeSubmissions.stream()
-                .map(JudgeSubmissionResponseDTO::new)
-                .collect(Collectors.toList());
+        return judgeSubmissions.stream().map(JudgeSubmissionResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
     public boolean deleteJudgeSubmission(Long submissionId) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findBySubmissionId(submissionId)
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findBySubmissionId(submissionId)
                 .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
 
         judgeSubmissionRepository.delete(judgeSubmission);
@@ -119,9 +124,7 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         if (judgeSubmissions.isEmpty()) {
             throw new IllegalArgumentException("No submissions found for judgeId: " + judgeId);
         }
-        return judgeSubmissions.stream()
-                .map(JudgeSubmissionResponseDTO::new)
-                .collect(Collectors.toList());
+        return judgeSubmissions.stream().map(JudgeSubmissionResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
@@ -131,14 +134,13 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         if (judgeSubmissions.isEmpty()) {
             throw new IllegalArgumentException("No submissions found for roundId: " + roundId);
         }
-        return judgeSubmissions.stream()
-                .map(JudgeSubmissionResponseDTO::new)
-                .collect(Collectors.toList());
+        return judgeSubmissions.stream().map(JudgeSubmissionResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
     public JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findBySubmissionId(submissionId)
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findBySubmissionId(submissionId)
                 .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
 
         return new JudgeSubmissionResponseDTO(judgeSubmission);
