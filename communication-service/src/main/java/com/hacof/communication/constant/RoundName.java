@@ -1,7 +1,6 @@
 package com.hacof.communication.constant;
 
-
-public enum Name {
+public enum RoundName {
     QUALIFYING,
     SEMIFINAL,
     FINAL
