@@ -28,35 +28,28 @@ public class RoundServiceImpl implements RoundService {
     final RoundMapper roundMapper;
 
     @Override
-    public List<RoundDTO> getRoundByAllCriteria(Specification<Round> spec) {
+    public List<RoundDTO> getRounds(Specification<Round> spec) {
         if (roundRepository.findAll(spec).isEmpty()) {
             throw new ResourceNotFoundException("No rounds found");
         }
-        return roundRepository.findAll(spec).stream()
-                .map(roundMapper::convertToDTO)
-                .collect(Collectors.toList());
+
+        return roundRepository.findAll(spec).stream().map(roundMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public RoundDTO createRound(RoundDTO roundDTO) {
-        Round round = roundMapper.convertToEntity(roundDTO);
+        Round round = roundMapper.toEntity(roundDTO);
         Round savedRound = roundRepository.save(round);
-        return roundMapper.convertToDTO(savedRound);
+        return roundMapper.toDTO(savedRound);
     }
 
     @Override
     public RoundDTO updateRound(Long id, RoundDTO roundDTO) {
-        Round existingRound =
-                roundRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Round not found"));
-        //        existingRound.setRoundName(roundDTO.getRoundName());
-        //        existingRound.setDescription(roundDTO.getDescription());
-        //        existingRound.setStartTime(roundDTO.getStartDate());
-        //        existingRound.setEndTime(roundDTO.getEndDate());
-        //        existingRound.setMaxTeam(roundDTO.getMaxTeam()); //
-        // existingRound.setVideoRound(roundDTO.getIsVideo());
 
-        Round updatedRound = roundRepository.save(existingRound);
-        return roundMapper.convertToDTO(updatedRound);
+        Round round = roundRepository.findById(id).orElseThrow(() -> new RuntimeException("Round not found"));
+        roundMapper.updateEntityFromDTO(roundDTO, round);
+        round = roundRepository.save(round);
+        return roundMapper.toDTO(round);
     }
 
     @Override
