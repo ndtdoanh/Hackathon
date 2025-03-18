@@ -130,7 +130,7 @@ Ensure you have the following installed on your machine:
    mvn spring-boot:run
    ```
 
-### Frontend (ReactJS)
+### Frontend (NextJS)
 
 1. Clone the repository:
    ```bash
