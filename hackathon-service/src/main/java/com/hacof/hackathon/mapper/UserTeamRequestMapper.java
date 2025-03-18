@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import com.hacof.hackathon.dto.UserTeamRequestDTO;
-import com.hacof.hackathon.entity.UserTeamRequest;
 
 @Mapper(
         componentModel = "spring",
