@@ -9,11 +9,20 @@ import jakarta.validation.Valid;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.EventDTO;
+import com.hacof.hackathon.dto.EventRegistrationDTO;
 import com.hacof.hackathon.entity.Event;
+import com.hacof.hackathon.service.EventRegistrationService;
 import com.hacof.hackathon.service.EventService;
 import com.hacof.hackathon.specification.EventSpecification;
 import com.hacof.hackathon.util.CommonRequest;
@@ -28,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EventController {
     final EventService eventService;
+    final EventRegistrationService eventRegistrationService;
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<EventDTO>>> getByAllCriteria(
@@ -100,5 +110,43 @@ public class EventController {
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Event deleted successfully"),
                 null);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<CommonResponse<EventRegistrationDTO>> registerForEvent(
+            @Valid @RequestBody CommonRequest<EventRegistrationDTO> request) {
+        EventRegistrationDTO result = eventRegistrationService.registerForEvent(
+                request.getData().getEventId(), request.getData().getUserId());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Event registration successful"),
+                result));
+    }
+
+    @PostMapping("/approve")
+    public ResponseEntity<CommonResponse<EventRegistrationDTO>> approveRegistration(
+            @Valid @RequestBody CommonRequest<Long> request) {
+        EventRegistrationDTO result =
+                eventRegistrationService.approveRegistration(request.getData(), request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Event registration approved"),
+                result));
+    }
+
+    @PostMapping("/reject")
+    public ResponseEntity<CommonResponse<EventRegistrationDTO>> rejectRegistration(
+            @Valid @RequestBody CommonRequest<Long> request) {
+        EventRegistrationDTO result = eventRegistrationService.rejectRegistration(request.getData(), request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Event registration rejected"),
+                result));
     }
 }
