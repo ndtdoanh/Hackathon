@@ -7,6 +7,7 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,88 +20,80 @@ import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/hackathons")
 @RequiredArgsConstructor
+@Slf4j
 public class HackathonController {
-    private final HackathonService hackathonService;
+    final HackathonService hackathonService;
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String bannerImageUrl,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
-            @RequestParam(required = false) Integer numberRound,
-            @RequestParam(required = false) Integer maxTeams,
-            @RequestParam(required = false) Integer minTeamSize,
-            @RequestParam(required = false) Integer maxTeamSize,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String createdBy,
-            @RequestParam(required = false) String lastModifiedBy) {
-        Specification<Hackathon> spec = Specification.where(HackathonSpecification.idEquals(id))
+            @RequestParam(required = false) int numberRound,
+            @RequestParam(required = false) int maxTeams,
+            @RequestParam(required = false) int minTeamSize,
+            @RequestParam(required = false) int maxTeamSize,
+            @RequestParam(required = false) String status) {
+
+        Specification<Hackathon> spec = Specification.where(HackathonSpecification.hasId(id))
                 .and(HackathonSpecification.hasName(name))
-                // .and(HackathonSpecification.nameContains(name))
-                .and(HackathonSpecification.bannerImageUrlContains(bannerImageUrl))
-                .and(HackathonSpecification.descriptionContains(description))
-                // .and(HackathonSpecification.startDateGreaterThan(startDate))
-                // .and(HackathonSpecification.endDateLessThan(endDate))
-                .and(HackathonSpecification.numberRoundEquals(numberRound))
-                .and(HackathonSpecification.maxTeamsEquals(maxTeams))
-                .and(HackathonSpecification.minTeamSizeEquals(minTeamSize))
-                .and(HackathonSpecification.maxTeamSizeEquals(maxTeamSize))
-                .and(HackathonSpecification.statusEquals(status))
-                .and(HackathonSpecification.createdByEquals(createdBy))
-                .and(HackathonSpecification.lastModifiedByEquals(lastModifiedBy));
-        List<HackathonDTO> hackathons = hackathonService.getAllHackathon(spec);
+                .and(HackathonSpecification.hasDescription(description))
+                .and(HackathonSpecification.hasNumberRound(numberRound))
+                .and(HackathonSpecification.hasMaxTeamsGreaterThan(maxTeams))
+                .and(HackathonSpecification.hasStatus(status));
+
+        List<HackathonDTO> hackathons = hackathonService.getHackathons(spec);
         CommonResponse<List<HackathonDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched all hackathons successfully"),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched hackathons successfully"),
                 hackathons);
         return ResponseEntity.ok(response);
     }
 
-    //    @GetMapping
-    //    public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
-    //
-    //    }
-
     @PostMapping
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
-            @Valid @RequestBody CommonRequest<HackathonDTO> request) {
-        HackathonDTO hackathonDTO = hackathonService.createHackathon(request.getData());
+            @RequestBody @Valid CommonRequest<HackathonDTO> request) {
+        log.debug("Received request to create hackathon: {}", request);
+        HackathonDTO createdHackathon = hackathonService.createHackathon(request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon created successfully"),
-                hackathonDTO);
-        return ResponseEntity.ok(response);
+                createdHackathon);
+        log.debug("Created hackathon: {}", createdHackathon);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping()
-    public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(
-            @Valid @RequestBody CommonRequest<HackathonDTO> request) {
-        Long hackathonId = request.getData().getId();
-        HackathonDTO hackathonDTO = hackathonService.updateHackathon(hackathonId, request.getData());
+    @PutMapping
+    public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(@RequestBody @Valid HackathonDTO hackathonDTO) {
+        log.debug("Received request to update hackathon: {}", hackathonDTO);
+        long id = hackathonDTO.getId();
+        HackathonDTO updatedHackathon = hackathonService.updateHackathon(id, hackathonDTO);
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
-                request.getRequestId(),
+                UUID.randomUUID().toString(),
                 LocalDateTime.now(),
-                request.getChannel(),
+                "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon updated successfully"),
-                hackathonDTO);
+                updatedHackathon);
+        log.debug("Updated hackathon: {}", updatedHackathon);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping()
-    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody CommonRequest<HackathonDTO> request) {
-        Long hackathonId = request.getData().getId();
-        hackathonService.deleteHackathon(hackathonId);
+    @DeleteMapping
+    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody HackathonDTO hackathonDTO) {
+        long id = hackathonDTO.getId();
+        log.debug("Received request to delete hackathon with id: {}", id);
+        hackathonService.deleteHackathon(id);
         CommonResponse<Void> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
