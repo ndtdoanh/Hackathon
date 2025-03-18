@@ -1,13 +1,15 @@
 package com.hacof.submission.repository;
 
-import com.hacof.submission.entity.JudgeSubmission;
-import feign.Param;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.hacof.submission.entity.JudgeSubmission;
+
+import feign.Param;
 
 @Repository
 public interface JudgeSubmissionRepository extends JpaRepository<JudgeSubmission, Long> {
@@ -16,4 +18,5 @@ public interface JudgeSubmissionRepository extends JpaRepository<JudgeSubmission
     List<JudgeSubmission> findByJudgeId(Long judgeId);
 
     @Query("SELECT js FROM JudgeSubmission js WHERE js.id = :roundId")
-    List<JudgeSubmission> findByRoundId(@Param("roundId") Long roundId);}
+    List<JudgeSubmission> findByRoundId(@Param("roundId") Long roundId);
+}
