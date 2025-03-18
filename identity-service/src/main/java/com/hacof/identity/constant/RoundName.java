@@ -1,6 +1,6 @@
 package com.hacof.identity.constant;
 
-public enum Name {
+public enum RoundName {
     QUALIFYING,
     SEMIFINAL,
     FINAL
