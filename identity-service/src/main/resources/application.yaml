@@ -35,7 +35,7 @@ outbound:
   identity:
     client-id: ${clientId}
     client-secret: ${clientSecret}
-    redirect-uri: "http://localhost:3000/authenticate" .....
+    redirect-uri: "http://localhost:3000/authenticate"
 
 jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
@@ -44,8 +44,10 @@ jwt:
 
 eureka:
   client:
-    services-url:
+    service-url:
       defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
   instance:
-    prefer-ip-address: true
+    preferIpAddress: true
 
