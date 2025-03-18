@@ -15,4 +15,3 @@ public class ForumCategoryResponseDTO {
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }
-
