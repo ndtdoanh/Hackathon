@@ -18,7 +18,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 - **Development Tools**: Docker, Github
 - **Architecture**: Microservices
 
-![HaCoF Architecture](https://github.com/user-attachments/assets/af03f90b-a089-4be3-bd41-18cd5520fa85)
+![HaCoF Architecture](https://github.com/user-attachments/assets/e8f5ade6-2766-4a5f-bd57-a2e5f78424d0)
 
 ---
 
