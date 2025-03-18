@@ -63,6 +63,9 @@ This project is developed using modern technologies such as **Spring Boot** for 
 - Collects and processes event data for reports and insights.
 - Manages feedback and post-event evaluations.
 - Key entities: Feedback, FeedbackDetail, BlogPost.
+7. **Eureka Server (Service Discovery)**:
+- Manages dynamic service registration and discovery.
+- Enables load balancing and fault tolerance across microservices.
 
 ### Frontend (ReactJS):
 - **Dashboard**: Intuitive UI for administrators, organizers, and judges to manage hackathons, evaluate projects, and view analytics.
