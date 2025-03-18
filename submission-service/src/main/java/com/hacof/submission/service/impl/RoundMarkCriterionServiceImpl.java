@@ -1,23 +1,21 @@
 package com.hacof.submission.service.impl;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.submission.entity.User;
-import com.hacof.submission.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
 import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
-import com.hacof.submission.entity.RoundMarkCriterion;
 import com.hacof.submission.entity.Round;
+import com.hacof.submission.entity.RoundMarkCriterion;
+import com.hacof.submission.entity.User;
 import com.hacof.submission.mapper.RoundMarkCriterionMapper;
 import com.hacof.submission.repository.RoundMarkCriterionRepository;
 import com.hacof.submission.repository.RoundRepository;
+import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.service.RoundMarkCriterionService;
 import com.hacof.submission.util.SecurityUtil;
 
@@ -32,6 +30,7 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoundMarkCriterionMapper mapper;
 
@@ -66,13 +65,13 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
         final String finalCurrentUser = currentUser;
 
         Optional<User> userOpt = userRepository.findByUsername(finalCurrentUser);
-        User user = userOpt.orElseThrow(() -> new IllegalArgumentException("User not found with username " + finalCurrentUser));
-        criterion.setCreatedBy(user);  // set đối tượng User vào createdBy
+        User user = userOpt.orElseThrow(
+                () -> new IllegalArgumentException("User not found with username " + finalCurrentUser));
+        criterion.setCreatedBy(user); // set đối tượng User vào createdBy
 
         RoundMarkCriterion savedCriterion = repository.save(criterion);
         return mapper.toResponseDTO(savedCriterion);
     }
-
 
     @Override
     public RoundMarkCriterionResponseDTO update(Long id, RoundMarkCriterionRequestDTO updatedCriterionDTO) {
@@ -81,7 +80,8 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
                 .map(criterion -> {
                     Optional<Round> roundOpt = roundRepository.findById(updatedCriterionDTO.getRoundId());
                     if (!roundOpt.isPresent()) {
-                        throw new IllegalArgumentException("Round not found with id " + updatedCriterionDTO.getRoundId());
+                        throw new IllegalArgumentException(
+                                "Round not found with id " + updatedCriterionDTO.getRoundId());
                     }
 
                     criterion.setName(updatedCriterionDTO.getName());
@@ -104,5 +104,4 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
             throw new IllegalArgumentException("Round mark criterion with id " + id + " not found");
         }
     }
-
 }
