@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ForumThreadRequestDTO;
-import com.hacof.communication.dto.response.ForumThreadResponseDTO;
-import com.hacof.communication.service.ForumThreadService;
-import com.hacof.communication.response.CommonResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.ForumThreadRequestDTO;
+import com.hacof.communication.dto.response.ForumThreadResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.ForumThreadService;
 
 @RestController
 @RequestMapping("/api/v1/forum-threads")
@@ -77,8 +78,7 @@ public class ForumThreadController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> updateForumThread(
-            @PathVariable Long id,
-            @RequestBody ForumThreadRequestDTO forumThreadRequestDTO) {
+            @PathVariable Long id, @RequestBody ForumThreadRequestDTO forumThreadRequestDTO) {
         CommonResponse<ForumThreadResponseDTO> response = new CommonResponse<>();
         try {
             ForumThreadResponseDTO updatedThread = forumThreadService.updateForumThread(id, forumThreadRequestDTO);
