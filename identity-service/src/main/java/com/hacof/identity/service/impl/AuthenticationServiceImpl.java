@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -230,12 +230,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
-        String role = user.getUserRoles().iterator().next().getRole().getName();
+        Set<String> roles = user.getUserRoles().stream()
+                .map(userRole -> userRole.getRole().getName())
+                .collect(Collectors.toSet());
 
-        List<String> permissions = user.getUserRoles().stream()
+        Set<String> permissions = user.getUserRoles().stream()
                 .flatMap(userRole -> userRole.getRole().getRolePermissions().stream())
                 .map(rolePermission -> rolePermission.getPermission().getName())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
@@ -245,7 +247,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("user_id", user.getId())
-                .claim("role", role)
+                .claim("role", roles)
                 .claim("permissions", permissions)
                 .build();
 

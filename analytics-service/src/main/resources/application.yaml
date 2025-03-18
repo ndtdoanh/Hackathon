@@ -1,7 +1,7 @@
 server:
   port: 8084
-  servlet:
-    context-path: /analytics
+#  servlet:
+#    context-path: /analytics
 
 spring:
   application:
@@ -17,9 +17,16 @@ spring:
       ddl-auto: update
     show-sql: true
 
+jwt:
+  signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
+  valid-duration: 3600
+  refreshable-duration: 864000
+
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    preferIpAddress: true

@@ -35,8 +35,8 @@ spring:
 
 outbound:
   identity:
-    client-id : ${clientId}
-    client-secret : ${clientSecret}
+    client-id: ${clientId}
+    client-secret: ${clientSecret}
     redirect-uri: "http://localhost:3000/authenticate"
 
 jwt:
@@ -46,7 +46,9 @@ jwt:
 
 eureka:
   client:
-    services-url:
+    service-url:
       defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    preferIpAddress: true
