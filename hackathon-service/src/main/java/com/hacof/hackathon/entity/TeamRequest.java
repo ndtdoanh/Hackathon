@@ -1,5 +1,7 @@
 package com.hacof.hackathon.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 import com.hacof.hackathon.constant.Status;
@@ -15,20 +17,34 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_requests")
-public class TeamRequest extends AuditCreatedBase {
+// public class TeamRequest extends AuditCreatedBase {
+public class TeamRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne
+    @Column(name = "team_name")
+    String teamName;
+
+    @Column(name = "description")
+    String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leader_id")
+    User leader;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    private Status status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewed_by")
-    User reviewedBy;
+    private User reviewedBy;
+
+    @Column(name = "reviewed_at")
+    private LocalDateTime reviewedAt;
 }
