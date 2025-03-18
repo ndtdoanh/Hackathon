@@ -1,6 +1,6 @@
 package com.hacof.analytics.constant;
 
-public enum Name {
+public enum RoundName {
     QUALIFYING,
     SEMIFINAL,
     FINAL
