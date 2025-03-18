@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "InvalidatedTokens")
+@Table(name = "invalidated_tokens")
 public class InvalidatedToken extends AuditBase {
     @Id
     String id;

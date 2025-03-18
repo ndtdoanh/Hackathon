@@ -2,7 +2,11 @@ package com.hacof.hackathon.entity;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,17 +23,22 @@ import lombok.experimental.FieldDefaults;
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class AuditBase {
-    @Column(name = "created_by")
-    String createdBy;
 
     @CreatedDate
-    @Column(name = "created_date", columnDefinition = "DATETIME(6)", updatable = false)
+    @Column(name = "created_date", columnDefinition = "DATETIME(6)")
     LocalDateTime createdDate;
-
-    @Column(name = "last_modified_by")
-    String lastModifiedBy;
 
     @LastModifiedDate
     @Column(name = "last_modified_date", columnDefinition = "DATETIME(6)")
     LocalDateTime lastModifiedDate;
+
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.lastModifiedDate = LocalDateTime.now();
+    }
 }

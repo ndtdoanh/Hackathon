@@ -1,16 +1,17 @@
 package com.hacof.submission.controller;
 
-import com.hacof.submission.dto.request.AssignJudgeRequest;
-import com.hacof.submission.dto.request.UpdateScoreRequest;
-import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-import com.hacof.submission.response.CommonResponse;
-import com.hacof.submission.service.JudgeSubmissionService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dto.request.AssignJudgeRequest;
+import com.hacof.submission.dto.request.UpdateScoreRequest;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.service.JudgeSubmissionService;
 
 @RestController
 @RequestMapping("/api/v1/judge-submissions")
@@ -20,7 +21,8 @@ public class JudgeSubmissionController {
     private JudgeSubmissionService judgeSubmissionService;
 
     @PostMapping("/assign")
-    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> assignJudgeToSubmission(@RequestBody AssignJudgeRequest assignJudgeRequest) {
+    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> assignJudgeToSubmission(
+            @RequestBody AssignJudgeRequest assignJudgeRequest) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
             JudgeSubmissionResponseDTO responseDTO = judgeSubmissionService.assignJudgeToSubmission(assignJudgeRequest);
@@ -40,15 +42,17 @@ public class JudgeSubmissionController {
     }
 
     @PutMapping("/update-score")
-    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> updateScoreAndNoteForSubmission(@RequestBody UpdateScoreRequest updateScoreRequest) {
+    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> updateScoreAndNoteForSubmission(
+            @RequestBody UpdateScoreRequest updateScoreRequest) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO responseDTO = judgeSubmissionService.updateScoreAndNoteForSubmission(updateScoreRequest);
+            JudgeSubmissionResponseDTO responseDTO =
+                    judgeSubmissionService.updateScoreAndNoteForSubmission(updateScoreRequest);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Score and note updated successfully");
             response.setData(responseDTO);
             return ResponseEntity.ok(response);
-        } catch  (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -60,10 +64,12 @@ public class JudgeSubmissionController {
     }
 
     @GetMapping("/{submissionId}")
-    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> getJudgeSubmissionBySubmissionId(@PathVariable Long submissionId) {
+    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> getJudgeSubmissionBySubmissionId(
+            @PathVariable Long submissionId) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO responseDTO = judgeSubmissionService.getJudgeSubmissionBySubmissionId(submissionId);
+            JudgeSubmissionResponseDTO responseDTO =
+                    judgeSubmissionService.getJudgeSubmissionBySubmissionId(submissionId);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Judge submission fetched successfully");
             response.setData(responseDTO);
@@ -122,7 +128,8 @@ public class JudgeSubmissionController {
     }
 
     @GetMapping("/by-judge/{judgeId}")
-    public ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> getSubmissionsByJudgeId(@PathVariable Long judgeId) {
+    public ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> getSubmissionsByJudgeId(
+            @PathVariable Long judgeId) {
         CommonResponse<List<JudgeSubmissionResponseDTO>> response = new CommonResponse<>();
         try {
             List<JudgeSubmissionResponseDTO> responseDTO = judgeSubmissionService.getSubmissionsByJudgeId(judgeId);
@@ -142,7 +149,8 @@ public class JudgeSubmissionController {
     }
 
     @GetMapping("/by-round/{roundId}")
-    public ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> getSubmissionsByRoundId(@PathVariable Long roundId) {
+    public ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> getSubmissionsByRoundId(
+            @PathVariable Long roundId) {
         CommonResponse<List<JudgeSubmissionResponseDTO>> response = new CommonResponse<>();
         try {
             List<JudgeSubmissionResponseDTO> responseDTO = judgeSubmissionService.getSubmissionsByRoundId(roundId);

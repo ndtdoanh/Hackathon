@@ -1,20 +1,22 @@
 package com.hacof.submission.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
 import com.hacof.submission.dto.response.JudgeRoundResponseDTO;
 import com.hacof.submission.entity.JudgeRound;
 import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.User;
-import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.repository.RoundRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.hacof.submission.repository.UserRepository;
 
 @Component
 public class JudgeRoundMapper {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoundRepository roundRepository;
 
@@ -22,9 +24,11 @@ public class JudgeRoundMapper {
     public JudgeRound toEntity(JudgeRoundRequestDTO dto) {
         JudgeRound judgeRound = new JudgeRound();
 
-        User judge = userRepository.findById(dto.getJudgeId())
+        User judge = userRepository
+                .findById(dto.getJudgeId())
                 .orElseThrow(() -> new IllegalArgumentException("Judge not found"));
-        Round round = roundRepository.findById(dto.getRoundId())
+        Round round = roundRepository
+                .findById(dto.getRoundId())
                 .orElseThrow(() -> new IllegalArgumentException("Round not found"));
         judgeRound.setJudge(judge);
         judgeRound.setRound(round);

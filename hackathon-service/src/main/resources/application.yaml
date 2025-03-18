@@ -8,9 +8,9 @@ spring:
     name: hackathon-service
   datasource:
     url: "jdbc:mysql://localhost:3306/hacof"
-    driverClassName: "com.mysql.cj.jdbc.Driver"
+#    driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: 12345
+    password: trungkien
 
   jpa:
     hibernate:
@@ -28,3 +28,5 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    preferIpAddress: true

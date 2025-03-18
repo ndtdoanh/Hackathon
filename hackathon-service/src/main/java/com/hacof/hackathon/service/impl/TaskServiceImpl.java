@@ -43,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
         Task existingTask =
                 taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task not found"));
-        existingTask.setName(taskDTO.getName());
+        // existingTask.setName(taskDTO.getName());
         existingTask.setDescription(taskDTO.getDescription());
         Task updatedTask = taskRepository.save(existingTask);
         return taskMapper.convertToDTO(updatedTask);

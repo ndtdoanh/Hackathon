@@ -1,9 +1,9 @@
 package com.hacof.submission.service;
 
+import java.util.List;
+
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
-
-import java.util.List;
 
 public interface JudgeSubmissionDetailService {
 

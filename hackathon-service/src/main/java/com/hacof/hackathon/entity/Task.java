@@ -1,15 +1,20 @@
 package com.hacof.hackathon.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import com.hacof.hackathon.constant.Priority;
-import com.hacof.hackathon.constant.Status;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,54 +31,35 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Tasks")
-public class Task extends AuditBase {
+@Table(name = "tasks")
+public class Task extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @Column(name = "name")
-    String name;
+    @Column(name = "title")
+    String title;
 
     @Lob
     @Column(name = "description")
     String description;
 
-    @Lob
-    @Column(name = "comment")
-    String comment;
+    @Column(name = "position")
+    int position;
 
-    @Lob
-    @Column(name = "document_url")
-    String documentUrl;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    Status status = Status.TODO;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "priority")
-    Priority priority = Priority.MEDIUM;
-
-    @Column(name = "deadline")
-    LocalDate deadline;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "assigned_to")
-    User assignedTo;
+    @JoinColumn(name = "board_list_id")
+    BoardList boardList;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "mentor_id")
-    Mentor mentor;
+    @Column(name = "due_date")
+    LocalDateTime dueDate;
 
-    @Column(name = "list_name")
-    String listName;
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TaskAssignee> assignees;
 
-    @Column(name = "board_name")
-    String boardName;
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TaskComment> comments;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TaskLabel> taskLabels;
 }

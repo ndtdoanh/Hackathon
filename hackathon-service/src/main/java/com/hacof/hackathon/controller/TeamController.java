@@ -2,133 +2,247 @@ package com.hacof.hackathon.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
-import com.hacof.hackathon.dto.TeamDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.hacof.hackathon.constant.StatusCode;
+import com.hacof.hackathon.dto.*;
 import com.hacof.hackathon.service.TeamService;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/teams")
 @RequiredArgsConstructor
+@Slf4j
 public class TeamController {
     private final TeamService teamService;
-
-    @PostMapping("/create")
-    @PreAuthorize("hasAuthority('CREATE_TEAM')")
-    public ResponseEntity<CommonResponse<TeamDTO>> createTeam(@RequestBody CommonRequest<TeamDTO> request) {
-        Long userId = request.getData().getLeaderId();
-        TeamDTO teamDTO = teamService.createTeam(request.getData(), userId);
-        CommonResponse<TeamDTO> response = new CommonResponse<>(
+    /**
+     *
+     * <h3> Step 1: Create team request </h3>
+     * <h3> Step 2: Approve or reject team request - Admin Or Organizer </h3>
+     * <h2> Step 2.1: Approve team request, if not - change to step 2.2 </h2>
+     * <h2> Step 2.2: Reject team request </h2>
+     * <h3> Step 3: Team leader invite member or member request to join team </h3>
+     * <h2> Step 3.1: Team leader invite member </h2>
+     * <h1> Step 3.1.1: Member accept invitation, if not - change to step 3.2 </h1>
+     * <h1> Step 3.1.2: Member reject invitation </h1>
+     * <h2> Step 3.2: Member request to join team </h2>
+     * <h1> Step 3.2.1: Team leader approve join request, if not - change to step 3.2.2 </h1>
+     * <h1> Step 3.2.2: Team leader reject join request </h1>
+     * <h3> Step 4: Team leader register team for hackathon </h3>
+     * <h3> Step 5: Team leader update team information, get information of team </h3>
+     * <h3> Step 6: Team leader remove member from team if nescessary </h3>
+     *
+     */
+    @PostMapping("/requests")
+    public ResponseEntity<CommonResponse<TeamRequestDTO>> createTeamRequest(
+            @Valid @RequestBody CommonRequest<TeamRequestDTO> request) {
+        log.debug("Received request to create team request: {}", request);
+        TeamRequestDTO result = teamService.createTeamRequest(request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Team created successfully"),
-                teamDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Team request created successfully"),
+                result));
     }
 
-    @PostMapping("/add-member")
-    @PreAuthorize("hasAuthority('ADD_MEMBER_TO_TEAM')")
-    public ResponseEntity<CommonResponse<TeamDTO>> addMemberToTeam(
-            @RequestBody CommonRequest<Map<String, Long>> request) {
-        Long teamId = request.getData().get("teamId");
-        Long memberId = request.getData().get("memberId");
-        TeamDTO teamDTO = teamService.addMemberToTeam(teamId, memberId);
-        CommonResponse<TeamDTO> response = new CommonResponse<>(
+    @PostMapping("/requests/approve")
+    public ResponseEntity<CommonResponse<TeamRequestDTO>> approveTeamRequest(
+            @Valid @RequestBody CommonRequest<ApprovalRequestDTO> request) {
+        log.debug("Received request to approve team request: {}", request);
+        TeamRequestDTO result = teamService.approveTeamRequest(
+                request.getData().getRequestId(), request.getData().getReviewerId());
+
+        return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Member added successfully"),
-                teamDTO);
-        return ResponseEntity.ok(response);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Team request approved successfully"),
+                result));
     }
 
-    @PostMapping("/assign-mentor")
-    @PreAuthorize("hasAuthority('ASSIGN_MENTOR_TO_TEAM')")
-    public ResponseEntity<CommonResponse<TeamDTO>> assignMentorToTeam(
-            @RequestBody CommonRequest<Map<String, Long>> request) {
-        Long teamId = request.getData().get("teamId");
-        Long mentorId = request.getData().get("mentorId");
-        TeamDTO teamDTO = teamService.assignMentorToTeam(teamId, mentorId);
-        CommonResponse<TeamDTO> response = new CommonResponse<>(
+    @PostMapping("/requests/reject")
+    public ResponseEntity<CommonResponse<TeamRequestDTO>> rejectTeamRequest(
+            @Valid @RequestBody CommonRequest<ApprovalRequestDTO> request) {
+        log.debug("Received request to reject team request: {}", request);
+        TeamRequestDTO result = teamService.rejectTeamRequest(
+                request.getData().getRequestId(), request.getData().getReviewerId());
+        return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Mentor assigned successfully"),
-                teamDTO);
-        return ResponseEntity.ok(response);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Team request rejected successfully"),
+                result));
     }
 
-    @PutMapping("/update")
-    @PreAuthorize("hasAuthority('UPDATE_TEAM')")
-    public ResponseEntity<CommonResponse<TeamDTO>> updateTeam(@RequestBody CommonRequest<TeamDTO> request) {
-        Long teamId = request.getData().getId();
-        TeamDTO teamDTO = teamService.updateTeam(teamId, request.getData());
-        CommonResponse<TeamDTO> response = new CommonResponse<>(
+    @PostMapping("/members/invite")
+    public ResponseEntity<CommonResponse<UserTeamRequestDTO>> inviteMember(
+            @Valid @RequestBody CommonRequest<InviteRequestDTO> request) {
+        log.debug("Received request to invite member: {}", request);
+        UserTeamRequestDTO result = teamService.inviteMember(
+                request.getData().getTeamId(),
+                request.getData().getUserId(),
+                request.getData().getInviterId());
+        return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Team updated successfully"),
-                teamDTO);
-        return ResponseEntity.ok(response);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Member invited successfully"),
+                result));
     }
 
-    @DeleteMapping("/remove-member")
-    @PreAuthorize("hasAuthority('REMOVE_MEMBER_FROM_TEAM')")
-    public ResponseEntity<CommonResponse<Void>> removeMemberFromTeam(
-            @RequestBody CommonRequest<Map<String, Long>> request) {
-        Long teamId = request.getData().get("teamId");
-        Long memberId = request.getData().get("memberId");
-        teamService.removeMemberFromTeam(teamId, memberId);
-        CommonResponse<Void> response = new CommonResponse<>(
+    @PostMapping("/invitations/accept")
+    public ResponseEntity<CommonResponse<UserTeamRequestDTO>> acceptInvitation(
+            @Valid @RequestBody CommonRequest<UserActionRequestDTO> request) {
+        log.debug("Received request to accept invitation: {}", request);
+        UserTeamRequestDTO result = teamService.acceptInvitation(
+                request.getData().getRequestId(), request.getData().getUserId());
+        return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Member removed successfully"),
-                null);
-        return ResponseEntity.ok(response);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Invitation accepted successfully"),
+                result));
     }
 
-    @DeleteMapping("/delete")
-    @PreAuthorize("hasAuthority('DELETE_TEAM')")
-    public ResponseEntity<CommonResponse<Void>> deleteTeam(@RequestBody CommonRequest<Map<String, Long>> request) {
-        Long teamId = request.getData().get("teamId");
-        teamService.deleteTeam(teamId);
-        CommonResponse<Void> response = new CommonResponse<>(
+    @PostMapping("/invitations/reject")
+    public ResponseEntity<CommonResponse<UserTeamRequestDTO>> rejectInvitation(
+            @Valid @RequestBody CommonRequest<UserActionRequestDTO> request) {
+        log.debug("Received request to reject invitation: {}", request);
+        UserTeamRequestDTO result = teamService.rejectInvitation(
+                request.getData().getRequestId(), request.getData().getUserId());
+        return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Team deleted successfully"),
-                null);
-        return ResponseEntity.ok(response);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Invitation rejected successfully"),
+                result));
+    }
+
+    @PostMapping("/members/join")
+    public ResponseEntity<CommonResponse<UserTeamRequestDTO>> requestToJoinTeam(
+            @Valid @RequestBody CommonRequest<JoinTeamRequestDTO> request) {
+        log.debug("Received request to join team: {}", request);
+        UserTeamRequestDTO result = teamService.requestToJoinTeam(
+                request.getData().getTeamId(), request.getData().getUserId());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Join request sent successfully"),
+                result));
+    }
+
+    @PostMapping("/members/approve")
+    public ResponseEntity<CommonResponse<UserTeamRequestDTO>> approveJoinRequest(
+            @Valid @RequestBody CommonRequest<ApprovalRequestDTO> request) {
+        log.debug("Received request to approve join request: {}", request);
+        UserTeamRequestDTO result = teamService.approveJoinRequest(
+                request.getData().getRequestId(), request.getData().getLeaderId());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Join request approved successfully"),
+                result));
+    }
+
+    @PostMapping("/members/reject")
+    public ResponseEntity<CommonResponse<UserTeamRequestDTO>> rejectJoinRequest(
+            @Valid @RequestBody CommonRequest<ApprovalRequestDTO> request) {
+        log.debug("Received request to reject join request: {}", request);
+        UserTeamRequestDTO result = teamService.rejectJoinRequest(
+                request.getData().getRequestId(), request.getData().getLeaderId());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Join request rejected successfully"),
+                result));
+    }
+
+    @PostMapping("/hackathons")
+    public ResponseEntity<CommonResponse<TeamDTO>> registerForHackathon(
+            @Valid @RequestBody CommonRequest<TeamDTO> request) {
+        log.debug("Received request to register team for hackathon: {}", request);
+        TeamDTO result = teamService.registerForHackathon(request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Team registered successfully"),
+                result));
+    }
+
+    @PostMapping("/hackathons/remove")
+    public ResponseEntity<CommonResponse<Void>> removeMember(@Valid @RequestBody CommonRequest<UserTeamDTO> request) {
+        log.debug("Received request to remove member: {}", request);
+        teamService.removeMember(request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Member removed successfully"),
+                null));
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('GET_TEAMS')")
-    public ResponseEntity<CommonResponse<List<TeamDTO>>> getAllTeams() {
-        List<TeamDTO> teams = teamService.getAllTeams();
-        CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
+    public ResponseEntity<CommonResponse<List<TeamDTO>>> getTeams() {
+        List<TeamDTO> teams = teamService.getAll();
+        return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched all teams successfully"),
-                teams);
-        return ResponseEntity.ok(response);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched teams successfully"),
+                teams));
+    }
+    //    public ResponseEntity<CommonResponse<List<TeamDTO>>> getTeams(
+    //            @RequestParam(required = false) Long id, @RequestParam(required = false) String name) {
+    //        Specification<Team> spec =
+    //                Specification.where(TeamSpecification.hasId(id)).and(TeamSpecification.hasName(name));
+    //
+    //        List<TeamDTO> teams = teamService.getTeams(spec);
+    //        CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
+    //                UUID.randomUUID().toString(),
+    //                LocalDateTime.now(),
+    //                "HACOF",
+    //                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched teams successfully"),
+    //                teams);
+    //        return ResponseEntity.ok(response);
+    //    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<TeamDTO>> getTeam(@PathVariable long id) {
+        TeamDTO teamDTO = teamService.getTeamById(id);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched team successfully"),
+                teamDTO));
+    }
+
+    @PutMapping
+    public ResponseEntity<CommonResponse<TeamDTO>> updateTeam(@Valid @RequestBody CommonRequest<TeamDTO> request) {
+        log.debug("Received request to update team: {}", request);
+        long id = request.getData().getId();
+        TeamDTO teamDTO = request.getData();
+        teamDTO.setId(id);
+        TeamDTO result = teamService.updateTeam(teamDTO);
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Team updated successfully"),
+                result));
     }
 }

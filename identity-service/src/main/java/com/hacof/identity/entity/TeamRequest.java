@@ -1,5 +1,8 @@
 package com.hacof.identity.entity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import com.hacof.identity.constant.Status;
@@ -22,6 +25,10 @@ public class TeamRequest extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    Team team;
 
     @ManyToOne
     @JoinColumn(name = "hackathon_id")
