@@ -56,4 +56,24 @@ public class ThreadPostReportController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<ThreadPostReportResponseDTO>> getThreadPostReportById(@PathVariable Long id) {
+        CommonResponse<ThreadPostReportResponseDTO> response = new CommonResponse<>();
+        try {
+            ThreadPostReportResponseDTO report = threadPostReportService.getThreadPostReport(id);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Report fetched successfully!");
+            response.setData(report);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

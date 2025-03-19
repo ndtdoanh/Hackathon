@@ -9,4 +9,6 @@ public interface ThreadPostReportService {
     ThreadPostReportResponseDTO createThreadPostReport(ThreadPostReportRequestDTO requestDTO);
 
     List<ThreadPostReportResponseDTO> getReportsByThreadPostId(Long threadPostId);
+
+    ThreadPostReportResponseDTO getThreadPostReport(Long id);
 }

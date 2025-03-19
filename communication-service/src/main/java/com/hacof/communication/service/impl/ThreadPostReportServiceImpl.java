@@ -46,4 +46,11 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ThreadPostReportResponseDTO getThreadPostReport(Long id) {
+        ThreadPostReport threadPostReport = threadPostReportRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ThreadPostReport not found with id " + id));
+        return ThreadPostReportMapper.toResponseDTO(threadPostReport);
+    }
+
 }
