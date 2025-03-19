@@ -65,6 +65,12 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
         entity.setRoundMarkCriterion(roundMarkCriterion);
 
         JudgeSubmissionDetail savedDetail = detailRepository.save(entity);
+
+        // Cập nhật điểm tổng trong JudgeSubmission
+        int newTotalScore = judgeSubmission.getScore() + savedDetail.getScore();
+        judgeSubmission.setScore(newTotalScore);
+        judgeSubmissionRepository.save(judgeSubmission);
+
         return mapper.toResponseDTO(savedDetail);
     }
 
