@@ -1,5 +1,6 @@
 package com.hacof.submission.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -32,6 +33,6 @@ public class JudgeSubmission extends AuditBase {
     int score;
     String note;
 
-    @OneToMany(mappedBy = "judgeSubmission", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<JudgeSubmissionDetail> judgeSubmissionDetails;
+    @OneToMany(mappedBy = "judgeSubmission", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<JudgeSubmissionDetail> judgeSubmissionDetails = new HashSet<>();
 }
