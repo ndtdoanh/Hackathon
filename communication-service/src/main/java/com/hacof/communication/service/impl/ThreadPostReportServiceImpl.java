@@ -58,12 +58,17 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
         ThreadPostReport threadPostReport = threadPostReportRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPostReport not found with id " + id));
 
-        // Update the status and reason
         threadPostReport.setReason(requestDTO.getReason());
 
-        // Save the updated report and return DTO
         threadPostReport = threadPostReportRepository.save(threadPostReport);
         return ThreadPostReportMapper.toResponseDTO(threadPostReport);
     }
 
+    @Override
+    public void deleteThreadPostReport(Long id) {
+        if (!threadPostReportRepository.existsById(id)) {
+            throw new IllegalArgumentException("ThreadPostReport not found with id " + id);
+        }
+        threadPostReportRepository.deleteById(id);
+    }
 }

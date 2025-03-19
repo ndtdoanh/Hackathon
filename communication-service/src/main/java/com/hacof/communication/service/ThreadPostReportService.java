@@ -14,4 +14,6 @@ public interface ThreadPostReportService {
     ThreadPostReportResponseDTO getThreadPostReport(Long id);
 
     ThreadPostReportResponseDTO updateThreadPostReport(Long id, ThreadPostReportRequestDTO requestDTO);
+
+    void deleteThreadPostReport(Long id);
 }

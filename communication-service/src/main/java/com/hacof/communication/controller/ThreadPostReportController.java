@@ -97,4 +97,22 @@ public class ThreadPostReportController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<Void>> deleteThreadPostReport(@PathVariable Long id) {
+        CommonResponse<Void> response = new CommonResponse<>();
+        try {
+            threadPostReportService.deleteThreadPostReport(id);
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            response.setMessage("Report deleted successfully!");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
