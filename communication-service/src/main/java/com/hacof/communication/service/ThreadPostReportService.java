@@ -1,0 +1,11 @@
+package com.hacof.communication.service;
+
+import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
+import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
+
+import java.util.List;
+
+public interface ThreadPostReportService {
+    ThreadPostReportResponseDTO createThreadPostReport(ThreadPostReportRequestDTO requestDTO);
+
+}
