@@ -40,10 +40,6 @@ public class TeamRequest extends AuditCreatedBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "team_id")
-    Team team;
-
-    @ManyToOne
     @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
