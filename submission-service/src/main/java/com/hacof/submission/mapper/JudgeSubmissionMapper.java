@@ -1,13 +1,14 @@
 package com.hacof.submission.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
 import com.hacof.submission.dto.request.UpdateScoreRequest;
 import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
 import com.hacof.submission.entity.*;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class JudgeSubmissionMapper {
@@ -18,11 +19,11 @@ public class JudgeSubmissionMapper {
 
         // Set Judge and Submission
         User judge = new User();
-        judge.setId(dto.getJudgeId());  // Thiết lập người chấm từ judgeId
+        judge.setId(dto.getJudgeId()); // Thiết lập người chấm từ judgeId
         entity.setJudge(judge);
 
         Submission submission = new Submission();
-        submission.setId(dto.getSubmissionId());  // Thiết lập submission từ submissionId
+        submission.setId(dto.getSubmissionId()); // Thiết lập submission từ submissionId
         entity.setSubmission(submission);
 
         entity.setNote(dto.getNote()); // Note from DTO
@@ -43,7 +44,7 @@ public class JudgeSubmissionMapper {
         JudgeSubmission entity = new JudgeSubmission();
 
         // Fetch the JudgeSubmission by ID
-        entity.setId(dto.getJudgeSubmissionId());  // Set the existing judgeSubmissionId
+        entity.setId(dto.getJudgeSubmissionId()); // Set the existing judgeSubmissionId
         entity.setNote(dto.getNote()); // Update the note
 
         // The score will be recalculated automatically in the service layer

@@ -27,7 +27,6 @@ public class RoundMarkCriterionMapper {
                 entity.getNote(),
                 entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null,
                 entity.getCreatedDate(),
-                entity.getLastModifiedDate()
-        );
+                entity.getLastModifiedDate());
     }
 }

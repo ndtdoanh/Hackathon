@@ -46,7 +46,9 @@ jwt:
 
 eureka:
   client:
-    services-url:
+    service-url:
       defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    preferIpAddress: true

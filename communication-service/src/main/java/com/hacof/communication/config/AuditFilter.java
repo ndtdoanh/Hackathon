@@ -1,11 +1,13 @@
 package com.hacof.communication.config;
 
-import com.hacof.communication.util.AuditContext;
-import com.hacof.communication.util.SecurityUtil;
+import java.io.IOException;
+
 import jakarta.servlet.*;
+
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import com.hacof.communication.util.AuditContext;
+import com.hacof.communication.util.SecurityUtil;
 
 @Component
 public class AuditFilter implements Filter {

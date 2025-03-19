@@ -1,20 +1,20 @@
 package com.hacof.communication.service.impl;
 
-import com.hacof.communication.dto.request.ForumThreadRequestDTO;
-import com.hacof.communication.dto.response.ForumThreadResponseDTO;
-import com.hacof.communication.entity.ForumThread;
-import com.hacof.communication.entity.ForumCategory;
-import com.hacof.communication.entity.User;
-import com.hacof.communication.mapper.ForumThreadMapper;
-import com.hacof.communication.repository.ForumThreadRepository;
-import com.hacof.communication.repository.ForumCategoryRepository;
-import com.hacof.communication.repository.UserRepository;
-import com.hacof.communication.service.ForumThreadService;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.hacof.communication.dto.request.ForumThreadRequestDTO;
+import com.hacof.communication.dto.response.ForumThreadResponseDTO;
+import com.hacof.communication.entity.ForumCategory;
+import com.hacof.communication.entity.ForumThread;
+import com.hacof.communication.mapper.ForumThreadMapper;
+import com.hacof.communication.repository.ForumCategoryRepository;
+import com.hacof.communication.repository.ForumThreadRepository;
+import com.hacof.communication.repository.UserRepository;
+import com.hacof.communication.service.ForumThreadService;
 
 @Service
 public class ForumThreadServiceImpl implements ForumThreadService {
@@ -30,7 +30,8 @@ public class ForumThreadServiceImpl implements ForumThreadService {
 
     @Override
     public ForumThreadResponseDTO createForumThread(ForumThreadRequestDTO forumThreadRequestDTO) {
-        Optional<ForumCategory> forumCategoryOptional = forumCategoryRepository.findById(forumThreadRequestDTO.getForumCategoryId());
+        Optional<ForumCategory> forumCategoryOptional =
+                forumCategoryRepository.findById(forumThreadRequestDTO.getForumCategoryId());
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }
@@ -50,7 +51,8 @@ public class ForumThreadServiceImpl implements ForumThreadService {
         }
 
         ForumThread forumThread = forumThreadOptional.get();
-        Optional<ForumCategory> forumCategoryOptional = forumCategoryRepository.findById(forumThreadRequestDTO.getForumCategoryId());
+        Optional<ForumCategory> forumCategoryOptional =
+                forumCategoryRepository.findById(forumThreadRequestDTO.getForumCategoryId());
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }
@@ -74,12 +76,12 @@ public class ForumThreadServiceImpl implements ForumThreadService {
 
         ForumThread forumThread = forumThreadOptional.get();
 
-        if (forumThread.getThreadPosts() != null && !forumThread.getThreadPosts().isEmpty()) {
+        if (forumThread.getThreadPosts() != null
+                && !forumThread.getThreadPosts().isEmpty()) {
             throw new IllegalArgumentException("Cannot delete ForumThread because it contains thread posts!");
         }
         forumThreadRepository.deleteById(id);
     }
-
 
     @Override
     public ForumThreadResponseDTO getForumThread(Long id) {

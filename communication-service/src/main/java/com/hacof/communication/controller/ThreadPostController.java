@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ThreadPostRequestDTO;
-import com.hacof.communication.dto.response.ThreadPostResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.ThreadPostService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.ThreadPostRequestDTO;
+import com.hacof.communication.dto.response.ThreadPostResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.ThreadPostService;
 
 @RestController
 @RequestMapping("/api/v1/thread-posts")
@@ -77,8 +78,7 @@ public class ThreadPostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<ThreadPostResponseDTO>> updateThreadPost(
-            @PathVariable Long id,
-            @RequestBody ThreadPostRequestDTO threadPostRequestDTO) {
+            @PathVariable Long id, @RequestBody ThreadPostRequestDTO threadPostRequestDTO) {
         CommonResponse<ThreadPostResponseDTO> response = new CommonResponse<>();
         try {
             ThreadPostResponseDTO updatedPost = threadPostService.updateThreadPost(id, threadPostRequestDTO);

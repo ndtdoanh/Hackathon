@@ -1,5 +1,8 @@
 package com.hacof.communication.entity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import com.hacof.communication.constant.Status;
@@ -28,7 +31,16 @@ public class TeamRequest extends AuditCreatedBase {
     @Column(name = "status")
     Status status;
 
+    @JoinColumn(name = "confirmation_deadline")
+    LocalDateTime confirmationDeadline;
+
+    @JoinColumn(name = "note")
+    String note;
+
     @ManyToOne
     @JoinColumn(name = "reviewed_by")
     User reviewedBy;
+
+    @OneToMany(mappedBy = "teamRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRequestMember> teamRequestMembers;
 }

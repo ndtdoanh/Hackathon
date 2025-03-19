@@ -4,7 +4,13 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+  instance:
+    preferIpAddress: true
 logging:
   level:
     '[com.netflix.eureka]': 'OFF'
     '[com.netflix.discovery]': 'OFF'
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true

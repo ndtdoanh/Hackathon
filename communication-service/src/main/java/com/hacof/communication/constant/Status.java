@@ -1,6 +1,5 @@
 package com.hacof.communication.constant;
 
-
 public enum Status {
     PENDING,
     SUCCESS,

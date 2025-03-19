@@ -1,5 +1,22 @@
 package com.hacof.submission.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.hacof.submission.config.FirebaseConfig;
 import com.hacof.submission.constant.Status;
 import com.hacof.submission.dto.request.SubmissionRequestDTO;
 import com.hacof.submission.dto.response.SubmissionResponseDTO;
@@ -11,23 +28,7 @@ import com.hacof.submission.repository.FileUrlRepository;
 import com.hacof.submission.repository.RoundRepository;
 import com.hacof.submission.repository.SubmissionRepository;
 import com.hacof.submission.service.SubmissionService;
-import com.hacof.submission.config.FirebaseConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import java.util.UUID;
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
 
@@ -46,19 +47,21 @@ public class SubmissionServiceImpl implements SubmissionService {
     private static final String UPLOAD_DIR = "E:\\Chuyên Ngành\\SEP\\uploads\\submissions\\";
     private static final List<String> ALLOWED_FILE_TYPES = Arrays.asList(
             "image/jpeg", // JPEG images
-            "image/png",  // PNG images
+            "image/png", // PNG images
             "application/pdf", // PDF files
-            "application/msword",  // .doc files (Microsoft Word)
+            "application/msword", // .doc files (Microsoft Word)
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx files (Microsoft Word)
             "application/vnd.ms-excel", // .xls files (Microsoft Excel)
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx files (Microsoft Excel)
             "application/vnd.ms-powerpoint", // .ppt files (Microsoft PowerPoint)
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx files (Microsoft PowerPoint)
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx files (Microsoft
+            // PowerPoint)
             "text/plain" // .txt files (Text files)
-    );
+            );
 
     @Override
-    public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files) throws IOException {
+    public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
+            throws IOException {
         Submission submission = SubmissionMapper.toEntity(submissionDTO, roundRepository);
         submission.setSubmittedAt(LocalDateTime.now());
         submission = submissionRepository.save(submission);
@@ -103,54 +106,54 @@ public class SubmissionServiceImpl implements SubmissionService {
         return SubmissionMapper.toResponseDTO(submission);
     }
 
+    //    @Override
+    //    public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
+    // throws IOException {
+    //        Submission submission = SubmissionMapper.toEntity(submissionDTO, roundRepository);
+    //
+    //        // Save the submission
+    //        submission = submissionRepository.save(submission);
+    //
+    //        // Handle file upload to Firebase Storage
+    //        for (MultipartFile file : files) {
+    ////            String fileUrl = uploadFileToFirebase(file);
+    //
+    //            // Save file metadata in FileUrl table
+    //            FileUrl fileUrlEntity = new FileUrl();
+    //            fileUrlEntity.setFileName(file.getOriginalFilename());
+    ////            fileUrlEntity.setFileUrl(fileUrl); // If using Firebase, store the file URL here
+    //            fileUrlEntity.setFileType(file.getContentType());
+    //            fileUrlEntity.setFileSize((int) file.getSize());
+    //            fileUrlEntity.setSubmission(submission);
+    //
+    //            fileUrlRepository.save(fileUrlEntity);
+    //        }
+    //
+    //        return SubmissionMapper.toResponseDTO(submission);
+    //    }
 
-//    @Override
-//    public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files) throws IOException {
-//        Submission submission = SubmissionMapper.toEntity(submissionDTO, roundRepository);
-//
-//        // Save the submission
-//        submission = submissionRepository.save(submission);
-//
-//        // Handle file upload to Firebase Storage
-//        for (MultipartFile file : files) {
-////            String fileUrl = uploadFileToFirebase(file);
-//
-//            // Save file metadata in FileUrl table
-//            FileUrl fileUrlEntity = new FileUrl();
-//            fileUrlEntity.setFileName(file.getOriginalFilename());
-////            fileUrlEntity.setFileUrl(fileUrl); // If using Firebase, store the file URL here
-//            fileUrlEntity.setFileType(file.getContentType());
-//            fileUrlEntity.setFileSize((int) file.getSize());
-//            fileUrlEntity.setSubmission(submission);
-//
-//            fileUrlRepository.save(fileUrlEntity);
-//        }
-//
-//        return SubmissionMapper.toResponseDTO(submission);
-//    }
-
-//    public String uploadFileToFirebase(MultipartFile file) throws IOException {
-//        // Initialize Firebase
-//        StorageReference storageReference = firebaseConfig.getStorageReference();
-//
-//        // Create a reference to the Firebase Storage location
-//        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-//        StorageReference fileReference = storageReference.child("submissions/" + fileName);
-//
-//        // Upload the file to Firebase
-//        UploadTask uploadTask = fileReference.putBytes(file.getBytes());
-//
-//        // Wait for the upload to finish and get the download URL
-//        uploadTask.addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                TaskSnapshot taskSnapshot = task.getResult();
-//                String downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-//                return downloadUrl;  // Return the file URL
-//            } else {
-//                throw new IOException("Failed to upload file to Firebase Storage");
-//            }
-//        });
-//    }
+    //    public String uploadFileToFirebase(MultipartFile file) throws IOException {
+    //        // Initialize Firebase
+    //        StorageReference storageReference = firebaseConfig.getStorageReference();
+    //
+    //        // Create a reference to the Firebase Storage location
+    //        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+    //        StorageReference fileReference = storageReference.child("submissions/" + fileName);
+    //
+    //        // Upload the file to Firebase
+    //        UploadTask uploadTask = fileReference.putBytes(file.getBytes());
+    //
+    //        // Wait for the upload to finish and get the download URL
+    //        uploadTask.addOnCompleteListener(task -> {
+    //            if (task.isSuccessful()) {
+    //                TaskSnapshot taskSnapshot = task.getResult();
+    //                String downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+    //                return downloadUrl;  // Return the file URL
+    //            } else {
+    //                throw new IOException("Failed to upload file to Firebase Storage");
+    //            }
+    //        });
+    //    }
 
     @Override
     public SubmissionResponseDTO getSubmissionById(Long id) {
@@ -164,13 +167,12 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public List<SubmissionResponseDTO> getAllSubmissions() {
         List<Submission> submissions = submissionRepository.findAll();
-        return submissions.stream()
-                .map(SubmissionMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return submissions.stream().map(SubmissionMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
-    public SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files) {
+    public SubmissionResponseDTO updateSubmission(
+            Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files) {
         Optional<Submission> optionalSubmission = submissionRepository.findById(id);
         if (!optionalSubmission.isPresent()) {
             throw new IllegalArgumentException("Submission not found for ID: " + id);
@@ -211,7 +213,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     public boolean deleteSubmission(Long id) {
         Optional<Submission> submissionOpt = submissionRepository.findById(id);
         if (!submissionOpt.isPresent()) {
-             throw new IllegalArgumentException("Submission not found with ID " + id);
+            throw new IllegalArgumentException("Submission not found with ID " + id);
         }
         submissionRepository.deleteById(id);
         return true;

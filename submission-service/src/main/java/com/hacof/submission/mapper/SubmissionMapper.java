@@ -1,16 +1,15 @@
 package com.hacof.submission.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.hacof.submission.constant.Status;
 import com.hacof.submission.dto.request.SubmissionRequestDTO;
 import com.hacof.submission.dto.response.FileUrlResponseDTO;
 import com.hacof.submission.dto.response.SubmissionResponseDTO;
 import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.Submission;
-import com.hacof.submission.entity.FileUrl;
 import com.hacof.submission.repository.RoundRepository;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class SubmissionMapper {
 
@@ -19,7 +18,8 @@ public class SubmissionMapper {
         Submission submission = new Submission();
 
         // Fetch the round by ID from the database
-        Round round = roundRepository.findById(dto.getRoundId())
+        Round round = roundRepository
+                .findById(dto.getRoundId())
                 .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + dto.getRoundId()));
 
         submission.setRound(round); // Set the fetched round
@@ -43,7 +43,8 @@ public class SubmissionMapper {
                     fileResponse.setFileType(fileUrl.getFileType());
                     fileResponse.setFileSize(fileUrl.getFileSize());
                     return fileResponse;
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
 
         responseDTO.setFileUrls(fileUrls);
         return responseDTO;

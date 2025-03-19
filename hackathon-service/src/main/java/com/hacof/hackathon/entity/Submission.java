@@ -1,7 +1,10 @@
 package com.hacof.hackathon.entity;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,12 +14,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -37,42 +38,27 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Submissions")
-public class Submission extends AuditBase {
+@Table(name = "submissions")
+public class Submission extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "team_id")
-    Team team;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
-
-    @Column(name = "submission_url")
-    String submissionUrl;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "round_id")
-    CompetitionRound round;
+    Round round;
+
+    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
+
+    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<JudgeSubmission> judgeSubmissions;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status = Status.PENDING;
+    Status status;
 
-    @Lob
-    @Column(name = "feedback")
-    String feedback;
-
-    @ColumnDefault("CURRENT_TIMESTAMP(6)")
     @Column(name = "submitted_at")
-    Instant submittedAt;
+    LocalDateTime submittedAt;
 }

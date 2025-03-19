@@ -1,6 +1,6 @@
 package com.hacof.hackathon.entity;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -35,13 +34,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "UserProfiles")
+@Table(name = "user_profiles")
 public class UserProfile extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
@@ -56,11 +54,11 @@ public class UserProfile extends AuditBase {
     @ElementCollection
     @CollectionTable(name = "user_skills", joinColumns = @JoinColumn(name = "user_profile_id"))
     @Column(name = "skill")
-    private Set<String> skills = new HashSet<>();
+    Set<String> skills = new HashSet<>();
 
     @Column(name = "avatar_url")
     String avatarUrl;
 
     @Column(name = "uploaded_at")
-    Instant uploadedAt;
+    LocalDateTime uploadedAt;
 }

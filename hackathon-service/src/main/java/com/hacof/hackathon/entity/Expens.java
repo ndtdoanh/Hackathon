@@ -1,6 +1,6 @@
 package com.hacof.hackathon.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -35,13 +34,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "Expenses")
+@Table(name = "expenses")
 public class Expens extends AuditBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hackathon_id")
@@ -57,15 +55,12 @@ public class Expens extends AuditBase {
     @JoinColumn(name = "event_id")
     Event event;
 
-    @NotNull
     @Column(name = "amount")
-    Long amount;
+    long amount;
 
-    @NotNull
     @Column(name = "expense_date")
-    LocalDate expenseDate;
+    LocalDateTime expenseDate;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "expense_type")
     ExpenseType expenseType;
