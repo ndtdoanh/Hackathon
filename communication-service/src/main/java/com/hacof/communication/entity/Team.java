@@ -74,9 +74,6 @@ public class Team extends AuditCreatedBase {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Feedback> feedbacks;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TeamRequest> teamRequests;
-
     @Lob
     @Column(name = "bio")
     String bio;
