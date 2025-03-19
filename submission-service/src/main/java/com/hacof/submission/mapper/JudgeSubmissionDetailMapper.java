@@ -29,7 +29,6 @@ public class JudgeSubmissionDetailMapper {
         entity.setScore(dto.getScore());
         entity.setNote(dto.getNote());
 
-        // Ánh xạ đối tượng judgeSubmission và roundMarkCriterion từ ID
         Optional<JudgeSubmission> judgeSubmission = judgeSubmissionRepository.findById(dto.getJudgeSubmissionId());
         if (judgeSubmission.isPresent()) {
             entity.setJudgeSubmission(judgeSubmission.get());
@@ -50,23 +49,6 @@ public class JudgeSubmissionDetailMapper {
     }
 
     public JudgeSubmissionDetailResponseDTO toResponseDTO(JudgeSubmissionDetail entity) {
-        JudgeSubmissionDetailResponseDTO dto = new JudgeSubmissionDetailResponseDTO();
-
-        // Thiết lập các trường trong ResponseDTO
-        dto.setId(entity.getId());
-        dto.setJudgeSubmissionId(
-                entity.getJudgeSubmission() != null
-                        ? entity.getJudgeSubmission().getId()
-                        : null);
-        dto.setRoundMarkCriterionId(
-                entity.getRoundMarkCriterion() != null
-                        ? entity.getRoundMarkCriterion().getId()
-                        : null);
-        dto.setScore(entity.getScore());
-        dto.setNote(entity.getNote());
-        dto.setCreatedDate(entity.getCreatedDate());
-        dto.setLastModifiedDate(entity.getLastModifiedDate());
-
-        return dto;
+        return new JudgeSubmissionDetailResponseDTO(entity);
     }
 }
