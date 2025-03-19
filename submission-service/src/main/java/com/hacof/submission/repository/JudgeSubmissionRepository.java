@@ -13,7 +13,8 @@ import feign.Param;
 
 @Repository
 public interface JudgeSubmissionRepository extends JpaRepository<JudgeSubmission, Long> {
-    Optional<JudgeSubmission> findBySubmissionId(Long submissionId);
+    @Query("SELECT js FROM JudgeSubmission js JOIN js.submission s WHERE s.id = :submissionId")
+    List<JudgeSubmission> findBySubmissionId(@Param("submissionId") Long submissionId);
 
     List<JudgeSubmission> findByJudgeId(Long judgeId);
 
