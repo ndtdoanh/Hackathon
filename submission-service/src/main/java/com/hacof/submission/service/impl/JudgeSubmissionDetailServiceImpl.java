@@ -86,10 +86,14 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
         RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository
                 .findById(requestDTO.getRoundMarkCriterionId())
                 .orElseThrow(() -> new IllegalArgumentException("Round Mark Criterion not found"));
+
         if (requestDTO.getScore() > roundMarkCriterion.getMaxScore()) {
             throw new IllegalArgumentException(
                     "Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
         }
+
+        // Lưu lại điểm cũ của JudgeSubmission để cập nhật sau khi thay đổi điểm
+        int oldScore = existingDetail.getScore();
 
         existingDetail.setScore(requestDTO.getScore());
         existingDetail.setNote(requestDTO.getNote());
@@ -97,8 +101,15 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
         existingDetail.setRoundMarkCriterion(roundMarkCriterion);
 
         JudgeSubmissionDetail updatedDetail = detailRepository.save(existingDetail);
+
+        // Cập nhật điểm tổng trong JudgeSubmission (cộng điểm mới, trừ điểm cũ)
+        int newTotalScore = judgeSubmission.getScore() - oldScore + updatedDetail.getScore();
+        judgeSubmission.setScore(newTotalScore);
+        judgeSubmissionRepository.save(judgeSubmission);
+
         return mapper.toResponseDTO(updatedDetail);
     }
+
 
     @Override
     public boolean deleteDetail(Long id) {
