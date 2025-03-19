@@ -39,5 +39,21 @@ public class ThreadPostReportController {
         }
     }
 
+    @GetMapping("/thread-post/{threadPostId}")
+    public ResponseEntity<CommonResponse<List<ThreadPostReportResponseDTO>>> getReportsByThreadPostId(
+            @PathVariable Long threadPostId) {
+        CommonResponse<List<ThreadPostReportResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ThreadPostReportResponseDTO> reports = threadPostReportService.getReportsByThreadPostId(threadPostId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Reports fetched successfully!");
+            response.setData(reports);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
 }

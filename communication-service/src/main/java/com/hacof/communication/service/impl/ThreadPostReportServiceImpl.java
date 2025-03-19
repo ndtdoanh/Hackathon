@@ -38,5 +38,12 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
         return ThreadPostReportMapper.toResponseDTO(threadPostReport);
     }
 
+    @Override
+    public List<ThreadPostReportResponseDTO> getReportsByThreadPostId(Long threadPostId) {
+        List<ThreadPostReport> reports = threadPostReportRepository.findByThreadPostId(threadPostId);
+        return reports.stream()
+                .map(ThreadPostReportMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
 
 }

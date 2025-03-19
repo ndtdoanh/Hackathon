@@ -8,4 +8,5 @@ import java.util.List;
 public interface ThreadPostReportService {
     ThreadPostReportResponseDTO createThreadPostReport(ThreadPostReportRequestDTO requestDTO);
 
+    List<ThreadPostReportResponseDTO> getReportsByThreadPostId(Long threadPostId);
 }
