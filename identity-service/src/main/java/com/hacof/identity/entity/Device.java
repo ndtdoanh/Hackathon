@@ -10,6 +10,9 @@ import com.hacof.identity.constant.DeviceStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -49,4 +52,7 @@ public class Device extends AuditCreatedBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     DeviceStatus status;
+
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }

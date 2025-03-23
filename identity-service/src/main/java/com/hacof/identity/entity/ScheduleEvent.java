@@ -1,6 +1,8 @@
 package com.hacof.identity.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -46,4 +48,7 @@ public class ScheduleEvent extends AuditCreatedBase {
 
     @Column(name = "recurrence_rule")
     String recurrenceRule;
+
+    @OneToMany(mappedBy = "scheduleEvent", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }

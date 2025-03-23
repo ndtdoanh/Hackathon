@@ -1,6 +1,8 @@
 package com.hacof.identity.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -45,4 +47,7 @@ public class UserDevice extends AuditCreatedBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     UserDeviceStatus status;
+
+    @OneToMany(mappedBy = "userDevice", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }
