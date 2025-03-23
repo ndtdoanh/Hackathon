@@ -1,5 +1,6 @@
 package com.hacof.submission.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -33,5 +34,5 @@ public class Schedule extends AuditCreatedBase {
     String description;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ScheduleEvent> scheduleEvents;
+    List<ScheduleEvent> scheduleEvents = new ArrayList<>();
 }
