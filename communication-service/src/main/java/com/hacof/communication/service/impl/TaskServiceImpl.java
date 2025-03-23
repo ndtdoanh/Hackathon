@@ -71,4 +71,16 @@ public class TaskServiceImpl implements TaskService {
 
         taskRepository.deleteById(id);
     }
+
+    @Override
+    public TaskResponseDTO getTask(Long id) {
+        Optional<Task> taskOptional = taskRepository.findById(id);
+        if (!taskOptional.isPresent()) {
+            throw new IllegalArgumentException("Task not found!");
+        }
+
+        return taskMapper.toDto(taskOptional.get());
+    }
+
+
 }
