@@ -82,5 +82,9 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDto(taskOptional.get());
     }
 
-
+    @Override
+    public List<TaskResponseDTO> getAllTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
+    }
 }

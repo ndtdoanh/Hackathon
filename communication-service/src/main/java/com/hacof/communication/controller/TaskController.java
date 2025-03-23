@@ -98,4 +98,20 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TaskResponseDTO>>> getAllTasks() {
+        CommonResponse<List<TaskResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TaskResponseDTO> tasks = taskService.getAllTasks();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Tasks fetched successfully!");
+            response.setData(tasks);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

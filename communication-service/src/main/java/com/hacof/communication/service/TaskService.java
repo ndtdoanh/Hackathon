@@ -15,4 +15,5 @@ public interface TaskService {
 
     TaskResponseDTO getTask(Long id);
 
+    List<TaskResponseDTO> getAllTasks();
 }
