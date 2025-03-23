@@ -15,8 +15,14 @@ public class RoundMarkCriterionResponseDTO {
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 
-    public RoundMarkCriterionResponseDTO(Long id, String name, Integer maxScore, String note,
-                                         String createdBy, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
+    public RoundMarkCriterionResponseDTO(
+            Long id,
+            String name,
+            Integer maxScore,
+            String note,
+            String createdBy,
+            LocalDateTime createdDate,
+            LocalDateTime lastModifiedDate) {
         this.id = id;
         this.name = name;
         this.maxScore = maxScore;

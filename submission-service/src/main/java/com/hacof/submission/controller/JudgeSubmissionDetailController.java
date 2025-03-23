@@ -1,15 +1,16 @@
 package com.hacof.submission.controller;
 
-import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
-import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
-import com.hacof.submission.response.CommonResponse;
-import com.hacof.submission.service.JudgeSubmissionDetailService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
+import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.service.JudgeSubmissionDetailService;
 
 @RestController
 @RequestMapping("/api/v1/judgesubmissiondetails")
@@ -59,7 +60,8 @@ public class JudgeSubmissionDetailController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<JudgeSubmissionDetailResponseDTO>> createDetail(@RequestBody JudgeSubmissionDetailRequestDTO requestDTO) {
+    public ResponseEntity<CommonResponse<JudgeSubmissionDetailResponseDTO>> createDetail(
+            @RequestBody JudgeSubmissionDetailRequestDTO requestDTO) {
         CommonResponse<JudgeSubmissionDetailResponseDTO> response = new CommonResponse<>();
         try {
             JudgeSubmissionDetailResponseDTO createdDetail = service.createDetail(requestDTO);
@@ -79,7 +81,8 @@ public class JudgeSubmissionDetailController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<JudgeSubmissionDetailResponseDTO>> updateDetail(@PathVariable Long id, @RequestBody JudgeSubmissionDetailRequestDTO requestDTO) {
+    public ResponseEntity<CommonResponse<JudgeSubmissionDetailResponseDTO>> updateDetail(
+            @PathVariable Long id, @RequestBody JudgeSubmissionDetailRequestDTO requestDTO) {
         CommonResponse<JudgeSubmissionDetailResponseDTO> response = new CommonResponse<>();
         try {
             JudgeSubmissionDetailResponseDTO updatedDetail = service.updateDetail(id, requestDTO);

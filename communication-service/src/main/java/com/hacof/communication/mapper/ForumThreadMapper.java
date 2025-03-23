@@ -1,12 +1,12 @@
 package com.hacof.communication.mapper;
 
-import com.hacof.communication.dto.request.ForumThreadRequestDTO;
-import com.hacof.communication.dto.response.ForumThreadResponseDTO;
-import com.hacof.communication.entity.ForumThread;
-import com.hacof.communication.entity.ForumCategory;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.hacof.communication.dto.request.ForumThreadRequestDTO;
+import com.hacof.communication.dto.response.ForumThreadResponseDTO;
+import com.hacof.communication.entity.ForumCategory;
+import com.hacof.communication.entity.ForumThread;
 
 public class ForumThreadMapper {
 

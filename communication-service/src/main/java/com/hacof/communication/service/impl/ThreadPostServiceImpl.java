@@ -1,19 +1,19 @@
 package com.hacof.communication.service.impl;
 
-import com.hacof.communication.dto.request.ThreadPostRequestDTO;
-import com.hacof.communication.dto.response.ThreadPostResponseDTO;
-import com.hacof.communication.entity.ThreadPost;
-import com.hacof.communication.entity.ForumThread;
-import com.hacof.communication.mapper.ThreadPostMapper;
-import com.hacof.communication.repository.ThreadPostRepository;
-import com.hacof.communication.repository.ForumThreadRepository;
-import com.hacof.communication.service.ThreadPostService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hacof.communication.dto.request.ThreadPostRequestDTO;
+import com.hacof.communication.dto.response.ThreadPostResponseDTO;
+import com.hacof.communication.entity.ForumThread;
+import com.hacof.communication.entity.ThreadPost;
+import com.hacof.communication.mapper.ThreadPostMapper;
+import com.hacof.communication.repository.ForumThreadRepository;
+import com.hacof.communication.repository.ThreadPostRepository;
+import com.hacof.communication.service.ThreadPostService;
 
 @Service
 public class ThreadPostServiceImpl implements ThreadPostService {
@@ -26,7 +26,8 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
     @Override
     public ThreadPostResponseDTO createThreadPost(ThreadPostRequestDTO requestDTO) {
-        ForumThread forumThread = forumThreadRepository.findById(requestDTO.getForumThreadId())
+        ForumThread forumThread = forumThreadRepository
+                .findById(requestDTO.getForumThreadId())
                 .orElseThrow(() -> new IllegalArgumentException("ForumThread not found"));
 
         ThreadPost threadPost = ThreadPostMapper.toEntity(requestDTO, forumThread);
@@ -37,14 +38,13 @@ public class ThreadPostServiceImpl implements ThreadPostService {
     @Override
     public List<ThreadPostResponseDTO> getAllThreadPosts() {
         List<ThreadPost> threadPosts = threadPostRepository.findAll();
-        return threadPosts.stream()
-                .map(ThreadPostMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return threadPosts.stream().map(ThreadPostMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
     public ThreadPostResponseDTO getThreadPost(Long id) {
-        ThreadPost threadPost = threadPostRepository.findById(id)
+        ThreadPost threadPost = threadPostRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + id));
 
         return ThreadPostMapper.toResponseDTO(threadPost);
@@ -52,7 +52,8 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
     @Override
     public ThreadPostResponseDTO updateThreadPost(Long id, ThreadPostRequestDTO requestDTO) {
-        ThreadPost threadPost = threadPostRepository.findById(id)
+        ThreadPost threadPost = threadPostRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + id));
 
         threadPost.setContent(requestDTO.getContent());
@@ -62,11 +63,11 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
     @Override
     public void deleteThreadPost(Long id) {
-        ThreadPost threadPost = threadPostRepository.findById(id)
+        ThreadPost threadPost = threadPostRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + id));
 
         threadPost.setDeleted(true);
         threadPostRepository.save(threadPost);
     }
 }
-

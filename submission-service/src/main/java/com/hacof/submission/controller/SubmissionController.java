@@ -1,18 +1,18 @@
 package com.hacof.submission.controller;
 
-import com.hacof.submission.dto.request.SubmissionRequestDTO;
-import com.hacof.submission.dto.response.SubmissionResponseDTO;
-import com.hacof.submission.response.CommonResponse;
-import com.hacof.submission.service.SubmissionService;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+import com.hacof.submission.dto.request.SubmissionRequestDTO;
+import com.hacof.submission.dto.response.SubmissionResponseDTO;
+import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.service.SubmissionService;
 
 @RestController
 @RequestMapping("/api/v1/submissions")
@@ -98,7 +98,8 @@ public class SubmissionController {
             submissionRequestDTO.setRoundId(roundId);
             submissionRequestDTO.setStatus(status);
 
-            SubmissionResponseDTO updatedSubmission = submissionService.updateSubmission(id, submissionRequestDTO, files);
+            SubmissionResponseDTO updatedSubmission =
+                    submissionService.updateSubmission(id, submissionRequestDTO, files);
 
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Submission updated successfully!");
@@ -114,7 +115,6 @@ public class SubmissionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteSubmission(@PathVariable Long id) {

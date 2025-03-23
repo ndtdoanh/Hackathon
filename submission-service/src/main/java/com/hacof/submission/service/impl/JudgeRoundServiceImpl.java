@@ -1,5 +1,12 @@
 package com.hacof.submission.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
 import com.hacof.submission.dto.response.JudgeRoundResponseDTO;
 import com.hacof.submission.entity.JudgeRound;
@@ -7,15 +14,9 @@ import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.User;
 import com.hacof.submission.mapper.JudgeRoundMapper;
 import com.hacof.submission.repository.JudgeRoundRepository;
-import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.repository.RoundRepository;
+import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.service.JudgeRoundService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class JudgeRoundServiceImpl implements JudgeRoundService {
@@ -42,12 +43,15 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
 
     @Override
     public JudgeRoundResponseDTO updateJudgeRound(Long id, JudgeRoundRequestDTO dto) {
-        JudgeRound judgeRound = judgeRoundRepository.findById(id)
+        JudgeRound judgeRound = judgeRoundRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("JudgeRound not found"));
 
-        User judge = userRepository.findById(dto.getJudgeId())
+        User judge = userRepository
+                .findById(dto.getJudgeId())
                 .orElseThrow(() -> new IllegalArgumentException("Judge not found"));
-        Round round = roundRepository.findById(dto.getRoundId())
+        Round round = roundRepository
+                .findById(dto.getRoundId())
                 .orElseThrow(() -> new IllegalArgumentException("Round not found"));
 
         judgeRound.setJudge(judge);
@@ -70,7 +74,8 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
 
     @Override
     public JudgeRoundResponseDTO getJudgeRound(Long id) {
-        JudgeRound judgeRound = judgeRoundRepository.findById(id)
+        JudgeRound judgeRound = judgeRoundRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("JudgeRound not found"));
 
         return judgeRoundMapper.toResponseDTO(judgeRound);
@@ -79,17 +84,17 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
     @Override
     public List<JudgeRoundResponseDTO> getAllJudgeRounds() {
         List<JudgeRound> judgeRounds = judgeRoundRepository.findAll();
-        return judgeRounds.stream()
-                .map(judgeRoundMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return judgeRounds.stream().map(judgeRoundMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
     public JudgeRoundResponseDTO updateJudgeRoundByJudgeId(Long judgeId, JudgeRoundRequestDTO dto) {
-        JudgeRound judgeRound = judgeRoundRepository.findByJudgeId(judgeId)
+        JudgeRound judgeRound = judgeRoundRepository
+                .findByJudgeId(judgeId)
                 .orElseThrow(() -> new IllegalArgumentException("JudgeRound with judgeId " + judgeId + " not found"));
 
-        Round round = roundRepository.findById(dto.getRoundId())
+        Round round = roundRepository
+                .findById(dto.getRoundId())
                 .orElseThrow(() -> new IllegalArgumentException("Round not found"));
         judgeRound.setRound(round);
 
@@ -101,8 +106,6 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
     public List<JudgeRoundResponseDTO> getJudgeRoundsByRoundId(Long roundId) {
         List<JudgeRound> judgeRounds = judgeRoundRepository.findByRoundId(roundId);
 
-        return judgeRounds.stream()
-                .map(judgeRoundMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return judgeRounds.stream().map(judgeRoundMapper::toResponseDTO).collect(Collectors.toList());
     }
 }

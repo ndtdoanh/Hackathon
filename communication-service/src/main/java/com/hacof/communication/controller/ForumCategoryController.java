@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ForumCategoryRequestDTO;
-import com.hacof.communication.dto.response.ForumCategoryResponseDTO;
-import com.hacof.communication.service.ForumCategoryService;
-import com.hacof.communication.response.CommonResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.ForumCategoryRequestDTO;
+import com.hacof.communication.dto.response.ForumCategoryResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.ForumCategoryService;
 
 @RestController
 @RequestMapping("/api/v1/forum-categories")
@@ -23,7 +24,8 @@ public class ForumCategoryController {
             @RequestBody ForumCategoryRequestDTO forumCategoryRequestDTO) {
         CommonResponse<ForumCategoryResponseDTO> response = new CommonResponse<>();
         try {
-            ForumCategoryResponseDTO createdCategory = forumCategoryService.createForumCategory(forumCategoryRequestDTO);
+            ForumCategoryResponseDTO createdCategory =
+                    forumCategoryService.createForumCategory(forumCategoryRequestDTO);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Forum category created successfully!");
             response.setData(createdCategory);
@@ -77,11 +79,11 @@ public class ForumCategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<ForumCategoryResponseDTO>> updateForumCategory(
-            @PathVariable Long id,
-            @RequestBody ForumCategoryRequestDTO forumCategoryRequestDTO) {
+            @PathVariable Long id, @RequestBody ForumCategoryRequestDTO forumCategoryRequestDTO) {
         CommonResponse<ForumCategoryResponseDTO> response = new CommonResponse<>();
         try {
-            ForumCategoryResponseDTO updatedCategory = forumCategoryService.updateForumCategory(id, forumCategoryRequestDTO);
+            ForumCategoryResponseDTO updatedCategory =
+                    forumCategoryService.updateForumCategory(id, forumCategoryRequestDTO);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Forum category updated successfully!");
             response.setData(updatedCategory);

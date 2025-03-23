@@ -2,9 +2,8 @@ package com.hacof.communication.mapper;
 
 import com.hacof.communication.dto.request.ThreadPostRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostResponseDTO;
-import com.hacof.communication.entity.ThreadPost;
 import com.hacof.communication.entity.ForumThread;
-import com.hacof.communication.entity.User;
+import com.hacof.communication.entity.ThreadPost;
 
 public class ThreadPostMapper {
 
@@ -25,7 +24,7 @@ public class ThreadPostMapper {
         responseDTO.setDeleted(threadPost.isDeleted());
         responseDTO.setCreatedBy(threadPost.getCreatedBy().getUsername());
         responseDTO.setCreatedDate(threadPost.getCreatedDate());
-        responseDTO.setLastModifiedDate(threadPost.getLastModifiedDate());  // Optionally set last modified date
+        responseDTO.setLastModifiedDate(threadPost.getLastModifiedDate()); // Optionally set last modified date
         return responseDTO;
     }
 }
