@@ -1,5 +1,9 @@
 package com.hacof.analytics.entity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import com.hacof.analytics.constant.Status;
@@ -42,7 +47,16 @@ public class TeamRequest extends AuditCreatedBase {
     @Column(name = "status")
     Status status;
 
+    @JoinColumn(name = "confirmation_deadline")
+    LocalDateTime confirmationDeadline;
+
+    @JoinColumn(name = "note")
+    String note;
+
     @ManyToOne
     @JoinColumn(name = "reviewed_by")
     User reviewedBy;
+
+    @OneToMany(mappedBy = "teamRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRequestMember> teamRequestMembers;
 }

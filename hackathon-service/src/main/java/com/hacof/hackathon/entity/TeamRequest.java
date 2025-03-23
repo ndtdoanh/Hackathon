@@ -1,12 +1,29 @@
 package com.hacof.hackathon.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import com.hacof.hackathon.constant.Status;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
@@ -17,34 +34,29 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_requests")
-// public class TeamRequest extends AuditCreatedBase {
-public class TeamRequest {
+public class TeamRequest extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(name = "team_name")
-    String teamName;
-
-    @Column(name = "description")
-    String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leader_id")
-    User leader;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "confirmation_deadline")
+    LocalDateTime confirmationDeadline;
+
+    @JoinColumn(name = "note")
+    String note;
+
+    @ManyToOne
     @JoinColumn(name = "reviewed_by")
-    private User reviewedBy;
+    User reviewedBy;
 
-    @Column(name = "reviewed_at")
-    private LocalDateTime reviewedAt;
+    @OneToMany(mappedBy = "teamRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRequestMember> teamRequestMembers;
 }

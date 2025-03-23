@@ -3,12 +3,26 @@ package com.hacof.hackathon.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.hackathon.constant.Status;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
@@ -40,9 +54,6 @@ public class Hackathon extends AuditCreatedBase {
     @Column(name = "end_date", columnDefinition = "datetime(6)")
     LocalDateTime endDate;
 
-    @Column(name = "number_round")
-    int numberRound;
-
     @Column(name = "max_teams")
     int maxTeams;
 
@@ -57,7 +68,6 @@ public class Hackathon extends AuditCreatedBase {
     Status status;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<Round> rounds;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)

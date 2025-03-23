@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.entity.User;
-import com.hacof.hackathon.entity.UserTeamRequest;
 
 @Repository
 public interface UserTeamRequestRepository extends JpaRepository<UserTeamRequest, Long> {
