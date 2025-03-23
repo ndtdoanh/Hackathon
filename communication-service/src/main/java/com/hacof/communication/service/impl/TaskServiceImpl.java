@@ -39,4 +39,26 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDto(task);
     }
 
+    @Override
+    public TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO) {
+        Optional<Task> taskOptional = taskRepository.findById(id);
+        if (!taskOptional.isPresent()) {
+            throw new IllegalArgumentException("Task not found!");
+        }
+
+        Optional<BoardList> boardListOptional = boardListRepository.findById(taskRequestDTO.getBoardListId());
+        if (!boardListOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardList not found!");
+        }
+
+        Task task = taskOptional.get();
+        task.setTitle(taskRequestDTO.getTitle());
+        task.setDescription(taskRequestDTO.getDescription());
+        task.setPosition(taskRequestDTO.getPosition());
+        task.setDueDate(taskRequestDTO.getDueDate());
+        task.setBoardList(boardListOptional.get());
+
+        task = taskRepository.save(task);
+        return taskMapper.toDto(task);
+    }
 }

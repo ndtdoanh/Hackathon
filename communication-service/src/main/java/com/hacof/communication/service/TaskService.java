@@ -8,4 +8,7 @@ import java.util.List;
 public interface TaskService {
 
     TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO);
+
+    TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO);
+
 }
