@@ -1,17 +1,6 @@
 package com.hacof.analytics.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,6 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -52,4 +44,7 @@ public class UserDeviceTrack extends AuditBase {
     @Lob
     @Column(name = "note")
     String note;
+
+    @OneToMany(mappedBy = "userDeviceTrack", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }
