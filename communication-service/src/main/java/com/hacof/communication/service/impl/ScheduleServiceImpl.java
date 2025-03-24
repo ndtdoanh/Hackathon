@@ -61,4 +61,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleMapper.toDto(schedule);
     }
 
+    @Override
+    public void deleteSchedule(Long id) {
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(id);
+        if (!scheduleOptional.isPresent()) {
+            throw new IllegalArgumentException("Schedule not found!");
+        }
+        scheduleRepository.deleteById(id);
+    }
 }
