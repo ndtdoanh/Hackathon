@@ -98,4 +98,20 @@ public class ScheduleEventReminderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>> getAllScheduleEventReminders() {
+        CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ScheduleEventReminderResponseDTO> scheduleEventReminders = scheduleEventReminderService.getAllScheduleEventReminders();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedule Event Reminders fetched successfully!");
+            response.setData(scheduleEventReminders);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

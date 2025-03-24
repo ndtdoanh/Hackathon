@@ -15,4 +15,5 @@ public interface ScheduleEventReminderService {
 
     ScheduleEventReminderResponseDTO getScheduleEventReminder(Long id);
 
+    List<ScheduleEventReminderResponseDTO> getAllScheduleEventReminders();
 }

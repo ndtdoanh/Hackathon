@@ -119,4 +119,9 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         return scheduleEventReminderMapper.toDto(scheduleEventReminderOptional.get());
     }
 
+    @Override
+    public List<ScheduleEventReminderResponseDTO> getAllScheduleEventReminders() {
+        List<ScheduleEventReminder> scheduleEventReminders = scheduleEventReminderRepository.findAll();
+        return scheduleEventReminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
+    }
 }
