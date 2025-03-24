@@ -39,4 +39,25 @@ public class TaskCommentController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<TaskCommentResponseDTO>> updateTaskComment(
+            @PathVariable Long id, @RequestBody TaskCommentRequestDTO taskCommentRequestDTO) {
+        CommonResponse<TaskCommentResponseDTO> response = new CommonResponse<>();
+        try {
+            TaskCommentResponseDTO updatedTaskComment = taskCommentService.updateTaskComment(id, taskCommentRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Comment updated successfully!");
+            response.setData(updatedTaskComment);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

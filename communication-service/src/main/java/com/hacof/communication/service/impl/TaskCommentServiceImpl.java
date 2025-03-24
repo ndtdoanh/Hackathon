@@ -41,4 +41,24 @@ public class TaskCommentServiceImpl implements TaskCommentService {
 
         return taskCommentMapper.toDto(taskComment);
     }
+
+    @Override
+    public TaskCommentResponseDTO updateTaskComment(Long id, TaskCommentRequestDTO taskCommentRequestDTO) {
+        Optional<TaskComment> taskCommentOptional = taskCommentRepository.findById(id);
+        if (!taskCommentOptional.isPresent()) {
+            throw new IllegalArgumentException("TaskComment not found!");
+        }
+
+        Optional<Task> taskOptional = taskRepository.findById(taskCommentRequestDTO.getTaskId());
+        if (!taskOptional.isPresent()) {
+            throw new IllegalArgumentException("Task not found!");
+        }
+
+        TaskComment taskComment = taskCommentOptional.get();
+        taskComment.setContent(taskCommentRequestDTO.getContent());
+        taskComment.setTask(taskOptional.get());
+        taskComment = taskCommentRepository.save(taskComment);
+
+        return taskCommentMapper.toDto(taskComment);
+    }
 }

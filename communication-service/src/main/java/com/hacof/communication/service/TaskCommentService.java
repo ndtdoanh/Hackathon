@@ -8,4 +8,7 @@ import java.util.List;
 public interface TaskCommentService {
 
     TaskCommentResponseDTO createTaskComment(TaskCommentRequestDTO taskCommentRequestDTO);
+
+    TaskCommentResponseDTO updateTaskComment(Long id, TaskCommentRequestDTO taskCommentRequestDTO);
+
 }
