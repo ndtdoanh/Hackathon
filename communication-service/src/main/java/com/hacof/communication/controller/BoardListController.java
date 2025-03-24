@@ -78,4 +78,25 @@ public class BoardListController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<BoardListResponseDTO>> getBoardList(@PathVariable Long id) {
+        CommonResponse<BoardListResponseDTO> response = new CommonResponse<>();
+        try {
+            BoardListResponseDTO boardList = boardListService.getBoardList(id);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board List fetched successfully!");
+            response.setData(boardList);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

@@ -71,4 +71,14 @@ public class BoardListServiceImpl implements BoardListService {
         boardListRepository.deleteById(id);
     }
 
+    @Override
+    public BoardListResponseDTO getBoardList(Long id) {
+        Optional<BoardList> boardListOptional = boardListRepository.findById(id);
+        if (!boardListOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardList not found!");
+        }
+
+        return boardListMapper.toDto(boardListOptional.get());
+    }
+
 }
