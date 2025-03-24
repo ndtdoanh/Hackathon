@@ -96,4 +96,9 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         return scheduleEventMapper.toDto(scheduleEventOptional.get());
     }
 
+    @Override
+    public List<ScheduleEventResponseDTO> getAllScheduleEvents() {
+        List<ScheduleEvent> scheduleEvents = scheduleEventRepository.findAll();
+        return scheduleEvents.stream().map(scheduleEventMapper::toDto).collect(Collectors.toList());
+    }
 }

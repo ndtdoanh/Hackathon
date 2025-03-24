@@ -15,4 +15,5 @@ public interface ScheduleEventService {
 
     ScheduleEventResponseDTO getScheduleEvent(Long id);
 
+    List<ScheduleEventResponseDTO> getAllScheduleEvents();
 }
