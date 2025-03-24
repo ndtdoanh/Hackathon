@@ -92,4 +92,15 @@ public class BoardServiceImpl implements BoardService {
                 board.getCreatedBy().getUsername(), board.getCreatedDate(),
                 board.getLastModifiedDate());
     }
+
+    @Override
+    public void deleteBoard(Long id) {
+        Optional<Board> boardOptional = boardRepository.findById(id);
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board not found!");
+        }
+
+        boardRepository.deleteById(id);
+    }
+
 }
