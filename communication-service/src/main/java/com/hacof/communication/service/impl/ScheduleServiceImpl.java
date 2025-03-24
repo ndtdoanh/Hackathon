@@ -40,4 +40,25 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleMapper.toDto(schedule);
     }
 
+    @Override
+    public ScheduleResponseDTO updateSchedule(Long id, ScheduleRequestDTO scheduleRequestDTO) {
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(id);
+        if (!scheduleOptional.isPresent()) {
+            throw new IllegalArgumentException("Schedule not found!");
+        }
+
+        Optional<Team> teamOptional = teamRepository.findById(scheduleRequestDTO.getTeamId());
+        if (!teamOptional.isPresent()) {
+            throw new IllegalArgumentException("Team not found!");
+        }
+
+        Schedule schedule = scheduleOptional.get();
+        schedule.setTeam(teamOptional.get());
+        schedule.setName(scheduleRequestDTO.getName());
+        schedule.setDescription(scheduleRequestDTO.getDescription());
+        schedule = scheduleRepository.save(schedule);
+
+        return scheduleMapper.toDto(schedule);
+    }
+
 }

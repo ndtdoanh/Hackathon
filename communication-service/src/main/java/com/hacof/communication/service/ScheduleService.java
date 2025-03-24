@@ -9,4 +9,5 @@ public interface ScheduleService {
 
     ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO);
 
+    ScheduleResponseDTO updateSchedule(Long id, ScheduleRequestDTO scheduleRequestDTO);
 }
