@@ -12,4 +12,6 @@ public interface BoardService {
 
     void deleteBoard(Long id);
 
+    BoardResponseDTO getBoard(Long id);
+
 }

@@ -103,4 +103,14 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.deleteById(id);
     }
 
+    @Override
+    public BoardResponseDTO getBoard(Long id) {
+        Optional<Board> boardOptional = boardRepository.findById(id);
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board not found!");
+        }
+
+        return boardMapper.toDto(boardOptional.get());
+    }
+
 }
