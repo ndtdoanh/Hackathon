@@ -69,4 +69,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         scheduleRepository.deleteById(id);
     }
+
+    @Override
+    public ScheduleResponseDTO getSchedule(Long id) {
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(id);
+        if (!scheduleOptional.isPresent()) {
+            throw new IllegalArgumentException("Schedule not found!");
+        }
+
+        return scheduleMapper.toDto(scheduleOptional.get());
+    }
+
 }
