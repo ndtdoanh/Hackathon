@@ -11,4 +11,5 @@ public interface TaskAssigneeService {
 
     TaskAssigneeResponseDTO updateTaskAssignee(Long id, TaskAssigneeRequestDTO taskAssigneeRequestDTO);
 
+    void deleteTaskAssignee(Long id);
 }

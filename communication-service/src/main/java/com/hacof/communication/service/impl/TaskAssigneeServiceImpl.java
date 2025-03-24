@@ -72,4 +72,12 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
         return taskAssigneeMapper.toDto(taskAssignee);
     }
 
+    @Override
+    public void deleteTaskAssignee(Long id) {
+        Optional<TaskAssignee> taskAssigneeOptional = taskAssigneeRepository.findById(id);
+        if (!taskAssigneeOptional.isPresent()) {
+            throw new IllegalArgumentException("TaskAssignee not found!");
+        }
+        taskAssigneeRepository.deleteById(id);
+    }
 }
