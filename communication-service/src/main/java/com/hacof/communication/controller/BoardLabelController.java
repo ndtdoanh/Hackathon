@@ -99,4 +99,19 @@ public class BoardLabelController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<BoardLabelResponseDTO>>> getAllBoardLabels() {
+        CommonResponse<List<BoardLabelResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardLabelResponseDTO> boardLabels = boardLabelService.getAllBoardLabels();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board Labels fetched successfully!");
+            response.setData(boardLabels);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

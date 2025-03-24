@@ -79,4 +79,9 @@ public class BoardLabelServiceImpl implements BoardLabelService {
         return boardLabelMapper.toDto(boardLabelOptional.get());
     }
 
+    @Override
+    public List<BoardLabelResponseDTO> getAllBoardLabels() {
+        List<BoardLabel> boardLabels = boardLabelRepository.findAll();
+        return boardLabels.stream().map(boardLabelMapper::toDto).collect(Collectors.toList());
+    }
 }
