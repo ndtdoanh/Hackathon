@@ -10,4 +10,7 @@ public interface TaskLabelService {
     TaskLabelResponseDTO createTaskLabel(TaskLabelRequestDTO taskLabelRequestDTO);
 
     TaskLabelResponseDTO updateTaskLabel(Long id, TaskLabelRequestDTO taskLabelRequestDTO);
+
+    void deleteTaskLabel(Long id);
+
 }

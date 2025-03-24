@@ -78,4 +78,15 @@ public class TaskLabelServiceImpl implements TaskLabelService {
 
         return taskLabelMapper.toDto(taskLabel);
     }
+
+    @Override
+    public void deleteTaskLabel(Long id) {
+        Optional<TaskLabel> taskLabelOptional = taskLabelRepository.findById(id);
+        if (!taskLabelOptional.isPresent()) {
+            throw new IllegalArgumentException("TaskLabel not found!");
+        }
+        taskLabelRepository.deleteById(id);
+    }
+
+
 }
