@@ -11,4 +11,6 @@ public interface BoardLabelService {
 
     BoardLabelResponseDTO updateBoardLabel(Long id, BoardLabelRequestDTO boardLabelRequestDTO);
 
+    void deleteBoardLabel(Long id);
+
 }

@@ -60,4 +60,13 @@ public class BoardLabelServiceImpl implements BoardLabelService {
 
         return boardLabelMapper.toDto(boardLabel);
     }
+
+    @Override
+    public void deleteBoardLabel(Long id) {
+        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(id);
+        if (!boardLabelOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardLabel not found!");
+        }
+        boardLabelRepository.deleteById(id);
+    }
 }
