@@ -38,4 +38,25 @@ public class ScheduleEventController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<ScheduleEventResponseDTO>> updateScheduleEvent(
+            @PathVariable Long id, @RequestBody ScheduleEventRequestDTO scheduleEventRequestDTO) {
+        CommonResponse<ScheduleEventResponseDTO> response = new CommonResponse<>();
+        try {
+            ScheduleEventResponseDTO updatedScheduleEvent = scheduleEventService.updateScheduleEvent(id, scheduleEventRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedule Event updated successfully!");
+            response.setData(updatedScheduleEvent);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

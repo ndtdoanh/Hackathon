@@ -9,4 +9,6 @@ public interface ScheduleEventService {
 
     ScheduleEventResponseDTO createScheduleEvent(ScheduleEventRequestDTO scheduleEventRequestDTO);
 
+    ScheduleEventResponseDTO updateScheduleEvent(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO);
+
 }

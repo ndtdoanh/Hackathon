@@ -44,4 +44,37 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         // Trả về ScheduleEventResponseDTO
         return scheduleEventMapper.toDto(scheduleEvent);
     }
+
+    @Override
+    public ScheduleEventResponseDTO updateScheduleEvent(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO) {
+        // Tìm ScheduleEvent theo ID
+        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(id);
+        if (!scheduleEventOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEvent not found!");
+        }
+
+        // Tìm Schedule theo scheduleId
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleEventRequestDTO.getScheduleId());
+        if (!scheduleOptional.isPresent()) {
+            throw new IllegalArgumentException("Schedule not found!");
+        }
+
+        // Cập nhật ScheduleEvent
+        ScheduleEvent scheduleEvent = scheduleEventOptional.get();
+        scheduleEvent.setSchedule(scheduleOptional.get());
+        scheduleEvent.setName(scheduleEventRequestDTO.getName());
+        scheduleEvent.setDescription(scheduleEventRequestDTO.getDescription());
+        scheduleEvent.setLocation(scheduleEventRequestDTO.getLocation());
+        scheduleEvent.setStartTime(scheduleEventRequestDTO.getStartTime());
+        scheduleEvent.setEndTime(scheduleEventRequestDTO.getEndTime());
+        scheduleEvent.setRecurring(scheduleEventRequestDTO.isRecurring());
+        scheduleEvent.setRecurrenceRule(scheduleEventRequestDTO.getRecurrenceRule());
+
+        // Lưu ScheduleEvent đã cập nhật vào cơ sở dữ liệu
+        scheduleEvent = scheduleEventRepository.save(scheduleEvent);
+
+        // Trả về ScheduleEventResponseDTO
+        return scheduleEventMapper.toDto(scheduleEvent);
+    }
+
 }
