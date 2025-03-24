@@ -80,4 +80,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleMapper.toDto(scheduleOptional.get());
     }
 
+    @Override
+    public List<ScheduleResponseDTO> getAllSchedules() {
+        List<Schedule> schedules = scheduleRepository.findAll();
+        return schedules.stream()
+                .map(scheduleMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

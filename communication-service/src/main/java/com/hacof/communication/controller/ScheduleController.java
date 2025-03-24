@@ -98,4 +98,20 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getAllSchedules() {
+        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getAllSchedules();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedules fetched successfully!");
+            response.setData(schedules);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

@@ -15,4 +15,5 @@ public interface ScheduleService {
 
     ScheduleResponseDTO getSchedule(Long id);
 
+    List<ScheduleResponseDTO> getAllSchedules();
 }
