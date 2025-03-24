@@ -39,5 +39,24 @@ public class TaskLabelController {
         }
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<TaskLabelResponseDTO>> updateTaskLabel(
+            @PathVariable Long id, @RequestBody TaskLabelRequestDTO taskLabelRequestDTO) {
+        CommonResponse<TaskLabelResponseDTO> response = new CommonResponse<>();
+        try {
+            TaskLabelResponseDTO updatedTaskLabel = taskLabelService.updateTaskLabel(id, taskLabelRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Label updated successfully!");
+            response.setData(updatedTaskLabel);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

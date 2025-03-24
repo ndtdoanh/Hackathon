@@ -8,4 +8,6 @@ import java.util.List;
 public interface TaskLabelService {
 
     TaskLabelResponseDTO createTaskLabel(TaskLabelRequestDTO taskLabelRequestDTO);
+
+    TaskLabelResponseDTO updateTaskLabel(Long id, TaskLabelRequestDTO taskLabelRequestDTO);
 }

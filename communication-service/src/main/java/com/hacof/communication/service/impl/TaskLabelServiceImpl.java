@@ -53,5 +53,29 @@ public class TaskLabelServiceImpl implements TaskLabelService {
         return taskLabelMapper.toDto(taskLabel);
     }
 
+    @Override
+    public TaskLabelResponseDTO updateTaskLabel(Long id, TaskLabelRequestDTO taskLabelRequestDTO) {
+        Optional<TaskLabel> taskLabelOptional = taskLabelRepository.findById(id);
+        if (!taskLabelOptional.isPresent()) {
+            throw new IllegalArgumentException("TaskLabel not found!");
+        }
 
+        Optional<Task> taskOptional = taskRepository.findById(taskLabelRequestDTO.getTaskId());
+        if (!taskOptional.isPresent()) {
+            throw new IllegalArgumentException("Task not found!");
+        }
+
+        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(taskLabelRequestDTO.getBoardLabelId());
+        if (!boardLabelOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardLabel not found!");
+        }
+
+        TaskLabel taskLabel = taskLabelOptional.get();
+        taskLabel.setTask(taskOptional.get());
+        taskLabel.setBoardLabel(boardLabelOptional.get());
+
+        taskLabel = taskLabelRepository.save(taskLabel);
+
+        return taskLabelMapper.toDto(taskLabel);
+    }
 }
