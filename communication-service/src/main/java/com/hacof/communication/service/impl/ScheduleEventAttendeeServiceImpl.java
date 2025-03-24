@@ -94,4 +94,10 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
         }
         return scheduleEventAttendeeMapper.toDto(scheduleEventAttendeeOptional.get());
     }
+
+    @Override
+    public List<ScheduleEventAttendeeResponseDTO> getAllScheduleEventAttendees() {
+        List<ScheduleEventAttendee> scheduleEventAttendees = scheduleEventAttendeeRepository.findAll();
+        return scheduleEventAttendees.stream().map(scheduleEventAttendeeMapper::toDto).collect(Collectors.toList());
+    }
 }

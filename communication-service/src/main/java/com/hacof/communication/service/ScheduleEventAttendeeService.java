@@ -16,4 +16,6 @@ public interface ScheduleEventAttendeeService {
 
     ScheduleEventAttendeeResponseDTO getScheduleEventAttendee(Long id);
 
+    List<ScheduleEventAttendeeResponseDTO> getAllScheduleEventAttendees();
+
 }
