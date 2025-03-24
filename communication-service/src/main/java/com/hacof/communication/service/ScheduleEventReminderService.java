@@ -9,4 +9,6 @@ public interface ScheduleEventReminderService {
 
     ScheduleEventReminderResponseDTO createScheduleEventReminder(ScheduleEventReminderRequestDTO scheduleEventReminderRequestDTO);
 
+    ScheduleEventReminderResponseDTO updateScheduleEventReminder(Long id, ScheduleEventReminderRequestDTO scheduleEventReminderRequestDTO);
+
 }

@@ -61,4 +61,42 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         // Trả về ScheduleEventReminderResponseDTO
         return scheduleEventReminderMapper.toDto(scheduleEventReminder);
     }
+
+    @Override
+    public ScheduleEventReminderResponseDTO updateScheduleEventReminder(Long id, ScheduleEventReminderRequestDTO requestDTO) {
+        // Tìm ScheduleEventReminder theo ID
+        Optional<ScheduleEventReminder> scheduleEventReminderOptional = scheduleEventReminderRepository.findById(id);
+        if (!scheduleEventReminderOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEventReminder not found!");
+        }
+
+        // Tìm ScheduleEvent và User theo ID
+        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        if (!scheduleEventOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEvent not found!");
+        }
+
+        Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
+        if (!userOptional.isPresent()) {
+            throw new IllegalArgumentException("User not found!");
+        }
+
+        // Kiểm tra remindAt có trước startTime của ScheduleEvent không
+        ScheduleEvent scheduleEvent = scheduleEventOptional.get();
+        if (requestDTO.getRemindAt().isAfter(scheduleEvent.getStartTime())) {
+            throw new IllegalArgumentException("Reminder time (remindAt) must be before the start time of the event.");
+        }
+
+        // Cập nhật ScheduleEventReminder
+        ScheduleEventReminder scheduleEventReminder = scheduleEventReminderOptional.get();
+        scheduleEventReminder.setScheduleEvent(scheduleEvent);
+        scheduleEventReminder.setUser(userOptional.get());
+        scheduleEventReminder.setRemindAt(requestDTO.getRemindAt());
+
+        // Lưu ScheduleEventReminder đã cập nhật vào cơ sở dữ liệu
+        scheduleEventReminder = scheduleEventReminderRepository.save(scheduleEventReminder);
+
+        // Trả về ScheduleEventReminderResponseDTO
+        return scheduleEventReminderMapper.toDto(scheduleEventReminder);
+    }
 }
