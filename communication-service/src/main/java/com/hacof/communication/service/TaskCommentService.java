@@ -13,4 +13,6 @@ public interface TaskCommentService {
 
     void deleteTaskComment(Long id);
 
+    TaskCommentResponseDTO getTaskComment(Long id);
+
 }
