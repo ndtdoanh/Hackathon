@@ -110,4 +110,13 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         scheduleEventReminderRepository.deleteById(id);
     }
 
+    @Override
+    public ScheduleEventReminderResponseDTO getScheduleEventReminder(Long id) {
+        Optional<ScheduleEventReminder> scheduleEventReminderOptional = scheduleEventReminderRepository.findById(id);
+        if (!scheduleEventReminderOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEventReminder not found!");
+        }
+        return scheduleEventReminderMapper.toDto(scheduleEventReminderOptional.get());
+    }
+
 }

@@ -78,4 +78,24 @@ public class ScheduleEventReminderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<ScheduleEventReminderResponseDTO>> getScheduleEventReminder(@PathVariable Long id) {
+        CommonResponse<ScheduleEventReminderResponseDTO> response = new CommonResponse<>();
+        try {
+            ScheduleEventReminderResponseDTO scheduleEventReminder = scheduleEventReminderService.getScheduleEventReminder(id);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedule Event Reminder fetched successfully!");
+            response.setData(scheduleEventReminder);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

@@ -13,4 +13,6 @@ public interface ScheduleEventReminderService {
 
     void deleteScheduleEventReminder(Long id);
 
+    ScheduleEventReminderResponseDTO getScheduleEventReminder(Long id);
+
 }
