@@ -38,4 +38,25 @@ public class BoardLabelController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<BoardLabelResponseDTO>> updateBoardLabel(
+            @PathVariable Long id, @RequestBody BoardLabelRequestDTO boardLabelRequestDTO) {
+        CommonResponse<BoardLabelResponseDTO> response = new CommonResponse<>();
+        try {
+            BoardLabelResponseDTO updatedBoardLabel = boardLabelService.updateBoardLabel(id, boardLabelRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board Label updated successfully!");
+            response.setData(updatedBoardLabel);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

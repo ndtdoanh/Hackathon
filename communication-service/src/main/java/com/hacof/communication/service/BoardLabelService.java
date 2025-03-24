@@ -9,4 +9,6 @@ public interface BoardLabelService {
 
     BoardLabelResponseDTO createBoardLabel(BoardLabelRequestDTO boardLabelRequestDTO);
 
+    BoardLabelResponseDTO updateBoardLabel(Long id, BoardLabelRequestDTO boardLabelRequestDTO);
+
 }

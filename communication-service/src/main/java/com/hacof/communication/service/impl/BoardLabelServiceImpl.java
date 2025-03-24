@@ -39,4 +39,25 @@ public class BoardLabelServiceImpl implements BoardLabelService {
 
         return boardLabelMapper.toDto(boardLabel);
     }
+
+    @Override
+    public BoardLabelResponseDTO updateBoardLabel(Long id, BoardLabelRequestDTO boardLabelRequestDTO) {
+        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(id);
+        if (!boardLabelOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardLabel not found!");
+        }
+
+        Optional<Board> boardOptional = boardRepository.findById(boardLabelRequestDTO.getBoardId());
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board not found!");
+        }
+
+        BoardLabel boardLabel = boardLabelOptional.get();
+        boardLabel.setName(boardLabelRequestDTO.getName());
+        boardLabel.setColor(boardLabelRequestDTO.getColor());
+        boardLabel.setBoard(boardOptional.get());
+        boardLabel = boardLabelRepository.save(boardLabel);
+
+        return boardLabelMapper.toDto(boardLabel);
+    }
 }
