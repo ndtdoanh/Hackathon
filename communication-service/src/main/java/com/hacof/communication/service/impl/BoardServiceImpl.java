@@ -57,4 +57,39 @@ public class BoardServiceImpl implements BoardService {
                 board.getCreatedBy().getUsername(), board.getCreatedDate(),
                 board.getLastModifiedDate());
     }
+
+    @Override
+    public BoardResponseDTO updateBoard(Long id, BoardRequestDTO boardRequestDTO) {
+        Optional<Board> boardOptional = boardRepository.findById(id);
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board not found!");
+        }
+
+        // Lấy Board từ Optional
+        Board board = boardOptional.get();
+
+        Optional<User> ownerOptional = userRepository.findById(boardRequestDTO.getOwnerId());
+        if (!ownerOptional.isPresent()) {
+            throw new IllegalArgumentException("Owner not found!");
+        }
+        User owner = ownerOptional.get();
+        Optional<Team> teamOptional = teamRepository.findById(boardRequestDTO.getTeamId());
+        if (!teamOptional.isPresent()) {
+            throw new IllegalArgumentException("Team not found!");
+        }
+        Team team = teamOptional.get();
+
+        // Cập nhật các trường của Board từ BoardRequestDTO
+        board.setName(boardRequestDTO.getName());
+        board.setDescription(boardRequestDTO.getDescription());
+        board.setOwner(owner);
+        board.setTeam(team);
+
+
+        board = boardRepository.save(board);
+        return new BoardResponseDTO(board.getId(), board.getName(), board.getDescription(),
+                board.getOwner().getUsername(), board.getTeam().getName(),
+                board.getCreatedBy().getUsername(), board.getCreatedDate(),
+                board.getLastModifiedDate());
+    }
 }

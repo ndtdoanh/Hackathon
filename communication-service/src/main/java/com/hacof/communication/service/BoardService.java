@@ -8,4 +8,6 @@ import java.util.List;
 public interface BoardService {
     BoardResponseDTO createBoard(BoardRequestDTO boardRequestDTO);
 
+    BoardResponseDTO updateBoard(Long id, BoardRequestDTO boardRequestDTO);
+
 }

@@ -38,4 +38,28 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<BoardResponseDTO>> updateBoard(
+            @PathVariable Long id,
+            @RequestBody BoardRequestDTO boardRequestDTO) {
+
+        CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
+        try {
+            BoardResponseDTO updatedBoard = boardService.updateBoard(id, boardRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board updated successfully!");
+            response.setData(updatedBoard);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }
