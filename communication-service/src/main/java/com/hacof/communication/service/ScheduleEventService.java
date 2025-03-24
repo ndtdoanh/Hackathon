@@ -13,4 +13,6 @@ public interface ScheduleEventService {
 
     void deleteScheduleEvent(Long id);
 
+    ScheduleEventResponseDTO getScheduleEvent(Long id);
+
 }
