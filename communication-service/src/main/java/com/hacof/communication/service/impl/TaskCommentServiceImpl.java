@@ -79,4 +79,10 @@ public class TaskCommentServiceImpl implements TaskCommentService {
         }
         return taskCommentMapper.toDto(taskCommentOptional.get());
     }
+
+    @Override
+    public List<TaskCommentResponseDTO> getAllTaskComments() {
+        List<TaskComment> taskComments = taskCommentRepository.findAll();
+        return taskComments.stream().map(taskCommentMapper::toDto).collect(Collectors.toList());
+    }
 }

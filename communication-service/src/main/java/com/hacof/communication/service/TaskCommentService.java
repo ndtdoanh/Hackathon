@@ -15,4 +15,5 @@ public interface TaskCommentService {
 
     TaskCommentResponseDTO getTaskComment(Long id);
 
+    List<TaskCommentResponseDTO> getAllTaskComments();
 }

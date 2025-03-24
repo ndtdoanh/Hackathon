@@ -98,4 +98,20 @@ public class TaskCommentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TaskCommentResponseDTO>>> getAllTaskComments() {
+        CommonResponse<List<TaskCommentResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TaskCommentResponseDTO> taskComments = taskCommentService.getAllTaskComments();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Comments fetched successfully!");
+            response.setData(taskComments);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
