@@ -99,4 +99,19 @@ public class BoardListController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<BoardListResponseDTO>>> getAllBoardLists() {
+        CommonResponse<List<BoardListResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardListResponseDTO> boardLists = boardListService.getAllBoardLists();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board Lists fetched successfully!");
+            response.setData(boardLists);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

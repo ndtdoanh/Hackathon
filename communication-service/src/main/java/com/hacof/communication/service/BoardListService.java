@@ -15,4 +15,5 @@ public interface BoardListService {
 
     BoardListResponseDTO getBoardList(Long id);
 
+    List<BoardListResponseDTO> getAllBoardLists();
 }

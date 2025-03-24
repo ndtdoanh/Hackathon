@@ -81,4 +81,9 @@ public class BoardListServiceImpl implements BoardListService {
         return boardListMapper.toDto(boardListOptional.get());
     }
 
+    @Override
+    public List<BoardListResponseDTO> getAllBoardLists() {
+        List<BoardList> boardLists = boardListRepository.findAll();
+        return boardLists.stream().map(boardListMapper::toDto).collect(Collectors.toList());
+    }
 }
