@@ -61,4 +61,13 @@ public class TaskCommentServiceImpl implements TaskCommentService {
 
         return taskCommentMapper.toDto(taskComment);
     }
+
+    @Override
+    public void deleteTaskComment(Long id) {
+        Optional<TaskComment> taskCommentOptional = taskCommentRepository.findById(id);
+        if (!taskCommentOptional.isPresent()) {
+            throw new IllegalArgumentException("TaskComment not found!");
+        }
+        taskCommentRepository.deleteById(id);
+    }
 }

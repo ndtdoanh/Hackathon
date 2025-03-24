@@ -11,4 +11,6 @@ public interface TaskCommentService {
 
     TaskCommentResponseDTO updateTaskComment(Long id, TaskCommentRequestDTO taskCommentRequestDTO);
 
+    void deleteTaskComment(Long id);
+
 }
