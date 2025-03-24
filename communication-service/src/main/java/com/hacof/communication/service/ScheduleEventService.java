@@ -11,4 +11,6 @@ public interface ScheduleEventService {
 
     ScheduleEventResponseDTO updateScheduleEvent(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO);
 
+    void deleteScheduleEvent(Long id);
+
 }

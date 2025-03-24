@@ -77,4 +77,13 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         return scheduleEventMapper.toDto(scheduleEvent);
     }
 
+    @Override
+    public void deleteScheduleEvent(Long id) {
+        // Tìm ScheduleEvent theo ID và xóa
+        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(id);
+        if (!scheduleEventOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEvent not found!");
+        }
+        scheduleEventRepository.deleteById(id);
+    }
 }
