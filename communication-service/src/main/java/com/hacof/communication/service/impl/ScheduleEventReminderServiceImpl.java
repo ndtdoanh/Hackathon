@@ -99,4 +99,15 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         // Trả về ScheduleEventReminderResponseDTO
         return scheduleEventReminderMapper.toDto(scheduleEventReminder);
     }
+
+    @Override
+    public void deleteScheduleEventReminder(Long id) {
+        // Tìm ScheduleEventReminder theo ID và xóa
+        Optional<ScheduleEventReminder> scheduleEventReminderOptional = scheduleEventReminderRepository.findById(id);
+        if (!scheduleEventReminderOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEventReminder not found!");
+        }
+        scheduleEventReminderRepository.deleteById(id);
+    }
+
 }
