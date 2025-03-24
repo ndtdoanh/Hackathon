@@ -15,4 +15,6 @@ public interface TaskAssigneeService {
 
     TaskAssigneeResponseDTO getTaskAssignee(Long id);
 
+    List<TaskAssigneeResponseDTO> getAllTaskAssignees();
+
 }

@@ -98,4 +98,21 @@ public class TaskAssigneeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TaskAssigneeResponseDTO>>> getAllTaskAssignees() {
+        CommonResponse<List<TaskAssigneeResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TaskAssigneeResponseDTO> taskAssignees = taskAssigneeService.getAllTaskAssignees();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Assignees fetched successfully!");
+            response.setData(taskAssignees);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

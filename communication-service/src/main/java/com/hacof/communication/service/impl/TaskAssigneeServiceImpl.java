@@ -89,4 +89,10 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
         }
         return taskAssigneeMapper.toDto(taskAssigneeOptional.get());
     }
+
+    @Override
+    public List<TaskAssigneeResponseDTO> getAllTaskAssignees() {
+        List<TaskAssignee> taskAssignees = taskAssigneeRepository.findAll();
+        return taskAssignees.stream().map(taskAssigneeMapper::toDto).collect(Collectors.toList());
+    }
 }
