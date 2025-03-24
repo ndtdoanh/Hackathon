@@ -12,4 +12,6 @@ public interface ScheduleEventAttendeeService {
 
     ScheduleEventAttendeeResponseDTO updateScheduleEventAttendee(Long id, ScheduleEventAttendeeRequestDTO requestDTO);
 
+    void deleteScheduleEventAttendee(Long id);
+
 }

@@ -75,4 +75,15 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
 
         return scheduleEventAttendeeMapper.toDto(scheduleEventAttendee);
     }
+
+    @Override
+    public void deleteScheduleEventAttendee(Long id) {
+        // Tìm ScheduleEventAttendee theo ID và xóa
+        Optional<ScheduleEventAttendee> scheduleEventAttendeeOptional = scheduleEventAttendeeRepository.findById(id);
+        if (!scheduleEventAttendeeOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEventAttendee not found!");
+        }
+        scheduleEventAttendeeRepository.deleteById(id);
+    }
+
 }
