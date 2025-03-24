@@ -99,4 +99,19 @@ public class TaskLabelController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TaskLabelResponseDTO>>> getAllTaskLabels() {
+        CommonResponse<List<TaskLabelResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TaskLabelResponseDTO> taskLabels = taskLabelService.getAllTaskLabels();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Labels fetched successfully!");
+            response.setData(taskLabels);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

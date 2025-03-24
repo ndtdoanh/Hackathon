@@ -97,4 +97,9 @@ public class TaskLabelServiceImpl implements TaskLabelService {
         return taskLabelMapper.toDto(taskLabelOptional.get());
     }
 
+    @Override
+    public List<TaskLabelResponseDTO> getAllTaskLabels() {
+        List<TaskLabel> taskLabels = taskLabelRepository.findAll();
+        return taskLabels.stream().map(taskLabelMapper::toDto).collect(Collectors.toList());
+    }
 }

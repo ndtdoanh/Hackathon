@@ -14,4 +14,6 @@ public interface TaskLabelService {
     void deleteTaskLabel(Long id);
 
     TaskLabelResponseDTO getTaskLabel(Long id);
+
+    List<TaskLabelResponseDTO> getAllTaskLabels();
 }
