@@ -50,4 +50,29 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
 
         return scheduleEventAttendeeMapper.toDto(scheduleEventAttendee);
     }
+
+    @Override
+    public ScheduleEventAttendeeResponseDTO updateScheduleEventAttendee(Long id, ScheduleEventAttendeeRequestDTO requestDTO) {
+        Optional<ScheduleEventAttendee> scheduleEventAttendeeOptional = scheduleEventAttendeeRepository.findById(id);
+        if (!scheduleEventAttendeeOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEventAttendee not found!");
+        }
+
+        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        if (!scheduleEventOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEvent not found!");
+        }
+
+        Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
+        if (!userOptional.isPresent()) {
+            throw new IllegalArgumentException("User not found!");
+        }
+
+        ScheduleEventAttendee scheduleEventAttendee = scheduleEventAttendeeOptional.get();
+        scheduleEventAttendee.setScheduleEvent(scheduleEventOptional.get());
+        scheduleEventAttendee.setUser(userOptional.get());
+        scheduleEventAttendee = scheduleEventAttendeeRepository.save(scheduleEventAttendee);
+
+        return scheduleEventAttendeeMapper.toDto(scheduleEventAttendee);
+    }
 }

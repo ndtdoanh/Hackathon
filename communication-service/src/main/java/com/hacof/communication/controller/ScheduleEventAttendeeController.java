@@ -40,4 +40,24 @@ public class ScheduleEventAttendeeController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<ScheduleEventAttendeeResponseDTO>> updateScheduleEventAttendee(
+            @PathVariable Long id, @RequestBody ScheduleEventAttendeeRequestDTO scheduleEventAttendeeRequestDTO) {
+        CommonResponse<ScheduleEventAttendeeResponseDTO> response = new CommonResponse<>();
+        try {
+            ScheduleEventAttendeeResponseDTO updatedScheduleEventAttendee = scheduleEventAttendeeService.updateScheduleEventAttendee(id, scheduleEventAttendeeRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedule Event Attendee updated successfully!");
+            response.setData(updatedScheduleEventAttendee);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

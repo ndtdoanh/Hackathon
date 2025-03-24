@@ -10,4 +10,6 @@ public interface ScheduleEventAttendeeService {
 
     ScheduleEventAttendeeResponseDTO createScheduleEventAttendee(ScheduleEventAttendeeRequestDTO requestDTO);
 
+    ScheduleEventAttendeeResponseDTO updateScheduleEventAttendee(Long id, ScheduleEventAttendeeRequestDTO requestDTO);
+
 }
