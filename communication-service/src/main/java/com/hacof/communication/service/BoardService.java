@@ -14,4 +14,5 @@ public interface BoardService {
 
     BoardResponseDTO getBoard(Long id);
 
+    List<BoardResponseDTO> getAllBoards();
 }

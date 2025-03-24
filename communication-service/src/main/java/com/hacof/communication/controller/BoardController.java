@@ -39,6 +39,22 @@ public class BoardController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<BoardResponseDTO>>> getAllBoards() {
+        CommonResponse<List<BoardResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardResponseDTO> boards = boardService.getAllBoards();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Boards fetched successfully!");
+            response.setData(boards);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error fetching boards: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<BoardResponseDTO>> getBoardById(@PathVariable Long id) {
         CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
