@@ -86,4 +86,12 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
         scheduleEventAttendeeRepository.deleteById(id);
     }
 
+    @Override
+    public ScheduleEventAttendeeResponseDTO getScheduleEventAttendee(Long id) {
+        Optional<ScheduleEventAttendee> scheduleEventAttendeeOptional = scheduleEventAttendeeRepository.findById(id);
+        if (!scheduleEventAttendeeOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEventAttendee not found!");
+        }
+        return scheduleEventAttendeeMapper.toDto(scheduleEventAttendeeOptional.get());
+    }
 }
