@@ -69,4 +69,14 @@ public class BoardLabelServiceImpl implements BoardLabelService {
         }
         boardLabelRepository.deleteById(id);
     }
+
+    @Override
+    public BoardLabelResponseDTO getBoardLabel(Long id) {
+        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(id);
+        if (!boardLabelOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardLabel not found!");
+        }
+        return boardLabelMapper.toDto(boardLabelOptional.get());
+    }
+
 }

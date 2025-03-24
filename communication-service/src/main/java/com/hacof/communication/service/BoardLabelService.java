@@ -13,4 +13,6 @@ public interface BoardLabelService {
 
     void deleteBoardLabel(Long id);
 
+    BoardLabelResponseDTO getBoardLabel(Long id);
+
 }
