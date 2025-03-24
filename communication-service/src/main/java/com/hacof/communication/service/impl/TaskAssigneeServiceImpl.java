@@ -95,4 +95,15 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
         List<TaskAssignee> taskAssignees = taskAssigneeRepository.findAll();
         return taskAssignees.stream().map(taskAssigneeMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<TaskAssigneeResponseDTO> getTaskAssigneesByTaskId(Long taskId) {
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+        if (!taskOptional.isPresent()) {
+            throw new IllegalArgumentException("Task with the given ID not found!");
+        }
+
+        List<TaskAssignee> taskAssignees = taskAssigneeRepository.findByTaskId(taskId);
+        return taskAssignees.stream().map(taskAssigneeMapper::toDto).collect(Collectors.toList());
+    }
 }
