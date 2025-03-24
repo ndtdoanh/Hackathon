@@ -9,4 +9,6 @@ public interface TaskAssigneeService {
 
     TaskAssigneeResponseDTO createTaskAssignee(TaskAssigneeRequestDTO taskAssigneeRequestDTO);
 
+    TaskAssigneeResponseDTO updateTaskAssignee(Long id, TaskAssigneeRequestDTO taskAssigneeRequestDTO);
+
 }

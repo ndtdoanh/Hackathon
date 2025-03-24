@@ -38,4 +38,25 @@ public class TaskAssigneeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<TaskAssigneeResponseDTO>> updateTaskAssignee(
+            @PathVariable Long id, @RequestBody TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
+        CommonResponse<TaskAssigneeResponseDTO> response = new CommonResponse<>();
+        try {
+            TaskAssigneeResponseDTO updatedTaskAssignee = taskAssigneeService.updateTaskAssignee(id, taskAssigneeRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Assignee updated successfully!");
+            response.setData(updatedTaskAssignee);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

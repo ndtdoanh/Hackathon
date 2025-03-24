@@ -48,4 +48,28 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
 
         return taskAssigneeMapper.toDto(taskAssignee);
     }
+
+    @Override
+    public TaskAssigneeResponseDTO updateTaskAssignee(Long id, TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
+        Optional<TaskAssignee> taskAssigneeOptional = taskAssigneeRepository.findById(id);
+        if (!taskAssigneeOptional.isPresent()) {
+            throw new IllegalArgumentException("TaskAssignee not found!");
+        }
+        Optional<Task> taskOptional = taskRepository.findById(taskAssigneeRequestDTO.getTaskId());
+        if (!taskOptional.isPresent()) {
+            throw new IllegalArgumentException("Task not found!");
+        }
+        Optional<User> userOptional = userRepository.findById(taskAssigneeRequestDTO.getUserId());
+        if (!userOptional.isPresent()) {
+            throw new IllegalArgumentException("User not found!");
+        }
+
+        TaskAssignee taskAssignee = taskAssigneeOptional.get();
+        taskAssignee.setTask(taskOptional.get());
+        taskAssignee.setUser(userOptional.get());
+
+        taskAssignee = taskAssigneeRepository.save(taskAssignee);
+        return taskAssigneeMapper.toDto(taskAssignee);
+    }
+
 }
