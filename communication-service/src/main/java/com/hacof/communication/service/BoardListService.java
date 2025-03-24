@@ -11,4 +11,6 @@ public interface BoardListService {
 
     BoardListResponseDTO updateBoardList(Long id, BoardListRequestDTO boardListRequestDTO);
 
+    void deleteBoardList(Long id);
+
 }

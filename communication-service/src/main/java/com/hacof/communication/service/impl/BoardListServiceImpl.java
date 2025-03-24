@@ -60,4 +60,15 @@ public class BoardListServiceImpl implements BoardListService {
 
         return boardListMapper.toDto(boardList);
     }
+
+    @Override
+    public void deleteBoardList(Long id) {
+        Optional<BoardList> boardListOptional = boardListRepository.findById(id);
+        if (!boardListOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardList not found!");
+        }
+
+        boardListRepository.deleteById(id);
+    }
+
 }
