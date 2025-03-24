@@ -39,4 +39,25 @@ public class BoardListServiceImpl implements BoardListService {
 
         return boardListMapper.toDto(boardList);
     }
+
+    @Override
+    public BoardListResponseDTO updateBoardList(Long id, BoardListRequestDTO boardListRequestDTO) {
+        Optional<BoardList> boardListOptional = boardListRepository.findById(id);
+        if (!boardListOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardList not found!");
+        }
+
+        Optional<Board> boardOptional = boardRepository.findById(boardListRequestDTO.getBoardId());
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board not found!");
+        }
+
+        BoardList boardList = boardListOptional.get();
+        boardList.setName(boardListRequestDTO.getName());
+        boardList.setPosition(boardListRequestDTO.getPosition());
+        boardList.setBoard(boardOptional.get());
+        boardList = boardListRepository.save(boardList);
+
+        return boardListMapper.toDto(boardList);
+    }
 }

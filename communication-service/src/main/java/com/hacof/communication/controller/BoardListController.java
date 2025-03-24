@@ -39,4 +39,24 @@ public class BoardListController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<BoardListResponseDTO>> updateBoardList(
+            @PathVariable Long id, @RequestBody BoardListRequestDTO boardListRequestDTO) {
+        CommonResponse<BoardListResponseDTO> response = new CommonResponse<>();
+        try {
+            BoardListResponseDTO updatedBoardList = boardListService.updateBoardList(id, boardListRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board List updated successfully!");
+            response.setData(updatedBoardList);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

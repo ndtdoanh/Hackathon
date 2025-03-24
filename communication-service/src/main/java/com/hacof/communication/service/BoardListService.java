@@ -8,4 +8,7 @@ import java.util.List;
 public interface BoardListService {
 
     BoardListResponseDTO createBoardList(BoardListRequestDTO boardListRequestDTO);
+
+    BoardListResponseDTO updateBoardList(Long id, BoardListRequestDTO boardListRequestDTO);
+
 }
