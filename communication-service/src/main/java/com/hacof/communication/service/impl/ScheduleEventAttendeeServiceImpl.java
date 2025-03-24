@@ -100,4 +100,18 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
         List<ScheduleEventAttendee> scheduleEventAttendees = scheduleEventAttendeeRepository.findAll();
         return scheduleEventAttendees.stream().map(scheduleEventAttendeeMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public ScheduleEventAttendeeResponseDTO changeStatus(Long id, ScheduleEventStatus status) {
+        Optional<ScheduleEventAttendee> scheduleEventAttendeeOptional = scheduleEventAttendeeRepository.findById(id);
+        if (!scheduleEventAttendeeOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEventAttendee not found!");
+        }
+
+        ScheduleEventAttendee scheduleEventAttendee = scheduleEventAttendeeOptional.get();
+        scheduleEventAttendee.setStatusD(status);
+        scheduleEventAttendee = scheduleEventAttendeeRepository.save(scheduleEventAttendee);
+
+        return scheduleEventAttendeeMapper.toDto(scheduleEventAttendee);
+    }
 }

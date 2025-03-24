@@ -18,4 +18,5 @@ public interface ScheduleEventAttendeeService {
 
     List<ScheduleEventAttendeeResponseDTO> getAllScheduleEventAttendees();
 
+    ScheduleEventAttendeeResponseDTO changeStatus(Long id, ScheduleEventStatus status);
 }
