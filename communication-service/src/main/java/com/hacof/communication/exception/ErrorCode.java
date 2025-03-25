@@ -28,7 +28,9 @@ public enum ErrorCode {
     CANNOT_REMOVE_USER_FROM_SINGLE_CONVERSATION(
             1014, "Cannot remove user from single conversation", HttpStatus.BAD_REQUEST),
 
-    USER_ALREADY_IN_CONVERSATION(1015, "User already in conversation", HttpStatus.BAD_REQUEST);
+    USER_ALREADY_IN_CONVERSATION(1015, "User already in conversation", HttpStatus.BAD_REQUEST),
+    MESSAGE_NOT_EXISTED(1016, "Message not existed", HttpStatus.BAD_REQUEST),
+    REACTION_NOT_EXISTED(1017, "Reaction not existed", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
