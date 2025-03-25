@@ -1,11 +1,12 @@
 package com.hacof.communication.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.BoardRequestDTO;
 import com.hacof.communication.dto.response.BoardResponseDTO;
 import com.hacof.communication.entity.Board;
-import com.hacof.communication.entity.User;
 import com.hacof.communication.entity.Team;
-import org.springframework.stereotype.Component;
+import com.hacof.communication.entity.User;
 
 @Component
 public class BoardMapper {
