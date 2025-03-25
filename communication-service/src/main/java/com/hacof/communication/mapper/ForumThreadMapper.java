@@ -60,16 +60,44 @@ public class ForumThreadMapper {
     }
 
     // Helper method to map ThreadPost entity to ThreadPostResponseDTO
+    // Helper method to map ThreadPost entity to ThreadPostResponseDTO
     private static ThreadPostResponseDTO toThreadPostResponseDTO(ThreadPost threadPost) {
         ThreadPostResponseDTO threadPostResponseDTO = new ThreadPostResponseDTO();
         threadPostResponseDTO.setId(threadPost.getId());
-        threadPostResponseDTO.setForumThreadId(threadPost.getForumThread().getId());
+
+        // Map the ForumThread entity to ForumThreadResponseDTO
+        ForumThreadResponseDTO forumThreadResponseDTO = new ForumThreadResponseDTO();
+        forumThreadResponseDTO.setId(threadPost.getForumThread().getId());
+        forumThreadResponseDTO.setTitle(threadPost.getForumThread().getTitle());
+
+        // Map ForumCategory for ForumThread
+        ForumCategoryResponseDTO forumCategoryResponseDTO = new ForumCategoryResponseDTO();
+        forumCategoryResponseDTO.setId(threadPost.getForumThread().getForumCategory().getId());
+        forumCategoryResponseDTO.setName(threadPost.getForumThread().getForumCategory().getName());
+        forumCategoryResponseDTO.setDescription(threadPost.getForumThread().getForumCategory().getDescription());
+        forumCategoryResponseDTO.setSection(threadPost.getForumThread().getForumCategory().getSection());
+        forumCategoryResponseDTO.setCreatedDate(threadPost.getForumThread().getForumCategory().getCreatedDate());
+        forumCategoryResponseDTO.setLastModifiedDate(threadPost.getForumThread().getForumCategory().getLastModifiedDate());
+
+        forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
+
+        // Set ForumThread details
+        forumThreadResponseDTO.setCreatedDate(threadPost.getForumThread().getCreatedDate().toString());
+        forumThreadResponseDTO.setLastModifiedDate(threadPost.getForumThread().getLastModifiedDate().toString());
+
+        // Set the full ForumThreadResponseDTO in ThreadPostResponseDTO
+        threadPostResponseDTO.setForumThread(forumThreadResponseDTO);
+
+        // Set remaining ThreadPost details
         threadPostResponseDTO.setContent(threadPost.getContent());
+        threadPostResponseDTO.setDeleted(threadPost.isDeleted());
         threadPostResponseDTO.setCreatedBy(threadPost.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
         threadPostResponseDTO.setCreatedDate(threadPost.getCreatedDate());
         threadPostResponseDTO.setLastModifiedDate(threadPost.getLastModifiedDate());
+
         return threadPostResponseDTO;
     }
+
 
     // Method to convert List<ForumThread> entities to List<ForumThreadResponseDTO>
     public static List<ForumThreadResponseDTO> toResponseDTOList(List<ForumThread> entities) {
