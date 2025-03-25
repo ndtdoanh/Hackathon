@@ -1,22 +1,24 @@
 package com.hacof.communication.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.constant.ScheduleEventStatus;
 import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
-import com.hacof.communication.entity.ScheduleEventAttendee;
 import com.hacof.communication.entity.ScheduleEvent;
+import com.hacof.communication.entity.ScheduleEventAttendee;
 import com.hacof.communication.entity.User;
-import org.springframework.stereotype.Component;
 
 @Component
 public class ScheduleEventAttendeeMapper {
 
     // Chuyển từ ScheduleEventAttendeeRequestDTO sang ScheduleEventAttendee entity
-    public ScheduleEventAttendee toEntity(ScheduleEventAttendeeRequestDTO requestDTO, ScheduleEvent scheduleEvent, User user) {
+    public ScheduleEventAttendee toEntity(
+            ScheduleEventAttendeeRequestDTO requestDTO, ScheduleEvent scheduleEvent, User user) {
         return ScheduleEventAttendee.builder()
                 .scheduleEvent(scheduleEvent)
                 .user(user)
-                .statusD(ScheduleEventStatus.INVITED)  // Mặc định là INVITED
+                .statusD(ScheduleEventStatus.INVITED) // Mặc định là INVITED
                 .build();
     }
 
