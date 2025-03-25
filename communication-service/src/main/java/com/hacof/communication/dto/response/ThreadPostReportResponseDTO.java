@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class ThreadPostReportResponseDTO {
     private Long id;
-    private Long threadPostId;
+    private ThreadPostResponseDTO threadPost;
     private String reason;
     private String status;
     private Long reviewedById;
