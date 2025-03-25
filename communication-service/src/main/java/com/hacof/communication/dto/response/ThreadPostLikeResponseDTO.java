@@ -10,10 +10,8 @@ import java.time.LocalDateTime;
 public class ThreadPostLikeResponseDTO {
 
     private long id;
-    private long threadPostId;
+    private ThreadPostResponseDTO threadPost;  // Include the full ThreadPost object
     private String createdBy;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-
-
 }
