@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageResponse {
     Long id;
+    Long conversationId;
     String content;
+    List<FileUrlResponse> fileUrls;
     LocalDateTime createdDate;
-    Long createdBy;
+    LocalDateTime lastModifiedDate;
+    Long createdByUserId;
 }

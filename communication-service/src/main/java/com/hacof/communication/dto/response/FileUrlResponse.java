@@ -1,6 +1,4 @@
-package com.hacof.communication.dto.request;
-
-import com.hacof.communication.constant.ReactionType;
+package com.hacof.communication.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,6 +12,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MessageReactionRequest {
-    ReactionType reactionType;
+public class FileUrlResponse {
+    Long id;
+    String fileName;
+    String fileUrl;
+    String fileType;
+    int fileSize;
 }

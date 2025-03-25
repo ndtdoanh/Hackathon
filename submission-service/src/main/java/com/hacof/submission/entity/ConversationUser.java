@@ -32,4 +32,9 @@ public class ConversationUser extends AuditBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deleted_by")
     User deletedBy;
+
+    public ConversationUser(User user, Conversation conversation) {
+        this.user = user;
+        this.conversation = conversation;
+    }
 }

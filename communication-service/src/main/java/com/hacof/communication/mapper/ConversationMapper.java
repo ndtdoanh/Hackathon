@@ -4,9 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.hacof.communication.dto.response.ConversationResponse;
-import com.hacof.communication.dto.response.ConversationUserResponse;
 import com.hacof.communication.entity.Conversation;
-import com.hacof.communication.entity.ConversationUser;
 
 @Mapper(componentModel = "spring")
 public interface ConversationMapper {

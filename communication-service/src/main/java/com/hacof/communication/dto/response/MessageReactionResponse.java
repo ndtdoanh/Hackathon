@@ -1,4 +1,6 @@
-package com.hacof.communication.dto.request;
+package com.hacof.communication.dto.response;
+
+import java.time.LocalDateTime;
 
 import com.hacof.communication.constant.ReactionType;
 
@@ -14,6 +16,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MessageReactionRequest {
+public class MessageReactionResponse {
+    Long id;
     ReactionType reactionType;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    Long createdByUserId;
 }
