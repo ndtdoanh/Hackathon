@@ -10,7 +10,7 @@ import lombok.Setter;
 public class ThreadPostResponseDTO {
 
     private Long id;
-    private Long forumThreadId;
+    private ForumThreadResponseDTO forumThread;
     private String content;
     private boolean isDeleted;
     private String createdBy;
