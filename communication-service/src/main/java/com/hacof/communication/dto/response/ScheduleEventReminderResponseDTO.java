@@ -11,10 +11,10 @@ import lombok.*;
 @AllArgsConstructor
 public class ScheduleEventReminderResponseDTO {
 
-    private Long id;              // ID của ScheduleEventReminder
+    private Long id; // ID của ScheduleEventReminder
     private Long scheduleEventId; // ID của ScheduleEvent mà Reminder này thuộc về
-    private Long userId;          // ID của User nhận Reminder
+    private Long userId; // ID của User nhận Reminder
     private LocalDateTime remindAt; // Thời gian nhắc nhở
-    private LocalDateTime createdDate;  // Thời gian tạo Reminder
+    private LocalDateTime createdDate; // Thời gian tạo Reminder
     private LocalDateTime lastModifiedDate; // Thời gian sửa đổi Reminder
 }
