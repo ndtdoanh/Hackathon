@@ -15,14 +15,17 @@ import java.util.stream.Collectors;
 
 public class ThreadPostReportMapper {
 
-    public static ThreadPostReport toEntity(ThreadPostReportRequestDTO requestDTO, ThreadPost threadPost, User createdBy) {
+    // Convert DTO to Entity
+    public static ThreadPostReport toEntity(ThreadPostReportRequestDTO requestDTO, ThreadPost threadPost, User reviewedBy) {
         return ThreadPostReport.builder()
                 .threadPost(threadPost)
                 .reason(requestDTO.getReason())
                 .status(ThreadPostReportStatus.PENDING)  // Default status could be PENDING
+                .reviewedBy(reviewedBy)
                 .build();
     }
 
+    // Convert Entity to Response DTO
     public static ThreadPostReportResponseDTO toResponseDTO(ThreadPostReport threadPostReport) {
         ThreadPostReportResponseDTO responseDTO = new ThreadPostReportResponseDTO();
         responseDTO.setId(threadPostReport.getId());
@@ -52,6 +55,9 @@ public class ThreadPostReportMapper {
         forumCategoryResponseDTO.setCreatedDate(threadPostReport.getThreadPost().getForumThread().getForumCategory().getCreatedDate());
         forumCategoryResponseDTO.setLastModifiedDate(threadPostReport.getThreadPost().getForumThread().getForumCategory().getLastModifiedDate());
 
+        // Set ForumCategory into ForumThreadResponseDTO
+        forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
+
         // Map ThreadPosts (List) in ForumThread
         List<ThreadPostResponseDTO> threadPostList = threadPostReport.getThreadPost().getForumThread().getThreadPosts().stream()
                 .map(ThreadPostMapper::toResponseDTO) // Use the existing method to map ThreadPost to ThreadPostResponseDTO
@@ -60,10 +66,7 @@ public class ThreadPostReportMapper {
         // Set ThreadPosts into ForumThreadResponseDTO
         forumThreadResponseDTO.setThreadPosts(threadPostList);
 
-        // Set ForumCategory into ForumThreadResponseDTO
-        forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
-
-        // Set ThreadPost into ThreadPostResponseDTO
+        // Set ForumThread into ThreadPostResponseDTO
         threadPostResponseDTO.setForumThread(forumThreadResponseDTO);
 
         // Set the full ThreadPostResponseDTO in the response DTO
