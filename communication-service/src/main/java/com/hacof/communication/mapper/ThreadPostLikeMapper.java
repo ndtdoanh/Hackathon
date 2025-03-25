@@ -18,7 +18,7 @@ public class ThreadPostLikeMapper {
         ThreadPostLikeResponseDTO responseDTO = new ThreadPostLikeResponseDTO();
         responseDTO.setId(threadPostLike.getId());
         responseDTO.setThreadPostId(threadPostLike.getThreadPost().getId());
-        responseDTO.setCreatedBy(threadPostLike.getCreatedBy().getUsername());  // Chỉ lấy ID của User
+        responseDTO.setCreatedBy(threadPostLike.getCreatedBy().getUsername()); // Chỉ lấy ID của User
         responseDTO.setCreatedDate(threadPostLike.getCreatedDate());
         responseDTO.setLastModifiedDate(threadPostLike.getLastModifiedDate());
         return responseDTO;
