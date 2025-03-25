@@ -1,10 +1,11 @@
 package com.hacof.communication.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
-import com.hacof.communication.entity.ScheduleEvent;
 import com.hacof.communication.entity.Schedule;
-import org.springframework.stereotype.Component;
+import com.hacof.communication.entity.ScheduleEvent;
 
 @Component
 public class ScheduleEventMapper {

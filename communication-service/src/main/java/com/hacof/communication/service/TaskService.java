@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.TaskRequestDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
-
-import java.util.List;
 
 public interface TaskService {
 

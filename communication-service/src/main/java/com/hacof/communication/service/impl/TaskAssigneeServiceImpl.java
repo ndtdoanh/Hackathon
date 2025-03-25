@@ -1,21 +1,22 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.TaskAssigneeRequestDTO;
 import com.hacof.communication.dto.response.TaskAssigneeResponseDTO;
 import com.hacof.communication.entity.Task;
-import com.hacof.communication.entity.User;
 import com.hacof.communication.entity.TaskAssignee;
+import com.hacof.communication.entity.User;
 import com.hacof.communication.mapper.TaskAssigneeMapper;
 import com.hacof.communication.repository.TaskAssigneeRepository;
 import com.hacof.communication.repository.TaskRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.TaskAssigneeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskAssigneeServiceImpl implements TaskAssigneeService {
@@ -43,7 +44,8 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
             throw new IllegalArgumentException("User not found!");
         }
 
-        TaskAssignee taskAssignee = taskAssigneeMapper.toEntity(taskAssigneeRequestDTO, taskOptional.get(), userOptional.get());
+        TaskAssignee taskAssignee =
+                taskAssigneeMapper.toEntity(taskAssigneeRequestDTO, taskOptional.get(), userOptional.get());
         taskAssignee = taskAssigneeRepository.save(taskAssignee);
 
         return taskAssigneeMapper.toDto(taskAssignee);

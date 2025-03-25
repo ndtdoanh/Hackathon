@@ -1,21 +1,22 @@
 package com.hacof.communication.service.impl;
 
-import com.hacof.communication.dto.request.BoardRequestDTO;
-import com.hacof.communication.dto.response.BoardResponseDTO;
-import com.hacof.communication.entity.Board;
-import com.hacof.communication.entity.User;
-import com.hacof.communication.entity.Team;
-import com.hacof.communication.mapper.BoardMapper;
-import com.hacof.communication.repository.BoardRepository;
-import com.hacof.communication.repository.UserRepository;
-import com.hacof.communication.repository.TeamRepository;
-import com.hacof.communication.service.BoardService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hacof.communication.dto.request.BoardRequestDTO;
+import com.hacof.communication.dto.response.BoardResponseDTO;
+import com.hacof.communication.entity.Board;
+import com.hacof.communication.entity.Team;
+import com.hacof.communication.entity.User;
+import com.hacof.communication.mapper.BoardMapper;
+import com.hacof.communication.repository.BoardRepository;
+import com.hacof.communication.repository.TeamRepository;
+import com.hacof.communication.repository.UserRepository;
+import com.hacof.communication.service.BoardService;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -52,9 +53,14 @@ public class BoardServiceImpl implements BoardService {
         board.setTeam(team);
 
         board = boardRepository.save(board);
-        return new BoardResponseDTO(board.getId(), board.getName(), board.getDescription(),
-                board.getOwner().getUsername(), board.getTeam().getName(),
-                board.getCreatedBy().getUsername(), board.getCreatedDate(),
+        return new BoardResponseDTO(
+                board.getId(),
+                board.getName(),
+                board.getDescription(),
+                board.getOwner().getUsername(),
+                board.getTeam().getName(),
+                board.getCreatedBy().getUsername(),
+                board.getCreatedDate(),
                 board.getLastModifiedDate());
     }
 
@@ -85,11 +91,15 @@ public class BoardServiceImpl implements BoardService {
         board.setOwner(owner);
         board.setTeam(team);
 
-
         board = boardRepository.save(board);
-        return new BoardResponseDTO(board.getId(), board.getName(), board.getDescription(),
-                board.getOwner().getUsername(), board.getTeam().getName(),
-                board.getCreatedBy().getUsername(), board.getCreatedDate(),
+        return new BoardResponseDTO(
+                board.getId(),
+                board.getName(),
+                board.getDescription(),
+                board.getOwner().getUsername(),
+                board.getTeam().getName(),
+                board.getCreatedBy().getUsername(),
+                board.getCreatedDate(),
                 board.getLastModifiedDate());
     }
 

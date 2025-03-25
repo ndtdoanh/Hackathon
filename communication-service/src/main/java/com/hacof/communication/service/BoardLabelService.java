@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.BoardLabelRequestDTO;
 import com.hacof.communication.dto.response.BoardLabelResponseDTO;
-
-import java.util.List;
 
 public interface BoardLabelService {
 

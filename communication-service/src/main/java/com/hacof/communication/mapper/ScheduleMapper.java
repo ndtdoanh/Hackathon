@@ -1,15 +1,15 @@
 package com.hacof.communication.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.ScheduleRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 import com.hacof.communication.dto.response.ScheduleResponseDTO;
 import com.hacof.communication.entity.Schedule;
-import com.hacof.communication.entity.ScheduleEvent;
 import com.hacof.communication.entity.Team;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ScheduleMapper {
@@ -28,13 +28,13 @@ public class ScheduleMapper {
         // Kiểm tra nếu scheduleEvents không phải là null và dùng stream, nếu null trả về danh sách trống
         List<ScheduleEventResponseDTO> scheduleEvents = (schedule.getScheduleEvents() != null)
                 ? schedule.getScheduleEvents().stream()
-                .map(scheduleEvent -> ScheduleEventResponseDTO.builder()
-                        .id(scheduleEvent.getId())
-                        .name(scheduleEvent.getName())
-                        .startTime(scheduleEvent.getStartTime())
-                        .endTime(scheduleEvent.getEndTime())
-                        .build()) // Dùng builder pattern
-                .collect(Collectors.toList())
+                        .map(scheduleEvent -> ScheduleEventResponseDTO.builder()
+                                .id(scheduleEvent.getId())
+                                .name(scheduleEvent.getName())
+                                .startTime(scheduleEvent.getStartTime())
+                                .endTime(scheduleEvent.getEndTime())
+                                .build()) // Dùng builder pattern
+                        .collect(Collectors.toList())
                 : List.of(); // Trả về danh sách trống nếu scheduleEvents là null
 
         return ScheduleResponseDTO.builder()

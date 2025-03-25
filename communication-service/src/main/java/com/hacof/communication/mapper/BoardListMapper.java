@@ -1,10 +1,11 @@
 package com.hacof.communication.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.BoardListRequestDTO;
 import com.hacof.communication.dto.response.BoardListResponseDTO;
-import com.hacof.communication.entity.BoardList;
 import com.hacof.communication.entity.Board;
-import org.springframework.stereotype.Component;
+import com.hacof.communication.entity.BoardList;
 
 @Component
 public class BoardListMapper {
@@ -24,7 +25,10 @@ public class BoardListMapper {
                 .name(boardList.getName())
                 .position(boardList.getPosition())
                 .boardName(boardList.getBoard().getName())
-                .createdBy(boardList.getCreatedBy() != null ? boardList.getCreatedBy().getUsername() : null)
+                .createdBy(
+                        boardList.getCreatedBy() != null
+                                ? boardList.getCreatedBy().getUsername()
+                                : null)
                 .createdDate(boardList.getCreatedDate())
                 .lastModifiedDate(boardList.getLastModifiedDate())
                 .build();

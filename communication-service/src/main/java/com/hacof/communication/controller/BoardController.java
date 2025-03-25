@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.BoardRequestDTO;
-import com.hacof.communication.dto.response.BoardResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.BoardService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.BoardRequestDTO;
+import com.hacof.communication.dto.response.BoardResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.BoardService;
 
 @RestController
 @RequestMapping("/api/v1/boards")
@@ -19,8 +20,7 @@ public class BoardController {
     private BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<BoardResponseDTO>> createBoard(
-            @RequestBody BoardRequestDTO boardRequestDTO) {
+    public ResponseEntity<CommonResponse<BoardResponseDTO>> createBoard(@RequestBody BoardRequestDTO boardRequestDTO) {
         CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
         try {
             BoardResponseDTO createdBoard = boardService.createBoard(boardRequestDTO);
@@ -77,8 +77,7 @@ public class BoardController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<BoardResponseDTO>> updateBoard(
-            @PathVariable Long id,
-            @RequestBody BoardRequestDTO boardRequestDTO) {
+            @PathVariable Long id, @RequestBody BoardRequestDTO boardRequestDTO) {
 
         CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
         try {

@@ -1,9 +1,10 @@
 package com.hacof.communication.repository;
 
-import com.hacof.communication.entity.ThreadPostReport;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.hacof.communication.entity.ThreadPostReport;
 
 public interface ThreadPostReportRepository extends JpaRepository<ThreadPostReport, Long> {
     List<ThreadPostReport> findByThreadPostId(Long threadPostId);

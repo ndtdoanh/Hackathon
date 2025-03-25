@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
-import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.ScheduleEventService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
+import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.ScheduleEventService;
 
 @RestController
 @RequestMapping("/api/v1/schedule-events")
@@ -23,7 +24,8 @@ public class ScheduleEventController {
             @RequestBody ScheduleEventRequestDTO scheduleEventRequestDTO) {
         CommonResponse<ScheduleEventResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventResponseDTO createdScheduleEvent = scheduleEventService.createScheduleEvent(scheduleEventRequestDTO);
+            ScheduleEventResponseDTO createdScheduleEvent =
+                    scheduleEventService.createScheduleEvent(scheduleEventRequestDTO);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Schedule Event created successfully!");
             response.setData(createdScheduleEvent);
@@ -44,7 +46,8 @@ public class ScheduleEventController {
             @PathVariable Long id, @RequestBody ScheduleEventRequestDTO scheduleEventRequestDTO) {
         CommonResponse<ScheduleEventResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventResponseDTO updatedScheduleEvent = scheduleEventService.updateScheduleEvent(id, scheduleEventRequestDTO);
+            ScheduleEventResponseDTO updatedScheduleEvent =
+                    scheduleEventService.updateScheduleEvent(id, scheduleEventRequestDTO);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event updated successfully!");
             response.setData(updatedScheduleEvent);

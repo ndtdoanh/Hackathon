@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ThreadPostLikeRequestDTO;
-import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.ThreadPostLikeService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.ThreadPostLikeRequestDTO;
+import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.ThreadPostLikeService;
 
 @RestController
 @RequestMapping("/api/v1/thread-post-likes")
@@ -38,7 +39,6 @@ public class ThreadPostLikeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 
     // Lấy tất cả ThreadPostLikes
     @GetMapping
@@ -79,7 +79,8 @@ public class ThreadPostLikeController {
     }
 
     @GetMapping("/thread-post/{threadPostId}")
-    public ResponseEntity<CommonResponse<List<ThreadPostLikeResponseDTO>>> getAllLikesByThreadPost(@PathVariable Long threadPostId) {
+    public ResponseEntity<CommonResponse<List<ThreadPostLikeResponseDTO>>> getAllLikesByThreadPost(
+            @PathVariable Long threadPostId) {
         CommonResponse<List<ThreadPostLikeResponseDTO>> response = new CommonResponse<>();
         try {
             List<ThreadPostLikeResponseDTO> likes = threadPostLikeService.getLikesByThreadPostId(threadPostId);
