@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
-import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.ThreadPostReportService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
+import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.ThreadPostReportService;
 
 @RestController
 @RequestMapping("/api/v1/thread-post-reports")
