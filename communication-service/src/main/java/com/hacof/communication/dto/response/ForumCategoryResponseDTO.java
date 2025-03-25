@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +15,5 @@ public class ForumCategoryResponseDTO {
     private String section;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
+    private List<ForumThreadResponseDTO> forumThreads;
 }
