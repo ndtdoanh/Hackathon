@@ -1,5 +1,12 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.constant.ScheduleEventStatus;
 import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
@@ -11,12 +18,6 @@ import com.hacof.communication.repository.ScheduleEventAttendeeRepository;
 import com.hacof.communication.repository.ScheduleEventRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ScheduleEventAttendeeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeService {
@@ -35,7 +36,8 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
 
     @Override
     public ScheduleEventAttendeeResponseDTO createScheduleEventAttendee(ScheduleEventAttendeeRequestDTO requestDTO) {
-        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        Optional<ScheduleEvent> scheduleEventOptional =
+                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
@@ -45,20 +47,23 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
             throw new IllegalArgumentException("User not found!");
         }
 
-        ScheduleEventAttendee scheduleEventAttendee = scheduleEventAttendeeMapper.toEntity(requestDTO, scheduleEventOptional.get(), userOptional.get());
+        ScheduleEventAttendee scheduleEventAttendee =
+                scheduleEventAttendeeMapper.toEntity(requestDTO, scheduleEventOptional.get(), userOptional.get());
         scheduleEventAttendee = scheduleEventAttendeeRepository.save(scheduleEventAttendee);
 
         return scheduleEventAttendeeMapper.toDto(scheduleEventAttendee);
     }
 
     @Override
-    public ScheduleEventAttendeeResponseDTO updateScheduleEventAttendee(Long id, ScheduleEventAttendeeRequestDTO requestDTO) {
+    public ScheduleEventAttendeeResponseDTO updateScheduleEventAttendee(
+            Long id, ScheduleEventAttendeeRequestDTO requestDTO) {
         Optional<ScheduleEventAttendee> scheduleEventAttendeeOptional = scheduleEventAttendeeRepository.findById(id);
         if (!scheduleEventAttendeeOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEventAttendee not found!");
         }
 
-        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        Optional<ScheduleEvent> scheduleEventOptional =
+                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
@@ -98,7 +103,9 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
     @Override
     public List<ScheduleEventAttendeeResponseDTO> getAllScheduleEventAttendees() {
         List<ScheduleEventAttendee> scheduleEventAttendees = scheduleEventAttendeeRepository.findAll();
-        return scheduleEventAttendees.stream().map(scheduleEventAttendeeMapper::toDto).collect(Collectors.toList());
+        return scheduleEventAttendees.stream()
+                .map(scheduleEventAttendeeMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
