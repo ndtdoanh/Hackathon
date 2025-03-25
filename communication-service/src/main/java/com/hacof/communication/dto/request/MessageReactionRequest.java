@@ -1,5 +1,7 @@
 package com.hacof.communication.dto.request;
 
+import com.hacof.communication.constant.ReactionType;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,5 +15,5 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageReactionRequest {
-    String reaction;
+    ReactionType reactionType;
 }
