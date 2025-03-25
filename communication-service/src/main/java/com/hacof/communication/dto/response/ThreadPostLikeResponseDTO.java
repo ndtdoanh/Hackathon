@@ -1,9 +1,9 @@
 package com.hacof.communication.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,6 +14,4 @@ public class ThreadPostLikeResponseDTO {
     private String createdBy;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-
-
 }
