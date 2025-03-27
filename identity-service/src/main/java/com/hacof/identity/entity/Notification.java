@@ -31,11 +31,6 @@ public class Notification extends AuditBase {
     @JoinColumn(name = "sender_id")
     User sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
-    User recipient;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "notification_type")
     NotificationType notificationType;
