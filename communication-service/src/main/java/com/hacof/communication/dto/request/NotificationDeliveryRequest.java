@@ -1,6 +1,9 @@
 package com.hacof.communication.dto.request;
 
-import com.hacof.communication.constant.NotificationType;
+import java.util.Set;
+
+import com.hacof.communication.constant.NotificationMethod;
+import com.hacof.communication.constant.RoleType;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,8 +17,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NotificationRequest {
-    NotificationType notificationType;
-    String content;
-    String metadata;
+public class NotificationDeliveryRequest {
+    Set<Long> recipientIds;
+    RoleType role;
+    NotificationMethod method;
 }

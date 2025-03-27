@@ -172,7 +172,7 @@ public class User extends AuditUserBase {
     List<Feedback> createdFeedbacks;
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Notification> receivedNotifications;
+    List<NotificationDelivery> receivedNotifications;
 
     public void addRole(Role role) {
         if (this.userRoles == null) {

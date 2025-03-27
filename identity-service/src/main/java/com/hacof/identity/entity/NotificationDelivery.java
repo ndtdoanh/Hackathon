@@ -1,5 +1,6 @@
 package com.hacof.identity.entity;
 
+import com.hacof.identity.constant.RoleType;
 import jakarta.persistence.*;
 
 import com.hacof.identity.constant.NotificationMethod;
@@ -7,6 +8,8 @@ import com.hacof.identity.constant.NotificationStatus;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -25,6 +28,15 @@ public class NotificationDelivery extends AuditBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notification_id")
     Notification notification;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id")
+    User recipient;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    RoleType role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "method")
