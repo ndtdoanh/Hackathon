@@ -10,14 +10,7 @@ import com.hacof.communication.entity.Notification;
 
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "sender", ignore = true)
-    @Mapping(target = "recipient", ignore = true)
-    @Mapping(target = "notificationType", source = "notificationType")
-    Notification toNotification(NotificationRequest request);
-
     @Mapping(target = "sender", source = "sender")
-    @Mapping(target = "recipient", source = "recipient")
     @Mapping(target = "notificationType", source = "notificationType")
     NotificationResponse toNotificationResponse(Notification notification);
 
