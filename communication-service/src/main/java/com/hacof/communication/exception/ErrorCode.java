@@ -32,7 +32,13 @@ public enum ErrorCode {
     MESSAGE_NOT_EXISTED(1016, "Message not existed", HttpStatus.BAD_REQUEST),
 
     NOTIFICATION_NOT_FOUND(1017, "Notification not found", HttpStatus.NOT_FOUND),
-    REACTION_NOT_EXISTED(1018, "Reaction not existed", HttpStatus.BAD_REQUEST);
+    NOTIFICATION_DELIVERY_NOT_FOUND(1018, "Notification delivery not found", HttpStatus.NOT_FOUND),
+
+    INVALID_NOTIFICATION_REQUEST(1019, "Invalid notification request", HttpStatus.BAD_REQUEST),
+    INVALID_ROLE(1020, "Invalid role", HttpStatus.BAD_REQUEST),
+    NO_USERS_WITH_ROLE(1021, "No users with role", HttpStatus.NOT_FOUND),
+
+    REACTION_NOT_EXISTED(1022, "Reaction not existed", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
