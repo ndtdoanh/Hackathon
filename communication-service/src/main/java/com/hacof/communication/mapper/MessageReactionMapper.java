@@ -2,7 +2,6 @@ package com.hacof.communication.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import com.hacof.communication.dto.request.MessageReactionRequest;
 import com.hacof.communication.dto.response.MessageReactionResponse;
