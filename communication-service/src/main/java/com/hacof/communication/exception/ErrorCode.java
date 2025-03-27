@@ -30,7 +30,9 @@ public enum ErrorCode {
 
     USER_ALREADY_IN_CONVERSATION(1015, "User already in conversation", HttpStatus.BAD_REQUEST),
     MESSAGE_NOT_EXISTED(1016, "Message not existed", HttpStatus.BAD_REQUEST),
-    REACTION_NOT_EXISTED(1017, "Reaction not existed", HttpStatus.BAD_REQUEST);
+
+    NOTIFICATION_NOT_FOUND(1017, "Notification not found", HttpStatus.NOT_FOUND),
+    REACTION_NOT_EXISTED(1018, "Reaction not existed", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
