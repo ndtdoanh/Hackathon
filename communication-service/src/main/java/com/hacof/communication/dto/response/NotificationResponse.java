@@ -19,7 +19,6 @@ import lombok.experimental.FieldDefaults;
 public class NotificationResponse {
     Long id;
     UserResponse sender;
-    UserResponse recipient;
     NotificationType notificationType;
     String content;
     String metadata;
