@@ -3,20 +3,20 @@ package com.hacof.communication.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.hacof.communication.entity.User;
-import com.hacof.communication.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.dto.request.MessageReactionRequest;
 import com.hacof.communication.dto.response.MessageReactionResponse;
 import com.hacof.communication.entity.Message;
 import com.hacof.communication.entity.MessageReaction;
+import com.hacof.communication.entity.User;
 import com.hacof.communication.exception.AppException;
 import com.hacof.communication.exception.ErrorCode;
 import com.hacof.communication.mapper.MessageReactionMapper;
 import com.hacof.communication.repository.MessageReactionRepository;
 import com.hacof.communication.repository.MessageRepository;
 import com.hacof.communication.service.MessageReactionService;
+import com.hacof.communication.util.SecurityUtil;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +33,15 @@ public class MessageReactionServiceImpl implements MessageReactionService {
 
     @Override
     public MessageReactionResponse reactToMessage(Long messageId, MessageReactionRequest request) {
-        Message message = messageRepository.findById(messageId)
+        Message message = messageRepository
+                .findById(messageId)
                 .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_EXISTED));
 
-        User currentUser = securityUtil.getCurrentUser()
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User currentUser =
+                securityUtil.getCurrentUser().orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Optional<MessageReaction> existingReaction = reactionRepository.findByMessageIdAndCreatedBy(messageId, currentUser);
+        Optional<MessageReaction> existingReaction =
+                reactionRepository.findByMessageIdAndCreatedBy(messageId, currentUser);
 
         MessageReaction reaction;
         if (existingReaction.isPresent()) {
