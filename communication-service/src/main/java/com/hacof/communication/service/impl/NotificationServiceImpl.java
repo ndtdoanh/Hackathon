@@ -31,14 +31,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationResponse createNotification(NotificationRequest request) {
-        User recipient = userRepository
-                .findById(request.getRecipientId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         User sender = securityUtil.getCurrentUser().orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Notification notification = Notification.builder()
-                .recipient(recipient)
                 .sender(sender)
                 .notificationType(request.getNotificationType())
                 .content(request.getContent())
