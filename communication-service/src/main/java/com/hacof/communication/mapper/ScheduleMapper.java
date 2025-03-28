@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 @Component
 public class ScheduleMapper {
 
-    // Chuyển từ ScheduleRequestDTO sang Schedule entity
     public Schedule toEntity(ScheduleRequestDTO requestDTO, Team team) {
         return Schedule.builder()
                 .team(team)
@@ -23,7 +22,6 @@ public class ScheduleMapper {
                 .build();
     }
 
-    // Chuyển từ Schedule entity sang ScheduleResponseDTO
     public ScheduleResponseDTO toDto(Schedule schedule) {
         // Kiểm tra nếu scheduleEvents không phải là null và dùng stream, nếu null trả về danh sách trống
         List<ScheduleEventResponseDTO> scheduleEvents = (schedule.getScheduleEvents() != null)
@@ -31,11 +29,17 @@ public class ScheduleMapper {
                 .map(scheduleEvent -> ScheduleEventResponseDTO.builder()
                         .id(scheduleEvent.getId())
                         .name(scheduleEvent.getName())
+                        .description(scheduleEvent.getDescription())
+                        .location(scheduleEvent.getLocation())
                         .startTime(scheduleEvent.getStartTime())
                         .endTime(scheduleEvent.getEndTime())
-                        .build()) // Dùng builder pattern
+                        .recurrenceRule(scheduleEvent.getRecurrenceRule())
+                        .createdDate(scheduleEvent.getCreatedDate())
+                        .lastModifiedDate(scheduleEvent.getLastModifiedDate())
+                        .createdBy(scheduleEvent.getCreatedBy().getUsername())
+                        .build())
                 .collect(Collectors.toList())
-                : List.of(); // Trả về danh sách trống nếu scheduleEvents là null
+                : List.of();
 
         return ScheduleResponseDTO.builder()
                 .id(schedule.getId())
@@ -44,7 +48,7 @@ public class ScheduleMapper {
                 .description(schedule.getDescription())
                 .createdDate(schedule.getCreatedDate())
                 .lastModifiedDate(schedule.getLastModifiedDate())
-                .createdBy(schedule.getCreatedBy().getUsername()) // Giả sử User có trường `username`
+                .createdBy(schedule.getCreatedBy().getUsername())
                 .scheduleEvents(scheduleEvents)
                 .build();
     }
