@@ -1,7 +1,8 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.ReactionType;
 import jakarta.persistence.*;
+
+import com.hacof.identity.constant.ReactionType;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
