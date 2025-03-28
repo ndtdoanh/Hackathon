@@ -36,7 +36,9 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
     @Override
     public List<JudgeSubmissionDetailResponseDTO> getAllDetails() {
         List<JudgeSubmissionDetail> details = detailRepository.findAll();
-        return details.stream().map(mapper::toResponseDTO).collect(Collectors.toList());
+        return details.stream()
+                .map(detail -> JudgeSubmissionDetailMapper.toResponseDTO(detail)) // Gọi phương thức đúng từ Mapper
+                .collect(Collectors.toList());
     }
 
     @Override

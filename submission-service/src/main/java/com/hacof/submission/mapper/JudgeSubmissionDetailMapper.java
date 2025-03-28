@@ -1,7 +1,7 @@
 package com.hacof.submission.mapper;
 
-import java.util.Optional;
-
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +12,10 @@ import com.hacof.submission.entity.JudgeSubmissionDetail;
 import com.hacof.submission.entity.RoundMarkCriterion;
 import com.hacof.submission.repository.JudgeSubmissionRepository;
 import com.hacof.submission.repository.RoundMarkCriterionRepository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class JudgeSubmissionDetailMapper {
@@ -25,7 +29,6 @@ public class JudgeSubmissionDetailMapper {
     public JudgeSubmissionDetail toEntity(JudgeSubmissionDetailRequestDTO dto) {
         JudgeSubmissionDetail entity = new JudgeSubmissionDetail();
 
-        // Thiết lập các trường từ DTO
         entity.setScore(dto.getScore());
         entity.setNote(dto.getNote());
 
@@ -48,7 +51,34 @@ public class JudgeSubmissionDetailMapper {
         return entity;
     }
 
-    public JudgeSubmissionDetailResponseDTO toResponseDTO(JudgeSubmissionDetail entity) {
-        return new JudgeSubmissionDetailResponseDTO(entity);
+    public static JudgeSubmissionDetailResponseDTO toResponseDTO(JudgeSubmissionDetail entity) {
+        JudgeSubmissionDetailResponseDTO responseDTO = new JudgeSubmissionDetailResponseDTO(entity);
+        responseDTO.setId(entity.getId());
+        responseDTO.setScore(entity.getScore());
+        responseDTO.setNote(entity.getNote());
+
+        JudgeSubmissionResponseDTO judgeSubmissionResponseDTO = new JudgeSubmissionResponseDTO(entity.getJudgeSubmission()); // Sử dụng constructor có tham số
+        responseDTO.setJudgeSubmissionId(judgeSubmissionResponseDTO.getId()); // Set the ID directly in the response DTO
+
+        RoundMarkCriterionResponseDTO roundMarkCriterionResponseDTO = new RoundMarkCriterionResponseDTO(
+                entity.getRoundMarkCriterion().getId(),
+                entity.getRoundMarkCriterion().getName(),
+                entity.getRoundMarkCriterion().getMaxScore(),
+                entity.getRoundMarkCriterion().getNote(),
+                entity.getRoundMarkCriterion().getCreatedBy() != null ? entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null,
+                entity.getRoundMarkCriterion().getCreatedDate(),
+                entity.getRoundMarkCriterion().getLastModifiedDate(),
+                null
+        );
+        responseDTO.setRoundMarkCriterion(roundMarkCriterionResponseDTO);
+
+        responseDTO.setCreatedDate(entity.getCreatedDate());
+        responseDTO.setLastModifiedDate(entity.getLastModifiedDate());
+
+        return responseDTO;
+    }
+
+    public static List<JudgeSubmissionDetailResponseDTO> toResponseDTOList(List<JudgeSubmissionDetail> entities) {
+        return entities.stream().map(JudgeSubmissionDetailMapper::toResponseDTO).collect(Collectors.toList());
     }
 }

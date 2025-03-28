@@ -1,31 +1,46 @@
 package com.hacof.submission.dto.response;
 
-import java.time.LocalDateTime;
-
 import com.hacof.submission.entity.JudgeSubmissionDetail;
-import lombok.Getter;
-import lombok.Setter;
+import com.hacof.submission.entity.RoundMarkCriterion;
+import lombok.Data;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
 public class JudgeSubmissionDetailResponseDTO {
 
     private Long id;
-    private Long judgeSubmissionId;
-    private Long roundMarkCriterionId;
     private Integer score;
     private String note;
+    private Long judgeSubmissionId;
+    private RoundMarkCriterionResponseDTO roundMarkCriterion;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 
-    // Constructor yêu cầu JudgeSubmissionDetail entity
+    // Constructor
     public JudgeSubmissionDetailResponseDTO(JudgeSubmissionDetail entity) {
         this.id = entity.getId();
-        this.judgeSubmissionId = entity.getJudgeSubmission() != null ? entity.getJudgeSubmission().getId() : null;
-        this.roundMarkCriterionId = entity.getRoundMarkCriterion() != null ? entity.getRoundMarkCriterion().getId() : null;
         this.score = entity.getScore();
         this.note = entity.getNote();
         this.createdDate = entity.getCreatedDate();
         this.lastModifiedDate = entity.getLastModifiedDate();
+
+        if (entity.getJudgeSubmission() != null) {
+            this.judgeSubmissionId = entity.getJudgeSubmission().getId();  // Fetch judgeSubmissionId
+        }
+
+        if (entity.getRoundMarkCriterion() != null) {
+            this.roundMarkCriterion = new RoundMarkCriterionResponseDTO(
+                    entity.getRoundMarkCriterion().getId(),
+                    entity.getRoundMarkCriterion().getName(),
+                    entity.getRoundMarkCriterion().getMaxScore(),
+                    entity.getRoundMarkCriterion().getNote(),
+                    entity.getRoundMarkCriterion().getCreatedBy() != null ? entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null,
+                    entity.getRoundMarkCriterion().getCreatedDate(),
+                    entity.getRoundMarkCriterion().getLastModifiedDate(),
+                    null
+            );
+        }
     }
 }
