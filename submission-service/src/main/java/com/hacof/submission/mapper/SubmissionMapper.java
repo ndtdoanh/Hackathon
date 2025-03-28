@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.hacof.submission.constant.Status;
 import com.hacof.submission.dto.request.SubmissionRequestDTO;
 import com.hacof.submission.dto.response.FileUrlResponseDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
 import com.hacof.submission.dto.response.SubmissionResponseDTO;
 import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.Submission;
@@ -30,23 +31,30 @@ public class SubmissionMapper {
     public static SubmissionResponseDTO toResponseDTO(Submission submission) {
         SubmissionResponseDTO responseDTO = new SubmissionResponseDTO();
         responseDTO.setId(submission.getId());
-        responseDTO.setRoundId(submission.getRound().getId()); // Assuming round has an ID
+        responseDTO.setRoundId(submission.getRound().getId());
         responseDTO.setStatus(submission.getStatus().toString());
         responseDTO.setSubmittedAt(submission.getSubmittedAt());
 
         // Map FileUrls
         List<FileUrlResponseDTO> fileUrls = submission.getFileUrls().stream()
-                .map(fileUrl -> {
-                    FileUrlResponseDTO fileResponse = new FileUrlResponseDTO();
-                    fileResponse.setFileName(fileUrl.getFileName());
-                    fileResponse.setFileUrl(fileUrl.getFileUrl());
-                    fileResponse.setFileType(fileUrl.getFileType());
-                    fileResponse.setFileSize(fileUrl.getFileSize());
-                    return fileResponse;
-                })
+                .map(fileUrl -> new FileUrlResponseDTO(
+                        fileUrl.getFileName(),
+                        fileUrl.getFileUrl(),
+                        fileUrl.getFileType(),
+                        fileUrl.getFileSize()
+                ))
                 .collect(Collectors.toList());
 
         responseDTO.setFileUrls(fileUrls);
+
+        // Map JudgeSubmissions
+        if (submission.getJudgeSubmissions() != null) {
+            List<JudgeSubmissionResponseDTO> judgeSubmissions = submission.getJudgeSubmissions().stream()
+                    .map(JudgeSubmissionResponseDTO::new) // Gọi constructor từ entity
+                    .collect(Collectors.toList());
+            responseDTO.setJudgeSubmissions(judgeSubmissions);
+        }
+
         return responseDTO;
     }
 }
