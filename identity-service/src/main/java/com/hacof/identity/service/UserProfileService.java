@@ -13,6 +13,8 @@ public interface UserProfileService {
 
     UserProfileResponse updateProfile(UserProfileUpdateRequest request);
 
+    UserProfileResponse getProfileByUserId(Long userId);
+
     UserProfileResponse getProfile(Long userId);
 
     List<UserProfileResponse> getProfiles();
