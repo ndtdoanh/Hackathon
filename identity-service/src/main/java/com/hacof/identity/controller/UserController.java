@@ -45,7 +45,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_USER')")
+    //    @PreAuthorize("hasAuthority('CREATE_USER')")
     public ResponseEntity<ApiResponse> createUser(
             @RequestHeader("Authorization") String authorizationToken, @Valid @RequestBody UserCreateRequest request) {
 
