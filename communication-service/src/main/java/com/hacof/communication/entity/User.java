@@ -58,6 +58,9 @@ public class User extends AuditUserBase {
     @OneToMany(mappedBy = "createdBy")
     List<User> createdUsers;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    UserProfile userProfile;
+
     // User Roles
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
