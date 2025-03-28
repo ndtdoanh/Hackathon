@@ -12,5 +12,7 @@ public interface RoleMapper {
     @Mapping(target = "rolePermissions", ignore = true)
     Role toRole(RoleCreateRequest request);
 
+    @Mapping(source = "createdBy.id", target = "createdByUserId")
+    @Mapping(target = "permissions", source = "permissions")
     RoleResponse toRoleResponse(Role role);
 }
