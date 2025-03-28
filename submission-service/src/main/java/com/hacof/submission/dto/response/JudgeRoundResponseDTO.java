@@ -8,6 +8,7 @@ public class JudgeRoundResponseDTO {
     private Long judgeId;
     private Long roundId;
     private boolean isDeleted;
+    private String createdBy;
     private String createdDate;
     private String lastModifiedDate;
 }
