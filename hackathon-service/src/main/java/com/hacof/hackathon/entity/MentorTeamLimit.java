@@ -1,9 +1,5 @@
 package com.hacof.hackathon.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,11 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,28 +26,31 @@ import org.hibernate.annotations.OnDeleteAction;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "schedules")
-public class Schedule extends AuditCreatedBase {
+@Table(name = "mentor_team_limits")
+public class MentorTeamLimit extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    Team team;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hackathon_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Hackathon hackathon;
 
-    @Column(name = "name")
-    String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mentor_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    User mentor;
 
-    @Lob
-    @Column(name = "description")
-    String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    Team team;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ScheduleEvent> scheduleEvents = new ArrayList<>();}
+    @Column(name = "max_teams")
+    Integer maxTeams;
+
+    @Column(name = "max_mentors")
+    Integer maxMentors;
+}

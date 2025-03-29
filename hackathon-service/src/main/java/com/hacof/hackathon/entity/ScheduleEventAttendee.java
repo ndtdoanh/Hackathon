@@ -46,5 +46,5 @@ public class ScheduleEventAttendee extends AuditBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    ScheduleEventStatus statusD;
+    ScheduleEventStatus status;
 }
