@@ -2,17 +2,16 @@ package com.hacof.hackathon.service;
 
 import java.util.List;
 
-import org.springframework.data.jpa.domain.Specification;
-
 import com.hacof.hackathon.dto.RoundDTO;
-import com.hacof.hackathon.entity.Round;
 
 public interface RoundService {
-    List<RoundDTO> getRounds(Specification<Round> spec);
+    RoundDTO create(RoundDTO roundDTO);
 
-    RoundDTO createRound(RoundDTO roundDTO);
+    RoundDTO update(String id, RoundDTO roundDTO);
 
-    RoundDTO updateRound(Long id, RoundDTO roundDTO);
+    void delete(Long id);
 
-    void deleteRound(Long id);
+    List<RoundDTO> getAll();
+
+    RoundDTO getById(Long id);
 }
