@@ -44,10 +44,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Autowired
     private RoundRepository roundRepository;
 
-    @Autowired
-    private FirebaseConfig firebaseConfig;
 
-    private static final String UPLOAD_DIR = "E:\\Chuyên Ngành\\SEP\\uploads\\submissions\\";
     private static final List<String> ALLOWED_FILE_TYPES = Arrays.asList(
             "image/jpeg", // JPEG images
             "image/png", // PNG images
@@ -61,6 +58,8 @@ public class SubmissionServiceImpl implements SubmissionService {
             // PowerPoint)
             "text/plain" // .txt files (Text files)
             );
+    @Autowired
+    private S3Service s3Service;
 
     @Override
     public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
@@ -69,45 +68,79 @@ public class SubmissionServiceImpl implements SubmissionService {
         submission.setSubmittedAt(LocalDateTime.now());
         submission = submissionRepository.save(submission);
 
-        // Handle file uploads and store file metadata in FileUrl
+        // Handle file uploads to S3 and store file metadata in FileUrl
         for (MultipartFile file : files) {
             String fileType = file.getContentType();
             if (!ALLOWED_FILE_TYPES.contains(fileType)) {
                 throw new IllegalArgumentException("File type not allowed: " + fileType);
             }
 
-            // Generate a unique file name using UUID
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Path uploadPath = Paths.get(UPLOAD_DIR);
+            // Upload file to S3 and get the file URL
+            String fileUrl = s3Service.uploadFile(file.getInputStream(), file.getOriginalFilename(), file.getSize());
 
-            try {
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
+            // Create a new FileUrl entity for the uploaded file
+            FileUrl fileUrlEntity = new FileUrl();
+            fileUrlEntity.setFileName(file.getOriginalFilename());
+            fileUrlEntity.setFileUrl(fileUrl); // Store the S3 file URL
+            fileUrlEntity.setFileType(file.getContentType());
+            fileUrlEntity.setFileSize((int) file.getSize());
+            fileUrlEntity.setSubmission(submission);
 
-                // Create the file path and copy the file to the directory
-                Path filePath = uploadPath.resolve(fileName);
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                // Create a new FileUrl entity for the uploaded file
-                FileUrl fileUrlEntity = new FileUrl();
-                fileUrlEntity.setFileName(file.getOriginalFilename());
-                fileUrlEntity.setFileUrl("/" + UPLOAD_DIR + fileName);
-                fileUrlEntity.setFileType(file.getContentType());
-                fileUrlEntity.setFileSize((int) file.getSize());
-                fileUrlEntity.setSubmission(submission);
-
-                fileUrlRepository.save(fileUrlEntity);
-                submission.getFileUrls().add(fileUrlEntity);
-
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Failed to store file", e);
-            }
+            fileUrlRepository.save(fileUrlEntity);
+            submission.getFileUrls().add(fileUrlEntity);
         }
 
         submissionRepository.save(submission);
         return submissionMapper.toResponseDTO(submission);
     }
+
+
+//    @Override
+//    public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
+//            throws IOException {
+//        Submission submission = SubmissionMapper.toEntity(submissionDTO, roundRepository);
+//        submission.setSubmittedAt(LocalDateTime.now());
+//        submission = submissionRepository.save(submission);
+//
+//        // Handle file uploads and store file metadata in FileUrl
+//        for (MultipartFile file : files) {
+//            String fileType = file.getContentType();
+//            if (!ALLOWED_FILE_TYPES.contains(fileType)) {
+//                throw new IllegalArgumentException("File type not allowed: " + fileType);
+//            }
+//
+//            // Generate a unique file name using UUID
+//            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+//            Path uploadPath = Paths.get(UPLOAD_DIR);
+//
+//            try {
+//                if (!Files.exists(uploadPath)) {
+//                    Files.createDirectories(uploadPath);
+//                }
+//
+//                // Create the file path and copy the file to the directory
+//                Path filePath = uploadPath.resolve(fileName);
+//                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//
+//                // Create a new FileUrl entity for the uploaded file
+//                FileUrl fileUrlEntity = new FileUrl();
+//                fileUrlEntity.setFileName(file.getOriginalFilename());
+//                fileUrlEntity.setFileUrl("/" + UPLOAD_DIR + fileName);
+//                fileUrlEntity.setFileType(file.getContentType());
+//                fileUrlEntity.setFileSize((int) file.getSize());
+//                fileUrlEntity.setSubmission(submission);
+//
+//                fileUrlRepository.save(fileUrlEntity);
+//                submission.getFileUrls().add(fileUrlEntity);
+//
+//            } catch (IOException e) {
+//                throw new IllegalArgumentException("Failed to store file", e);
+//            }
+//        }
+//
+//        submissionRepository.save(submission);
+//        return submissionMapper.toResponseDTO(submission);
+//    }
 
     //    @Override
     //    public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
