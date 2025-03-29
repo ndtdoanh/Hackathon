@@ -3,20 +3,22 @@ package com.hacof.communication.dto.response;
 import java.time.LocalDateTime;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BoardResponseDTO {
 
-    private Long id;
-    private String name;
-    private String description;
-    private String ownerName;
-    private String teamName;
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+    String id;
+    String name;
+    String description;
+    String ownerName;
+    String teamName;
+    String createdBy;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
 }

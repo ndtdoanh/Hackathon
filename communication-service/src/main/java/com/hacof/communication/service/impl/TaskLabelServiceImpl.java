@@ -35,12 +35,14 @@ public class TaskLabelServiceImpl implements TaskLabelService {
 
     @Override
     public TaskLabelResponseDTO createTaskLabel(TaskLabelRequestDTO taskLabelRequestDTO) {
-        Optional<Task> taskOptional = taskRepository.findById(taskLabelRequestDTO.getTaskId());
+        Long taskId = Long.parseLong(taskLabelRequestDTO.getTaskId());
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
             throw new IllegalArgumentException("Task not found!");
         }
 
-        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(taskLabelRequestDTO.getBoardLabelId());
+        Long boardLabelId = Long.parseLong(taskLabelRequestDTO.getBoardLabelId());
+        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(boardLabelId);
         if (!boardLabelOptional.isPresent()) {
             throw new IllegalArgumentException("BoardLabel not found!");
         }
@@ -61,12 +63,14 @@ public class TaskLabelServiceImpl implements TaskLabelService {
             throw new IllegalArgumentException("TaskLabel not found!");
         }
 
-        Optional<Task> taskOptional = taskRepository.findById(taskLabelRequestDTO.getTaskId());
+        Long taskId = Long.parseLong(taskLabelRequestDTO.getTaskId());
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
             throw new IllegalArgumentException("Task not found!");
         }
 
-        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(taskLabelRequestDTO.getBoardLabelId());
+        Long boardLabelId = Long.parseLong(taskLabelRequestDTO.getBoardLabelId());
+        Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(boardLabelId);
         if (!boardLabelOptional.isPresent()) {
             throw new IllegalArgumentException("BoardLabel not found!");
         }

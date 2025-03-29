@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileUrlResponse {
-    Long id;
+    String id;
     String fileName;
     String fileUrl;
     String fileType;

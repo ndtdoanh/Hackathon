@@ -1,31 +1,25 @@
 package com.hacof.communication.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.Set;
-
 import com.hacof.communication.constant.Status;
+
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    private Long id;
-    private String username;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private Boolean isVerified;
-    private Status status;
-    private Boolean noPassword;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
-    private Long createdByUserId;
-    private Set<RoleResponse> roles;
+    String id;
+    String username;
+    String email;
+    String firstName;
+    String lastName;
+    Boolean isVerified;
+    Status status;
 
-    // Đảm bảo giá trị mặc định nếu bị null
     public Boolean getIsVerified() {
         return isVerified != null ? isVerified : false;
     }

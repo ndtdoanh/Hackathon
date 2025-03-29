@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationDeliveryResponse {
-    Long id;
+    String id;
     NotificationResponse notification;
     Set<UserResponse> recipients;
     RoleType role;

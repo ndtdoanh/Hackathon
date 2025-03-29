@@ -23,7 +23,7 @@ public class BoardMapper {
     // Chuyển đổi từ Board entity sang BoardResponseDTO
     public BoardResponseDTO toDto(Board board) {
         return BoardResponseDTO.builder()
-                .id(board.getId())
+                .id(String.valueOf(board.getId()))
                 .name(board.getName())
                 .description(board.getDescription())
                 .ownerName(board.getOwner().getUsername())

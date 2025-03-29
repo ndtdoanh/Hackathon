@@ -17,9 +17,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageReactionResponse {
-    Long id;
+    String id;
     ReactionType reactionType;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;
-    Long createdByUserId;
+    String createdByUserId;
 }

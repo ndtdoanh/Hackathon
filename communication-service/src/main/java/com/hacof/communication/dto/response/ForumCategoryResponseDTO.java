@@ -3,17 +3,20 @@ package com.hacof.communication.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ForumCategoryResponseDTO {
-    private long id;
-    private String name;
-    private String description;
-    private String section;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
-    private List<ForumThreadResponseDTO> forumThreads;
+    String id;
+    String name;
+    String description;
+    String section;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    List<ForumThreadResponseDTO> forumThreads;
 }

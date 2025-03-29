@@ -36,8 +36,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     @Override
     public ScheduleEventReminderResponseDTO createScheduleEventReminder(ScheduleEventReminderRequestDTO requestDTO) {
         // Tìm ScheduleEvent theo scheduleEventId
-        Optional<ScheduleEvent> scheduleEventOptional =
-                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        Long scheduleEventId = Long.parseLong(requestDTO.getScheduleEventId());
+        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(scheduleEventId);
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
@@ -49,7 +49,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         }
 
         // Tìm User theo userId
-        Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
+        Long userId = Long.parseLong(requestDTO.getUserId());
+        Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new IllegalArgumentException("User not found!");
         }
@@ -75,13 +76,14 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         }
 
         // Tìm ScheduleEvent và User theo ID
-        Optional<ScheduleEvent> scheduleEventOptional =
-                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        Long scheduleEventId = Long.parseLong(requestDTO.getScheduleEventId());
+        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(scheduleEventId);
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
 
-        Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
+        Long userId = Long.parseLong(requestDTO.getUserId());
+        Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new IllegalArgumentException("User not found!");
         }

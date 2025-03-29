@@ -1,16 +1,18 @@
 package com.hacof.communication.dto.request;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BoardRequestDTO {
 
-    private String name;
-    private String description;
-    private Long ownerId;
-    private Long teamId;
+    String name;
+    String description;
+    String ownerId;
+    String teamId;
 }

@@ -2,16 +2,19 @@ package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ThreadPostLikeResponseDTO {
 
-    private long id;
-    private ThreadPostResponseDTO threadPost;  // Include the full ThreadPost object
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+    String id;
+    ThreadPostResponseDTO threadPost; // Include the full ThreadPost object
+    String createdBy;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
 }

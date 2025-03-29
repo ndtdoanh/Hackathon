@@ -22,7 +22,9 @@ import lombok.experimental.FieldDefaults;
 public class UserProfileCreateRequest {
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits")
-    String phoneNumber;
+    String phone;
+
+    String bio;
 
     @NotNull(message = "Skills cannot be null")
     @Size(min = 1, message = "At least one skill is required")

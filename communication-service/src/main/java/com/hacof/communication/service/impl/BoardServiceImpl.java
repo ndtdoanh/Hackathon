@@ -35,12 +35,12 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardResponseDTO createBoard(BoardRequestDTO boardRequestDTO) {
-        Optional<User> ownerOptional = userRepository.findById(boardRequestDTO.getOwnerId());
+        Optional<User> ownerOptional = userRepository.findById(Long.parseLong(boardRequestDTO.getOwnerId()));
         if (!ownerOptional.isPresent()) {
             throw new IllegalArgumentException("Owner not found!");
         }
         User owner = ownerOptional.get();
-        Optional<Team> teamOptional = teamRepository.findById(boardRequestDTO.getTeamId());
+        Optional<Team> teamOptional = teamRepository.findById(Long.parseLong(boardRequestDTO.getTeamId()));
         if (!teamOptional.isPresent()) {
             throw new IllegalArgumentException("Team not found!");
         }
@@ -54,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
 
         board = boardRepository.save(board);
         return new BoardResponseDTO(
-                board.getId(),
+                String.valueOf(board.getId()),
                 board.getName(),
                 board.getDescription(),
                 board.getOwner().getUsername(),
@@ -74,12 +74,12 @@ public class BoardServiceImpl implements BoardService {
         // Lấy Board từ Optional
         Board board = boardOptional.get();
 
-        Optional<User> ownerOptional = userRepository.findById(boardRequestDTO.getOwnerId());
+        Optional<User> ownerOptional = userRepository.findById(Long.parseLong(boardRequestDTO.getOwnerId()));
         if (!ownerOptional.isPresent()) {
             throw new IllegalArgumentException("Owner not found!");
         }
         User owner = ownerOptional.get();
-        Optional<Team> teamOptional = teamRepository.findById(boardRequestDTO.getTeamId());
+        Optional<Team> teamOptional = teamRepository.findById(Long.parseLong(boardRequestDTO.getTeamId()));
         if (!teamOptional.isPresent()) {
             throw new IllegalArgumentException("Team not found!");
         }
@@ -93,7 +93,7 @@ public class BoardServiceImpl implements BoardService {
 
         board = boardRepository.save(board);
         return new BoardResponseDTO(
-                board.getId(),
+                String.valueOf(board.getId()),
                 board.getName(),
                 board.getDescription(),
                 board.getOwner().getUsername(),

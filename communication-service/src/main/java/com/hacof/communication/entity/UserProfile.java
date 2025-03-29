@@ -8,12 +8,10 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -46,11 +44,11 @@ public class UserProfile extends AuditBase {
     @JoinColumn(name = "user_id", unique = true)
     User user;
 
-    @Column(name = "name")
-    String name;
+    @Column(name = "phone", length = 10)
+    String phone;
 
-    @Column(name = "phone_number", length = 10)
-    String phoneNumber;
+    @Column(name = "bio")
+    String bio;
 
     @ElementCollection
     @CollectionTable(name = "user_skills", joinColumns = @JoinColumn(name = "user_profile_id"))

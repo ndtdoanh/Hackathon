@@ -20,7 +20,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileUpdateRequest {
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits")
-    String phoneNumber;
+    String phone;
+
+    String bio;
 
     @Size(min = 1, message = "At least one skill is required")
     Set<@NotBlank(message = "Skill cannot be blank") String> skills;
