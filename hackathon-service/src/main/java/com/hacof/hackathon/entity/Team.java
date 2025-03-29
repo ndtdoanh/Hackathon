@@ -43,10 +43,10 @@ public class Team extends AuditCreatedBase {
     @Column(name = "name")
     String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
+    //    @ManyToOne(fetch = FetchType.LAZY)
+    //    @OnDelete(action = OnDeleteAction.CASCADE)
+    //    @JoinColumn(name = "hackathon_id")
+    //    Hackathon hackathon;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

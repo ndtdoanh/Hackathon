@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.hackathon.constant.RoundStatus;
 
 import lombok.AccessLevel;
@@ -42,6 +43,7 @@ public class Round extends AuditBase {
 
     @ManyToOne
     @JoinColumn(name = "hackathon_id")
+    @JsonIgnore
     Hackathon hackathon;
 
     @Column(name = "start_time")
@@ -75,5 +77,6 @@ public class Round extends AuditBase {
     List<TeamRound> teamRounds;
 
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     List<RoundLocation> roundLocations;
 }
