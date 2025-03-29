@@ -8,26 +8,28 @@ import java.util.stream.Collectors;
 import com.hacof.submission.entity.JudgeSubmission;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JudgeSubmissionResponseDTO {
-    private Long id;
-    private UserResponse judge;
-    private SubmissionResponseDTO submission;
-    private int score;
-    private String note;
-    private String createdDate;
-    private String lastModifiedDate;
-    private Set<JudgeSubmissionDetailResponseDTO> judgeSubmissionDetails;
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
-    // Constructor that takes a JudgeSubmission entity
+public class JudgeSubmissionResponseDTO {
+    String id;
+    UserResponse judge;
+    SubmissionResponseDTO submission;
+    int score;
+    String note;
+    String createdDate;
+    String lastModifiedDate;
+    Set<JudgeSubmissionDetailResponseDTO> judgeSubmissionDetails;
+
     public JudgeSubmissionResponseDTO(JudgeSubmission entity) {
-        this.id = entity.getId();
-        this.judge = entity.getJudge() != null ? new UserResponse(entity.getJudge()) : null;
+        this.id = String.valueOf(entity.getId());
+        this.judge = entity.getJudge() != null ? new UserResponse() : null;
         this.score = entity.getScore();
         this.note = entity.getNote();
         this.createdDate =
@@ -44,12 +46,11 @@ public class JudgeSubmissionResponseDTO {
 
         if (entity.getSubmission() != null) {
             SubmissionResponseDTO submissionResponseDTO = new SubmissionResponseDTO();
-            submissionResponseDTO.setId(entity.getSubmission().getId());
+            submissionResponseDTO.setId(String.valueOf(entity.getSubmission().getId()));
 
-            // ✅ Fix: Set đúng kiểu dữ liệu RoundResponseDTO
             if (entity.getSubmission().getRound() != null) {
                 submissionResponseDTO.setRound(RoundResponseDTO.builder()
-                        .id(entity.getSubmission().getRound().getId())
+                        .id(String.valueOf(entity.getSubmission().getRound().getId()))
                         .roundTitle(entity.getSubmission().getRound().getRoundTitle())
                         .startTime(entity.getSubmission().getRound().getStartTime())
                         .endTime(entity.getSubmission().getRound().getEndTime())
