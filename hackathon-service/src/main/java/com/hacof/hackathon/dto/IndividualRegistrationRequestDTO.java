@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class IndividualRegistrationRequestDTO {
-    private Long id;
-    private Long userId;
+    private String id;
+    private String hackathonId;
     private String status;
+    private String reviewedById;
 }
