@@ -33,11 +33,14 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
     @Autowired
     private JudgeSubmissionDetailMapper mapper;
 
+    @Autowired
+    private JudgeSubmissionDetailMapper judgeSubmissionDetailMapper;
+
     @Override
     public List<JudgeSubmissionDetailResponseDTO> getAllDetails() {
         List<JudgeSubmissionDetail> details = detailRepository.findAll();
         return details.stream()
-                .map(detail -> JudgeSubmissionDetailMapper.toResponseDTO(detail)) // Gọi phương thức đúng từ Mapper
+                .map(detail -> judgeSubmissionDetailMapper.toResponseDTO(detail)) // Gọi phương thức đúng từ Mapper
                 .collect(Collectors.toList());
     }
 
