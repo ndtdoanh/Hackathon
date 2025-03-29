@@ -10,6 +10,9 @@ import com.hacof.submission.constant.DeviceQualityStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -36,4 +39,7 @@ public class UserDeviceTrack extends AuditBase {
     @Lob
     @Column(name = "note")
     String note;
+
+    @OneToMany(mappedBy = "userDeviceTrack", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }

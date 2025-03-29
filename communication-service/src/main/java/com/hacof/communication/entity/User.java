@@ -58,6 +58,9 @@ public class User extends AuditUserBase {
     @OneToMany(mappedBy = "createdBy")
     List<User> createdUsers;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    UserProfile userProfile;
+
     // User Roles
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -92,9 +95,6 @@ public class User extends AuditUserBase {
     // Mentorship Session Requests
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     List<MentorshipSessionRequest> createdMentorshipSessionRequests;
-
-    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MentorshipSessionRequest> mentorshipSessionRequestsAsMentor;
 
     @OneToMany(mappedBy = "evaluatedBy", cascade = CascadeType.ALL)
     List<MentorshipSessionRequest> evaluatedMentorshipSessionRequests;
@@ -172,7 +172,7 @@ public class User extends AuditUserBase {
     List<Feedback> createdFeedbacks;
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Notification> receivedNotifications;
+    List<NotificationDelivery> receivedNotifications;
 
     public void addRole(Role role) {
         if (this.userRoles == null) {

@@ -15,7 +15,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.hackathon.constant.Status;
 
 import lombok.AccessLevel;
@@ -34,16 +33,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "hackathons")
-public class Hackathon extends AuditUserBase {
+public class Hackathon extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(name = "title")
-    String title;
-
-    @Column(name = "sub_title")
-    String subTitle;
+    @Column(name = "name")
+    String name;
 
     @Column(name = "banner_image_url")
     String bannerImageUrl;
@@ -51,10 +47,6 @@ public class Hackathon extends AuditUserBase {
     @Lob
     @Column(name = "description")
     String description;
-
-    @Lob
-    @Column(name = "information")
-    String information;
 
     @Column(name = "start_date", columnDefinition = "datetime(6)")
     LocalDateTime startDate; // example:  2024-02-16 12:34:56.123456. -> datetime(6)
@@ -82,46 +74,35 @@ public class Hackathon extends AuditUserBase {
     Status status;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<Round> rounds;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<TeamHackathon> teamHackathons;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<HackathonResult> hackathonResults;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<UserHackathon> userHackathons;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<TeamRequest> teamRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<IndividualRegistrationRequest> individualRegistrationRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<MentorshipRequest> mentorshipRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<MentorshipSessionRequest> mentorshipSessionRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<SponsorshipHackathon> sponsorshipHackathons;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<Device> devices;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     List<Feedback> feedbacks;
 }

@@ -1,5 +1,7 @@
 package com.hacof.identity.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.hacof.identity.constant.DeviceStatus;
 
 import lombok.AccessLevel;
@@ -15,8 +17,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceResponse {
-    long id;
+    String id;
     String name;
     String description;
     DeviceStatus status;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    String createdByUserId;
 }

@@ -43,6 +43,9 @@ public class TeamRequest extends AuditCreatedBase {
     @JoinColumn(name = "hackathon_id")
     Hackathon hackathon;
 
+    @Column(name = "name")
+    String name;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     Status status;

@@ -46,6 +46,7 @@ public class JudgeRoundMapper {
         dto.setDeleted(entity.isDeleted());
         dto.setCreatedDate(entity.getCreatedDate().toString());
         dto.setLastModifiedDate(entity.getLastModifiedDate().toString());
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
 
         return dto;
     }

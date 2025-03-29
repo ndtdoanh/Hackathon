@@ -1,5 +1,7 @@
 package com.hacof.submission.entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +37,8 @@ public class Conversation extends AuditCreatedBase {
     String name;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<ConversationUser> conversationUsers;
+    Set<ConversationUser> conversationUsers = new HashSet<>();
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Message> messages;
+    List<Message> messages = new ArrayList<>();
 }

@@ -15,4 +15,5 @@ public class SubmissionResponseDTO {
     private String status;
     private LocalDateTime submittedAt;
     private List<FileUrlResponseDTO> fileUrls;
+    private List<JudgeSubmissionResponseDTO> judgeSubmissions;
 }

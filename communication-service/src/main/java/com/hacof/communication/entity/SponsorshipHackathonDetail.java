@@ -1,6 +1,8 @@
 package com.hacof.communication.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -47,4 +49,7 @@ public class SponsorshipHackathonDetail extends AuditBase {
 
     @Column(name = "time_to")
     LocalDateTime timeTo;
+
+    @OneToMany(mappedBy = "sponsorshipHackathonDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }

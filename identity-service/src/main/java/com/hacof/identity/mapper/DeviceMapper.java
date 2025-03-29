@@ -12,6 +12,10 @@ import com.hacof.identity.entity.Device;
 public interface DeviceMapper {
     Device toDevice(DeviceRequest request);
 
+    @Mapping(target = "id", expression = "java(String.valueOf(device.getId()))")
+    @Mapping(
+            target = "createdByUserId",
+            expression = "java(device.getCreatedBy() != null ? String.valueOf(device.getCreatedBy().getId()) : null)")
     DeviceResponse toDeviceResponse(Device device);
 
     @Mapping(target = "id", ignore = true)

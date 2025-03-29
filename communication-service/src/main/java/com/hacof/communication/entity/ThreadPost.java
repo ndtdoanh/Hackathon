@@ -1,5 +1,8 @@
 package com.hacof.communication.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -37,4 +40,10 @@ public class ThreadPost extends AuditCreatedBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deleted_by")
     User deletedBy;
+
+    @OneToMany(mappedBy = "threadPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ThreadPostLike> threadPostLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "threadPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ThreadPostReport> threadPostReports = new ArrayList<>();
 }

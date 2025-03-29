@@ -1,5 +1,8 @@
 package com.hacof.identity.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -49,4 +52,7 @@ public class Device extends AuditCreatedBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     DeviceStatus status;
+
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }

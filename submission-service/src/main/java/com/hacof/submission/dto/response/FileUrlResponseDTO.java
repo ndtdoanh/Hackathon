@@ -11,4 +11,11 @@ public class FileUrlResponseDTO {
     private String fileUrl;
     private String fileType;
     private int fileSize;
+
+    public FileUrlResponseDTO(String fileName, String fileUrl, String fileType, int fileSize) {
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
+        this.fileType = fileType;
+        this.fileSize = fileSize;
+    }
 }

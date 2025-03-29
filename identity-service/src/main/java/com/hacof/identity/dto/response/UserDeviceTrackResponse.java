@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDeviceTrackResponse {
-    long id;
+    String id;
     long userDeviceId;
     String note;
     DeviceQualityStatus status;

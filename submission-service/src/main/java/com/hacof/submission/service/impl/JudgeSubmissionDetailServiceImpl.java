@@ -36,7 +36,9 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
     @Override
     public List<JudgeSubmissionDetailResponseDTO> getAllDetails() {
         List<JudgeSubmissionDetail> details = detailRepository.findAll();
-        return details.stream().map(mapper::toResponseDTO).collect(Collectors.toList());
+        return details.stream()
+                .map(detail -> JudgeSubmissionDetailMapper.toResponseDTO(detail)) // Gọi phương thức đúng từ Mapper
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -65,6 +67,12 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
         entity.setRoundMarkCriterion(roundMarkCriterion);
 
         JudgeSubmissionDetail savedDetail = detailRepository.save(entity);
+
+        // Cập nhật điểm tổng trong JudgeSubmission
+        int newTotalScore = judgeSubmission.getScore() + savedDetail.getScore();
+        judgeSubmission.setScore(newTotalScore);
+        judgeSubmissionRepository.save(judgeSubmission);
+
         return mapper.toResponseDTO(savedDetail);
     }
 
@@ -80,10 +88,14 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
         RoundMarkCriterion roundMarkCriterion = roundMarkCriterionRepository
                 .findById(requestDTO.getRoundMarkCriterionId())
                 .orElseThrow(() -> new IllegalArgumentException("Round Mark Criterion not found"));
+
         if (requestDTO.getScore() > roundMarkCriterion.getMaxScore()) {
             throw new IllegalArgumentException(
                     "Score cannot be greater than Max Score (" + roundMarkCriterion.getMaxScore() + ")");
         }
+
+        // Lưu lại điểm cũ của JudgeSubmission để cập nhật sau khi thay đổi điểm
+        int oldScore = existingDetail.getScore();
 
         existingDetail.setScore(requestDTO.getScore());
         existingDetail.setNote(requestDTO.getNote());
@@ -91,8 +103,15 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
         existingDetail.setRoundMarkCriterion(roundMarkCriterion);
 
         JudgeSubmissionDetail updatedDetail = detailRepository.save(existingDetail);
+
+        // Cập nhật điểm tổng trong JudgeSubmission (cộng điểm mới, trừ điểm cũ)
+        int newTotalScore = judgeSubmission.getScore() - oldScore + updatedDetail.getScore();
+        judgeSubmission.setScore(newTotalScore);
+        judgeSubmissionRepository.save(judgeSubmission);
+
         return mapper.toResponseDTO(updatedDetail);
     }
+
 
     @Override
     public boolean deleteDetail(Long id) {

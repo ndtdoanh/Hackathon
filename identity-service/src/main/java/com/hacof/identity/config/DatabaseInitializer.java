@@ -1,5 +1,6 @@
 package com.hacof.identity.config;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,12 +10,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.hacof.identity.constant.Status;
+import com.hacof.identity.entity.Hackathon;
 import com.hacof.identity.entity.Permission;
 import com.hacof.identity.entity.Role;
 import com.hacof.identity.entity.RolePermission;
 import com.hacof.identity.entity.User;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
+import com.hacof.identity.repository.HackathonRepository;
 import com.hacof.identity.repository.PermissionRepository;
 import com.hacof.identity.repository.RoleRepository;
 import com.hacof.identity.repository.UserRepository;
@@ -34,6 +37,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     UserRepository userRepository;
     RoleRepository roleRepository;
     PermissionRepository permissionRepository;
+    HackathonRepository hackathonRepository;
 
     private static final Map<String, Set<String>> ROLE_PERMISSIONS = Map.of(
             "ADMIN",
@@ -477,6 +481,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         long countUsers = userRepository.count();
         long countRoles = roleRepository.count();
         long countPermissions = permissionRepository.count();
+        long countHackathons = hackathonRepository.count();
 
         if (countPermissions == 0) {
             createPermissions();
@@ -492,6 +497,12 @@ public class DatabaseInitializer implements CommandLineRunner {
             createDefaultUsers();
         } else {
             log.info(">>> SKIP INIT DATABASE ~ ALREADY HAVE USERS...");
+        }
+
+        if (countHackathons == 0) {
+            createHackathons();
+        } else {
+            log.info(">>> SKIP INIT HACKATHONS ~ ALREADY HAVE HACKATHONS...");
         }
     }
 
@@ -681,18 +692,20 @@ public class DatabaseInitializer implements CommandLineRunner {
         Role organizationRole = getRole("ORGANIZATION");
         Role mentorRole = getRole("MENTOR");
         Role judgeRole = getRole("JUDGE");
+        Role teammemberRole = getRole("TEAM_MEMBER");
 
         createUser("admin", "12345", "Admin", "System", adminRole);
         createUser("organization", "12345", "Organization", "System", organizationRole);
         createUser("mentor", "12345", "Mentor", "System", mentorRole);
         createUser("judge", "12345", "Judge", "System", judgeRole);
+        createUser("teammember", "12345", "Team", "Member", teammemberRole);
 
         log.info(">>> DEFAULT USERS CREATED SUCCESSFULLY");
     }
 
-    private void createUser(String email, String password, String firstName, String lastName, Role role) {
+    private void createUser(String username, String password, String firstName, String lastName, Role role) {
         User user = new User();
-        user.setUsername(email);
+        user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -705,5 +718,87 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     private Role getRole(String roleName) {
         return roleRepository.findByName(roleName).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+    }
+
+    private void createHackathons() {
+        List<Hackathon> hackathons = List.of(
+                Hackathon.builder()
+                        .title("AI Innovation Challenge")
+                        .subTitle("Exploring the Future of AI")
+                        .bannerImageUrl("https://example.com/banner1.jpg")
+                        .description("A hackathon focused on AI and Machine Learning.")
+                        .information("Participants will develop AI-powered solutions.")
+                        .startDate(LocalDateTime.of(2025, 6, 10, 9, 0))
+                        .endDate(LocalDateTime.of(2025, 6, 12, 18, 0))
+                        .maxTeams(20)
+                        .minTeamSize(3)
+                        .maxTeamSize(5)
+                        .contact("contact@ai-hackathon.com")
+                        .category("Technology")
+                        .status(Status.ACTIVE)
+                        .build(),
+                Hackathon.builder()
+                        .title("Blockchain Revolution")
+                        .subTitle("Building the Next-Gen Blockchain Apps")
+                        .bannerImageUrl("https://example.com/banner2.jpg")
+                        .description("A hackathon focused on decentralized applications and smart contracts.")
+                        .information("Teams will create blockchain-based solutions.")
+                        .startDate(LocalDateTime.of(2025, 7, 15, 10, 0))
+                        .endDate(LocalDateTime.of(2025, 7, 17, 19, 0))
+                        .maxTeams(15)
+                        .minTeamSize(2)
+                        .maxTeamSize(6)
+                        .contact("contact@blockchain-hack.com")
+                        .category("Finance & Technology")
+                        .status(Status.ACTIVE)
+                        .build(),
+                Hackathon.builder()
+                        .title("HealthTech Hackathon")
+                        .subTitle("Innovating Healthcare Solutions")
+                        .bannerImageUrl("https://example.com/banner3.jpg")
+                        .description("A hackathon to develop digital health solutions.")
+                        .information("Participants will design and prototype healthcare applications.")
+                        .startDate(LocalDateTime.of(2025, 8, 20, 8, 30))
+                        .endDate(LocalDateTime.of(2025, 8, 22, 17, 30))
+                        .maxTeams(25)
+                        .minTeamSize(3)
+                        .maxTeamSize(6)
+                        .contact("contact@healthtech-hack.com")
+                        .category("Healthcare")
+                        .status(Status.ACTIVE)
+                        .build(),
+                Hackathon.builder()
+                        .title("Cybersecurity Challenge")
+                        .subTitle("Defending the Digital World")
+                        .bannerImageUrl("https://example.com/banner4.jpg")
+                        .description("A hackathon for ethical hackers and security researchers.")
+                        .information("Teams will work on securing digital assets.")
+                        .startDate(LocalDateTime.of(2025, 9, 5, 9, 0))
+                        .endDate(LocalDateTime.of(2025, 9, 7, 18, 0))
+                        .maxTeams(18)
+                        .minTeamSize(2)
+                        .maxTeamSize(5)
+                        .contact("contact@cybersecurity-hack.com")
+                        .category("Security")
+                        .status(Status.ACTIVE)
+                        .build(),
+                Hackathon.builder()
+                        .title("GreenTech Innovation")
+                        .subTitle("Sustainable Solutions for a Greener Future")
+                        .bannerImageUrl("https://example.com/banner5.jpg")
+                        .description("A hackathon to promote eco-friendly and sustainable technologies.")
+                        .information("Participants will create green-tech solutions to tackle climate change.")
+                        .startDate(LocalDateTime.of(2025, 10, 12, 10, 0))
+                        .endDate(LocalDateTime.of(2025, 10, 14, 16, 0))
+                        .maxTeams(30)
+                        .minTeamSize(3)
+                        .maxTeamSize(7)
+                        .contact("contact@greentech-hack.com")
+                        .category("Environment")
+                        .status(Status.ACTIVE)
+                        .build());
+
+        hackathonRepository.saveAll(hackathons);
+        log.info(">>> HACKATHONS CREATED SUCCESSFULLY");
     }
 }

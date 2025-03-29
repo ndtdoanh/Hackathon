@@ -16,10 +16,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileResponse {
-    long id;
-    String name;
-    String phoneNumber;
+    String id;
+    Long userId;
+    String phone;
+    String bio;
     Set<String> skills;
     String avatarUrl;
-    LocalDateTime uploadedAt;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
 }

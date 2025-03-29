@@ -2,5 +2,6 @@ package com.hacof.communication.constant;
 
 public enum RoundLocationType {
     ONLINE,
-    OFFLINE
+    OFFLINE,
+    HYBRID
 }

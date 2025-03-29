@@ -38,8 +38,11 @@ public class Hackathon extends AuditCreatedBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(name = "name")
-    String name;
+    @Column(name = "title")
+    String title;
+
+    @Column(name = "sub_title")
+    String subTitle;
 
     @Column(name = "banner_image_url")
     String bannerImageUrl;
@@ -47,6 +50,10 @@ public class Hackathon extends AuditCreatedBase {
     @Lob
     @Column(name = "description")
     String description;
+
+    @Lob
+    @Column(name = "information")
+    String information;
 
     @Column(name = "start_date", columnDefinition = "datetime(6)")
     LocalDateTime startDate; // example:  2024-02-16 12:34:56.123456. -> datetime(6)
@@ -62,6 +69,12 @@ public class Hackathon extends AuditCreatedBase {
 
     @Column(name = "max_team_size")
     int maxTeamSize;
+
+    @Column(name = "contact")
+    String contact;
+
+    @Column(name = "category")
+    String category;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -87,9 +100,6 @@ public class Hackathon extends AuditCreatedBase {
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     List<MentorshipRequest> mentorshipRequests;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MentorshipSessionRequest> mentorshipSessionRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SponsorshipHackathon> sponsorshipHackathons;

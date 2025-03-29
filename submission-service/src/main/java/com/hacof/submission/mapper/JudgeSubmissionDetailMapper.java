@@ -1,7 +1,7 @@
 package com.hacof.submission.mapper;
 
-import java.util.Optional;
-
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +12,10 @@ import com.hacof.submission.entity.JudgeSubmissionDetail;
 import com.hacof.submission.entity.RoundMarkCriterion;
 import com.hacof.submission.repository.JudgeSubmissionRepository;
 import com.hacof.submission.repository.RoundMarkCriterionRepository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class JudgeSubmissionDetailMapper {
@@ -25,11 +29,9 @@ public class JudgeSubmissionDetailMapper {
     public JudgeSubmissionDetail toEntity(JudgeSubmissionDetailRequestDTO dto) {
         JudgeSubmissionDetail entity = new JudgeSubmissionDetail();
 
-        // Thiết lập các trường từ DTO
         entity.setScore(dto.getScore());
         entity.setNote(dto.getNote());
 
-        // Ánh xạ đối tượng judgeSubmission và roundMarkCriterion từ ID
         Optional<JudgeSubmission> judgeSubmission = judgeSubmissionRepository.findById(dto.getJudgeSubmissionId());
         if (judgeSubmission.isPresent()) {
             entity.setJudgeSubmission(judgeSubmission.get());
@@ -49,24 +51,35 @@ public class JudgeSubmissionDetailMapper {
         return entity;
     }
 
-    public JudgeSubmissionDetailResponseDTO toResponseDTO(JudgeSubmissionDetail entity) {
-        JudgeSubmissionDetailResponseDTO dto = new JudgeSubmissionDetailResponseDTO();
+    public static JudgeSubmissionDetailResponseDTO toResponseDTO(JudgeSubmissionDetail entity) {
+        JudgeSubmissionDetailResponseDTO responseDTO = new JudgeSubmissionDetailResponseDTO(entity);
+        responseDTO.setId(entity.getId());
+        responseDTO.setScore(entity.getScore());
+        responseDTO.setNote(entity.getNote());
 
-        // Thiết lập các trường trong ResponseDTO
-        dto.setId(entity.getId());
-        dto.setJudgeSubmissionId(
-                entity.getJudgeSubmission() != null
-                        ? entity.getJudgeSubmission().getId()
-                        : null);
-        dto.setRoundMarkCriterionId(
-                entity.getRoundMarkCriterion() != null
-                        ? entity.getRoundMarkCriterion().getId()
-                        : null);
-        dto.setScore(entity.getScore());
-        dto.setNote(entity.getNote());
-        dto.setCreatedDate(entity.getCreatedDate());
-        dto.setLastModifiedDate(entity.getLastModifiedDate());
+        JudgeSubmissionResponseDTO judgeSubmissionResponseDTO = new JudgeSubmissionResponseDTO(entity.getJudgeSubmission()); // Sử dụng constructor có tham số
+        responseDTO.setJudgeSubmissionId(judgeSubmissionResponseDTO.getId()); // Set the ID directly in the response DTO
 
-        return dto;
+        RoundMarkCriterionResponseDTO roundMarkCriterionResponseDTO = RoundMarkCriterionResponseDTO.builder()
+                .id(entity.getRoundMarkCriterion().getId())
+                .name(entity.getRoundMarkCriterion().getName())
+                .maxScore(entity.getRoundMarkCriterion().getMaxScore())
+                .note(entity.getRoundMarkCriterion().getNote())
+                .createdBy(entity.getRoundMarkCriterion().getCreatedBy() != null ?
+                        entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null)
+                .createdDate(entity.getRoundMarkCriterion().getCreatedDate())
+                .lastModifiedDate(entity.getRoundMarkCriterion().getLastModifiedDate())
+                .build();
+
+        responseDTO.setRoundMarkCriterion(roundMarkCriterionResponseDTO);
+
+        responseDTO.setCreatedDate(entity.getCreatedDate());
+        responseDTO.setLastModifiedDate(entity.getLastModifiedDate());
+
+        return responseDTO;
+    }
+
+    public static List<JudgeSubmissionDetailResponseDTO> toResponseDTOList(List<JudgeSubmissionDetail> entities) {
+        return entities.stream().map(JudgeSubmissionDetailMapper::toResponseDTO).collect(Collectors.toList());
     }
 }

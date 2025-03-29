@@ -13,16 +13,12 @@ import com.hacof.identity.entity.UserProfile;
 
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "name", ignore = true)
     @Mapping(target = "avatarUrl", ignore = true)
     @Mapping(target = "uploadedAt", ignore = true)
     UserProfile toEntity(UserProfileCreateRequest request);
 
-    @Mapping(
-            target = "name",
-            expression = "java(userProfile.getUser().getFirstName() + \" \" + userProfile.getUser().getLastName())")
+    @Mapping(target = "userId", source = "user.id")
     UserProfileResponse toResponse(UserProfile userProfile);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

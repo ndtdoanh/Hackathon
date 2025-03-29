@@ -68,7 +68,7 @@ public class RoleServiceImpl implements RoleService {
                 .map(rolePermission -> {
                     Permission permission = rolePermission.getPermission();
                     return PermissionResponse.builder()
-                            .id(permission.getId())
+                            .id(String.valueOf(permission.getId()))
                             .name(permission.getName())
                             .apiPath(permission.getApiPath())
                             .method(permission.getMethod())
@@ -125,7 +125,7 @@ public class RoleServiceImpl implements RoleService {
 
         roleResponse.setPermissions(role.getPermissions().stream()
                 .map(permission -> PermissionResponse.builder()
-                        .id(permission.getId())
+                        .id(String.valueOf(permission.getId()))
                         .name(permission.getName())
                         .apiPath(permission.getApiPath())
                         .method(permission.getMethod())
@@ -142,7 +142,13 @@ public class RoleServiceImpl implements RoleService {
             JWSObject jwsObject = JWSObject.parse(token);
             JWTClaimsSet claims = JWTClaimsSet.parse(jwsObject.getPayload().toJSONObject());
 
-            String roleName = claims.getStringClaim("role");
+            List<String> roles = (List<String>) claims.getClaim("role");
+            if (roles == null || roles.isEmpty()) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+
+            String roleName = roles.get(0);
+
             if (roleName == null || roleName.isBlank()) {
                 throw new AppException(ErrorCode.INVALID_TOKEN);
             }
@@ -150,9 +156,7 @@ public class RoleServiceImpl implements RoleService {
             Role role =
                     roleRepository.findByName(roleName).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
-            RoleResponse roleResponse = roleMapper.toRoleResponse(role);
-
-            return roleResponse;
+            return roleMapper.toRoleResponse(role);
 
         } catch (Exception e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);

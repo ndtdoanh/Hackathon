@@ -38,16 +38,8 @@ public class MentorshipSessionRequest extends AuditCreatedBase {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
-
-    @ManyToOne
-    @JoinColumn(name = "mentor_id")
-    User mentor;
-
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    Team team;
+    @JoinColumn(name = "mentor_team_id")
+    MentorTeam mentorTeam;
 
     LocalDateTime startTime;
     LocalDateTime endTime;

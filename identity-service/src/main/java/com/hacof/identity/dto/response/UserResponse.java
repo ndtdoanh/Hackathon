@@ -1,5 +1,6 @@
 package com.hacof.identity.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.hacof.identity.constant.Status;
@@ -17,13 +18,18 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    long id;
+    String id;
     String username;
+    String email;
     String firstName;
     String lastName;
     Boolean isVerified;
     Status status;
     Boolean noPassword;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    String createdByUserId;
+    UserProfileResponse userProfile;
     Set<RoleResponse> roles;
 
     public Boolean getIsVerified() {

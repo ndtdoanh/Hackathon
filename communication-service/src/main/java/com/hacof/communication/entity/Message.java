@@ -1,5 +1,8 @@
 package com.hacof.communication.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -27,4 +30,7 @@ public class Message extends AuditCreatedBase {
 
     @Column(name = "is_deleted")
     boolean isDeleted = false;
+
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
 }

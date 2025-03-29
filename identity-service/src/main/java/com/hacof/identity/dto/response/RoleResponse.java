@@ -1,5 +1,6 @@
 package com.hacof.identity.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.AccessLevel;
@@ -15,8 +16,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleResponse {
-    long id;
+    String id;
     String name;
     String description;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    String createdByUserId;
     Set<PermissionResponse> permissions;
 }

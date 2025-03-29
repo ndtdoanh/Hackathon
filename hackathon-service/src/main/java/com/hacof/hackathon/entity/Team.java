@@ -43,11 +43,6 @@ public class Team extends AuditCreatedBase {
     @Column(name = "name")
     String name;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-    //    @OnDelete(action = OnDeleteAction.CASCADE)
-    //    @JoinColumn(name = "hackathon_id")
-    //    Hackathon hackathon;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_leader_id")
@@ -55,9 +50,6 @@ public class Team extends AuditCreatedBase {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<UserTeam> teamMembers;
-
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MentorshipSessionRequest> mentorshipSessionRequests;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TeamHackathon> teamHackathons;

@@ -26,8 +26,9 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
     @Override
     public ThreadPostResponseDTO createThreadPost(ThreadPostRequestDTO requestDTO) {
+        Long forumThreadId = Long.parseLong(requestDTO.getForumThreadId());
         ForumThread forumThread = forumThreadRepository
-                .findById(requestDTO.getForumThreadId())
+                .findById(forumThreadId)
                 .orElseThrow(() -> new IllegalArgumentException("ForumThread not found"));
 
         ThreadPost threadPost = ThreadPostMapper.toEntity(requestDTO, forumThread);

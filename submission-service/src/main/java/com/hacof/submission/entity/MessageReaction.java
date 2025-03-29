@@ -1,5 +1,6 @@
 package com.hacof.submission.entity;
 
+import com.hacof.submission.constant.ReactionType;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -23,6 +24,7 @@ public class MessageReaction extends AuditCreatedBase {
     @JoinColumn(name = "message_id")
     Message message;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "reaction")
-    String reaction;
+    ReactionType reactionType;
 }

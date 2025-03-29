@@ -1,8 +1,12 @@
 package com.hacof.communication.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
+
+import com.hacof.communication.constant.EventLabel;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -46,4 +50,11 @@ public class ScheduleEvent extends AuditCreatedBase {
 
     @Column(name = "recurrence_rule")
     String recurrenceRule;
+
+    @OneToMany(mappedBy = "scheduleEvent", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_label")
+    EventLabel eventLabel;
 }

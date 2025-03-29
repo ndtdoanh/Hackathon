@@ -1,7 +1,10 @@
 package com.hacof.submission.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.hacof.submission.constant.EventLabel;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -46,4 +49,11 @@ public class ScheduleEvent extends AuditCreatedBase {
 
     @Column(name = "recurrence_rule")
     String recurrenceRule;
+
+    @OneToMany(mappedBy = "scheduleEvent", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<FileUrl> fileUrls = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_label")
+    EventLabel eventLabel;
 }
