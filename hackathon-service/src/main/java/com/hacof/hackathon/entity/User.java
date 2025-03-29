@@ -107,9 +107,6 @@ public class User extends AuditUserBase {
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     List<MentorshipSessionRequest> createdMentorshipSessionRequests;
 
-    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MentorshipSessionRequest> mentorshipSessionRequestsAsMentor;
-
     @OneToMany(mappedBy = "evaluatedBy", cascade = CascadeType.ALL)
     List<MentorshipSessionRequest> evaluatedMentorshipSessionRequests;
 

@@ -102,9 +102,6 @@ public class Hackathon extends AuditCreatedBase {
     List<MentorshipRequest> mentorshipRequests;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MentorshipSessionRequest> mentorshipSessionRequests;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SponsorshipHackathon> sponsorshipHackathons;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
