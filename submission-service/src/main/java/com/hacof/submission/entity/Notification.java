@@ -29,23 +29,18 @@ public class Notification extends AuditBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "sender_id")
-    User sender; // Phuc note: should not be replaced by AuditCreatedBase
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
-    User recipient;
+    User sender;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    NotificationType type;
+    @Column(name = "notification_type")
+    NotificationType notificationType;
 
     @Column(name = "content", columnDefinition = "TEXT")
     String content;
 
     @Lob
-    @Column(name = "metadata", columnDefinition = "JSON")
-    String metadata; // JSON string for extra data
+    @Column(name = "metadata")
+    String metadata;
 
     @Column(name = "is_read")
     boolean isRead = false;

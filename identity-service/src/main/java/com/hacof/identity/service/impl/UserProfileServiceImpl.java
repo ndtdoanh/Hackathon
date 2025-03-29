@@ -68,10 +68,6 @@ public class UserProfileServiceImpl implements UserProfileService {
         UserProfile userProfile = userProfileMapper.toEntity(request);
         userProfile.setUser(user);
 
-        String fullName = (user.getFirstName() != null ? user.getFirstName() : "") + " "
-                + (user.getLastName() != null ? user.getLastName() : "");
-        userProfile.setName(fullName.trim().isEmpty() ? "Unknown" : fullName.trim());
-
         userProfileRepository.save(userProfile);
         return userProfileMapper.toResponse(userProfile);
     }
@@ -87,6 +83,15 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         userProfileMapper.updateEntity(userProfile, request);
         userProfileRepository.save(userProfile);
+        return userProfileMapper.toResponse(userProfile);
+    }
+
+    @Override
+    public UserProfileResponse getProfileByUserId(Long userId) {
+        UserProfile userProfile = userProfileRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
+
         return userProfileMapper.toResponse(userProfile);
     }
 

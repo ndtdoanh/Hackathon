@@ -1,5 +1,7 @@
 package com.hacof.identity.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -39,4 +41,7 @@ public class TeamRound extends AuditCreatedBase {
 
     @Column(nullable = false)
     String description;
+
+    @OneToMany(mappedBy = "teamRound", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRoundJudge> teamRoundJudges;
 }

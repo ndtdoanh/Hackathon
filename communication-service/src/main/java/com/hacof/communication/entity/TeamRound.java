@@ -10,6 +10,8 @@ import com.hacof.communication.constant.TeamRoundStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -39,4 +41,7 @@ public class TeamRound extends AuditCreatedBase {
 
     @Column(nullable = false)
     String description;
+
+    @OneToMany(mappedBy = "teamRound", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRoundJudge> teamRoundJudges;
 }

@@ -1,16 +1,17 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.constant.ScheduleEventStatus;
-import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
-import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.ScheduleEventAttendeeService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.constant.ScheduleEventStatus;
+import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
+import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.ScheduleEventAttendeeService;
 
 @RestController
 @RequestMapping("/api/v1/schedule-event-attendees")
@@ -24,7 +25,8 @@ public class ScheduleEventAttendeeController {
             @RequestBody ScheduleEventAttendeeRequestDTO scheduleEventAttendeeRequestDTO) {
         CommonResponse<ScheduleEventAttendeeResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventAttendeeResponseDTO createdScheduleEventAttendee = scheduleEventAttendeeService.createScheduleEventAttendee(scheduleEventAttendeeRequestDTO);
+            ScheduleEventAttendeeResponseDTO createdScheduleEventAttendee =
+                    scheduleEventAttendeeService.createScheduleEventAttendee(scheduleEventAttendeeRequestDTO);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Schedule Event Attendee created successfully!");
             response.setData(createdScheduleEventAttendee);
@@ -45,7 +47,8 @@ public class ScheduleEventAttendeeController {
             @PathVariable Long id, @RequestBody ScheduleEventAttendeeRequestDTO scheduleEventAttendeeRequestDTO) {
         CommonResponse<ScheduleEventAttendeeResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventAttendeeResponseDTO updatedScheduleEventAttendee = scheduleEventAttendeeService.updateScheduleEventAttendee(id, scheduleEventAttendeeRequestDTO);
+            ScheduleEventAttendeeResponseDTO updatedScheduleEventAttendee =
+                    scheduleEventAttendeeService.updateScheduleEventAttendee(id, scheduleEventAttendeeRequestDTO);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendee updated successfully!");
             response.setData(updatedScheduleEventAttendee);
@@ -81,10 +84,12 @@ public class ScheduleEventAttendeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<ScheduleEventAttendeeResponseDTO>> getScheduleEventAttendee(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<ScheduleEventAttendeeResponseDTO>> getScheduleEventAttendee(
+            @PathVariable Long id) {
         CommonResponse<ScheduleEventAttendeeResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventAttendeeResponseDTO scheduleEventAttendee = scheduleEventAttendeeService.getScheduleEventAttendee(id);
+            ScheduleEventAttendeeResponseDTO scheduleEventAttendee =
+                    scheduleEventAttendeeService.getScheduleEventAttendee(id);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendee fetched successfully!");
             response.setData(scheduleEventAttendee);
@@ -104,7 +109,8 @@ public class ScheduleEventAttendeeController {
     public ResponseEntity<CommonResponse<List<ScheduleEventAttendeeResponseDTO>>> getAllScheduleEventAttendees() {
         CommonResponse<List<ScheduleEventAttendeeResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventAttendeeResponseDTO> scheduleEventAttendees = scheduleEventAttendeeService.getAllScheduleEventAttendees();
+            List<ScheduleEventAttendeeResponseDTO> scheduleEventAttendees =
+                    scheduleEventAttendeeService.getAllScheduleEventAttendees();
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendees fetched successfully!");
             response.setData(scheduleEventAttendees);
@@ -121,7 +127,8 @@ public class ScheduleEventAttendeeController {
             @PathVariable Long id, @RequestParam("status") ScheduleEventStatus status) {
         CommonResponse<ScheduleEventAttendeeResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventAttendeeResponseDTO updatedScheduleEventAttendee = scheduleEventAttendeeService.changeStatus(id, status);
+            ScheduleEventAttendeeResponseDTO updatedScheduleEventAttendee =
+                    scheduleEventAttendeeService.changeStatus(id, status);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendee status updated successfully!");
             response.setData(updatedScheduleEventAttendee);

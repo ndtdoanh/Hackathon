@@ -1,8 +1,8 @@
 package com.hacof.communication.dto.response;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import lombok.*;
 
 @Getter
 @Setter

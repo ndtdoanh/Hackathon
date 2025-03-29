@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -25,6 +27,11 @@ public class Schedule extends AuditCreatedBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     Team team;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hackathon_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    Hackathon hackathon;
 
     @Column(name = "name")
     String name;

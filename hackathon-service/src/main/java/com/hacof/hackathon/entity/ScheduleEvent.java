@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hacof.hackathon.constant.EventLabel;
 import jakarta.persistence.*;
 
 import lombok.AccessLevel;
@@ -56,4 +57,8 @@ public class ScheduleEvent extends AuditCreatedBase {
 
     @OneToMany(mappedBy = "scheduleEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     List<FileUrl> fileUrls = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_label")
+    EventLabel eventLabel;
 }

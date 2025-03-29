@@ -1,5 +1,6 @@
 package com.hacof.identity.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.hacof.identity.constant.Status;
@@ -24,6 +25,9 @@ public class UserResponse {
     Boolean isVerified;
     Status status;
     Boolean noPassword;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    Long createdByUserId;
     Set<RoleResponse> roles;
 
     public Boolean getIsVerified() {

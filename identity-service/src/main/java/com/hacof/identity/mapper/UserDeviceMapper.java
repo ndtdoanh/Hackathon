@@ -13,6 +13,7 @@ public interface UserDeviceMapper {
 
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "device.id", target = "deviceId")
+    @Mapping(source = "createdBy.id", target = "createdByUserId")
     @Mapping(source = "createdDate", target = "createdDate")
     @Mapping(source = "lastModifiedDate", target = "lastModifiedDate")
     UserDeviceResponse toUserDeviceResponse(UserDevice userDevice);

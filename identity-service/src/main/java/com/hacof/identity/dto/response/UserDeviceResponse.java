@@ -23,4 +23,5 @@ public class UserDeviceResponse {
     UserDeviceStatus status;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;
+    Long createdByUserId;
 }

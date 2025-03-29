@@ -1,5 +1,7 @@
 package com.hacof.identity.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.hacof.identity.constant.DeviceStatus;
 
 import lombok.AccessLevel;
@@ -19,4 +21,7 @@ public class DeviceResponse {
     String name;
     String description;
     DeviceStatus status;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    Long createdByUserId;
 }

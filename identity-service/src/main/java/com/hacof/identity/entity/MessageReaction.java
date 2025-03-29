@@ -2,6 +2,8 @@ package com.hacof.identity.entity;
 
 import jakarta.persistence.*;
 
+import com.hacof.identity.constant.ReactionType;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,6 +25,7 @@ public class MessageReaction extends AuditCreatedBase {
     @JoinColumn(name = "message_id")
     Message message;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "reaction")
-    String reaction;
+    ReactionType reactionType;
 }

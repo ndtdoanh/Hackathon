@@ -1,5 +1,6 @@
 package com.hacof.analytics.entity;
 
+import com.hacof.analytics.constant.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,6 +23,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -40,6 +43,15 @@ public class NotificationDelivery extends AuditBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notification_id")
     Notification notification;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id")
+    User recipient;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    RoleType role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "method")

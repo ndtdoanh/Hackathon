@@ -19,5 +19,4 @@ public class BoardResponseDTO {
     private String createdBy;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-
 }

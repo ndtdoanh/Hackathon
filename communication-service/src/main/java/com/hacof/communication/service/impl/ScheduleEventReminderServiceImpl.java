@@ -1,5 +1,12 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.ScheduleEventReminderRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventReminderResponseDTO;
 import com.hacof.communication.entity.ScheduleEvent;
@@ -10,12 +17,6 @@ import com.hacof.communication.repository.ScheduleEventReminderRepository;
 import com.hacof.communication.repository.ScheduleEventRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ScheduleEventReminderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderService {
@@ -35,7 +36,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     @Override
     public ScheduleEventReminderResponseDTO createScheduleEventReminder(ScheduleEventReminderRequestDTO requestDTO) {
         // Tìm ScheduleEvent theo scheduleEventId
-        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        Optional<ScheduleEvent> scheduleEventOptional =
+                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
@@ -53,7 +55,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         }
 
         // Chuyển từ ScheduleEventReminderRequestDTO thành ScheduleEventReminder entity
-        ScheduleEventReminder scheduleEventReminder = scheduleEventReminderMapper.toEntity(requestDTO, scheduleEvent, userOptional.get());
+        ScheduleEventReminder scheduleEventReminder =
+                scheduleEventReminderMapper.toEntity(requestDTO, scheduleEvent, userOptional.get());
 
         // Lưu ScheduleEventReminder vào cơ sở dữ liệu
         scheduleEventReminder = scheduleEventReminderRepository.save(scheduleEventReminder);
@@ -63,7 +66,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     }
 
     @Override
-    public ScheduleEventReminderResponseDTO updateScheduleEventReminder(Long id, ScheduleEventReminderRequestDTO requestDTO) {
+    public ScheduleEventReminderResponseDTO updateScheduleEventReminder(
+            Long id, ScheduleEventReminderRequestDTO requestDTO) {
         // Tìm ScheduleEventReminder theo ID
         Optional<ScheduleEventReminder> scheduleEventReminderOptional = scheduleEventReminderRepository.findById(id);
         if (!scheduleEventReminderOptional.isPresent()) {
@@ -71,7 +75,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         }
 
         // Tìm ScheduleEvent và User theo ID
-        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+        Optional<ScheduleEvent> scheduleEventOptional =
+                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
@@ -122,6 +127,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     @Override
     public List<ScheduleEventReminderResponseDTO> getAllScheduleEventReminders() {
         List<ScheduleEventReminder> scheduleEventReminders = scheduleEventReminderRepository.findAll();
-        return scheduleEventReminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
+        return scheduleEventReminders.stream()
+                .map(scheduleEventReminderMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

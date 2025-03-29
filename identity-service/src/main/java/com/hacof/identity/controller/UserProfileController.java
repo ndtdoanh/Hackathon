@@ -53,6 +53,18 @@ public class UserProfileController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAuthority('GET_PROFILE')")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> getProfileByUserId(@PathVariable Long userId) {
+        UserProfileResponse profileResponse = userProfileService.getProfileByUserId(userId);
+        ApiResponse<UserProfileResponse> response = ApiResponse.<UserProfileResponse>builder()
+                .result(profileResponse)
+                .message("Profile retrieved successfully by userId")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{Id}")
     @PreAuthorize("hasAuthority('GET_PROFILE')")
     public ResponseEntity<ApiResponse<UserProfileResponse>> getProfile(@PathVariable Long Id) {

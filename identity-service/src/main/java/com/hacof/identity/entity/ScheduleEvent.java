@@ -6,6 +6,8 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+import com.hacof.identity.constant.EventLabel;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -51,4 +53,8 @@ public class ScheduleEvent extends AuditCreatedBase {
 
     @OneToMany(mappedBy = "scheduleEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     List<FileUrl> fileUrls = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_label")
+    EventLabel eventLabel;
 }

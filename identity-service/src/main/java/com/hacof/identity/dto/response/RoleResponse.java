@@ -1,5 +1,6 @@
 package com.hacof.identity.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.AccessLevel;
@@ -18,5 +19,8 @@ public class RoleResponse {
     long id;
     String name;
     String description;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    Long createdByUserId;
     Set<PermissionResponse> permissions;
 }

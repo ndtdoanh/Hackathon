@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.TaskAssigneeRequestDTO;
-import com.hacof.communication.dto.response.TaskAssigneeResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.TaskAssigneeService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.communication.dto.request.TaskAssigneeRequestDTO;
+import com.hacof.communication.dto.response.TaskAssigneeResponseDTO;
+import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.service.TaskAssigneeService;
 
 @RestController
 @RequestMapping("/api/v1/task-assignees")
@@ -23,7 +24,8 @@ public class TaskAssigneeController {
             @RequestBody TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
         CommonResponse<TaskAssigneeResponseDTO> response = new CommonResponse<>();
         try {
-            TaskAssigneeResponseDTO createdTaskAssignee = taskAssigneeService.createTaskAssignee(taskAssigneeRequestDTO);
+            TaskAssigneeResponseDTO createdTaskAssignee =
+                    taskAssigneeService.createTaskAssignee(taskAssigneeRequestDTO);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Task Assignee created successfully!");
             response.setData(createdTaskAssignee);
@@ -44,7 +46,8 @@ public class TaskAssigneeController {
             @PathVariable Long id, @RequestBody TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
         CommonResponse<TaskAssigneeResponseDTO> response = new CommonResponse<>();
         try {
-            TaskAssigneeResponseDTO updatedTaskAssignee = taskAssigneeService.updateTaskAssignee(id, taskAssigneeRequestDTO);
+            TaskAssigneeResponseDTO updatedTaskAssignee =
+                    taskAssigneeService.updateTaskAssignee(id, taskAssigneeRequestDTO);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Task Assignee updated successfully!");
             response.setData(updatedTaskAssignee);
@@ -116,7 +119,8 @@ public class TaskAssigneeController {
     }
 
     @GetMapping("/by-task/{taskId}")
-    public ResponseEntity<CommonResponse<List<TaskAssigneeResponseDTO>>> getTaskAssigneesByTaskId(@PathVariable Long taskId) {
+    public ResponseEntity<CommonResponse<List<TaskAssigneeResponseDTO>>> getTaskAssigneesByTaskId(
+            @PathVariable Long taskId) {
         CommonResponse<List<TaskAssigneeResponseDTO>> response = new CommonResponse<>();
         try {
             List<TaskAssigneeResponseDTO> taskAssignees = taskAssigneeService.getTaskAssigneesByTaskId(taskId);
