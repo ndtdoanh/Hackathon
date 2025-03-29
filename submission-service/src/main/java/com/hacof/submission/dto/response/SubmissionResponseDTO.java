@@ -7,28 +7,30 @@ import java.util.stream.Collectors;
 import com.hacof.submission.entity.Submission;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubmissionResponseDTO {
-    private Long id;
-    private RoundResponseDTO round;
-    private String status;
-    private LocalDateTime submittedAt;
-    private List<FileUrlResponseDTO> fileUrls;
-    private List<JudgeSubmissionResponseDTO> judgeSubmissions;
-    private Integer finalScore;
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
-    // Constructor to map from Submission entity
+public class SubmissionResponseDTO {
+    String id;
+    RoundResponseDTO round;
+    String status;
+    LocalDateTime submittedAt;
+    List<FileUrlResponseDTO> fileUrls;
+    List<JudgeSubmissionResponseDTO> judgeSubmissions;
+    Integer finalScore;
+
     public SubmissionResponseDTO(Submission submission) {
         if (submission != null) {
-            this.id = submission.getId();
+            this.id = String.valueOf(submission.getId());
             this.round = submission.getRound() != null
                     ? new RoundResponseDTO()
-                    : null; // ✅ Fix: Correctly map RoundResponseDTO
+                    : null;
             this.status =
                     submission.getStatus() != null ? submission.getStatus().toString() : null;
             this.submittedAt = submission.getSubmittedAt();
