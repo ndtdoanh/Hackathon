@@ -22,7 +22,6 @@ public class JudgeRoundMapper {
     @Autowired
     private RoundRepository roundRepository;
 
-    // Chuyển từ DTO sang Entity
     public JudgeRound toEntity(JudgeRoundRequestDTO dto) {
         JudgeRound judgeRound = new JudgeRound();
 
@@ -44,9 +43,9 @@ public class JudgeRoundMapper {
         }
 
         return JudgeRoundResponseDTO.builder()
-                .id(entity.getId())
-                .judge(mapUserToDto(entity.getJudge())) // ✅ Chuyển đổi toàn bộ thông tin Judge
-                .round(mapRoundToDto(entity.getRound())) // ✅ Chuyển đổi toàn bộ thông tin Round
+                .id(String.valueOf(entity.getId()))
+                .judge(mapUserToDto(entity.getJudge()))
+                .round(mapRoundToDto(entity.getRound()))
                 .isDeleted(entity.isDeleted())
                 .createdBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
                 .createdDate(
@@ -62,26 +61,20 @@ public class JudgeRoundMapper {
 
     private UserResponse mapUserToDto(User user) {
         return UserResponse.builder()
-                .id(user.getId())
+                .id(String.valueOf(user.getId()))
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .isVerified(user.getIsVerified())
                 .status(user.getStatus())
-                .noPassword(user.getPassword() == null || user.getPassword().isEmpty()) // Derived field
-                .createdDate(user.getCreatedDate())
-                .lastModifiedDate(user.getLastModifiedDate())
-                .createdByUserId(
-                        user.getCreatedBy() != null ? user.getCreatedBy().getId() : null)
-                .roles(user.getUserRoles() != null ? mapUserRoles(user.getUserRoles()) : Collections.emptySet())
                 .build();
     }
 
     private Set<RoleResponse> mapUserRoles(Set<UserRole> userRoles) {
         return userRoles.stream()
                 .map(userRole -> RoleResponse.builder()
-                        .id(userRole.getRole().getId())
+                        .id(String.valueOf(userRole.getRole().getId()))
                         .name(userRole.getRole().getName())
                         .description(userRole.getRole().getDescription())
                         .createdDate(userRole.getRole().getCreatedDate())
@@ -101,7 +94,7 @@ public class JudgeRoundMapper {
     private Set<PermissionResponse> mapPermissions(Set<Permission> permissions) {
         return permissions.stream()
                 .map(permission -> PermissionResponse.builder()
-                        .id(permission.getId())
+                        .id(String.valueOf(permission.getId()))
                         .name(permission.getName())
                         .apiPath(permission.getApiPath())
                         .method(permission.getMethod())
@@ -112,7 +105,7 @@ public class JudgeRoundMapper {
 
     private RoundResponseDTO mapRoundToDto(Round round) {
         return RoundResponseDTO.builder()
-                .id(round.getId())
+                .id(String.valueOf(round.getId()))
                 .hackathon(round.getHackathon() != null ? mapHackathonToDto(round.getHackathon()) : null)
                 .startTime(round.getStartTime())
                 .endTime(round.getEndTime())
@@ -124,14 +117,13 @@ public class JudgeRoundMapper {
                 .build();
     }
 
-    // Convert Hackathon entity to response DTO
     private HackathonResponseDTO mapHackathonToDto(Hackathon hackathon) {
         if (hackathon == null) {
             return null;
         }
 
         return HackathonResponseDTO.builder()
-                .id(hackathon.getId())
+                .id(String.valueOf(hackathon.getId()))
                 .title(hackathon.getTitle())
                 .subTitle(hackathon.getSubTitle())
                 .bannerImageUrl(hackathon.getBannerImageUrl())

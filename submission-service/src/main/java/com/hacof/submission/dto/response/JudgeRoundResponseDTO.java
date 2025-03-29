@@ -1,6 +1,7 @@
 package com.hacof.submission.dto.response;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Getter
@@ -8,12 +9,14 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class JudgeRoundResponseDTO {
-    private Long id;
-    private UserResponse judge;
-    private RoundResponseDTO round;
-    private boolean isDeleted;
-    private String createdBy;
-    private String createdDate;
-    private String lastModifiedDate;
+    String id;
+    UserResponse judge;
+    RoundResponseDTO round;
+    boolean isDeleted;
+    String createdBy;
+    String createdDate;
+    String lastModifiedDate;
 }
