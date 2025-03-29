@@ -14,7 +14,7 @@ public class BoardLabelResponseDTO {
     private Long id;
     private String name;
     private String color;
-    private String boardName;
+    private BoardResponseDTO board;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }

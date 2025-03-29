@@ -2,6 +2,7 @@ package com.hacof.communication.mapper;
 
 import com.hacof.communication.dto.request.BoardLabelRequestDTO;
 import com.hacof.communication.dto.response.BoardLabelResponseDTO;
+import com.hacof.communication.dto.response.BoardResponseDTO;
 import com.hacof.communication.entity.BoardLabel;
 import com.hacof.communication.entity.Board;
 import org.springframework.stereotype.Component;
@@ -24,9 +25,23 @@ public class BoardLabelMapper {
                 .id(boardLabel.getId())
                 .name(boardLabel.getName())
                 .color(boardLabel.getColor())
-                .boardName(boardLabel.getBoard().getName())  // Giả sử Board có trường name
+                .board(boardLabel.getBoard() != null ? mapBoardToDto(boardLabel.getBoard()) : null) // Map toàn bộ Board
                 .createdDate(boardLabel.getCreatedDate()) // Truyền thời gian tạo
                 .lastModifiedDate(boardLabel.getLastModifiedDate()) // Truyền thời gian sửa đổi
+                .build();
+    }
+
+    // Chuyển đổi Board sang BoardResponseDTO
+    private BoardResponseDTO mapBoardToDto(Board board) {
+        return BoardResponseDTO.builder()
+                .id(board.getId())
+                .name(board.getName())
+                .description(board.getDescription()) // Lấy mô tả Board
+                .ownerName(board.getOwner() != null ? board.getOwner().getUsername() : null) // Lấy tên chủ sở hữu
+                .teamName(board.getTeam() != null ? board.getTeam().getName() : null) // Lấy tên team (nếu có)
+                .createdBy(board.getCreatedBy() != null ? board.getCreatedBy().getUsername() : null) // Người tạo
+                .createdDate(board.getCreatedDate())
+                .lastModifiedDate(board.getLastModifiedDate())
                 .build();
     }
 }
