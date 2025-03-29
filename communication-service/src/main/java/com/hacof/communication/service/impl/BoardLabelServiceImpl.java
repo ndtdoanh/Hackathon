@@ -30,7 +30,7 @@ public class BoardLabelServiceImpl implements BoardLabelService {
 
     @Override
     public BoardLabelResponseDTO createBoardLabel(BoardLabelRequestDTO boardLabelRequestDTO) {
-        Optional<Board> boardOptional = boardRepository.findById(boardLabelRequestDTO.getBoardId());
+        Optional<Board> boardOptional = boardRepository.findById(Long.valueOf(boardLabelRequestDTO.getBoardId()));
         if (!boardOptional.isPresent()) {
             throw new IllegalArgumentException("Board not found!");
         }
@@ -48,7 +48,7 @@ public class BoardLabelServiceImpl implements BoardLabelService {
             throw new IllegalArgumentException("BoardLabel not found!");
         }
 
-        Optional<Board> boardOptional = boardRepository.findById(boardLabelRequestDTO.getBoardId());
+        Optional<Board> boardOptional = boardRepository.findById(Long.valueOf(boardLabelRequestDTO.getBoardId()));
         if (!boardOptional.isPresent()) {
             throw new IllegalArgumentException("Board not found!");
         }

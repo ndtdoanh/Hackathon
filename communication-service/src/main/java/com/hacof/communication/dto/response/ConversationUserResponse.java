@@ -15,10 +15,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConversationUserResponse {
-    Long id;
-    Long userId;
+    String id;
+    String userId;
     boolean isDeleted;
-    Long deletedByUserId;
+    String deletedByUserId;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;
 }

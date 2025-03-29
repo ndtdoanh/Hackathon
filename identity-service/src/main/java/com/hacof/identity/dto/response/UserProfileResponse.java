@@ -18,7 +18,8 @@ import lombok.experimental.FieldDefaults;
 public class UserProfileResponse {
     String id;
     Long userId;
-    String phoneNumber;
+    String phone;
+    String bio;
     Set<String> skills;
     String avatarUrl;
     LocalDateTime createdDate;

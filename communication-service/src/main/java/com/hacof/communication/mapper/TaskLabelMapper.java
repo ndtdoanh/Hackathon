@@ -19,10 +19,16 @@ public class TaskLabelMapper {
     // Chuyển từ TaskLabel entity sang TaskLabelResponseDTO
     public TaskLabelResponseDTO toDto(TaskLabel taskLabel) {
         return TaskLabelResponseDTO.builder()
-                .id(taskLabel.getId())
-                .taskId(taskLabel.getTask().getId())
+                .id(String.valueOf(taskLabel.getId())) // Chuyển đổi long -> String
+                .taskId(
+                        taskLabel.getTask() != null
+                                ? String.valueOf(taskLabel.getTask().getId())
+                                : null)
                 .taskTitle(taskLabel.getTask().getTitle()) // Giả sử Task có trường `title`
-                .boardLabelId(taskLabel.getBoardLabel().getId())
+                .boardLabelId(
+                        taskLabel.getBoardLabel() != null
+                                ? String.valueOf(taskLabel.getBoardLabel().getId())
+                                : null)
                 .boardLabelName(taskLabel.getBoardLabel().getName()) // Giả sử BoardLabel có trường `name`
                 .createdDate(taskLabel.getCreatedDate()) // Trường từ AuditBase
                 .lastModifiedDate(taskLabel.getLastModifiedDate()) // Trường từ AuditBase

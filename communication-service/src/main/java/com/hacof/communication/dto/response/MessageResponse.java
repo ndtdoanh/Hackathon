@@ -16,11 +16,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageResponse {
-    Long id;
-    Long conversationId;
+    String id;
+    String conversationId;
     String content;
     List<FileUrlResponse> fileUrls;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;
-    Long createdByUserId;
+    String createdByUserId;
 }

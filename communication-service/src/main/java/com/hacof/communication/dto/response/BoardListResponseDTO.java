@@ -4,19 +4,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BoardListResponseDTO {
-    private Long id;
-    private String name;
-    private int position;
-    private BoardResponseDTO board;
-    private List<TaskResponseDTO> tasks;
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+    String id;
+    String name;
+    int position;
+    BoardResponseDTO board;
+    List<TaskResponseDTO> tasks;
+    String createdBy;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
 }

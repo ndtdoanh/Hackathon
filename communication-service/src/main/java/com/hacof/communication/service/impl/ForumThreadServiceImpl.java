@@ -31,7 +31,7 @@ public class ForumThreadServiceImpl implements ForumThreadService {
     @Override
     public ForumThreadResponseDTO createForumThread(ForumThreadRequestDTO forumThreadRequestDTO) {
         Optional<ForumCategory> forumCategoryOptional =
-                forumCategoryRepository.findById(forumThreadRequestDTO.getForumCategoryId());
+                forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }
@@ -52,7 +52,7 @@ public class ForumThreadServiceImpl implements ForumThreadService {
 
         ForumThread forumThread = forumThreadOptional.get();
         Optional<ForumCategory> forumCategoryOptional =
-                forumCategoryRepository.findById(forumThreadRequestDTO.getForumCategoryId());
+                forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }

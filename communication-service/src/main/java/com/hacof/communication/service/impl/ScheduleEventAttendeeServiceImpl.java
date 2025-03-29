@@ -37,12 +37,12 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
     @Override
     public ScheduleEventAttendeeResponseDTO createScheduleEventAttendee(ScheduleEventAttendeeRequestDTO requestDTO) {
         Optional<ScheduleEvent> scheduleEventOptional =
-                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+                scheduleEventRepository.findById(Long.parseLong(requestDTO.getScheduleEventId()));
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
 
-        Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
+        Optional<User> userOptional = userRepository.findById(Long.parseLong(requestDTO.getUserId()));
         if (!userOptional.isPresent()) {
             throw new IllegalArgumentException("User not found!");
         }
@@ -63,12 +63,12 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
         }
 
         Optional<ScheduleEvent> scheduleEventOptional =
-                scheduleEventRepository.findById(requestDTO.getScheduleEventId());
+                scheduleEventRepository.findById(Long.parseLong(requestDTO.getScheduleEventId()));
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
 
-        Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
+        Optional<User> userOptional = userRepository.findById(Long.parseLong(requestDTO.getUserId()));
         if (!userOptional.isPresent()) {
             throw new IllegalArgumentException("User not found!");
         }
@@ -116,7 +116,7 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
         }
 
         ScheduleEventAttendee scheduleEventAttendee = scheduleEventAttendeeOptional.get();
-        scheduleEventAttendee.setStatusD(status);
+        scheduleEventAttendee.setStatus(status);
         scheduleEventAttendee = scheduleEventAttendeeRepository.save(scheduleEventAttendee);
 
         return scheduleEventAttendeeMapper.toDto(scheduleEventAttendee);

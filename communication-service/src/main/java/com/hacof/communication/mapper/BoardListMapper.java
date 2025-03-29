@@ -1,16 +1,18 @@
 package com.hacof.communication.mapper;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.BoardListRequestDTO;
 import com.hacof.communication.dto.response.BoardListResponseDTO;
 import com.hacof.communication.dto.response.BoardResponseDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
-import com.hacof.communication.entity.BoardList;
 import com.hacof.communication.entity.Board;
+import com.hacof.communication.entity.BoardList;
 import com.hacof.communication.entity.Task;
-import org.springframework.stereotype.Component;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class BoardListMapper {
@@ -27,12 +29,15 @@ public class BoardListMapper {
     // Chuyển từ BoardList entity sang BoardListResponseDTO
     public BoardListResponseDTO toDto(BoardList boardList) {
         return BoardListResponseDTO.builder()
-                .id(boardList.getId())
+                .id(String.valueOf(boardList.getId()))
                 .name(boardList.getName())
                 .position(boardList.getPosition())
                 .board(boardList.getBoard() != null ? mapBoardToDto(boardList.getBoard()) : null) // Map Board
                 .tasks(boardList.getTasks() != null ? mapTasksToDto(boardList.getTasks()) : null) // Map Tasks
-                .createdBy(boardList.getCreatedBy() != null ? boardList.getCreatedBy().getUsername() : null)
+                .createdBy(
+                        boardList.getCreatedBy() != null
+                                ? boardList.getCreatedBy().getUsername()
+                                : null)
                 .createdDate(boardList.getCreatedDate())
                 .lastModifiedDate(boardList.getLastModifiedDate())
                 .build();
@@ -41,7 +46,7 @@ public class BoardListMapper {
     // Chuyển đổi Board sang BoardResponseDTO
     private BoardResponseDTO mapBoardToDto(Board board) {
         return BoardResponseDTO.builder()
-                .id(board.getId())
+                .id(String.valueOf(board.getId()))
                 .name(board.getName())
                 .description(board.getDescription()) // Lấy mô tả Board
                 .ownerName(board.getOwner() != null ? board.getOwner().getUsername() : null) // Lấy tên chủ sở hữu
@@ -60,7 +65,7 @@ public class BoardListMapper {
     // Chuyển đổi Task sang TaskResponseDTO
     private TaskResponseDTO mapTaskToDto(Task task) {
         return TaskResponseDTO.builder()
-                .id(task.getId())
+                .id(String.valueOf(task.getId()))
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .position(task.getPosition())

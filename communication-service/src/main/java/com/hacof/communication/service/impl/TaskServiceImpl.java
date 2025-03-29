@@ -30,7 +30,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
-        Optional<BoardList> boardListOptional = boardListRepository.findById(taskRequestDTO.getBoardListId());
+        Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
+        Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
+
         if (!boardListOptional.isPresent()) {
             throw new IllegalArgumentException("BoardList not found!");
         }
@@ -47,7 +49,8 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task not found!");
         }
 
-        Optional<BoardList> boardListOptional = boardListRepository.findById(taskRequestDTO.getBoardListId());
+        Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
+        Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
         if (!boardListOptional.isPresent()) {
             throw new IllegalArgumentException("BoardList not found!");
         }

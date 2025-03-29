@@ -31,7 +31,9 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
     @Override
     public ScheduleEventResponseDTO createScheduleEvent(ScheduleEventRequestDTO scheduleEventRequestDTO) {
         // Tìm Schedule theo scheduleId
-        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleEventRequestDTO.getScheduleId());
+        Long scheduleId = Long.parseLong(scheduleEventRequestDTO.getScheduleId());
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleId);
+
         if (!scheduleOptional.isPresent()) {
             throw new IllegalArgumentException("Schedule not found!");
         }
@@ -55,7 +57,8 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         }
 
         // Tìm Schedule theo scheduleId
-        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleEventRequestDTO.getScheduleId());
+        Long scheduleId = Long.parseLong(scheduleEventRequestDTO.getScheduleId());
+        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleId);
         if (!scheduleOptional.isPresent()) {
             throw new IllegalArgumentException("Schedule not found!");
         }

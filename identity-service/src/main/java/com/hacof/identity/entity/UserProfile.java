@@ -44,8 +44,11 @@ public class UserProfile extends AuditBase {
     @JoinColumn(name = "user_id", unique = true)
     User user;
 
-    @Column(name = "phone_number", length = 10)
-    String phoneNumber;
+    @Column(name = "phone", length = 10)
+    String phone;
+
+    @Column(name = "bio")
+    String bio;
 
     @ElementCollection
     @CollectionTable(name = "user_skills", joinColumns = @JoinColumn(name = "user_profile_id"))

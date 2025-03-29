@@ -16,8 +16,11 @@ public class TaskCommentMapper {
     // Chuyển từ TaskComment entity sang TaskCommentResponseDTO
     public TaskCommentResponseDTO toDto(TaskComment taskComment) {
         return TaskCommentResponseDTO.builder()
-                .id(taskComment.getId())
-                .taskId(taskComment.getTask().getId())
+                .id(String.valueOf(taskComment.getId())) // Chuyển đổi long -> String
+                .taskId(
+                        taskComment.getTask() != null
+                                ? String.valueOf(taskComment.getTask().getId())
+                                : null)
                 .taskTitle(taskComment.getTask().getTitle()) // Giả sử Task có trường `title`
                 .content(taskComment.getContent())
                 .createdDate(taskComment.getCreatedDate())

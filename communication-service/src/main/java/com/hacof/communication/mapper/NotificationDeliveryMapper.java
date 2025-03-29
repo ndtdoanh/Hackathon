@@ -9,6 +9,7 @@ import com.hacof.communication.entity.NotificationDelivery;
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface NotificationDeliveryMapper {
 
+    @Mapping(target = "id", expression = "java(String.valueOf(delivery.getId()))")
     @Mapping(source = "method", target = "method")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "role", target = "role")
