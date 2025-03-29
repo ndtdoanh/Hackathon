@@ -1,11 +1,17 @@
 package com.hacof.hackathon.service;
 
+import java.util.List;
+
 import com.hacof.hackathon.dto.SponsorshipDTO;
 
 public interface SponsorshipService {
-    SponsorshipDTO createSponsorship(Long hackathonId, String sponsorName);
+    SponsorshipDTO create(SponsorshipDTO sponsorshipDTO);
 
-    SponsorshipDTO approveSponsorship(Long sponsorshipId, Long adminId);
+    SponsorshipDTO update(Long id, SponsorshipDTO sponsorshipDTO);
 
-    SponsorshipDTO rejectSponsorship(Long sponsorshipId, Long adminId);
+    void delete(Long id);
+
+    List<SponsorshipDTO> getAll();
+
+    SponsorshipDTO getById(Long id);
 }
