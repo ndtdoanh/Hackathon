@@ -28,8 +28,12 @@ public interface UserMapper {
     @Mapping(target = "userRoles", ignore = true)
     User toUser(UserCreateRequest request);
 
-    @Mapping(target = "createdByUserId", source = "createdBy.id")
+    @Mapping(target = "id", expression = "java(String.valueOf(user.getId()))")
+    @Mapping(
+            target = "createdByUserId",
+            expression = "java(user.getCreatedBy() != null ? String.valueOf(user.getCreatedBy().getId()) : null)")
     @Mapping(target = "roles", source = "userRoles", qualifiedByName = "mapUserRolesToRoles")
+    @Mapping(target = "userProfile", source = "userProfile")
     UserResponse toUserResponse(User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

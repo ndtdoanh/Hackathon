@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActivityLogResponse {
-    Long id;
+    String id;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;
     String action;
@@ -32,7 +32,7 @@ public class ActivityLogResponse {
 
     public static ActivityLogResponse fromEntity(ActivityLog log) {
         return ActivityLogResponse.builder()
-                .id(log.getId())
+                .id(String.valueOf(log.getId()))
                 .createdDate(log.getCreatedDate())
                 .lastModifiedDate(log.getLastModifiedDate())
                 .action(log.getAction())

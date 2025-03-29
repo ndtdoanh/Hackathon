@@ -68,7 +68,7 @@ public class RoleServiceImpl implements RoleService {
                 .map(rolePermission -> {
                     Permission permission = rolePermission.getPermission();
                     return PermissionResponse.builder()
-                            .id(permission.getId())
+                            .id(String.valueOf(permission.getId()))
                             .name(permission.getName())
                             .apiPath(permission.getApiPath())
                             .method(permission.getMethod())
@@ -125,7 +125,7 @@ public class RoleServiceImpl implements RoleService {
 
         roleResponse.setPermissions(role.getPermissions().stream()
                 .map(permission -> PermissionResponse.builder()
-                        .id(permission.getId())
+                        .id(String.valueOf(permission.getId()))
                         .name(permission.getName())
                         .apiPath(permission.getApiPath())
                         .method(permission.getMethod())

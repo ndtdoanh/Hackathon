@@ -13,7 +13,6 @@ import com.hacof.identity.entity.UserProfile;
 
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "avatarUrl", ignore = true)
     @Mapping(target = "uploadedAt", ignore = true)
