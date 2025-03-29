@@ -15,6 +15,4 @@ public interface HackathonService {
     void deleteHackathon(Long id);
 
     List<HackathonDTO> getHackathons(Specification<Hackathon> spec);
-
-    List<HackathonDTO> getHackathons();
 }

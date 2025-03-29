@@ -58,8 +58,8 @@ public class HackathonDTO {
     List<Feedback> feedbacks;
 
     // Audit fields
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private String lastModifiedBy;
-    private LocalDateTime lastModifiedDate;
+    String createdBy; // save username
+    LocalDateTime createdDate;
+    String lastModifiedBy; // save username
+    LocalDateTime lastModifiedDate;
 }

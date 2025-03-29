@@ -21,6 +21,7 @@ import com.hacof.hackathon.specification.HackathonSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,69 +33,48 @@ public class HackathonController {
     final HackathonService hackathonService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<HackathonDTO>>> getAllHackathons() {
-        log.debug("Received request to fetch all hackathons");
-        List<HackathonDTO> hackathons = hackathonService.getHackathons();
-        CommonResponse<List<HackathonDTO>> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched hackathons successfully"),
-                hackathons);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/hello")
-    // @PreAuthorize("hasAuthority('GET_HACKATHON')")
     public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
-            @RequestParam(required = false) String id,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String subTitle,
-            @RequestParam(required = false) String bannerImageUrl,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                    LocalDateTime enrollStartDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                    LocalDateTime enrollEndDate,
-            @RequestParam(required = false) Integer enrollmentCount,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @RequestParam(required = false) String information,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) String contact,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String organization,
-            @RequestParam(required = false) String enrollmentStatus,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) Integer minimumTeamMembers,
-            @RequestParam(required = false) Integer maximumTeamMembers) {
-        log.debug("Received request to fetch hackathons by all criteria");
-        Specification<Hackathon> spec = HackathonSpecification.filter(
-                id,
-                title,
-                subTitle,
-                bannerImageUrl,
-                enrollStartDate,
-                enrollEndDate,
-                enrollmentCount,
-                startDate,
-                endDate,
-                information,
-                description,
-                contact,
-                category,
-                organization,
-                enrollmentStatus,
+            @RequestParam(required = false) Integer minTeamSize,
+            @RequestParam(required = false) Integer maxTeamSize) {
+        log.debug(
+                "Searching hackathons with criteria - keyword: {}, status: {}, category: {}",
+                keyword,
                 status,
-                minimumTeamMembers,
-                maximumTeamMembers);
+                category);
+
+        Specification<Hackathon> spec = Specification.where(null);
+
+        if (StringUtils.isNotBlank(keyword)) {
+            spec = spec.and(HackathonSpecification.searchByKeyword(keyword));
+        }
+        if (StringUtils.isNotBlank(status)) {
+            spec = spec.and(HackathonSpecification.hasStatus(status));
+        }
+        if (StringUtils.isNotBlank(category)) {
+            spec = spec.and(HackathonSpecification.byCategory(category));
+        }
+        if (startDate != null || endDate != null) {
+            spec = spec.and(HackathonSpecification.datesBetween(startDate, endDate));
+        }
+        if (minTeamSize != null || maxTeamSize != null) {
+            spec = spec.and(HackathonSpecification.teamSizeRange(minTeamSize, maxTeamSize));
+        }
 
         List<HackathonDTO> hackathons = hackathonService.getHackathons(spec);
+
         CommonResponse<List<HackathonDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched hackathons successfully"),
+                new CommonResponse.Result(
+                        StatusCode.SUCCESS.getCode(), String.format("Found %d hackathons", hackathons.size())),
                 hackathons);
+
         return ResponseEntity.ok(response);
     }
 

@@ -1,18 +1,24 @@
 package com.hacof.hackathon.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.entity.Hackathon;
+import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.HackathonMapper;
 import com.hacof.hackathon.repository.HackathonRepository;
+import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.HackathonService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class HackathonServiceImpl implements HackathonService {
     final HackathonRepository hackathonRepository;
     final HackathonMapper hackathonMapper;
+    final UserRepository userRepository;
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
@@ -33,22 +40,39 @@ public class HackathonServiceImpl implements HackathonService {
     }
 
     @Override
+    @Transactional
     public HackathonDTO update(String id, HackathonDTO hackathonDTO) {
-        log.debug("Updating hackathon with id: {}", id);
-        if (id == null || id.trim().isEmpty()) {
-            throw new IllegalArgumentException("ID cannot be null or empty");
-        }
-        long Id;
-        try {
-            Id = Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid ID format: " + id);
+        Hackathon existingHackathon = hackathonRepository
+                .findById(Long.parseLong(id))
+                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + id));
+
+        // get current user's information from SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
         }
 
-        Hackathon existingHackathon = hackathonRepository
-                .findById(Id)
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + Id));
-        hackathonMapper.updateEntityFromDto(hackathonDTO, existingHackathon);
+        String username = authentication.getName();
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+        // hackathonMapper.updateEntityFromDto(hackathonDTO, existingHackathon);
+        existingHackathon.setTitle(hackathonDTO.getTitle());
+        existingHackathon.setSubTitle(hackathonDTO.getSubTitle());
+        existingHackathon.setBannerImageUrl(hackathonDTO.getBannerImageUrl());
+        existingHackathon.setDescription(hackathonDTO.getDescription());
+        existingHackathon.setInformation(hackathonDTO.getInformation());
+        existingHackathon.setStartDate(hackathonDTO.getStartDate());
+        existingHackathon.setEndDate(hackathonDTO.getEndDate());
+        existingHackathon.setMinTeamSize(hackathonDTO.getMinimumTeamMembers());
+        existingHackathon.setMaxTeamSize(hackathonDTO.getMaximumTeamMembers());
+        existingHackathon.setContact(hackathonDTO.getContact());
+        existingHackathon.setCategory(hackathonDTO.getCategory());
+        existingHackathon.setStatus(Status.valueOf(hackathonDTO.getStatus()));
+
+        existingHackathon.setLastModifiedBy(currentUser);
+        existingHackathon.setLastModifiedDate(LocalDateTime.now());
         return hackathonMapper.toDto(hackathonRepository.save(existingHackathon));
     }
 
@@ -68,21 +92,14 @@ public class HackathonServiceImpl implements HackathonService {
 
     @Override
     public List<HackathonDTO> getHackathons(Specification<Hackathon> spec) {
-        if (hackathonRepository.findAll(spec).isEmpty()) {
-            throw new ResourceNotFoundException("No hackathons found");
-        }
-        return hackathonRepository.findAll(spec).stream()
-                .map(hackathonMapper::toDto)
-                .collect(Collectors.toList());
-    }
+        log.debug("Searching hackathons with specification");
+        List<Hackathon> hackathons = hackathonRepository.findAll(spec);
 
-    @Override
-    public List<HackathonDTO> getHackathons() {
-        if (hackathonRepository.findAll().isEmpty()) {
-            throw new ResourceNotFoundException("No hackathons found");
+        if (hackathons.isEmpty()) {
+            throw new ResourceNotFoundException("No hackathons found matching the criteria");
         }
-        return hackathonRepository.findAll().stream()
-                .map(hackathonMapper::toDto)
-                .collect(Collectors.toList());
+
+        log.debug("Found {} hackathons matching the criteria", hackathons.size());
+        return hackathons.stream().map(hackathonMapper::toDto).collect(Collectors.toList());
     }
 }
