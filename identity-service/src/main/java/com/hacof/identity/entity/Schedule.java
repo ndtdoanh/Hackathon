@@ -5,6 +5,9 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -25,6 +28,11 @@ public class Schedule extends AuditCreatedBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     Team team;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hackathon_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    Hackathon hackathon;
 
     @Column(name = "name")
     String name;

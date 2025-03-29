@@ -45,19 +45,11 @@ public class Team extends AuditCreatedBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hackathon_id")
-    Hackathon hackathon;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_leader_id")
     User teamLeader;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<UserTeam> teamMembers;
-
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MentorshipSessionRequest> mentorshipSessionRequests;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TeamHackathon> teamHackathons;
