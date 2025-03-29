@@ -1,15 +1,18 @@
 package com.hacof.communication.mapper;
 
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
-import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
-import com.hacof.communication.entity.ScheduleEvent;
-import com.hacof.communication.entity.Schedule;
+import com.hacof.communication.dto.response.*;
+import com.hacof.communication.entity.*;
+
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ScheduleEventMapper {
 
-    // Chuyển từ ScheduleEventRequestDTO sang ScheduleEvent entity
+    // Convert from ScheduleEventRequestDTO to ScheduleEvent entity
     public ScheduleEvent toEntity(ScheduleEventRequestDTO requestDTO, Schedule schedule) {
         return ScheduleEvent.builder()
                 .schedule(schedule)
@@ -23,11 +26,13 @@ public class ScheduleEventMapper {
                 .build();
     }
 
-    // Chuyển từ ScheduleEvent entity sang ScheduleEventResponseDTO
+    // Convert from ScheduleEvent entity to ScheduleEventResponseDTO
     public ScheduleEventResponseDTO toDto(ScheduleEvent scheduleEvent) {
+        if (scheduleEvent == null) return null;
+
         return ScheduleEventResponseDTO.builder()
                 .id(scheduleEvent.getId())
-                .scheduleId(scheduleEvent.getSchedule().getId())
+                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false)) // Tránh lặp vô hạn
                 .name(scheduleEvent.getName())
                 .description(scheduleEvent.getDescription())
                 .location(scheduleEvent.getLocation())
@@ -37,7 +42,36 @@ public class ScheduleEventMapper {
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
                 .createdDate(scheduleEvent.getCreatedDate())
                 .lastModifiedDate(scheduleEvent.getLastModifiedDate())
-                .createdBy(scheduleEvent.getCreatedBy().getUsername()) // Giả sử User có trường `username`
+                .createdBy(scheduleEvent.getCreatedBy() != null ? scheduleEvent.getCreatedBy().getUsername() : null)
+                .fileUrls(mapFileUrls(scheduleEvent))
                 .build();
     }
+
+    // Map Schedule to ScheduleResponseDTO
+    private ScheduleResponseDTO mapScheduleToResponseDTO(Schedule schedule, boolean includeEvents) {
+        if (schedule == null) return null;
+
+        return new ScheduleResponseDTO(
+                schedule.getId(),
+                schedule.getTeam() != null ? schedule.getTeam().getId() : null,
+                schedule.getName(),
+                schedule.getDescription(),
+                schedule.getCreatedDate(),
+                schedule.getLastModifiedDate(),
+                schedule.getCreatedBy() != null ? schedule.getCreatedBy().getUsername() : null,
+                includeEvents && schedule.getScheduleEvents() != null ?
+                        schedule.getScheduleEvents().stream()
+                                .map(this::toDto)
+                                .collect(Collectors.toList()) : List.of() // Tránh ánh xạ vòng lặp vô hạn
+        );
+    }
+
+    // Map FileUrls
+    private List<String> mapFileUrls(ScheduleEvent scheduleEvent) {
+        return scheduleEvent.getFileUrls() == null ? List.of() :
+                scheduleEvent.getFileUrls().stream()
+                        .map(FileUrl::getFileUrl)
+                        .collect(Collectors.toList());
+    }
+
 }

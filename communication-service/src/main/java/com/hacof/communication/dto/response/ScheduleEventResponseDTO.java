@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.*;
 
@@ -12,7 +13,7 @@ import lombok.*;
 public class ScheduleEventResponseDTO {
 
     private Long id;           // ID của ScheduleEvent
-    private Long scheduleId;   // ID của Schedule mà ScheduleEvent này thuộc về
+    private ScheduleResponseDTO schedule;   // ID của Schedule mà ScheduleEvent này thuộc về
     private String name;       // Tên của ScheduleEvent
     private String description; // Mô tả về ScheduleEvent
     private String location;    // Vị trí của ScheduleEvent
@@ -23,4 +24,5 @@ public class ScheduleEventResponseDTO {
     private LocalDateTime createdDate;  // Thời gian tạo
     private LocalDateTime lastModifiedDate; // Thời gian sửa đổi
     private String createdBy;  // Người tạo
+    private List<String> fileUrls; // List of URLs associated with the event
 }
