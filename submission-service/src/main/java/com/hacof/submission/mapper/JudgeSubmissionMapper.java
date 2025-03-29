@@ -78,7 +78,10 @@ public class JudgeSubmissionMapper {
     private RoundMarkCriterionResponseDTO mapRoundMarkCriterionToDto(RoundMarkCriterion criterion) {
         return RoundMarkCriterionResponseDTO.builder()
                 .id(criterion.getId())
-                .round(criterion.getRound() != null ? mapRoundToDto(criterion.getRound()) : null) // Ensure Round is mapped
+                .round(
+                        criterion.getRound() != null
+                                ? mapRoundToDto(criterion.getRound())
+                                : null) // Ensure Round is mapped
                 .name(criterion.getName())
                 .maxScore(criterion.getMaxScore())
                 .note(criterion.getNote())
@@ -197,12 +200,12 @@ public class JudgeSubmissionMapper {
                 .fileUrls(
                         submission.getFileUrls() != null
                                 ? submission.getFileUrls().stream()
-                                .map(file -> new FileUrlResponseDTO(
-                                        file.getFileName(),
-                                        file.getFileUrl(),
-                                        file.getFileType(),
-                                        file.getFileSize()))
-                                .collect(Collectors.toList())
+                                        .map(file -> new FileUrlResponseDTO(
+                                                file.getFileName(),
+                                                file.getFileUrl(),
+                                                file.getFileType(),
+                                                file.getFileSize()))
+                                        .collect(Collectors.toList())
                                 : Collections.emptyList())
                 .build();
     }

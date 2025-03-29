@@ -42,7 +42,7 @@ public class SubmissionMapper {
                 .submittedAt(submission.getSubmittedAt())
                 .fileUrls(mapFileUrls(submission)) // ✅ Convert fileUrls
                 .judgeSubmissions(mapJudgeSubmissions(submission))
-                .finalScore(submission.getFinalScore())// ✅ Convert danh sách judgeSubmissions
+                .finalScore(submission.getFinalScore()) // ✅ Convert danh sách judgeSubmissions
                 .build();
     }
 

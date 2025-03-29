@@ -5,10 +5,11 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter

@@ -21,5 +21,5 @@ public interface JudgeSubmissionService {
 
     List<JudgeSubmissionResponseDTO> getSubmissionsByRoundId(Long roundId);
 
-//    JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId);
+    //    JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId);
 }

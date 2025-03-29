@@ -1,16 +1,16 @@
 package com.hacof.submission.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.response.*;
 import com.hacof.submission.entity.*;
 import com.hacof.submission.repository.JudgeSubmissionRepository;
 import com.hacof.submission.repository.RoundMarkCriterionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class JudgeSubmissionDetailMapper {
@@ -26,11 +26,15 @@ public class JudgeSubmissionDetailMapper {
         entity.setScore(dto.getScore());
         entity.setNote(dto.getNote());
 
-        entity.setJudgeSubmission(judgeSubmissionRepository.findById(dto.getJudgeSubmissionId())
-                .orElseThrow(() -> new IllegalArgumentException("Judge Submission not found with ID " + dto.getJudgeSubmissionId())));
+        entity.setJudgeSubmission(judgeSubmissionRepository
+                .findById(dto.getJudgeSubmissionId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Judge Submission not found with ID " + dto.getJudgeSubmissionId())));
 
-        entity.setRoundMarkCriterion(roundMarkCriterionRepository.findById(dto.getRoundMarkCriterionId())
-                .orElseThrow(() -> new IllegalArgumentException("Round Mark Criterion not found with ID " + dto.getRoundMarkCriterionId())));
+        entity.setRoundMarkCriterion(roundMarkCriterionRepository
+                .findById(dto.getRoundMarkCriterionId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Round Mark Criterion not found with ID " + dto.getRoundMarkCriterionId())));
 
         return entity;
     }
@@ -51,22 +55,24 @@ public class JudgeSubmissionDetailMapper {
         return entities.stream().map(this::toResponseDTO).collect(Collectors.toList());
     }
 
-//    // ✅ Convert JudgeSubmission to DTO
-//    private JudgeSubmissionResponseDTO mapJudgeSubmissionToDto(JudgeSubmission judgeSubmission) {
-//        if (judgeSubmission == null) {
-//            return null;
-//        }
-//
-//        return JudgeSubmissionResponseDTO.builder()
-//                .id(judgeSubmission.getId())
-//                .judge(mapUserToDto(judgeSubmission.getJudge()))
-//                .submission(mapSubmissionToDto(judgeSubmission.getSubmission()))
-//                .score(judgeSubmission.getScore())
-//                .note(judgeSubmission.getNote())
-//                .createdDate(judgeSubmission.getCreatedDate() != null ? judgeSubmission.getCreatedDate().toString() : null)
-//                .lastModifiedDate(judgeSubmission.getLastModifiedDate() != null ? judgeSubmission.getLastModifiedDate().toString() : null)
-//                .build();
-//    }
+    //    // ✅ Convert JudgeSubmission to DTO
+    //    private JudgeSubmissionResponseDTO mapJudgeSubmissionToDto(JudgeSubmission judgeSubmission) {
+    //        if (judgeSubmission == null) {
+    //            return null;
+    //        }
+    //
+    //        return JudgeSubmissionResponseDTO.builder()
+    //                .id(judgeSubmission.getId())
+    //                .judge(mapUserToDto(judgeSubmission.getJudge()))
+    //                .submission(mapSubmissionToDto(judgeSubmission.getSubmission()))
+    //                .score(judgeSubmission.getScore())
+    //                .note(judgeSubmission.getNote())
+    //                .createdDate(judgeSubmission.getCreatedDate() != null ?
+    // judgeSubmission.getCreatedDate().toString() : null)
+    //                .lastModifiedDate(judgeSubmission.getLastModifiedDate() != null ?
+    // judgeSubmission.getLastModifiedDate().toString() : null)
+    //                .build();
+    //    }
 
     // ✅ Convert RoundMarkCriterion to DTO
     private RoundMarkCriterionResponseDTO mapRoundMarkCriterionToDto(RoundMarkCriterion criterion) {
@@ -80,7 +86,10 @@ public class JudgeSubmissionDetailMapper {
                 .name(criterion.getName())
                 .maxScore(criterion.getMaxScore())
                 .note(criterion.getNote())
-                .createdBy(criterion.getCreatedBy() != null ? criterion.getCreatedBy().getUsername() : null)
+                .createdBy(
+                        criterion.getCreatedBy() != null
+                                ? criterion.getCreatedBy().getUsername()
+                                : null)
                 .createdDate(criterion.getCreatedDate())
                 .lastModifiedDate(criterion.getLastModifiedDate())
                 .build();

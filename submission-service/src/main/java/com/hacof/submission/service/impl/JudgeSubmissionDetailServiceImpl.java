@@ -115,7 +115,6 @@ public class JudgeSubmissionDetailServiceImpl implements JudgeSubmissionDetailSe
         return mapper.toResponseDTO(updatedDetail);
     }
 
-
     @Override
     public boolean deleteDetail(Long id) {
         JudgeSubmissionDetail existingDetail = detailRepository
