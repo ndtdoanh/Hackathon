@@ -57,6 +57,9 @@ public class TeamRequest extends AuditCreatedBase {
     @JoinColumn(name = "reviewed_by")
     User reviewedBy;
 
+    @JoinColumn(name = "reviewed_at")
+    LocalDateTime reviewedAt;
+
     @OneToMany(mappedBy = "teamRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TeamRequestMember> teamRequestMembers;
 }
