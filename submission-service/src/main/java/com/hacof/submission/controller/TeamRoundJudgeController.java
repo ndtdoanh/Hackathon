@@ -39,4 +39,26 @@ public class TeamRoundJudgeController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> update(
+            @PathVariable Long id, @RequestBody TeamRoundJudgeRequestDTO updatedTeamRoundJudge) {
+        CommonResponse<TeamRoundJudgeResponseDTO> response = new CommonResponse<>();
+        try {
+            TeamRoundJudgeResponseDTO updated = service.updateTeamRoundJudge(id, updatedTeamRoundJudge);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Team round judge updated successfully!");
+            response.setData(updated);
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

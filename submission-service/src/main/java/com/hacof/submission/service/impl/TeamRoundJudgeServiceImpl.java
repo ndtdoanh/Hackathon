@@ -37,4 +37,25 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
         return teamRoundJudgeMapper.toResponseDTO(savedEntity);
     }
 
+    @Override
+    public TeamRoundJudgeResponseDTO updateTeamRoundJudge(Long id, TeamRoundJudgeRequestDTO requestDTO) {
+        // Find the existing TeamRoundJudge entity by ID
+        Optional<TeamRoundJudge> teamRoundJudgeOptional = teamRoundJudgeRepository.findById(id);
+        if (!teamRoundJudgeOptional.isPresent()) {
+            throw new IllegalArgumentException("TeamRoundJudge not found with ID " + id);
+        }
+
+        // Get the existing TeamRoundJudge entity
+        TeamRoundJudge teamRoundJudge = teamRoundJudgeOptional.get();
+
+        // Update the entity using the provided request DTO
+        teamRoundJudgeMapper.updateEntityFromDTO(requestDTO, teamRoundJudge);
+
+        // Save the updated entity back to the repository
+        teamRoundJudge = teamRoundJudgeRepository.save(teamRoundJudge);
+
+        // Return the updated response DTO
+        return teamRoundJudgeMapper.toResponseDTO(teamRoundJudge);
+    }
+
 }

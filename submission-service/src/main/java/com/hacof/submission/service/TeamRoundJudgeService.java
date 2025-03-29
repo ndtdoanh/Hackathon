@@ -9,4 +9,6 @@ public interface TeamRoundJudgeService {
 
     TeamRoundJudgeResponseDTO createTeamRoundJudge(TeamRoundJudgeRequestDTO requestDTO);
 
+    TeamRoundJudgeResponseDTO updateTeamRoundJudge(Long id, TeamRoundJudgeRequestDTO requestDTO);
+
 }
