@@ -40,11 +40,13 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         // Fetch the submission and judge from the database
         Submission submission = submissionRepository
                 .findById(assignJudgeDTO.getSubmissionId())
-                .orElseThrow(() -> new IllegalArgumentException("Submission not found with ID: " + assignJudgeDTO.getSubmissionId()));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Submission not found with ID: " + assignJudgeDTO.getSubmissionId()));
 
         User judge = userRepository
                 .findById(assignJudgeDTO.getJudgeId())
-                .orElseThrow(() -> new IllegalArgumentException("Judge not found with ID: " + assignJudgeDTO.getJudgeId()));
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Judge not found with ID: " + assignJudgeDTO.getJudgeId()));
 
         // Create a new JudgeSubmission entity (with default score and note)
         JudgeSubmission judgeSubmission = JudgeSubmission.builder()
@@ -116,8 +118,10 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
     @Override
     public boolean deleteJudgeSubmission(Long judgeSubmissionId) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findById(judgeSubmissionId)
-                .orElseThrow(() -> new IllegalArgumentException("Judge submission not found for ID: " + judgeSubmissionId));
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findById(judgeSubmissionId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Judge submission not found for ID: " + judgeSubmissionId));
 
         judgeSubmissionRepository.delete(judgeSubmission);
         return true;
@@ -142,12 +146,12 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         return judgeSubmissions.stream().map(JudgeSubmissionResponseDTO::new).collect(Collectors.toList());
     }
 
-//    @Override
-//    public JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId) {
-//        JudgeSubmission judgeSubmission = judgeSubmissionRepository
-//                .findBySubmissionId(submissionId)
-//                .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
-//
-//        return new JudgeSubmissionResponseDTO(judgeSubmission);
-//    }
+    //    @Override
+    //    public JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId) {
+    //        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+    //                .findBySubmissionId(submissionId)
+    //                .orElseThrow(() -> new IllegalArgumentException("Judge submission not found"));
+    //
+    //        return new JudgeSubmissionResponseDTO(judgeSubmission);
+    //    }
 }
