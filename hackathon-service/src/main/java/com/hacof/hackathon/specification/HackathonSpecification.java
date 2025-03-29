@@ -1,83 +1,81 @@
 package com.hacof.hackathon.specification;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.criteria.Predicate;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.hacof.hackathon.entity.Hackathon;
 
 public class HackathonSpecification {
-    public static Specification<Hackathon> hasId(Long id) {
+    public static Specification<Hackathon> filter(
+            String id,
+            String title,
+            String subTitle,
+            String bannerImageUrl,
+            LocalDateTime enrollStartDate,
+            LocalDateTime enrollEndDate,
+            Integer enrollmentCount,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            String information,
+            String description,
+            String contact,
+            String category,
+            String organization,
+            String enrollmentStatus,
+            String status,
+            Integer minimumTeamMembers,
+            Integer maximumTeamMembers) {
+
         return (root, query, cb) -> {
-            if (id == null) return null;
-            return cb.equal(root.get("id"), id);
+            List<Predicate> predicates = new ArrayList<>();
+
+            Optional.ofNullable(id).ifPresent(value -> predicates.add(cb.equal(root.get("id"), value)));
+            Optional.ofNullable(title)
+                    .ifPresent(value ->
+                            predicates.add(cb.like(cb.lower(root.get("title")), "%" + value.toLowerCase() + "%")));
+            Optional.ofNullable(subTitle)
+                    .ifPresent(value ->
+                            predicates.add(cb.like(cb.lower(root.get("subtitle")), "%" + value.toLowerCase() + "%")));
+            Optional.ofNullable(bannerImageUrl)
+                    .ifPresent(value -> predicates.add(cb.equal(root.get("bannerImageUrl"), value)));
+            Optional.ofNullable(enrollStartDate)
+                    .ifPresent(value -> predicates.add(cb.greaterThanOrEqualTo(root.get("enrollStartDate"), value)));
+            Optional.ofNullable(enrollEndDate)
+                    .ifPresent(value -> predicates.add(cb.lessThanOrEqualTo(root.get("enrollEndDate"), value)));
+            Optional.ofNullable(enrollmentCount)
+                    .ifPresent(value -> predicates.add(cb.equal(root.get("enrollmentCount"), value)));
+            Optional.ofNullable(startDate)
+                    .ifPresent(value -> predicates.add(cb.greaterThanOrEqualTo(root.get("startDate"), value)));
+            Optional.ofNullable(endDate)
+                    .ifPresent(value -> predicates.add(cb.lessThanOrEqualTo(root.get("endDate"), value)));
+            Optional.ofNullable(information)
+                    .ifPresent(value -> predicates.add(
+                            cb.like(cb.lower(root.get("information")), "%" + value.toLowerCase() + "%")));
+            Optional.ofNullable(description)
+                    .ifPresent(value -> predicates.add(
+                            cb.like(cb.lower(root.get("description")), "%" + value.toLowerCase() + "%")));
+            Optional.ofNullable(contact).ifPresent(value -> predicates.add(cb.equal(root.get("contact"), value)));
+            Optional.ofNullable(category).ifPresent(value -> predicates.add(cb.equal(root.get("category"), value)));
+            Optional.ofNullable(organization)
+                    .ifPresent(value -> predicates.add(cb.equal(root.get("organization"), value)));
+            Optional.ofNullable(enrollmentStatus)
+                    .ifPresent(value -> predicates.add(cb.equal(root.get("enrollmentStatus"), value)));
+            Optional.ofNullable(status).ifPresent(value -> predicates.add(cb.equal(root.get("status"), value)));
+
+            if (minimumTeamMembers != null && maximumTeamMembers != null) {
+                predicates.add(cb.and(
+                        cb.greaterThanOrEqualTo(root.get("minimumTeamMembers"), minimumTeamMembers),
+                        cb.lessThanOrEqualTo(root.get("maximumTeamMembers"), maximumTeamMembers)));
+            }
+
+            // if we have no filter, return empty predicate to avoid error -> return all Hackathon
+            return predicates.isEmpty() ? cb.conjunction() : cb.and(predicates.toArray(new Predicate[0]));
         };
-    }
-
-    public static Specification<Hackathon> hasName(String name) {
-        return (root, query, cb) -> {
-            if (name == null) return null;
-            return cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
-        };
-    }
-
-    public static Specification<Hackathon> hasDescription(String description) {
-        return (root, query, cb) -> {
-            if (description == null) return null;
-            return cb.like(cb.lower(root.get("description")), "%" + description.toLowerCase() + "%");
-        };
-    }
-
-    public static Specification<Hackathon> hasStatus(String status) {
-        return (root, query, cb) -> {
-            if (status == null) return null;
-            return cb.equal(root.get("status"), status);
-        };
-    }
-
-    public static Specification<Hackathon> startDateBetween(LocalDateTime startFrom, LocalDateTime startTo) {
-        return (root, query, cb) -> {
-            if (startFrom == null || startTo == null) return null;
-            return cb.between(root.get("startDate"), startFrom, startTo);
-        };
-    }
-
-    public static Specification<Hackathon> endDateBetween(LocalDateTime endFrom, LocalDateTime endTo) {
-        return (root, query, cb) -> {
-            if (endFrom == null || endTo == null) return null;
-            return cb.between(root.get("endDate"), endFrom, endTo);
-        };
-    }
-
-    public static Specification<Hackathon> hasTeamSizeRange(Integer minSize, Integer maxSize) {
-        return (root, query, cb) -> {
-            if (minSize == null || maxSize == null) return null;
-            return cb.and(
-                    cb.greaterThanOrEqualTo(root.get("minTeamSize"), minSize),
-                    cb.lessThanOrEqualTo(root.get("maxTeamSize"), maxSize));
-        };
-    }
-
-    public static Specification<Hackathon> hasMaxTeamsGreaterThan(Integer maxTeams) {
-        return (root, query, cb) -> {
-            if (maxTeams == null) return null;
-            return cb.greaterThanOrEqualTo(root.get("maxTeams"), maxTeams);
-        };
-    }
-
-    public static Specification<Hackathon> hasNumberRound(Integer numberRound) {
-        return (root, query, cb) -> {
-            if (numberRound == null) return null;
-            return cb.equal(root.get("numberRound"), numberRound);
-        };
-    }
-
-    public static Specification<Hackathon> isActive() {
-        return (root, query, cb) ->
-                cb.or(cb.equal(root.get("status"), "OPEN"), cb.equal(root.get("status"), "IN_PROGRESS"));
-    }
-
-    public static Specification<Hackathon> isUpcoming() {
-        return (root, query, cb) -> cb.greaterThan(root.get("startDate"), LocalDateTime.now());
     }
 }

@@ -3,65 +3,63 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import com.hacof.hackathon.entity.*;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HackathonDTO {
-    private long id;
+    String id;
 
-    @NotBlank(message = "Name is mandatory")
-    private String name;
+    String title;
+    String subTitle;
 
-    @NotBlank(message = "Banner image url is mandatory")
-    private String bannerImageUrl;
+    String bannerImageUrl;
 
-    private String description;
+    LocalDateTime enrollStartDate;
 
-    @NotNull(message = "Start date is mandatory")
-    private LocalDateTime startDate;
+    LocalDateTime enrollEndDate;
 
-    @NotNull(message = "Start date is mandatory")
-    private LocalDateTime endDate;
+    int enrollmentCount;
 
-    @NotNull(message = "Number round is mandatory")
-    Integer numberRound;
+    LocalDateTime startDate;
 
-    @NotNull(message = "Max teams is mandatory")
-    int maxTeams;
+    LocalDateTime endDate;
 
-    @NotNull(message = "Min team size is mandatory")
-    int minTeamSize;
+    String information;
+    String description;
+    List<String> documentation; // Document public URLs
+    String contact;
+    String category; // Used for category filtering
+    String organization; // Used for organization filtering
+    String enrollmentStatus;
 
-    @NotNull(message = "Max team size is mandatory")
-    int maxTeamSize;
+    String status;
 
-    @NotNull(message = "Status is mandatory")
-    private String status;
+    int minimumTeamMembers;
+    int maximumTeamMembers;
 
-    private List<String> roundNames; // Thêm để hiển thị tên các vòng
-    private int currentTeamCount; // Số team đã đăng ký
-    private int registrationCount; // Số người đăng ký
-    private int mentorCount; // Số mentor
-    private int sponsorCount;
-    // private Long organizerId;
-    // private String organizerName;
+    // List<Round> rounds;
+    List<Long> roundIds;
+    List<TeamHackathon> teamHackathons;
+    List<HackathonResult> hackathonResults;
+    List<UserHackathon> userHackathons;
+    List<TeamRequest> teamRequests;
+    List<IndividualRegistrationRequest> individualRegistrationRequests;
+    List<MentorshipRequest> mentorshipRequests;
+    List<MentorshipSessionRequest> mentorshipSessionRequests;
+    List<SponsorshipHackathon> sponsorshipHackathons;
+    List<Device> devices;
+    List<Feedback> feedbacks;
 
-    //    List<RoundDTO> rounds;
-    //    List<TeamHackathon> teamHackathons;
-    //    List<HackathonResult> hackathonResults;
-    //    List<UserHackathon> userHackathons;
-    //    List<TeamRequest> teamRequests;
-    //    List<IndividualRegistrationRequest> individualRegistrationRequests;
-    //    List<MentorshipRequest> mentorshipRequests;
-    //    List<MentorshipSessionRequest> mentorshipSessionRequests;
-    //    List<SponsorshipHackathon> sponsorshipHackathons;
-    //    List<Device> devices;
-    //    List<Feedback> feedbacks;
+    // Audit fields
+    private String createdBy;
+    private LocalDateTime createdDate;
+    private String lastModifiedBy;
+    private LocalDateTime lastModifiedDate;
 }

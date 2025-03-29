@@ -1,63 +1,89 @@
 package com.hacof.hackathon.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.mapstruct.*;
 
 import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.entity.*;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface HackathonMapper {
+    @Mapping(source = "id", target = "id", qualifiedByName = "mapIdToString")
+    @Mapping(source = "title", target = "title")
+    @Mapping(source = "subTitle", target = "subTitle")
+    @Mapping(source = "description", target = "description")
+    @Mapping(source = "information", target = "information")
+    @Mapping(source = "bannerImageUrl", target = "bannerImageUrl")
+    @Mapping(source = "startDate", target = "enrollStartDate")
+    @Mapping(source = "endDate", target = "enrollEndDate")
+    @Mapping(source = "minTeamSize", target = "minimumTeamMembers")
+    @Mapping(source = "maxTeamSize", target = "maximumTeamMembers")
+    @Mapping(source = "contact", target = "contact")
+    @Mapping(source = "category", target = "category")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "createdBy", target = "createdBy", qualifiedByName = "mapUserToUsername")
+    @Mapping(source = "createdDate", target = "createdDate")
+    @Mapping(source = "lastModifiedBy", target = "lastModifiedBy", qualifiedByName = "mapUserToUsername")
+    @Mapping(source = "lastModifiedDate", target = "lastModifiedDate")
+    HackathonDTO toDto(Hackathon hackathon);
 
-    @Mapping(target = "roundNames", source = "rounds", qualifiedByName = "roundsToNames")
-    @Mapping(target = "currentTeamCount", source = "teamHackathons", qualifiedByName = "countTeams")
-    @Mapping(target = "registrationCount", source = "userHackathons", qualifiedByName = "countRegistrations")
-    @Mapping(target = "mentorCount", source = "mentorshipRequests", qualifiedByName = "countMentors")
-    @Mapping(target = "sponsorCount", source = "sponsorshipHackathons", qualifiedByName = "countSponsors")
-    HackathonDTO toDTO(Hackathon hackathon);
-
-    @Mapping(target = "rounds", ignore = true)
-    @Mapping(target = "teamHackathons", ignore = true)
-    @Mapping(target = "hackathonResults", ignore = true)
-    @Mapping(target = "userHackathons", ignore = true)
-    @Mapping(target = "teamRequests", ignore = true)
-    @Mapping(target = "individualRegistrationRequests", ignore = true)
-    @Mapping(target = "mentorshipRequests", ignore = true)
-    @Mapping(target = "mentorshipSessionRequests", ignore = true)
-    @Mapping(target = "sponsorshipHackathons", ignore = true)
-    @Mapping(target = "devices", ignore = true)
-    @Mapping(target = "feedbacks", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "title", target = "title")
+    @Mapping(source = "information", target = "information")
+    @Mapping(source = "description", target = "description")
+    @Mapping(source = "bannerImageUrl", target = "bannerImageUrl")
+    @Mapping(source = "enrollStartDate", target = "startDate")
+    @Mapping(source = "enrollEndDate", target = "endDate")
+    @Mapping(source = "minimumTeamMembers", target = "minTeamSize")
+    @Mapping(source = "maximumTeamMembers", target = "maxTeamSize")
+    @Mapping(source = "status", target = "status")
     Hackathon toEntity(HackathonDTO hackathonDTO);
 
-    @Named("roundsToNames")
-    default List<String> roundsToNames(List<Round> rounds) {
-        if (rounds == null) return List.of();
-        return rounds.stream().map(Round::getRoundTitle).collect(Collectors.toList());
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "title", target = "title")
+    @Mapping(source = "information", target = "information")
+    @Mapping(source = "description", target = "description")
+    @Mapping(source = "bannerImageUrl", target = "bannerImageUrl")
+    @Mapping(source = "enrollStartDate", target = "startDate")
+    @Mapping(source = "enrollEndDate", target = "endDate")
+    @Mapping(source = "minimumTeamMembers", target = "minTeamSize")
+    @Mapping(source = "maximumTeamMembers", target = "maxTeamSize")
+    @Mapping(source = "status", target = "status")
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(source = "lastModifiedBy", target = "lastModifiedBy", qualifiedByName = "mapUsernameToUser")
+    @Mapping(source = "lastModifiedDate", target = "lastModifiedDate")
+    void updateEntityFromDto(HackathonDTO dto, @MappingTarget Hackathon entity);
+
+    @Named("mapIdToString")
+    default String mapIdToString(Long id) {
+        return (id != null) ? String.valueOf(id) : null;
     }
 
-    @Named("countTeams")
-    default int countTeams(List<TeamHackathon> teams) {
-        return teams != null ? teams.size() : 0;
+    @Named("mapStringToId")
+    default Long mapStringToId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid ID format: " + id);
+        }
     }
 
-    @Named("countRegistrations")
-    default int countRegistrations(List<UserHackathon> registrations) {
-        return registrations != null ? registrations.size() : 0;
+    @Named("mapUserToUsername")
+    default String mapUserToUsername(User user) {
+        return user != null ? user.getUsername() : null;
     }
 
-    @Named("countMentors")
-    default int countMentors(List<MentorshipRequest> mentors) {
-        return mentors != null ? mentors.size() : 0;
-    }
-
-    @Named("countSponsors")
-    default int countSponsors(List<SponsorshipHackathon> sponsors) {
-        return sponsors != null ? sponsors.size() : 0;
-    }
-
-    default List<HackathonDTO> toDTOs(List<Hackathon> hackathons) {
-        return hackathons.stream().map(this::toDTO).collect(Collectors.toList());
+    @Named("mapUsernameToUser")
+    default User mapUsernameToUser(String username) {
+        if (username == null) {
+            return null;
+        }
+        User user = new User();
+        user.setUsername(username);
+        user.setId(1L);
+        return user;
     }
 }

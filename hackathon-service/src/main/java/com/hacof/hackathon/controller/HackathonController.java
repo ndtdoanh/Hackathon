@@ -7,8 +7,10 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.constant.StatusCode;
@@ -30,24 +32,61 @@ public class HackathonController {
     final HackathonService hackathonService;
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) LocalDateTime startDate,
-            @RequestParam(required = false) LocalDateTime endDate,
-            @RequestParam(required = false) int numberRound,
-            @RequestParam(required = false) int maxTeams,
-            @RequestParam(required = false) int minTeamSize,
-            @RequestParam(required = false) int maxTeamSize,
-            @RequestParam(required = false) String status) {
+    public ResponseEntity<CommonResponse<List<HackathonDTO>>> getAllHackathons() {
+        log.debug("Received request to fetch all hackathons");
+        List<HackathonDTO> hackathons = hackathonService.getHackathons();
+        CommonResponse<List<HackathonDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Fetched hackathons successfully"),
+                hackathons);
+        return ResponseEntity.ok(response);
+    }
 
-        Specification<Hackathon> spec = Specification.where(HackathonSpecification.hasId(id))
-                .and(HackathonSpecification.hasName(name))
-                .and(HackathonSpecification.hasDescription(description))
-                .and(HackathonSpecification.hasNumberRound(numberRound))
-                .and(HackathonSpecification.hasMaxTeamsGreaterThan(maxTeams))
-                .and(HackathonSpecification.hasStatus(status));
+    @GetMapping("/hello")
+    // @PreAuthorize("hasAuthority('GET_HACKATHON')")
+    public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String subTitle,
+            @RequestParam(required = false) String bannerImageUrl,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    LocalDateTime enrollStartDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    LocalDateTime enrollEndDate,
+            @RequestParam(required = false) Integer enrollmentCount,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false) String information,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String contact,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String organization,
+            @RequestParam(required = false) String enrollmentStatus,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Integer minimumTeamMembers,
+            @RequestParam(required = false) Integer maximumTeamMembers) {
+        log.debug("Received request to fetch hackathons by all criteria");
+        Specification<Hackathon> spec = HackathonSpecification.filter(
+                id,
+                title,
+                subTitle,
+                bannerImageUrl,
+                enrollStartDate,
+                enrollEndDate,
+                enrollmentCount,
+                startDate,
+                endDate,
+                information,
+                description,
+                contact,
+                category,
+                organization,
+                enrollmentStatus,
+                status,
+                minimumTeamMembers,
+                maximumTeamMembers);
 
         List<HackathonDTO> hackathons = hackathonService.getHackathons(spec);
         CommonResponse<List<HackathonDTO>> response = new CommonResponse<>(
@@ -60,10 +99,11 @@ public class HackathonController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
             @RequestBody @Valid CommonRequest<HackathonDTO> request) {
         log.debug("Received request to create hackathon: {}", request);
-        HackathonDTO createdHackathon = hackathonService.createHackathon(request.getData());
+        HackathonDTO createdHackathon = hackathonService.create(request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
@@ -75,10 +115,11 @@ public class HackathonController {
     }
 
     @PutMapping
-    public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(@RequestBody @Valid HackathonDTO hackathonDTO) {
-        log.debug("Received request to update hackathon: {}", hackathonDTO);
-        long id = hackathonDTO.getId();
-        HackathonDTO updatedHackathon = hackathonService.updateHackathon(id, hackathonDTO);
+    @PreAuthorize("hasAuthority('UPDATE_HACKATHON')")
+    public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(
+            @RequestBody @Valid CommonRequest<HackathonDTO> request) {
+        HackathonDTO updatedHackathon =
+                hackathonService.update(request.getData().getId(), request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
@@ -90,8 +131,9 @@ public class HackathonController {
     }
 
     @DeleteMapping
-    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody HackathonDTO hackathonDTO) {
-        long id = hackathonDTO.getId();
+    @PreAuthorize("hasAuthority('DELETE_HACKATHON')")
+    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody CommonResponse<HackathonDTO> request) {
+        Long id = Long.parseLong((request.getData().getId()));
         log.debug("Received request to delete hackathon with id: {}", id);
         hackathonService.deleteHackathon(id);
         CommonResponse<Void> response = new CommonResponse<>(
