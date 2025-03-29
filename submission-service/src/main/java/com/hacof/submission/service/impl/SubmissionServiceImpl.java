@@ -33,6 +33,9 @@ import com.hacof.submission.service.SubmissionService;
 public class SubmissionServiceImpl implements SubmissionService {
 
     @Autowired
+    private SubmissionMapper submissionMapper;
+
+    @Autowired
     private SubmissionRepository submissionRepository;
 
     @Autowired
@@ -103,7 +106,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
 
         submissionRepository.save(submission);
-        return SubmissionMapper.toResponseDTO(submission);
+        return submissionMapper.toResponseDTO(submission);
     }
 
     //    @Override
@@ -161,13 +164,13 @@ public class SubmissionServiceImpl implements SubmissionService {
         if (!submissionOpt.isPresent()) {
             throw new IllegalArgumentException("Submission not found with ID " + id);
         }
-        return SubmissionMapper.toResponseDTO(submissionOpt.get());
+        return submissionMapper.toResponseDTO(submissionOpt.get());
     }
 
     @Override
     public List<SubmissionResponseDTO> getAllSubmissions() {
         List<Submission> submissions = submissionRepository.findAll();
-        return submissions.stream().map(SubmissionMapper::toResponseDTO).collect(Collectors.toList());
+        return submissions.stream().map(submissionMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -206,7 +209,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
 
         submissionRepository.save(submission);
-        return SubmissionMapper.toResponseDTO(submission);
+        return submissionMapper.toResponseDTO(submission);
     }
 
     @Override
