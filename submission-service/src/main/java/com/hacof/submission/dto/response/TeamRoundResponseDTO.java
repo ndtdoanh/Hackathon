@@ -1,22 +1,25 @@
 package com.hacof.submission.dto.response;
 
 import com.hacof.submission.constant.TeamRoundStatus;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamRoundResponseDTO {
-
-    private Long id;                  // ID của TeamRound
-    private Long teamId;              // ID của Team
-    private Long roundId;             // ID của Round
-    private TeamRoundStatus status;   // Trạng thái của TeamRound
-    private String description;       // Mô tả về TeamRound
-    private String createdBy;         // Người tạo TeamRound
-    private String createdDate;       // Thời gian tạo
-    private String lastModifiedDate;  // Thời gian sửa đổi
+    String id;
+    String teamId;
+    String roundId;
+    TeamRoundStatus status;
+    String description;
+    String createdBy;
+    String createdDate;
+    String lastModifiedDate;
 }

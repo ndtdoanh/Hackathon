@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleResponse {
-    long id;
+    String id;
     String name;
     String description;
     LocalDateTime createdDate;

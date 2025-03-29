@@ -17,13 +17,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoundResponseDTO {
-    private Long id;
-    private HackathonResponseDTO hackathon;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private int roundNumber;
-    private String roundTitle;
-    private String status;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+    String id;
+    HackathonResponseDTO hackathon;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
+    int roundNumber;
+    String roundTitle;
+    String status;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
 }

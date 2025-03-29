@@ -12,21 +12,21 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HackathonResponseDTO {
-    private Long id;
-    private String title;
-    private String subTitle;
-    private String bannerImageUrl;
-    private String description;
-    private String information;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private int maxTeams;
-    private int minTeamSize;
-    private int maxTeamSize;
-    private String contact;
-    private String category;
-    private String status;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
-    private String createdBy;
+    String id;
+    String title;
+    String subTitle;
+    String bannerImageUrl;
+    String description;
+    String information;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
+    int maxTeams;
+    int minTeamSize;
+    int maxTeamSize;
+    String contact;
+    String category;
+    String status;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    String createdBy;
 }
