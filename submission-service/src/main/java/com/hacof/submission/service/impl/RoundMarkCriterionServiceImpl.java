@@ -37,13 +37,15 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
     @Override
     public List<RoundMarkCriterionResponseDTO> getAll() {
         List<RoundMarkCriterion> criterionList = repository.findAll();
-        return criterionList.stream().map(mapper::toResponseDTO).collect(Collectors.toList());
+        return criterionList.stream()
+                .map(mapper::toRoundMarkCriterionResponseDTO) // Ensure correct mapping method
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<RoundMarkCriterionResponseDTO> getById(Long id) {
         Optional<RoundMarkCriterion> criterion = repository.findById(id);
-        return criterion.map(mapper::toResponseDTO);
+        return criterion.map(mapper::toRoundMarkCriterionResponseDTO);
     }
 
     @Override
@@ -52,26 +54,25 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
         if (!roundOpt.isPresent()) {
             throw new IllegalArgumentException("Round not found with id " + criterionDTO.getRoundId());
         }
-        RoundMarkCriterion criterion = mapper.toEntity(criterionDTO);
 
-        Round round = roundOpt.get();
-        criterion.setRound(round);
+        RoundMarkCriterion criterion = mapper.toEntity(criterionDTO);
+        criterion.setRound(roundOpt.get());
 
         /// Lấy thông tin người dùng hiện tại từ SecurityUtil
         String currentUser = SecurityUtil.getCurrentUserLogin().orElse("anonymousUser");
         if ("anonymousUser".equals(currentUser)) {
             currentUser = "admin";
         }
-        final String finalCurrentUser = currentUser;
 
-        Optional<User> userOpt = userRepository.findByUsername(finalCurrentUser);
-        User user = userOpt.orElseThrow(
-                () -> new IllegalArgumentException("User not found with username " + finalCurrentUser));
-        criterion.setCreatedBy(user); // set đối tượng User vào createdBy
+        Optional<User> userOpt = userRepository.findByUsername(currentUser);
+        User user = userOpt.orElseThrow(() ->
+                new IllegalArgumentException("User not found with username "));
+        criterion.setCreatedBy(user);
 
         RoundMarkCriterion savedCriterion = repository.save(criterion);
-        return mapper.toResponseDTO(savedCriterion);
+        return mapper.toRoundMarkCriterionResponseDTO(savedCriterion); // Fix method call
     }
+
 
     @Override
     public RoundMarkCriterionResponseDTO update(Long id, RoundMarkCriterionRequestDTO updatedCriterionDTO) {
@@ -92,7 +93,7 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
                 })
                 .orElseThrow(() -> new IllegalArgumentException("RoundMarkCriterion not found with id " + id));
 
-        return mapper.toResponseDTO(updated);
+        return mapper.toRoundMarkCriterionResponseDTO(updated);
     }
 
     @Override

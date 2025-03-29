@@ -31,16 +31,17 @@ public class JudgeSubmissionDetailResponseDTO {
         }
 
         if (entity.getRoundMarkCriterion() != null) {
-            this.roundMarkCriterion = new RoundMarkCriterionResponseDTO(
-                    entity.getRoundMarkCriterion().getId(),
-                    entity.getRoundMarkCriterion().getName(),
-                    entity.getRoundMarkCriterion().getMaxScore(),
-                    entity.getRoundMarkCriterion().getNote(),
-                    entity.getRoundMarkCriterion().getCreatedBy() != null ? entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null,
-                    entity.getRoundMarkCriterion().getCreatedDate(),
-                    entity.getRoundMarkCriterion().getLastModifiedDate(),
-                    null
-            );
+            this.roundMarkCriterion = RoundMarkCriterionResponseDTO.builder()
+                    .id(entity.getRoundMarkCriterion().getId())
+                    .name(entity.getRoundMarkCriterion().getName())
+                    .maxScore(entity.getRoundMarkCriterion().getMaxScore())
+                    .note(entity.getRoundMarkCriterion().getNote())
+                    .createdBy(entity.getRoundMarkCriterion().getCreatedBy() != null ?
+                            entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null)
+                    .createdDate(entity.getRoundMarkCriterion().getCreatedDate())
+                    .lastModifiedDate(entity.getRoundMarkCriterion().getLastModifiedDate())
+                    .judgeSubmissionDetails(null) // Avoid passing `null` directly
+                    .build();
         }
     }
 }

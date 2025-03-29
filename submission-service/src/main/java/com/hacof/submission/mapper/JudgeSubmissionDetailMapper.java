@@ -60,16 +60,17 @@ public class JudgeSubmissionDetailMapper {
         JudgeSubmissionResponseDTO judgeSubmissionResponseDTO = new JudgeSubmissionResponseDTO(entity.getJudgeSubmission()); // Sử dụng constructor có tham số
         responseDTO.setJudgeSubmissionId(judgeSubmissionResponseDTO.getId()); // Set the ID directly in the response DTO
 
-        RoundMarkCriterionResponseDTO roundMarkCriterionResponseDTO = new RoundMarkCriterionResponseDTO(
-                entity.getRoundMarkCriterion().getId(),
-                entity.getRoundMarkCriterion().getName(),
-                entity.getRoundMarkCriterion().getMaxScore(),
-                entity.getRoundMarkCriterion().getNote(),
-                entity.getRoundMarkCriterion().getCreatedBy() != null ? entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null,
-                entity.getRoundMarkCriterion().getCreatedDate(),
-                entity.getRoundMarkCriterion().getLastModifiedDate(),
-                null
-        );
+        RoundMarkCriterionResponseDTO roundMarkCriterionResponseDTO = RoundMarkCriterionResponseDTO.builder()
+                .id(entity.getRoundMarkCriterion().getId())
+                .name(entity.getRoundMarkCriterion().getName())
+                .maxScore(entity.getRoundMarkCriterion().getMaxScore())
+                .note(entity.getRoundMarkCriterion().getNote())
+                .createdBy(entity.getRoundMarkCriterion().getCreatedBy() != null ?
+                        entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null)
+                .createdDate(entity.getRoundMarkCriterion().getCreatedDate())
+                .lastModifiedDate(entity.getRoundMarkCriterion().getLastModifiedDate())
+                .build();
+
         responseDTO.setRoundMarkCriterion(roundMarkCriterionResponseDTO);
 
         responseDTO.setCreatedDate(entity.getCreatedDate());
