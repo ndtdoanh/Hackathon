@@ -41,11 +41,11 @@ public class JudgeSubmissionDetailMapper {
 
     public JudgeSubmissionDetailResponseDTO toResponseDTO(JudgeSubmissionDetail entity) {
         return JudgeSubmissionDetailResponseDTO.builder()
-                .id(entity.getId())
+                .id(String.valueOf(entity.getId()))
                 .score(entity.getScore())
                 .note(entity.getNote())
-                .judgeSubmissionId(entity.getJudgeSubmission().getId()) // ✅ Mapping JudgeSubmission
-                .roundMarkCriterion(mapRoundMarkCriterionToDto(entity.getRoundMarkCriterion())) // ✅ Mapping Criterion
+                .judgeSubmissionId(entity.getJudgeSubmission().getId())
+                .roundMarkCriterion(mapRoundMarkCriterionToDto(entity.getRoundMarkCriterion()))
                 .createdDate(entity.getCreatedDate())
                 .lastModifiedDate(entity.getLastModifiedDate())
                 .build();
@@ -74,14 +74,13 @@ public class JudgeSubmissionDetailMapper {
     //                .build();
     //    }
 
-    // ✅ Convert RoundMarkCriterion to DTO
     private RoundMarkCriterionResponseDTO mapRoundMarkCriterionToDto(RoundMarkCriterion criterion) {
         if (criterion == null) {
             return null;
         }
 
         return RoundMarkCriterionResponseDTO.builder()
-                .id(criterion.getId())
+                .id(String.valueOf(criterion.getId()))
                 .round(criterion.getRound() != null ? mapRoundToDto(criterion.getRound()) : null)
                 .name(criterion.getName())
                 .maxScore(criterion.getMaxScore())
@@ -95,14 +94,13 @@ public class JudgeSubmissionDetailMapper {
                 .build();
     }
 
-    // ✅ Convert Round to DTO
     private RoundResponseDTO mapRoundToDto(Round round) {
         if (round == null) {
             return null;
         }
 
         return RoundResponseDTO.builder()
-                .id(round.getId())
+                .id(String.valueOf(round.getId()))
                 .roundTitle(round.getRoundTitle())
                 .startTime(round.getStartTime())
                 .endTime(round.getEndTime())
@@ -116,7 +114,7 @@ public class JudgeSubmissionDetailMapper {
         }
 
         return HackathonResponseDTO.builder()
-                .id(hackathon.getId())
+                .id(String.valueOf(hackathon.getId()))
                 .title(hackathon.getTitle())
                 .subTitle(hackathon.getSubTitle())
                 .bannerImageUrl(hackathon.getBannerImageUrl())
