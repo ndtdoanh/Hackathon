@@ -1,11 +1,10 @@
 package com.hacof.submission.dto.response;
 
-import com.hacof.submission.entity.JudgeSubmissionDetail;
-import com.hacof.submission.entity.RoundMarkCriterion;
-import lombok.Data;
-
 import java.time.LocalDateTime;
-import java.util.List;
+
+import com.hacof.submission.entity.JudgeSubmissionDetail;
+
+import lombok.Data;
 
 @Data
 public class JudgeSubmissionDetailResponseDTO {
@@ -27,7 +26,7 @@ public class JudgeSubmissionDetailResponseDTO {
         this.lastModifiedDate = entity.getLastModifiedDate();
 
         if (entity.getJudgeSubmission() != null) {
-            this.judgeSubmissionId = entity.getJudgeSubmission().getId();  // Fetch judgeSubmissionId
+            this.judgeSubmissionId = entity.getJudgeSubmission().getId(); // Fetch judgeSubmissionId
         }
 
         if (entity.getRoundMarkCriterion() != null) {
@@ -36,8 +35,12 @@ public class JudgeSubmissionDetailResponseDTO {
                     .name(entity.getRoundMarkCriterion().getName())
                     .maxScore(entity.getRoundMarkCriterion().getMaxScore())
                     .note(entity.getRoundMarkCriterion().getNote())
-                    .createdBy(entity.getRoundMarkCriterion().getCreatedBy() != null ?
-                            entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null)
+                    .createdBy(
+                            entity.getRoundMarkCriterion().getCreatedBy() != null
+                                    ? entity.getRoundMarkCriterion()
+                                            .getCreatedBy()
+                                            .getUsername()
+                                    : null)
                     .createdDate(entity.getRoundMarkCriterion().getCreatedDate())
                     .lastModifiedDate(entity.getRoundMarkCriterion().getLastModifiedDate())
                     .judgeSubmissionDetails(null) // Avoid passing `null` directly

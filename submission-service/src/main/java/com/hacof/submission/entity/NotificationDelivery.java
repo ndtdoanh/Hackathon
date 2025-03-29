@@ -1,15 +1,16 @@
 package com.hacof.submission.entity;
 
-import com.hacof.submission.constant.RoleType;
 import jakarta.persistence.*;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.hacof.submission.constant.NotificationMethod;
 import com.hacof.submission.constant.NotificationStatus;
+import com.hacof.submission.constant.RoleType;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter

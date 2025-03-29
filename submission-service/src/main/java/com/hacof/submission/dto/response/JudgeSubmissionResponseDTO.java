@@ -1,12 +1,13 @@
 package com.hacof.submission.dto.response;
 
-import com.hacof.submission.entity.JudgeSubmission;
-import lombok.Data;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.hacof.submission.entity.JudgeSubmission;
+
+import lombok.Data;
 
 @Data
 public class JudgeSubmissionResponseDTO {
@@ -29,8 +30,8 @@ public class JudgeSubmissionResponseDTO {
         this.lastModifiedDate = entity.getLastModifiedDate().toString();
         this.judgeSubmissionDetails = entity.getJudgeSubmissionDetails() != null
                 ? entity.getJudgeSubmissionDetails().stream()
-                .map(detail -> new JudgeSubmissionDetailResponseDTO(detail))
-                .collect(Collectors.toSet())
+                        .map(detail -> new JudgeSubmissionDetailResponseDTO(detail))
+                        .collect(Collectors.toSet())
                 : new HashSet<>();
 
         if (entity.getSubmission() != null) {

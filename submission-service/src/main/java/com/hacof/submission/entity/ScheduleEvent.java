@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hacof.submission.constant.EventLabel;
 import jakarta.persistence.*;
+
+import com.hacof.submission.constant.EventLabel;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

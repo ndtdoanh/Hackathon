@@ -1,5 +1,7 @@
 package com.hacof.submission.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -9,8 +11,6 @@ import com.hacof.submission.constant.TeamRoundStatus;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Entity
 @Getter

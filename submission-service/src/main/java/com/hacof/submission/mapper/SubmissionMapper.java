@@ -38,11 +38,7 @@ public class SubmissionMapper {
         // Map FileUrls
         List<FileUrlResponseDTO> fileUrls = submission.getFileUrls().stream()
                 .map(fileUrl -> new FileUrlResponseDTO(
-                        fileUrl.getFileName(),
-                        fileUrl.getFileUrl(),
-                        fileUrl.getFileType(),
-                        fileUrl.getFileSize()
-                ))
+                        fileUrl.getFileName(), fileUrl.getFileUrl(), fileUrl.getFileType(), fileUrl.getFileSize()))
                 .collect(Collectors.toList());
 
         responseDTO.setFileUrls(fileUrls);

@@ -1,21 +1,21 @@
 package com.hacof.submission.mapper;
 
-import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
 import com.hacof.submission.entity.JudgeSubmission;
 import com.hacof.submission.entity.JudgeSubmissionDetail;
 import com.hacof.submission.entity.RoundMarkCriterion;
 import com.hacof.submission.repository.JudgeSubmissionRepository;
 import com.hacof.submission.repository.RoundMarkCriterionRepository;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class JudgeSubmissionDetailMapper {
@@ -57,7 +57,8 @@ public class JudgeSubmissionDetailMapper {
         responseDTO.setScore(entity.getScore());
         responseDTO.setNote(entity.getNote());
 
-        JudgeSubmissionResponseDTO judgeSubmissionResponseDTO = new JudgeSubmissionResponseDTO(entity.getJudgeSubmission()); // Sử dụng constructor có tham số
+        JudgeSubmissionResponseDTO judgeSubmissionResponseDTO =
+                new JudgeSubmissionResponseDTO(entity.getJudgeSubmission()); // Sử dụng constructor có tham số
         responseDTO.setJudgeSubmissionId(judgeSubmissionResponseDTO.getId()); // Set the ID directly in the response DTO
 
         RoundMarkCriterionResponseDTO roundMarkCriterionResponseDTO = RoundMarkCriterionResponseDTO.builder()
@@ -65,8 +66,10 @@ public class JudgeSubmissionDetailMapper {
                 .name(entity.getRoundMarkCriterion().getName())
                 .maxScore(entity.getRoundMarkCriterion().getMaxScore())
                 .note(entity.getRoundMarkCriterion().getNote())
-                .createdBy(entity.getRoundMarkCriterion().getCreatedBy() != null ?
-                        entity.getRoundMarkCriterion().getCreatedBy().getUsername() : null)
+                .createdBy(
+                        entity.getRoundMarkCriterion().getCreatedBy() != null
+                                ? entity.getRoundMarkCriterion().getCreatedBy().getUsername()
+                                : null)
                 .createdDate(entity.getRoundMarkCriterion().getCreatedDate())
                 .lastModifiedDate(entity.getRoundMarkCriterion().getLastModifiedDate())
                 .build();
