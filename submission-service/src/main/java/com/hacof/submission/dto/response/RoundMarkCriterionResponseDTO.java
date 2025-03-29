@@ -1,17 +1,18 @@
 package com.hacof.submission.dto.response;
 
-import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.*;
+
 @Getter
 @Setter
-@Builder  // Ensure this annotation is present
+@Builder // Ensure this annotation is present
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoundMarkCriterionResponseDTO {
     private Long id;
-    private RoundResponseDTO round;  // Ensure this field exists
+    private RoundResponseDTO round; // Ensure this field exists
     private String name;
     private int maxScore;
     private String note;

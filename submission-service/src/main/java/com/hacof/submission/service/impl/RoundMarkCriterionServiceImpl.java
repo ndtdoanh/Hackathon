@@ -65,14 +65,12 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
         }
 
         Optional<User> userOpt = userRepository.findByUsername(currentUser);
-        User user = userOpt.orElseThrow(() ->
-                new IllegalArgumentException("User not found with username "));
+        User user = userOpt.orElseThrow(() -> new IllegalArgumentException("User not found with username "));
         criterion.setCreatedBy(user);
 
         RoundMarkCriterion savedCriterion = repository.save(criterion);
         return mapper.toRoundMarkCriterionResponseDTO(savedCriterion); // Fix method call
     }
-
 
     @Override
     public RoundMarkCriterionResponseDTO update(Long id, RoundMarkCriterionRequestDTO updatedCriterionDTO) {

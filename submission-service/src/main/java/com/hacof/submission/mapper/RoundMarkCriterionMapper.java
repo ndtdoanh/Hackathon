@@ -1,17 +1,14 @@
 package com.hacof.submission.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
 import com.hacof.submission.dto.response.HackathonResponseDTO;
-import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
 import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
 import com.hacof.submission.dto.response.RoundResponseDTO;
 import com.hacof.submission.entity.Hackathon;
 import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.RoundMarkCriterion;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class RoundMarkCriterionMapper {
@@ -81,7 +78,10 @@ public class RoundMarkCriterionMapper {
                 .status(hackathon.getStatus() != null ? hackathon.getStatus().name() : "UNKNOWN")
                 .createdDate(hackathon.getCreatedDate())
                 .lastModifiedDate(hackathon.getLastModifiedDate())
-                .createdBy(hackathon.getCreatedBy() != null ? hackathon.getCreatedBy().getUsername() : null)
+                .createdBy(
+                        hackathon.getCreatedBy() != null
+                                ? hackathon.getCreatedBy().getUsername()
+                                : null)
                 .build();
     }
 }
