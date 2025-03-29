@@ -2,6 +2,8 @@ package com.hacof.identity.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
 import com.hacof.identity.dto.request.PasswordCreateRequest;
@@ -34,4 +36,6 @@ public interface UserService {
     String forgotPassword(ForgotPasswordRequest request);
 
     String resetPassword(ResetPasswordRequest request);
+
+    UserResponse uploadAvatar(MultipartFile file);
 }
