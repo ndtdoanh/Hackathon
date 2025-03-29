@@ -1,8 +1,5 @@
 package com.hacof.identity.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -18,29 +15,19 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "schedules")
-public class Schedule extends AuditCreatedBase {
-
+@Table(name = "team_round_judges")
+public class TeamRoundJudge extends AuditCreatedBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    Team team;
+    @JoinColumn(name = "team_round_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    TeamRound teamRound;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hackathon_id")
+    @JoinColumn(name = "judge_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Hackathon hackathon;
-
-    @Column(name = "name")
-    String name;
-
-    @Lob
-    @Column(name = "description")
-    String description;
-
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ScheduleEvent> scheduleEvents = new ArrayList<>();
+    User judge;
 }

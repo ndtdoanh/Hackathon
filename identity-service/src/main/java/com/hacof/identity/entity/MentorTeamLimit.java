@@ -1,8 +1,5 @@
 package com.hacof.identity.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -18,29 +15,31 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "schedules")
-public class Schedule extends AuditCreatedBase {
+@Table(name = "mentor_team_limits")
+public class MentorTeamLimit extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    Team team;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hackathon_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Hackathon hackathon;
 
-    @Column(name = "name")
-    String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mentor_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    User mentor;
 
-    @Lob
-    @Column(name = "description")
-    String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    Team team;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ScheduleEvent> scheduleEvents = new ArrayList<>();
+    @Column(name = "max_teams")
+    Integer maxTeams;
+
+    @Column(name = "max_mentors")
+    Integer maxMentors;
 }
