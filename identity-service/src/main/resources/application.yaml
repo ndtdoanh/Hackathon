@@ -27,11 +27,20 @@ spring:
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
     password: 12345
+#    username: root
+#    password: trungkien
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+#outbound:
+#  identity:
+#    client-id: "626901727884-1tjqf1ktfgb32384892hu1dd2360dg0h.apps.googleusercontent.com"
+#    client-secret: "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"
+#    redirect-uri: "http://localhost:3000/authenticate"
+
 
 outbound:
   identity:

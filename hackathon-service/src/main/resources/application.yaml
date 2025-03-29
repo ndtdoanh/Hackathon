@@ -1,7 +1,5 @@
 server:
   port: 8081
-#  servlet:
-#    context-path: /hackthon
 
 spring:
   application:
@@ -19,7 +17,7 @@ spring:
 
 jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
-  valid-duration: 3600
+  valid-duration: 600000 #3600
   refreshable-duration: 864000
 
 eureka:
