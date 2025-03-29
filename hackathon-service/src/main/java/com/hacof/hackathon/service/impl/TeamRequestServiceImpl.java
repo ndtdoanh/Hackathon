@@ -89,7 +89,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
         Team team = Team.builder()
                 .name("Team for request " + teamRequestId)
-                //.hackathon(teamRequest.getHackathon())
+                // .hackathon(teamRequest.getHackathon())
                 .teamLeader(teamRequest.getReviewedBy())
                 .build();
         return teamMapper.toDto(teamRepository.save(team));
