@@ -45,11 +45,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         if (request.getFeedbackType() == FeedbackType.HACKATHON) {
             hackathon = hackathonRepository
-                    .findById(request.getTargetId())
+                    .findById(Long.parseLong(request.getTargetId()))
                     .orElseThrow(() -> new AppException(ErrorCode.INVALID_FEEDBACK));
         } else if (request.getFeedbackType() == FeedbackType.MENTOR) {
             mentor = userRepository
-                    .findById(request.getTargetId())
+                    .findById(Long.parseLong(request.getTargetId()))
                     .orElseThrow(() -> new AppException(ErrorCode.INVALID_FEEDBACK));
 
             if (mentor.getUserRoles().stream().map(UserRole::getRole).noneMatch(role -> role.getName()
@@ -61,7 +61,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
 
         Team team = teamRepository
-                .findById(request.getTeamId())
+                .findById(Long.parseLong(request.getTeamId()))
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_FEEDBACK));
 
         Feedback feedback = feedbackMapper.toFeedback(request);

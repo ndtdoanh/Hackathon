@@ -33,13 +33,13 @@ public class FeedbackDetailServiceImpl implements FeedbackDetailService {
     @Override
     public FeedbackDetailResponse createFeedbackDetail(FeedbackDetailCreateRequest request) {
         Feedback feedback = feedbackRepository
-                .findById(request.getFeedbackId())
+                .findById(Long.parseLong(request.getFeedbackId()))
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
 
         User currentUser = AuditContext.getCurrentUser();
 
         feedbackDetailRepository
-                .findByFeedback_IdAndFeedback_CreatedBy_Id(request.getFeedbackId(), currentUser.getId())
+                .findByFeedback_IdAndFeedback_CreatedBy_Id(Long.parseLong(request.getFeedbackId()), currentUser.getId()) // Ép kiểu
                 .ifPresent(feedbackDetail -> {
                     throw new AppException(ErrorCode.FEEDBACK_DETAIL_ALREADY_EXISTS);
                 });

@@ -1,5 +1,6 @@
 package com.hacof.analytics.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.hacof.analytics.constant.FeedbackType;
@@ -17,9 +18,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FeedbackResponse {
-    Long id;
-    Long targetId;
-    Long teamId;
+    String id;
+    String targetId;
+    String teamId;
     FeedbackType feedbackType;
     List<FeedbackDetailResponse> feedbackDetails;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    String createdByUserId;
 }
