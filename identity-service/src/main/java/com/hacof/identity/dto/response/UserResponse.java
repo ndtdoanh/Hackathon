@@ -18,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    long id;
+    String id;
     String username;
     String firstName;
     String lastName;
@@ -27,7 +27,8 @@ public class UserResponse {
     Boolean noPassword;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;
-    Long createdByUserId;
+    String createdByUserId;
+    UserProfileResponse userProfile;
     Set<RoleResponse> roles;
 
     public Boolean getIsVerified() {

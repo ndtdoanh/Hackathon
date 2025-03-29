@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileResponse {
-    long id;
+    String id;
     Long userId;
     String phoneNumber;
     Set<String> skills;
