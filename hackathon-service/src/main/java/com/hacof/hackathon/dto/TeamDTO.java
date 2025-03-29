@@ -1,22 +1,29 @@
 package com.hacof.hackathon.dto;
 
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Set;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamDTO {
-    private long id;
-    private String name;
-    private String bio;
-    private long hackathonId;
-    private long teamLeaderId;
-    private List<UserTeamDTO> teamMembers;
+    String id;
+    String name;
+    String hackathonId;
+    String teamLeaderId;
+    Set<UserTeamDTO> teamMembers;
+    List<MentorshipSessionRequestDTO> mentorshipSessionRequests;
+    List<TeamHackathonDTO> teamHackathons;
+    List<TeamRoundDTO> teamRounds;
+    List<HackathonResultDTO> hackathonResults;
+    List<MentorshipRequestDTO> mentorshipRequests;
+    List<FeedbackDTO> feedbacks;
+    String bio;
+    boolean isDeleted;
+    String deletedById;
 }
