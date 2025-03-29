@@ -71,7 +71,7 @@ public class Team extends AuditCreatedBase {
     String bio;
 
     @Column(name = "is_deleted")
-    boolean isDeleted = false;
+    Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deleted_by")
