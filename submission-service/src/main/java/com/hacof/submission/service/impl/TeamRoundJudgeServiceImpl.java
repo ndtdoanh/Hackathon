@@ -75,4 +75,14 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
         return teamRoundJudgeMapper.toResponseDTO(entity); // Map to response DTO after finding the entity
     }
 
+    @Override
+    public List<TeamRoundJudgeResponseDTO> getAllTeamRoundJudges() {
+        // Fetch all TeamRoundJudges from the repository
+        List<TeamRoundJudge> teamRoundJudges = teamRoundJudgeRepository.findAll();
+
+        // Convert the list of entities to response DTOs
+        return teamRoundJudges.stream()
+                .map(teamRoundJudgeMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
 }

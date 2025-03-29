@@ -18,6 +18,24 @@ public class TeamRoundJudgeController {
     @Autowired
     private TeamRoundJudgeService service;
 
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TeamRoundJudgeResponseDTO>>> getAll() {
+        CommonResponse<List<TeamRoundJudgeResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TeamRoundJudgeResponseDTO> data = service.getAllTeamRoundJudges();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Fetched all team round judges successfully!");
+            response.setData(data);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> getById(@PathVariable Long id) {
         CommonResponse<TeamRoundJudgeResponseDTO> response = new CommonResponse<>();

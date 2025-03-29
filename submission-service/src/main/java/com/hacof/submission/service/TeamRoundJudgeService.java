@@ -15,4 +15,5 @@ public interface TeamRoundJudgeService {
 
     TeamRoundJudgeResponseDTO getTeamRoundJudgeById(Long id);
 
+    List<TeamRoundJudgeResponseDTO> getAllTeamRoundJudges();
 }
