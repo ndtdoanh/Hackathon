@@ -7,6 +7,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 public class SecurityConfig {
 
@@ -15,12 +17,12 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        config.addAllowedOrigin("*");
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setAllowCredentials(false);
+        config.setAllowCredentials(true);
 
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config); // Match all paths
 
         return new CorsWebFilter(source);
     }
