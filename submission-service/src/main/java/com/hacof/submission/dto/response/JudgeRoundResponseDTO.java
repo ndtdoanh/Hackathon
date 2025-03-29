@@ -1,12 +1,17 @@
 package com.hacof.submission.dto.response;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class JudgeRoundResponseDTO {
     private Long id;
-    private Long judgeId;
-    private Long roundId;
+    private UserResponse judge;
+    private RoundResponseDTO round;
     private boolean isDeleted;
     private String createdBy;
     private String createdDate;
