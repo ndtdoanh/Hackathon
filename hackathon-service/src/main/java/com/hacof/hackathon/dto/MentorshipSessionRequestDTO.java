@@ -1,11 +1,18 @@
 package com.hacof.hackathon.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
 public class MentorshipSessionRequestDTO {
-    private Long id;
-    private Long mentorshipRequestId;
+    private String id;
+    private String mentorTeamId;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private String location;
+    private String description;
     private String status;
-    private String sessionDetails;
+    private String evaluatedById;
+    private LocalDateTime evaluatedAt;
 }
