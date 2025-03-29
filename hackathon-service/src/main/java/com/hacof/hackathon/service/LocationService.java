@@ -8,11 +8,15 @@ import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
 
 public interface LocationService {
-    LocationDTO createLocation(LocationDTO locationDTO);
+    LocationDTO create(LocationDTO locationDTO);
 
-    LocationDTO updateLocation(Long id, LocationDTO locationDTO);
+    LocationDTO update(Long id, LocationDTO locationDTO);
 
-    void deleteLocation(Long id);
+    void delete(Long id);
+
+    // List<LocationDTO> getAll();
+
+    // LocationDTO getById(Long id);
 
     List<LocationDTO> getLocations(Specification<Location> spec);
 }

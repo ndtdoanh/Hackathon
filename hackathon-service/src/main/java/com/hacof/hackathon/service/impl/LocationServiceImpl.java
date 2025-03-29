@@ -3,6 +3,8 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -19,44 +21,53 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
 
     @Override
-    public List<LocationDTO> getLocations(Specification<Location> spec) {
-        if (locationRepository.findAll(spec).isEmpty()) {
-            throw new ResourceNotFoundException("Location not found");
-        }
-        return locationRepository.findAll(spec).stream()
-                .map(locationMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public LocationDTO createLocation(LocationDTO locationDTO) {
+    public LocationDTO create(LocationDTO locationDTO) {
         Location location = locationMapper.toEntity(locationDTO);
-        Location savedLocation = locationRepository.save(location);
-        return locationMapper.toDTO(savedLocation);
+        return locationMapper.toDto(locationRepository.save(location));
     }
 
     @Override
-    public LocationDTO updateLocation(Long id, LocationDTO locationDTO) {
+    public LocationDTO update(Long id, LocationDTO locationDTO) {
         Location existingLocation =
                 locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
-        existingLocation.setName(locationDTO.getName());
-        existingLocation.setAddress(locationDTO.getAddress());
-        existingLocation.setLatitude(locationDTO.getLatitude());
-        existingLocation.setLongitude(locationDTO.getLongitude());
-        Location updatedLocation = locationRepository.save(existingLocation);
-        return locationMapper.toDTO(updatedLocation);
+        locationMapper.updateEntityFromDto(locationDTO, existingLocation);
+        return locationMapper.toDto(locationRepository.save(existingLocation));
     }
 
     @Override
-    public void deleteLocation(Long id) {
+    public void delete(Long id) {
         if (!locationRepository.existsById(id)) {
             throw new ResourceNotFoundException("Location not found");
         }
         locationRepository.deleteById(id);
     }
+
+    @Override
+    public List<LocationDTO> getLocations(Specification<Location> spec) {
+        return locationRepository.findAll(spec).stream()
+                .map(locationMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //    @Override
+    //    public List<LocationDTO> getAll() {
+    //        if (locationRepository.findAll().isEmpty()) {
+    //            throw new ResourceNotFoundException("No locations found");
+    //        }
+    //        return locationRepository.findAll().stream().map(locationMapper::toDto).collect(Collectors.toList());
+    //    }
+    //
+    //    @Override
+    //    public LocationDTO getById(Long id) {
+    //        Location location =
+    //                locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not
+    // found"));
+    //        return locationMapper.toDto(location);
+    //    }
 }

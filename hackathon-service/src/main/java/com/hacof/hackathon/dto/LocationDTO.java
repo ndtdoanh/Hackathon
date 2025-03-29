@@ -1,5 +1,7 @@
 package com.hacof.hackathon.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationDTO {
-    Long id;
+    String id;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 100, message = "Name must be less than 100 characters")
@@ -28,4 +30,6 @@ public class LocationDTO {
 
     @NotNull(message = "Longitude is required")
     Double longitude;
+
+    List<RoundLocationDTO> roundLocations;
 }
