@@ -1,16 +1,20 @@
 package com.hacof.submission.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamRoundJudgeResponseDTO {
 
-    private Long id;              // ID của TeamRoundJudge
-    private TeamRoundResponseDTO teamRound; // Thông tin chi tiết về TeamRound
-    private UserResponse judge;         // Thông tin chi tiết về Judge
-    private String createdBy;     // Người tạo
-    private String createdDate;   // Thời gian tạo
-    private String lastModifiedDate; // Thời gian sửa đổi
+    String id;
+    TeamRoundResponseDTO teamRound;
+    UserResponse judge;
+    String createdBy;
+    String createdDate;
+    String lastModifiedDate;
 }
