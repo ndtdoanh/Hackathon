@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
@@ -102,7 +104,7 @@ public class UserController {
 
     @PutMapping("/my-info")
     @PreAuthorize("hasAuthority('UPDATE_MY_INFO')")
-    public ApiResponse<UserResponse> updateUser(@RequestBody UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(@Valid @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.updateMyInfo(request))
                 .message("User updated successfully")
@@ -190,5 +192,17 @@ public class UserController {
         return ApiResponse.<String>builder()
                 .message(userService.resetPassword(request))
                 .build();
+    }
+
+    @PostMapping("/avatar")
+    @PreAuthorize("hasAuthority('UPLOAD_AVATAR')")
+    public ResponseEntity<ApiResponse<UserResponse>> uploadAvatar(@RequestParam("file") MultipartFile file) {
+        UserResponse userResponse = userService.uploadAvatar(file);
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .result(userResponse)
+                .message("Avatar uploaded successfully")
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }
