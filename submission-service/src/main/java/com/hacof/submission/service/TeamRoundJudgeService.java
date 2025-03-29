@@ -11,4 +11,6 @@ public interface TeamRoundJudgeService {
 
     TeamRoundJudgeResponseDTO updateTeamRoundJudge(Long id, TeamRoundJudgeRequestDTO requestDTO);
 
+    void deleteTeamRoundJudge(Long id);
+
 }

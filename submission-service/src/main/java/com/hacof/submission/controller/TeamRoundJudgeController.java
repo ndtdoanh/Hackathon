@@ -18,6 +18,8 @@ public class TeamRoundJudgeController {
     @Autowired
     private TeamRoundJudgeService service;
 
+
+
     @PostMapping
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> create(
             @RequestBody TeamRoundJudgeRequestDTO teamRoundJudgeRequestDTO) {
@@ -61,4 +63,22 @@ public class TeamRoundJudgeController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<Void>> delete(@PathVariable Long id) {
+        CommonResponse<Void> response = new CommonResponse<>();
+        try {
+            service.deleteTeamRoundJudge(id);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Team round judge deleted successfully!");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

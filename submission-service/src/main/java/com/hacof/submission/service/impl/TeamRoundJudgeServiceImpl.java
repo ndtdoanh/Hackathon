@@ -58,4 +58,14 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
         return teamRoundJudgeMapper.toResponseDTO(teamRoundJudge);
     }
 
+    @Override
+    public void deleteTeamRoundJudge(Long id) {
+        // Check if the TeamRoundJudge exists
+        if (!teamRoundJudgeRepository.existsById(id)) {
+            throw new IllegalArgumentException("TeamRoundJudge not found with ID " + id);
+        }
+        // Delete the TeamRoundJudge by ID
+        teamRoundJudgeRepository.deleteById(id);
+    }
+
 }
