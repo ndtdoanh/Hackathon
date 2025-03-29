@@ -4,20 +4,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@Builder // Ensure this annotation is present
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class RoundMarkCriterionResponseDTO {
-    private Long id;
-    private RoundResponseDTO round; // Ensure this field exists
-    private String name;
-    private int maxScore;
-    private String note;
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
-    private List<JudgeSubmissionDetailResponseDTO> judgeSubmissionDetails;
+    String id;
+    RoundResponseDTO round;
+    String name;
+    int maxScore;
+    String note;
+    String createdBy;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    List<JudgeSubmissionDetailResponseDTO> judgeSubmissionDetails;
 }

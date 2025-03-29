@@ -13,7 +13,6 @@ import com.hacof.submission.entity.RoundMarkCriterion;
 @Component
 public class RoundMarkCriterionMapper {
 
-    // Convert request DTO to entity
     public RoundMarkCriterion toEntity(RoundMarkCriterionRequestDTO requestDTO) {
         return RoundMarkCriterion.builder()
                 .name(requestDTO.getName())
@@ -22,14 +21,13 @@ public class RoundMarkCriterionMapper {
                 .build();
     }
 
-    // Convert RoundMarkCriterion entity to response DTO
     public RoundMarkCriterionResponseDTO toRoundMarkCriterionResponseDTO(RoundMarkCriterion entity) {
         if (entity == null) {
             return null;
         }
 
         return RoundMarkCriterionResponseDTO.builder()
-                .id(entity.getId())
+                .id(String.valueOf(entity.getId()))
                 .name(entity.getName())
                 .maxScore(entity.getMaxScore())
                 .note(entity.getNote())
@@ -40,10 +38,9 @@ public class RoundMarkCriterionMapper {
                 .build();
     }
 
-    // Convert Round entity to response DTO
     private RoundResponseDTO mapRoundToDto(Round round) {
         return RoundResponseDTO.builder()
-                .id(round.getId())
+                .id(String.valueOf(round.getId()))
                 .hackathon(round.getHackathon() != null ? mapHackathonToDto(round.getHackathon()) : null)
                 .startTime(round.getStartTime())
                 .endTime(round.getEndTime())
@@ -55,14 +52,13 @@ public class RoundMarkCriterionMapper {
                 .build();
     }
 
-    // Convert Hackathon entity to response DTO
     private HackathonResponseDTO mapHackathonToDto(Hackathon hackathon) {
         if (hackathon == null) {
             return null;
         }
 
         return HackathonResponseDTO.builder()
-                .id(hackathon.getId())
+                .id(String.valueOf(hackathon.getId()))
                 .title(hackathon.getTitle())
                 .subTitle(hackathon.getSubTitle())
                 .bannerImageUrl(hackathon.getBannerImageUrl())
