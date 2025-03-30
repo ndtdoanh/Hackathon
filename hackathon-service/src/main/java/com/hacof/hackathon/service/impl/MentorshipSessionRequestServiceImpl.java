@@ -1,8 +1,6 @@
 package com.hacof.hackathon.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,17 +26,18 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     @Override
     public MentorshipSessionRequestDTO requestSession(
             String mentorTeamId, LocalDateTime startTime, LocalDateTime endTime, String location, String description) {
-        MentorshipSessionRequest sessionRequest = new MentorshipSessionRequest();
-        sessionRequest.setMentor(userRepository
-                .findById(Long.parseLong(mentorTeamId))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid mentor team ID")));
-        sessionRequest.setStartTime(startTime);
-        sessionRequest.setEndTime(endTime);
-        sessionRequest.setLocation(location);
-        sessionRequest.setDescription(description);
-        sessionRequest.setStatus(Status.PENDING);
-        sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
-        return mentorshipSessionRequestMapper.toDTO(sessionRequest);
+        //        MentorshipSessionRequest sessionRequest = new MentorshipSessionRequest();
+        //        sessionRequest.setMentor(userRepository
+        //                .findById(Long.parseLong(mentorTeamId))
+        //                .orElseThrow(() -> new IllegalArgumentException("Invalid mentor team ID")));
+        //        sessionRequest.setStartTime(startTime);
+        //        sessionRequest.setEndTime(endTime);
+        //        sessionRequest.setLocation(location);
+        //        sessionRequest.setDescription(description);
+        //        sessionRequest.setStatus(Status.PENDING);
+        //        sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
+        //        return mentorshipSessionRequestMapper.toDTO(sessionRequest);
+        return null;
     }
 
     @Override
@@ -65,12 +64,5 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         sessionRequest.setEvaluatedAt(LocalDateTime.now());
         sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
         return mentorshipSessionRequestMapper.toDTO(sessionRequest);
-    }
-
-    @Override
-    public List<MentorshipSessionRequestDTO> getSessionsByMentorTeam(Long teamId) {
-        return mentorshipSessionRequestRepository.findByTeamId(teamId).stream()
-                .map(mentorshipSessionRequestMapper::toDTO)
-                .collect(Collectors.toList());
     }
 }

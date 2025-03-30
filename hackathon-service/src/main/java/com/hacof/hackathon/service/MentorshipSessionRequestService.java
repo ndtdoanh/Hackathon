@@ -1,7 +1,6 @@
 package com.hacof.hackathon.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
 
@@ -13,5 +12,5 @@ public interface MentorshipSessionRequestService {
 
     MentorshipSessionRequestDTO rejectSession(Long sessionId, Long mentorId);
 
-    List<MentorshipSessionRequestDTO> getSessionsByMentorTeam(Long mentorTeamId);
+    // List<MentorshipSessionRequestDTO> getSessionsByMentorTeam(Long mentorTeamId);
 }

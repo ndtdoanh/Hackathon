@@ -126,17 +126,17 @@ public class MentorshipRequestController {
                 result));
     }
 
-    @GetMapping("/sessions/team/{mentorTeamId}")
-    public ResponseEntity<CommonResponse<List<MentorshipSessionRequestDTO>>> getSessionsByMentorTeam(
-            @PathVariable Long mentorTeamId) {
-        log.debug("Received request to get mentorship sessions by mentor team: {}", mentorTeamId);
-        List<MentorshipSessionRequestDTO> result =
-                mentorshipSessionRequestService.getSessionsByMentorTeam(mentorTeamId);
-        return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentorship sessions successfully"),
-                result));
-    }
+    //    @GetMapping("/sessions/team/{mentorTeamId}")
+    //    public ResponseEntity<CommonResponse<List<MentorshipSessionRequestDTO>>> getSessionsByMentorTeam(
+    //            @PathVariable Long mentorTeamId) {
+    //        log.debug("Received request to get mentorship sessions by mentor team: {}", mentorTeamId);
+    //        List<MentorshipSessionRequestDTO> result =
+    //                mentorshipSessionRequestService.getSessionsByMentorTeam(mentorTeamId);
+    //        return ResponseEntity.ok(new CommonResponse<>(
+    //                UUID.randomUUID().toString(),
+    //                LocalDateTime.now(),
+    //                "HACOF",
+    //                new CommonResponse.Result("0000", "Fetched mentorship sessions successfully"),
+    //                result));
+    //    }
 }
