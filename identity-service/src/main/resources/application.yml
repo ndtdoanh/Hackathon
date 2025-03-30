@@ -26,7 +26,7 @@ spring:
     url: "jdbc:mysql://localhost:3306/hacof"
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: trungkien
+    password: 12345
 #    username: root
 #    password: trungkien
 
@@ -35,18 +35,18 @@ spring:
       ddl-auto: update
     show-sql: true
 
-outbound:
-  identity:
-    client-id: "626901727884-1tjqf1ktfgb32384892hu1dd2360dg0h.apps.googleusercontent.com"
-    client-secret: "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"
-    redirect-uri: "http://localhost:3000/authenticate"
-
-
 #outbound:
 #  identity:
-#    client-id: ${clientId}
-#    client-secret: ${clientSecret}
+#    client-id: "626901727884-1tjqf1ktfgb32384892hu1dd2360dg0h.apps.googleusercontent.com"
+#    client-secret: "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"
 #    redirect-uri: "http://localhost:3000/authenticate"
+
+
+outbound:
+  identity:
+    client-id: ${clientId}
+    client-secret: ${clientSecret}
+    redirect-uri: "http://localhost:3000/authenticate"
 
 jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
