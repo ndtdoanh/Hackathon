@@ -1,10 +1,13 @@
 package com.hacof.hackathon.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -31,5 +34,12 @@ public class LocationDTO {
     @NotNull(message = "Longitude is required")
     Double longitude;
 
+    @JsonIgnore
     List<RoundLocationDTO> roundLocations;
+
+    // Audit fields
+    String createdByUserName; // save username
+    LocalDateTime createdAt;
+    String lastModifiedByUserName; // save username
+    LocalDateTime updatedAt;
 }

@@ -9,15 +9,14 @@ import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
 import com.hacof.hackathon.entity.User;
 
-// @Mapper(
-//        componentModel = "spring",
-//        uses = {RoundMapper.class})
 @Mapper(componentModel = "spring")
 public interface LocationMapper {
-    @Mapping(target = "roundLocations", ignore = true)
     Location toEntity(LocationDTO locationDTO);
 
-    @Mapping(target = "roundLocations", ignore = true)
+    @Mapping(target = "createdByUserName", source = "createdBy", qualifiedByName = "mapUserToString")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "lastModifiedByUserName", source = "lastModifiedBy", qualifiedByName = "mapUserToString")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     LocationDTO toDto(Location location);
 
     void updateEntityFromDto(LocationDTO locationDTO, @MappingTarget Location location);

@@ -14,9 +14,5 @@ public interface LocationService {
 
     void delete(Long id);
 
-    // List<LocationDTO> getAll();
-
-    // LocationDTO getById(Long id);
-
     List<LocationDTO> getLocations(Specification<Location> spec);
 }

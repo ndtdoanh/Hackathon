@@ -16,18 +16,25 @@ import com.hacof.hackathon.repository.LocationRepository;
 import com.hacof.hackathon.service.LocationService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@FieldDefaults(makeFinal = true)
 public class LocationServiceImpl implements LocationService {
-    private final LocationRepository locationRepository;
-    private final LocationMapper locationMapper;
+    LocationRepository locationRepository;
+    LocationMapper locationMapper;
 
     @Override
     public LocationDTO create(LocationDTO locationDTO) {
+        // validate Name unique
+        if (locationRepository.existsByName(locationDTO.getName())) {
+            throw new ResourceNotFoundException("Location name already exists");
+        }
+
         Location location = locationMapper.toEntity(locationDTO);
         return locationMapper.toDto(locationRepository.save(location));
     }
@@ -36,7 +43,13 @@ public class LocationServiceImpl implements LocationService {
     public LocationDTO update(Long id, LocationDTO locationDTO) {
         Location existingLocation =
                 locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+
         locationMapper.updateEntityFromDto(locationDTO, existingLocation);
+        if (!locationDTO.getName().equals(existingLocation.getName())
+                && locationRepository.existsByName(locationDTO.getName())) {
+            throw new ResourceNotFoundException("Location name already exists");
+        }
+
         return locationMapper.toDto(locationRepository.save(existingLocation));
     }
 
@@ -50,24 +63,11 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<LocationDTO> getLocations(Specification<Location> spec) {
+        if (locationRepository.findAll(spec).isEmpty()) {
+            throw new ResourceNotFoundException("Location not found");
+        }
         return locationRepository.findAll(spec).stream()
                 .map(locationMapper::toDto)
                 .collect(Collectors.toList());
     }
-
-    //    @Override
-    //    public List<LocationDTO> getAll() {
-    //        if (locationRepository.findAll().isEmpty()) {
-    //            throw new ResourceNotFoundException("No locations found");
-    //        }
-    //        return locationRepository.findAll().stream().map(locationMapper::toDto).collect(Collectors.toList());
-    //    }
-    //
-    //    @Override
-    //    public LocationDTO getById(Long id) {
-    //        Location location =
-    //                locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not
-    // found"));
-    //        return locationMapper.toDto(location);
-    //    }
 }
