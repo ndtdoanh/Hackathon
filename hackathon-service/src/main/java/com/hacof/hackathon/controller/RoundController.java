@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class RoundController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_ROUND')")
-    public ResponseEntity<CommonResponse<RoundDTO>> createRound(@RequestBody CommonRequest<RoundDTO> request) {
+    public ResponseEntity<CommonResponse<RoundDTO>> createRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         RoundDTO roundDTO = roundService.create(request.getData());
         CommonResponse<RoundDTO> response = new CommonResponse<>(
                 request.getRequestId(),
@@ -36,7 +38,7 @@ public class RoundController {
 
     @PutMapping
     @PreAuthorize("hasAuthority('UPDATE_ROUND')")
-    public ResponseEntity<CommonResponse<RoundDTO>> updateRound(@RequestBody CommonRequest<RoundDTO> request) {
+    public ResponseEntity<CommonResponse<RoundDTO>> updateRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         RoundDTO roundDTO = roundService.update(request.getData().getId(), request.getData());
         CommonResponse<RoundDTO> response = new CommonResponse<>(
                 request.getRequestId(),

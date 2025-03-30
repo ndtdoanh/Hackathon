@@ -1,6 +1,7 @@
 package com.hacof.hackathon.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -61,22 +62,32 @@ public class Round extends AuditBase {
     RoundStatus status;
 
     // Submissions related to this round
-    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Submission> submissions;
+    @OneToMany(
+            mappedBy = "round",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<Submission> submissions = new ArrayList<>();
 
     // Criteria used to judge this round
-    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<RoundMarkCriterion> roundMarkCriteria;
+    @OneToMany(
+            mappedBy = "round",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<RoundMarkCriterion> roundMarkCriteria = new ArrayList<>();
 
     // Judges assigned to this round
-    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<JudgeRound> judgeRounds;
+    @OneToMany(
+            mappedBy = "round",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<JudgeRound> judgeRounds = new ArrayList<>();
 
     // Teams that participated in this round
-    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TeamRound> teamRounds;
+    @OneToMany(
+            mappedBy = "round",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<TeamRound> teamRounds = new ArrayList<>();
 
-    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "round",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonIgnore
-    List<RoundLocation> roundLocations;
+    List<RoundLocation> roundLocations = new ArrayList<>();
 }

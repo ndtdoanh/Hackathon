@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.RoundStatus;
 import com.hacof.hackathon.dto.RoundDTO;
-import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.RoundMapper;
@@ -31,11 +30,11 @@ public class RoundServiceImpl implements RoundService {
 
     @Override
     public RoundDTO create(RoundDTO roundDTO) {
-        Hackathon hackathon = hackathonRepository
-                .findById(Long.parseLong(roundDTO.getHackathon().getId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+        //        Hackathon hackathon = hackathonRepository
+        //                .findById(Long.parseLong(roundDTO.getHackathon().getId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
         Round round = roundMapper.toEntity(roundDTO);
-        round.setHackathon(hackathon);
+        // round.setHackathon(hackathon);
         Round savedRound = roundRepository.save(round);
         return roundMapper.toDto(savedRound);
     }
@@ -45,15 +44,15 @@ public class RoundServiceImpl implements RoundService {
         Round existingRound = roundRepository
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
-        existingRound.setHackathon(hackathonRepository
-                .findById(Long.parseLong(roundDTO.getHackathon().getId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
+        //        existingRound.setHackathon(hackathonRepository
+        //                .findById(Long.parseLong(roundDTO.getHackathonId())
+        //                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
         existingRound.setStartTime(roundDTO.getStartTime());
         existingRound.setEndTime(roundDTO.getEndTime());
         existingRound.setRoundNumber(roundDTO.getRoundNumber());
         existingRound.setRoundTitle(roundDTO.getRoundTitle());
         existingRound.setStatus(RoundStatus.valueOf(roundDTO.getStatus().name()));
-        existingRound.setLastModifiedDate(roundDTO.getLastModifiedDate());
+        // existingRound.setLastModifiedDate(roundDTO.getLastModifiedDate());
 
         Round updatedRound = roundRepository.save(existingRound);
         return roundMapper.toDto(updatedRound);
