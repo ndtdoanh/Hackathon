@@ -31,7 +31,7 @@ public class FeedbackController {
             @RequestBody @Valid FeedbackCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<FeedbackResponse>builder()
-                        .result(feedbackService.createFeedback(request))
+                        .data(feedbackService.createFeedback(request))
                         .message("Feedback created successfully")
                         .build());
     }
@@ -40,7 +40,7 @@ public class FeedbackController {
     @PreAuthorize("hasAuthority('GET_FEEDBACKS')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacks() {
         return ApiResponse.<List<FeedbackResponse>>builder()
-                .result(feedbackService.getFeedbacks())
+                .data(feedbackService.getFeedbacks())
                 .message("Get all feedbacks")
                 .build();
     }
@@ -49,7 +49,7 @@ public class FeedbackController {
     @PreAuthorize("hasAuthority('GET_FEEDBACK')")
     public ApiResponse<FeedbackResponse> getFeedback(@PathVariable Long id) {
         return ApiResponse.<FeedbackResponse>builder()
-                .result(feedbackService.getFeedback(id))
+                .data(feedbackService.getFeedback(id))
                 .message("Get feedback by ID")
                 .build();
     }
@@ -65,7 +65,7 @@ public class FeedbackController {
     @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_TEAM')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByTeam(@RequestParam Long teamId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
-                .result(feedbackService.getFeedbacksByTeam(teamId))
+                .data(feedbackService.getFeedbacksByTeam(teamId))
                 .message("Get feedbacks by team")
                 .build();
     }
@@ -74,7 +74,7 @@ public class FeedbackController {
     @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_HACKATHON')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByHackathon(@RequestParam Long hackathonId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
-                .result(feedbackService.getFeedbacksByHackathon(hackathonId))
+                .data(feedbackService.getFeedbacksByHackathon(hackathonId))
                 .message("Get feedbacks by hackathon")
                 .build();
     }
@@ -83,7 +83,7 @@ public class FeedbackController {
     @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByMentor(@RequestParam Long mentorId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
-                .result(feedbackService.getFeedbacksByMentor(mentorId))
+                .data(feedbackService.getFeedbacksByMentor(mentorId))
                 .message("Get feedbacks by mentor")
                 .build();
     }

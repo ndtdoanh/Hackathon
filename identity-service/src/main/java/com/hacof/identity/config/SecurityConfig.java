@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -18,16 +21,16 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/api/v1/auth/token",
-        "/api/v1/auth/introspect",
-        "/api/v1/auth/refresh",
-        "/api/v1/auth/logout",
-        "/api/v1/users/forgot-password",
-        "/api/v1/users/reset-password",
-        "/api/v1/auth/outbound/authentication",
-        "/v3/api-docs/**",
-        "/swagger-ui/**",
-        "/swagger-ui/index.html"
+            "/api/v1/auth/token",
+            "/api/v1/auth/introspect",
+            "/api/v1/auth/refresh",
+            "/api/v1/auth/logout",
+            "/api/v1/users/forgot-password",
+            "/api/v1/users/reset-password",
+            "/api/v1/auth/outbound/authentication",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui/index.html"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -50,13 +53,19 @@ public class SecurityConfig {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
-        // Disable CORS at this level since it's handled by the gateway
-        httpSecurity.cors(AbstractHttpConfigurer::disable);
-
         return httpSecurity.build();
     }
 
-    // CORS filter bean removed
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {

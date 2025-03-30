@@ -36,7 +36,7 @@ public class MessageReactionController {
             @PathVariable Long messageId, @RequestBody @Valid MessageReactionRequest request) {
         MessageReactionResponse reactionResponse = reactionService.reactToMessage(messageId, request);
         ApiResponse<MessageReactionResponse> response = ApiResponse.<MessageReactionResponse>builder()
-                .result(reactionResponse)
+                .data(reactionResponse)
                 .message("Reaction added successfully")
                 .build();
 
@@ -54,7 +54,7 @@ public class MessageReactionController {
     //    @PreAuthorize("hasAuthority('GET_REACTIONS')")
     public ApiResponse<List<MessageReactionResponse>> getReactionsByMessage(@PathVariable Long messageId) {
         return ApiResponse.<List<MessageReactionResponse>>builder()
-                .result(reactionService.getReactionsByMessage(messageId))
+                .data(reactionService.getReactionsByMessage(messageId))
                 .message("Get all reactions for message")
                 .build();
     }

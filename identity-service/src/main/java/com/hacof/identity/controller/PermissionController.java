@@ -39,7 +39,7 @@ public class PermissionController {
             @RequestBody @Valid PermissionCreateRequest request) {
         PermissionResponse permissionResponse = permissionService.createPermission(request);
         ApiResponse<PermissionResponse> response = ApiResponse.<PermissionResponse>builder()
-                .result(permissionResponse)
+                .data(permissionResponse)
                 .message("Permission created successfully")
                 .build();
 
@@ -50,7 +50,7 @@ public class PermissionController {
     @PreAuthorize("hasAuthority('GET_PERMISSIONS')")
     public ApiResponse<List<PermissionResponse>> getPermissions() {
         return ApiResponse.<List<PermissionResponse>>builder()
-                .result(permissionService.getPermissions())
+                .data(permissionService.getPermissions())
                 .message("Get all permissions")
                 .build();
     }
@@ -59,7 +59,7 @@ public class PermissionController {
     @PreAuthorize("hasAuthority('GET_PERMISSION')")
     public ApiResponse<PermissionResponse> getPermission(@PathVariable("Id") Long Id) {
         return ApiResponse.<PermissionResponse>builder()
-                .result(permissionService.getPermission(Id))
+                .data(permissionService.getPermission(Id))
                 .message("Get permission by Id")
                 .build();
     }
@@ -69,7 +69,7 @@ public class PermissionController {
     public ApiResponse<PermissionResponse> updatePermission(
             @PathVariable("Id") Long Id, @RequestBody PermissionUpdateRequest request) {
         return ApiResponse.<PermissionResponse>builder()
-                .result(permissionService.updatePermission(Id, request))
+                .data(permissionService.updatePermission(Id, request))
                 .message("Permission updated successfully")
                 .build();
     }

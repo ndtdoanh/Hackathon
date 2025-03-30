@@ -31,7 +31,7 @@ public class ActivityLogController {
     @PreAuthorize("hasAuthority('GET_LOGS')")
     public ApiResponse<List<ActivityLogResponse>> getLogs() {
         return ApiResponse.<List<ActivityLogResponse>>builder()
-                .result(activityLogService.getLogs())
+                .data(activityLogService.getLogs())
                 .message("Get all logs successfully")
                 .build();
     }
@@ -40,7 +40,7 @@ public class ActivityLogController {
     @PreAuthorize("hasAuthority('GET_LOG')")
     public ApiResponse<ActivityLogResponse> getLog(@PathVariable("id") Long id) {
         return ApiResponse.<ActivityLogResponse>builder()
-                .result(activityLogService.getLog(id))
+                .data(activityLogService.getLog(id))
                 .message("Get log by ID successfully")
                 .build();
     }
@@ -57,7 +57,7 @@ public class ActivityLogController {
             @RequestParam(required = false) Status status) {
 
         return ApiResponse.<List<ActivityLogResponse>>builder()
-                .result(activityLogService.searchLogs(action, target, username, fromDate, toDate, ipAddress, status))
+                .data(activityLogService.searchLogs(action, target, username, fromDate, toDate, ipAddress, status))
                 .message("Search logs successfully")
                 .build();
     }

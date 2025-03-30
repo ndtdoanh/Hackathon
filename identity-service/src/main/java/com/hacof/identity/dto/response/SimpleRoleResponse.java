@@ -1,9 +1,5 @@
 package com.hacof.identity.dto.response;
 
-import java.time.LocalDateTime;
-
-import com.hacof.identity.constant.UserDeviceStatus;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,16 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDeviceResponse {
+public class SimpleRoleResponse {
     String id;
-    long userId;
-    long deviceId;
-    UserDeviceStatus status;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
-    String createdByUserName;
+    String name;
 }

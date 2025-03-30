@@ -15,7 +15,11 @@ import com.hacof.analytics.entity.FeedbackDetail;
 public interface FeedbackMapper {
     @Mapping(target = "id", expression = "java(String.valueOf(feedback.getId()))")
     @Mapping(target = "teamId", expression = "java(String.valueOf(feedback.getTeam().getId()))")
-    @Mapping(target = "createdByUserId", expression = "java(String.valueOf(feedback.getCreatedBy().getId()))")
+    @Mapping(
+            target = "createdByUserName",
+            expression = "java(feedback.getCreatedBy() != null ? feedback.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     @Mapping(
             target = "targetId",
             expression = "java(feedback.getHackathon() != null ? String.valueOf(feedback.getHackathon().getId()) : String.valueOf(feedback.getMentor().getId()))"

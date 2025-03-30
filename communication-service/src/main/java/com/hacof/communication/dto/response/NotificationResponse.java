@@ -23,6 +23,6 @@ public class NotificationResponse {
     String content;
     String metadata;
     boolean isRead;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

@@ -23,7 +23,7 @@ public class ConversationResponse {
     ConversationType type;
     String teamId;
     Set<ConversationUserResponse> users;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }

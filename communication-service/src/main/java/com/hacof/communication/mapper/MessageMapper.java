@@ -13,8 +13,10 @@ import com.hacof.communication.entity.Message;
 public interface MessageMapper {
     @Mapping(target = "id", expression = "java(String.valueOf(message.getId()))")
     @Mapping(
-            target = "createdByUserId",
-            expression = "java(message.getCreatedBy() != null ? String.valueOf(message.getCreatedBy().getId()) : null)")
+            target = "createdByUserName",
+            expression = "java(message.getCreatedBy() != null ? message.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     @Mapping(
             target = "conversationId",
             expression =

@@ -16,6 +16,8 @@ public interface FeedbackDetailMapper {
 
     @Mapping(target = "id", expression = "java(String.valueOf(feedbackDetail.getId()))")
     @Mapping(target = "feedbackId", expression = "java(String.valueOf(feedbackDetail.getFeedback().getId()))")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     FeedbackDetailResponse toFeedbackDetailResponse(FeedbackDetail feedbackDetail);
 
     List<FeedbackDetailResponse> toFeedbackDetailResponseList(List<FeedbackDetail> feedbackDetails);

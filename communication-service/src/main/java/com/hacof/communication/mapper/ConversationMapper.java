@@ -14,9 +14,10 @@ public interface ConversationMapper {
             expression = "java(conversation.getTeam() != null ? String.valueOf(conversation.getTeam().getId()) : null)")
     @Mapping(target = "id", expression = "java(String.valueOf(conversation.getId()))")
     @Mapping(
-            target = "createdByUserId",
-            expression =
-                    "java(conversation.getCreatedBy() != null ? String.valueOf(conversation.getCreatedBy().getId()) : null)")
+            target = "createdByUserName",
+            expression = "java(conversation.getCreatedBy() != null ? conversation.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     @Mapping(target = "users", source = "conversationUsers")
     ConversationResponse toConversationResponse(Conversation conversation);
 }

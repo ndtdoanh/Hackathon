@@ -27,7 +27,7 @@ public class UserDeviceTrackController {
     @PreAuthorize("hasAuthority('CREATE_USER_DEVICE_TRACK')")
     public ApiResponse<UserDeviceTrackResponse> addDeviceTrack(@RequestBody @Valid LogDeviceStatusRequest request) {
         return ApiResponse.<UserDeviceTrackResponse>builder()
-                .result(userDeviceTrackService.addDeviceTrack(request))
+                .data(userDeviceTrackService.addDeviceTrack(request))
                 .message("Device track added successfully")
                 .build();
     }
@@ -36,7 +36,7 @@ public class UserDeviceTrackController {
     @PreAuthorize("hasAuthority('GET_USER_DEVICE_TRACKS')")
     public ApiResponse<List<UserDeviceTrackResponse>> getDeviceTracks() {
         return ApiResponse.<List<UserDeviceTrackResponse>>builder()
-                .result(userDeviceTrackService.getDeviceTracks())
+                .data(userDeviceTrackService.getDeviceTracks())
                 .message("Get all device tracks")
                 .build();
     }

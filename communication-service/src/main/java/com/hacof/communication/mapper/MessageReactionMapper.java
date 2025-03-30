@@ -11,9 +11,10 @@ import com.hacof.communication.entity.MessageReaction;
 public interface MessageReactionMapper {
     @Mapping(target = "id", expression = "java(String.valueOf(reaction.getId()))")
     @Mapping(
-            target = "createdByUserId",
-            expression =
-                    "java(reaction.getCreatedBy() != null ? String.valueOf(reaction.getCreatedBy().getId()) : null)")
+            target = "createdByUserName",
+            expression = "java(reaction.getCreatedBy() != null ? reaction.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     MessageReactionResponse toMessageReactionResponse(MessageReaction reaction);
 
     @Mapping(target = "id", ignore = true)

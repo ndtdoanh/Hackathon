@@ -41,7 +41,7 @@ public class NotificationDeliveryController {
 
         ApiResponse<List<NotificationDeliveryResponse>> response =
                 ApiResponse.<List<NotificationDeliveryResponse>>builder()
-                        .result(deliveryResponses)
+                        .data(deliveryResponses)
                         .message("NotificationDeliveries created successfully")
                         .build();
 
@@ -52,7 +52,7 @@ public class NotificationDeliveryController {
     public ApiResponse<NotificationDeliveryResponse> updateNotificationDeliveryStatus(
             @PathVariable("id") Long id, @RequestParam NotificationStatus status) {
         return ApiResponse.<NotificationDeliveryResponse>builder()
-                .result(notificationDeliveryService.updateNotificationDeliveryStatus(id, status))
+                .data(notificationDeliveryService.updateNotificationDeliveryStatus(id, status))
                 .message("NotificationDelivery status updated successfully")
                 .build();
     }
@@ -61,7 +61,7 @@ public class NotificationDeliveryController {
     public ApiResponse<List<NotificationDeliveryResponse>> getDeliveriesByNotification(
             @RequestParam("notificationId") Long notificationId) {
         return ApiResponse.<List<NotificationDeliveryResponse>>builder()
-                .result(notificationDeliveryService.getDeliveriesByNotification(notificationId))
+                .data(notificationDeliveryService.getDeliveriesByNotification(notificationId))
                 .message("Fetched all NotificationDeliveries for Notification")
                 .build();
     }

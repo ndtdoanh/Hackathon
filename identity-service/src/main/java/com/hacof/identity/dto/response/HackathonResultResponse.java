@@ -1,27 +1,22 @@
 package com.hacof.identity.dto.response;
 
-import java.time.LocalDateTime;
-
-import com.hacof.identity.constant.UserDeviceStatus;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDeviceResponse {
+public class HackathonResultResponse {
     String id;
-    long userId;
-    long deviceId;
-    UserDeviceStatus status;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
-    String createdByUserName;
+    String teamId;
+    int placement;
+    int totalScore;
 }

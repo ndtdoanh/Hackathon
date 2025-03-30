@@ -21,6 +21,6 @@ public class FeedbackDetailResponse {
     int maxRating;
     int rate;
     String note;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

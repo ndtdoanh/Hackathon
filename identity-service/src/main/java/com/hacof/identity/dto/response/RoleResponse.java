@@ -19,8 +19,8 @@ public class RoleResponse {
     String id;
     String name;
     String description;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
     Set<PermissionResponse> permissions;
 }

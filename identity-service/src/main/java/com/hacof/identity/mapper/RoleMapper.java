@@ -14,8 +14,10 @@ public interface RoleMapper {
 
     @Mapping(target = "id", expression = "java(String.valueOf(role.getId()))")
     @Mapping(
-            target = "createdByUserId",
-            expression = "java(role.getCreatedBy() != null ? String.valueOf(role.getCreatedBy().getId()) : null)")
+            target = "createdByUserName",
+            expression = "java(role.getCreatedBy() != null ? role.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     @Mapping(target = "permissions", source = "permissions")
     RoleResponse toRoleResponse(Role role);
 }

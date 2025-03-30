@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 public class MessageReactionResponse {
     String id;
     ReactionType reactionType;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }

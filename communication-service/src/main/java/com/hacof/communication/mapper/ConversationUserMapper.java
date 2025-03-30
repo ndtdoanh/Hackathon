@@ -13,8 +13,10 @@ public interface ConversationUserMapper {
             expression =
                     "java(conversationUser.getUser() != null ? String.valueOf(conversationUser.getUser().getId()) : null)")
     @Mapping(
-            target = "deletedByUserId",
+            target = "deletedByUserName",
             expression =
-                    "java(conversationUser.getDeletedBy() != null ? String.valueOf(conversationUser.getDeletedBy().getId()) : null)")
+                    "java(conversationUser.getDeletedBy() != null ? conversationUser.getDeletedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     ConversationUserResponse toConversationUserResponse(ConversationUser conversationUser);
 }

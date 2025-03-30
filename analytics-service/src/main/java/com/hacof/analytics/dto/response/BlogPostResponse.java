@@ -22,7 +22,7 @@ public class BlogPostResponse {
     String slug;
     String content;
     BlogPostStatus status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }
