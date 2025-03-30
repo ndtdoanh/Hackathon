@@ -4,6 +4,21 @@ server:
 spring:
   application:
     name: hackathon-service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: doanhndtse161935@fpt.edu.vn
+    password: xbmt tevy evrt uouh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+    test-connection: true
   datasource:
     url: "jdbc:mysql://localhost:3306/hacof"
 #    driverClassName: "com.mysql.cj.jdbc.Driver"
@@ -28,3 +43,9 @@ eureka:
     fetch-registry: true
   instance:
     preferIpAddress: true
+
+logging:
+  level:
+    com.hacof.hackathon.service.impl.EmailServiceImpl: DEBUG
+    com.hacof.hackathon.service.impl.NotificationServiceImpl: DEBUG
+    org.springframework.mail: DEBUG
