@@ -23,7 +23,7 @@ public class FeedbackResponse {
     String teamId;
     FeedbackType feedbackType;
     List<FeedbackDetailResponse> feedbackDetails;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }
