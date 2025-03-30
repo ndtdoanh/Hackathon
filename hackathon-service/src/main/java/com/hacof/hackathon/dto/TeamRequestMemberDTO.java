@@ -2,8 +2,7 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
-import com.hacof.hackathon.constant.Status;
-import com.hacof.hackathon.entity.AuditBase;
+import com.hacof.hackathon.constant.TeamRequestMemberStatus;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,10 +12,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TeamRequestMemberDTO extends AuditBase {
+public class TeamRequestMemberDTO {
     String id;
     String teamRequestId;
+    UserDTO user;
     String userId;
-    Status status;
+    TeamRequestMemberStatus status;
     LocalDateTime respondedAt;
+
+    // audit fields
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
 }

@@ -8,7 +8,8 @@ import com.hacof.hackathon.entity.TeamRequestMember;
 
 @Mapper(
         componentModel = "spring",
-        uses = {UserMapper.class, TeamRequestMapper.class})
+        //        uses = {UserMapper.class, TeamRequestMapper.class})
+        uses = {TeamRequestMapper.class})
 public interface TeamRequestMemberMapper {
     TeamRequestMemberDTO toDto(TeamRequestMember teamRequestMember);
 
