@@ -3,9 +3,7 @@ package com.hacof.submission.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.hacof.submission.entity.Submission;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,10 +13,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class SubmissionResponseDTO {
     String id;
     RoundResponseDTO round;
+    TeamResponseDTO team;
     String status;
     LocalDateTime submittedAt;
     List<FileUrlResponseDTO> fileUrls;
@@ -28,13 +26,12 @@ public class SubmissionResponseDTO {
     public SubmissionResponseDTO(Submission submission) {
         if (submission != null) {
             this.id = String.valueOf(submission.getId());
-            this.round = submission.getRound() != null
-                    ? new RoundResponseDTO()
-                    : null;
-            this.status =
-                    submission.getStatus() != null ? submission.getStatus().toString() : null;
+            this.round = submission.getRound() != null ? new RoundResponseDTO() : null;
+            this.team = submission.getTeam() != null ? new TeamResponseDTO(submission.getTeam()) : null;
+            this.status = submission.getStatus() != null ? submission.getStatus().toString() : null;
             this.submittedAt = submission.getSubmittedAt();
             this.finalScore = submission.getFinalScore();
+
             if (submission.getFileUrls() != null) {
                 this.fileUrls = submission.getFileUrls().stream()
                         .map(file -> new FileUrlResponseDTO(

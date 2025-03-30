@@ -10,6 +10,7 @@ import lombok.Setter;
 public class SubmissionRequestDTO {
 
     private Long roundId;
+    private Long teamId;
     private String status;
     private List<Long> fileIds;
 }

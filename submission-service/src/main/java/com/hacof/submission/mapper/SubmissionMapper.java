@@ -5,25 +5,28 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
-
 import com.hacof.submission.constant.Status;
 import com.hacof.submission.dto.request.SubmissionRequestDTO;
 import com.hacof.submission.dto.response.*;
 import com.hacof.submission.entity.*;
 import com.hacof.submission.repository.RoundRepository;
+import com.hacof.submission.repository.TeamRepository;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SubmissionMapper {
 
-    public static Submission toEntity(SubmissionRequestDTO dto, RoundRepository roundRepository) {
+    public static Submission toEntity(SubmissionRequestDTO dto, RoundRepository roundRepository, TeamRepository teamRepository) {
         Submission submission = new Submission();
 
-        Round round = roundRepository
-                .findById(dto.getRoundId())
+        Round round = roundRepository.findById(dto.getRoundId())
                 .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + dto.getRoundId()));
-
         submission.setRound(round);
+
+        Team team = teamRepository.findById(dto.getTeamId())
+                .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + dto.getTeamId()));
+        submission.setTeam(team);
+
         submission.setStatus(Status.valueOf(dto.getStatus().toUpperCase()));
         return submission;
     }
@@ -36,6 +39,7 @@ public class SubmissionMapper {
         return SubmissionResponseDTO.builder()
                 .id(String.valueOf(submission.getId()))
                 .round(mapRoundToDto(submission.getRound()))
+                .team(mapTeamToDto(submission.getTeam()))
                 .status(submission.getStatus() != null ? submission.getStatus().name() : "UNKNOWN")
                 .submittedAt(submission.getSubmittedAt())
                 .fileUrls(mapFileUrls(submission))
@@ -65,6 +69,10 @@ public class SubmissionMapper {
                 .build();
     }
 
+    private TeamResponseDTO mapTeamToDto(Team team) {
+        return team != null ? new TeamResponseDTO(team) : null;
+    }
+
     private HackathonResponseDTO mapHackathonToDto(Hackathon hackathon) {
         if (hackathon == null) {
             return null;
@@ -87,10 +95,7 @@ public class SubmissionMapper {
                 .status(hackathon.getStatus() != null ? hackathon.getStatus().name() : "UNKNOWN")
                 .createdDate(hackathon.getCreatedDate())
                 .lastModifiedDate(hackathon.getLastModifiedDate())
-                .createdBy(
-                        hackathon.getCreatedBy() != null
-                                ? hackathon.getCreatedBy().getUsername()
-                                : null)
+                .createdBy(hackathon.getCreatedBy() != null ? hackathon.getCreatedBy().getUsername() : null)
                 .build();
     }
 
@@ -106,8 +111,7 @@ public class SubmissionMapper {
     }
 
     private List<JudgeSubmissionResponseDTO> mapJudgeSubmissions(Submission submission) {
-        if (submission.getJudgeSubmissions() == null
-                || submission.getJudgeSubmissions().isEmpty()) {
+        if (submission.getJudgeSubmissions() == null || submission.getJudgeSubmissions().isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -117,14 +121,8 @@ public class SubmissionMapper {
                         .judge(mapUserToDto(judgeSubmission.getJudge()))
                         .score(judgeSubmission.getScore())
                         .note(judgeSubmission.getNote())
-                        .createdDate(
-                                judgeSubmission.getCreatedDate() != null
-                                        ? judgeSubmission.getCreatedDate().toString()
-                                        : null)
-                        .lastModifiedDate(
-                                judgeSubmission.getLastModifiedDate() != null
-                                        ? judgeSubmission.getLastModifiedDate().toString()
-                                        : null)
+                        .createdDate(judgeSubmission.getCreatedDate() != null ? judgeSubmission.getCreatedDate().toString() : null)
+                        .lastModifiedDate(judgeSubmission.getLastModifiedDate() != null ? judgeSubmission.getLastModifiedDate().toString() : null)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -157,10 +155,7 @@ public class SubmissionMapper {
                         .description(userRole.getRole().getDescription())
                         .createdDate(userRole.getRole().getCreatedDate())
                         .lastModifiedDate(userRole.getRole().getLastModifiedDate())
-                        .createdByUserId(
-                                userRole.getRole().getCreatedBy() != null
-                                        ? userRole.getRole().getCreatedBy().getId()
-                                        : null)
+                        .createdByUserId(userRole.getRole().getCreatedBy() != null ? userRole.getRole().getCreatedBy().getId() : null)
                         .permissions(mapPermissions(userRole.getRole().getPermissions()))
                         .build())
                 .collect(Collectors.toSet());
