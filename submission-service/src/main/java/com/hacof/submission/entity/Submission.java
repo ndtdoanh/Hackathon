@@ -37,6 +37,11 @@ public class Submission extends AuditCreatedBase {
     @JoinColumn(name = "round_id")
     Round round;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "team_id")
+    Team team;
+
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     List<FileUrl> fileUrls = new ArrayList<>();
 
