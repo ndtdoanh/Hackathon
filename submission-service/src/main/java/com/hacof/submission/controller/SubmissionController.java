@@ -23,13 +23,20 @@ public class SubmissionController {
 
     @PostMapping
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> createSubmission(
-            @RequestParam(value = "files", required = true) List<MultipartFile> files,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
             @RequestParam(value = "roundId", required = false) Long roundId,
+            @RequestParam(value = "teamId", required = false) Long teamId,
             @RequestParam("status") String status) {
+
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
+            if (roundId == null || teamId == null) {
+                throw new IllegalArgumentException("Round ID and Team ID must not be null.");
+            }
+
             SubmissionRequestDTO submissionRequestDTO = new SubmissionRequestDTO();
             submissionRequestDTO.setRoundId(roundId);
+            submissionRequestDTO.setTeamId(teamId);
             submissionRequestDTO.setStatus(status);
 
             SubmissionResponseDTO createdSubmission = submissionService.createSubmission(submissionRequestDTO, files);
@@ -43,9 +50,9 @@ public class SubmissionController {
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (IOException e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage("Error uploading files: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
@@ -90,12 +97,14 @@ public class SubmissionController {
             @PathVariable Long id,
             @RequestParam(value = "files", required = false) List<MultipartFile> files,
             @RequestParam("roundId") Long roundId,
+            @RequestParam("teamId") Long teamId,
             @RequestParam("status") String status) {
 
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
             SubmissionRequestDTO submissionRequestDTO = new SubmissionRequestDTO();
             submissionRequestDTO.setRoundId(roundId);
+            submissionRequestDTO.setTeamId(teamId);
             submissionRequestDTO.setStatus(status);
 
             SubmissionResponseDTO updatedSubmission =
