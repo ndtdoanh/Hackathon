@@ -38,7 +38,7 @@ public class MessageController {
             @PathVariable Long conversationId, @RequestBody @Valid MessageCreateRequest request) {
         MessageResponse messageResponse = messageService.createMessage(conversationId, request);
         ApiResponse<MessageResponse> response = ApiResponse.<MessageResponse>builder()
-                .result(messageResponse)
+                .data(messageResponse)
                 .message("Message created successfully")
                 .build();
 
@@ -49,7 +49,7 @@ public class MessageController {
     //    @PreAuthorize("hasAuthority('GET_MESSAGES')")
     public ApiResponse<List<MessageResponse>> getMessagesByConversation(@PathVariable Long conversationId) {
         return ApiResponse.<List<MessageResponse>>builder()
-                .result(messageService.getMessagesByConversation(conversationId))
+                .data(messageService.getMessagesByConversation(conversationId))
                 .message("Get all messages in conversation")
                 .build();
     }
@@ -59,7 +59,7 @@ public class MessageController {
     public ApiResponse<MessageResponse> updateMessage(
             @PathVariable Long messageId, @RequestBody MessageUpdateRequest request) {
         return ApiResponse.<MessageResponse>builder()
-                .result(messageService.updateMessage(messageId, request))
+                .data(messageService.updateMessage(messageId, request))
                 .message("Message updated successfully")
                 .build();
     }

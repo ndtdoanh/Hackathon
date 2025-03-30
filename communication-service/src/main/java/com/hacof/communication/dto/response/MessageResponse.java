@@ -20,7 +20,7 @@ public class MessageResponse {
     String conversationId;
     String content;
     List<FileUrlResponse> fileUrls;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }

@@ -18,7 +18,7 @@ public class ConversationUserResponse {
     String id;
     String userId;
     boolean isDeleted;
-    String deletedByUserId;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    String deletedByUserName;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

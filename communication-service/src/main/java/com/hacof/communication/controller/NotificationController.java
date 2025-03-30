@@ -30,7 +30,7 @@ public class NotificationController {
             @RequestBody @Valid NotificationRequest request) {
         NotificationResponse notificationResponse = notificationService.createNotification(request);
         ApiResponse<NotificationResponse> response = ApiResponse.<NotificationResponse>builder()
-                .result(notificationResponse)
+                .data(notificationResponse)
                 .message("Notification created successfully")
                 .build();
 
@@ -41,7 +41,7 @@ public class NotificationController {
     //    @PreAuthorize("hasAuthority('GET_NOTIFICATIONS')")
     public ApiResponse<List<NotificationResponse>> getNotifications() {
         return ApiResponse.<List<NotificationResponse>>builder()
-                .result(notificationService.getNotifications())
+                .data(notificationService.getNotifications())
                 .message("Fetched all notifications")
                 .build();
     }
@@ -50,7 +50,7 @@ public class NotificationController {
     //    @PreAuthorize("hasAuthority('GET_NOTIFICATION')")
     public ApiResponse<NotificationResponse> getNotification(@PathVariable("id") Long id) {
         return ApiResponse.<NotificationResponse>builder()
-                .result(notificationService.getNotification(id))
+                .data(notificationService.getNotification(id))
                 .message("Fetched notification by ID")
                 .build();
     }
@@ -60,7 +60,7 @@ public class NotificationController {
     public ApiResponse<NotificationResponse> updateNotification(
             @PathVariable("id") Long id, @RequestBody @Valid NotificationRequest request) {
         return ApiResponse.<NotificationResponse>builder()
-                .result(notificationService.updateNotification(id, request))
+                .data(notificationService.updateNotification(id, request))
                 .message("Notification updated successfully")
                 .build();
     }

@@ -26,6 +26,6 @@ public class NotificationDeliveryResponse {
     RoleType role;
     NotificationMethod method;
     NotificationStatus status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }
