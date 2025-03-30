@@ -19,8 +19,8 @@ spring:
 
   multipart:
     enabled: true
-    max-file-size: 2MB
-    max-request-size: 2MB
+    max-file-size: 15MB
+    max-request-size: 15MB
 
 jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
