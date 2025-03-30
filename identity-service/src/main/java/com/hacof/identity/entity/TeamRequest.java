@@ -5,7 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
-import com.hacof.identity.constant.Status;
+import com.hacof.identity.constant.TeamRequestStatus;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -32,7 +32,7 @@ public class TeamRequest extends AuditCreatedBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    TeamRequestStatus status;
 
     @JoinColumn(name = "confirmation_deadline")
     LocalDateTime confirmationDeadline;
