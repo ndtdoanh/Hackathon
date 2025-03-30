@@ -15,4 +15,8 @@ public interface HackathonService {
     void deleteHackathon(Long id);
 
     List<HackathonDTO> getHackathons(Specification<Hackathon> spec);
+
+    boolean existsByTitle(String title);
+
+    boolean existsByTitleAndIdNot(String title, Long id);
 }

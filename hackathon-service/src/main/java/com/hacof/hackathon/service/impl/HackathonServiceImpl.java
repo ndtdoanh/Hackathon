@@ -22,16 +22,18 @@ import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.HackathonService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@FieldDefaults(makeFinal = true)
 public class HackathonServiceImpl implements HackathonService {
-    final HackathonRepository hackathonRepository;
-    final HackathonMapper hackathonMapper;
-    final UserRepository userRepository;
+    HackathonRepository hackathonRepository;
+    HackathonMapper hackathonMapper;
+    UserRepository userRepository;
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
@@ -63,13 +65,14 @@ public class HackathonServiceImpl implements HackathonService {
         existingHackathon.setBannerImageUrl(hackathonDTO.getBannerImageUrl());
         existingHackathon.setDescription(hackathonDTO.getDescription());
         existingHackathon.setInformation(hackathonDTO.getInformation());
-        existingHackathon.setStartDate(hackathonDTO.getStartDate());
-        existingHackathon.setEndDate(hackathonDTO.getEndDate());
+        existingHackathon.setStartDate(hackathonDTO.getEnrollStartDate());
+        existingHackathon.setEndDate(hackathonDTO.getEnrollEndDate());
         existingHackathon.setMinTeamSize(hackathonDTO.getMinimumTeamMembers());
         existingHackathon.setMaxTeamSize(hackathonDTO.getMaximumTeamMembers());
         existingHackathon.setContact(hackathonDTO.getContact());
         existingHackathon.setCategory(hackathonDTO.getCategory());
-        existingHackathon.setStatus(Status.valueOf(hackathonDTO.getStatus()));
+        existingHackathon.setMaxTeams(hackathonDTO.getEnrollmentCount());
+        existingHackathon.setStatus(Status.valueOf(hackathonDTO.getEnrollmentStatus()));
 
         existingHackathon.setLastModifiedBy(currentUser);
         existingHackathon.setLastModifiedDate(LocalDateTime.now());
@@ -85,9 +88,7 @@ public class HackathonServiceImpl implements HackathonService {
             throw new ResourceNotFoundException("Hackathon not found with id: " + id);
         }
 
-        // Delete
         hackathonRepository.deleteById(id);
-        log.info("Deleted hackathon with id: {}", id);
     }
 
     @Override
@@ -101,5 +102,15 @@ public class HackathonServiceImpl implements HackathonService {
 
         log.debug("Found {} hackathons matching the criteria", hackathons.size());
         return hackathons.stream().map(hackathonMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsByTitle(String title) {
+        return hackathonRepository.existsByTitle(title);
+    }
+
+    @Override
+    public boolean existsByTitleAndIdNot(String title, Long id) {
+        return hackathonRepository.existsByTitleAndIdNot(title, id);
     }
 }
