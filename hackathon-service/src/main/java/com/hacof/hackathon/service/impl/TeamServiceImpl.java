@@ -57,10 +57,10 @@ public class TeamServiceImpl implements TeamService {
         return teamRepository.findAll().stream().map(teamMapper::toDto).collect(Collectors.toList());
     }
 
-    @Override
-    public List<TeamDTO> getTeamsByHackathon(long hackathonId) {
-        return teamRepository.findByHackathonId(hackathonId).stream()
-                .map(teamMapper::toDto)
-                .collect(Collectors.toList());
-    }
+    //    @Override
+    //    public List<TeamDTO> getTeamsByHackathon(long hackathonId) {
+    //        return teamRepository.findByHackathonId(hackathonId).stream()
+    //                .map(teamMapper::toDto)
+    //                .collect(Collectors.toList());
+    //    }
 }

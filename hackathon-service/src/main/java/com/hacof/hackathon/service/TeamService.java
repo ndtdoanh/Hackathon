@@ -50,5 +50,5 @@ public interface TeamService {
 
     List<TeamDTO> getAllTeams();
 
-    List<TeamDTO> getTeamsByHackathon(long hackathonId);
+    // List<TeamDTO> getTeamsByHackathon(long hackathonId);
 }
