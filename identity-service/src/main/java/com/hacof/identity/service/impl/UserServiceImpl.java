@@ -1,13 +1,18 @@
 package com.hacof.identity.service.impl;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.request.ChangePasswordRequest;
@@ -16,6 +21,7 @@ import com.hacof.identity.dto.request.PasswordCreateRequest;
 import com.hacof.identity.dto.request.ResetPasswordRequest;
 import com.hacof.identity.dto.request.UserCreateRequest;
 import com.hacof.identity.dto.request.UserUpdateRequest;
+import com.hacof.identity.dto.response.AvatarResponse;
 import com.hacof.identity.dto.response.RoleResponse;
 import com.hacof.identity.dto.response.UserResponse;
 import com.hacof.identity.entity.Role;
@@ -48,6 +54,7 @@ public class UserServiceImpl implements UserService {
     RoleService roleService;
     EmailService emailService;
     OtpService otpService;
+    S3Service s3Service;
 
     @Override
     public UserResponse createUser(String token, UserCreateRequest request) {
@@ -303,4 +310,40 @@ public class UserServiceImpl implements UserService {
         Pattern pattern = Pattern.compile(emailRegex);
         return pattern.matcher(email).matches();
     }
+
+    @Override
+    public AvatarResponse uploadAvatar(MultipartFile file, Authentication authentication) throws IOException {
+
+        if (!ALLOWED_FILE_TYPES.contains(file.getContentType())) {
+            throw new AppException(ErrorCode.INVALID_FILE_TYPE);
+        }
+
+        String username = authentication.getName();
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+
+        User user = optionalUser.get();
+        String fileUrl = s3Service.uploadFile(
+                file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
+
+        user.setAvatarUrl(fileUrl);
+        LocalDateTime uploadedAt = LocalDateTime.now();
+        user.setUploadedAt(uploadedAt);
+        userRepository.save(user);
+
+        return new AvatarResponse(String.valueOf(user.getId()), fileUrl, uploadedAt);
+    }
+
+    private static final List<String> ALLOWED_FILE_TYPES = List.of(
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/bmp",
+            "image/tiff",
+            "image/webp",
+            "image/svg+xml",
+            "image/x-icon");
 }
