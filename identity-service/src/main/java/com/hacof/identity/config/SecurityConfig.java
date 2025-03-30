@@ -21,16 +21,16 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/v1/auth/token",
-            "/api/v1/auth/introspect",
-            "/api/v1/auth/refresh",
-            "/api/v1/auth/logout",
-            "/api/v1/users/forgot-password",
-            "/api/v1/users/reset-password",
-            "/api/v1/auth/outbound/authentication",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-ui/index.html"
+        "/api/v1/auth/token",
+        "/api/v1/auth/introspect",
+        "/api/v1/auth/refresh",
+        "/api/v1/auth/logout",
+        "/api/v1/users/forgot-password",
+        "/api/v1/users/reset-password",
+        "/api/v1/auth/outbound/authentication",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui/index.html"
     };
 
     private final CustomJwtDecoder customJwtDecoder;

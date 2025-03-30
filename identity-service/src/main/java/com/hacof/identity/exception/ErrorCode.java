@@ -31,7 +31,8 @@ public enum ErrorCode {
     PASSWORD_MISMATCH(1021, "New password and confirmation password do not match", HttpStatus.BAD_REQUEST),
     INVALID_CURRENT_PASSWORD(1022, "Current password is incorrect", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_SAME_AS_OLD(1023, "New password must not be the same as the old password", HttpStatus.BAD_REQUEST),
-    LOG_NOT_FOUND(1024, "Log not found", HttpStatus.NOT_FOUND);
+    INVALID_FILE_TYPE(1024, "Invalid file type. Only JPEG and PNG are allowed.", HttpStatus.BAD_REQUEST),
+    LOG_NOT_FOUND(1025, "Log not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

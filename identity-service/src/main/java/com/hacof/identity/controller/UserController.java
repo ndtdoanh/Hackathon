@@ -1,5 +1,6 @@
 package com.hacof.identity.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -7,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
@@ -28,6 +32,7 @@ import com.hacof.identity.dto.request.ResetPasswordRequest;
 import com.hacof.identity.dto.request.UserCreateRequest;
 import com.hacof.identity.dto.request.UserUpdateRequest;
 import com.hacof.identity.dto.request.VerifyEmailRequest;
+import com.hacof.identity.dto.response.AvatarResponse;
 import com.hacof.identity.dto.response.UserResponse;
 import com.hacof.identity.service.UserService;
 
@@ -217,5 +222,19 @@ public class UserController {
         return ApiResponse.<String>builder()
                 .message(userService.resetPassword(request))
                 .build();
+    }
+
+    @PostMapping("/upload-avatar")
+    public ResponseEntity<AvatarResponse> uploadAvatar(
+            @RequestParam("file") MultipartFile file, Authentication authentication) {
+        try {
+            AvatarResponse avatarResponse = userService.uploadAvatar(file, authentication);
+            return ResponseEntity.ok(avatarResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new AvatarResponse(null, e.getMessage(), null));
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError()
+                    .body(new AvatarResponse(null, "Upload failed: " + e.getMessage(), null));
+        }
     }
 }
