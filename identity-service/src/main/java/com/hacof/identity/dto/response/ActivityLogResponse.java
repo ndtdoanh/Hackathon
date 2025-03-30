@@ -20,28 +20,28 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActivityLogResponse {
     String id;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
     String action;
     String target;
     Map<String, Object> changedFields;
     Status status;
     String ipAddress;
     String deviceDetails;
-    String username;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 
     public static ActivityLogResponse fromEntity(ActivityLog log) {
         return ActivityLogResponse.builder()
                 .id(String.valueOf(log.getId()))
-                .createdDate(log.getCreatedDate())
-                .lastModifiedDate(log.getLastModifiedDate())
+                .createdAt(log.getCreatedDate())
+                .updatedAt(log.getLastModifiedDate())
                 .action(log.getAction())
                 .target(log.getTarget())
                 .changedFields(log.getChangedFields())
                 .status(log.getStatus())
                 .ipAddress(log.getIpAddress())
                 .deviceDetails(log.getDeviceDetails())
-                .username(log.getUser() != null ? log.getUser().getUsername() : "Unknown")
+                .createdByUserName(log.getUser() != null ? log.getUser().getUsername() : "Unknown")
                 .build();
     }
 }

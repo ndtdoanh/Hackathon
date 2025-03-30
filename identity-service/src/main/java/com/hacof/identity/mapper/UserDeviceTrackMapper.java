@@ -12,8 +12,11 @@ public interface UserDeviceTrackMapper {
     UserDeviceTrack toUserDeviceTrack(LogDeviceStatusRequest request);
 
     @Mapping(target = "id", expression = "java(String.valueOf(userDeviceTrack.getId()))")
-    @Mapping(source = "userDevice.id", target = "userDeviceId")
-    @Mapping(source = "createdDate", target = "createdDate")
-    @Mapping(source = "lastModifiedDate", target = "lastModifiedDate")
+    @Mapping(
+            target = "userDeviceId",
+            expression =
+                    "java(userDeviceTrack.getUserDevice() != null ? String.valueOf(userDeviceTrack.getUserDevice().getId()) : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     UserDeviceTrackResponse toUserDeviceTrackResponse(UserDeviceTrack userDeviceTrack);
 }

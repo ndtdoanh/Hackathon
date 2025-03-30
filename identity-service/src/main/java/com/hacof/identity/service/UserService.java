@@ -2,8 +2,6 @@ package com.hacof.identity.service;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
 import com.hacof.identity.dto.request.PasswordCreateRequest;
@@ -21,7 +19,13 @@ public interface UserService {
 
     List<UserResponse> getUsers();
 
-    UserResponse getUser(Long id);
+    UserResponse getUserById(Long id);
+
+    UserResponse getUserByUserName(String username);
+
+    List<UserResponse> getUsersByRoles();
+
+    List<UserResponse> getTeamMembers();
 
     UserResponse updateMyInfo(UserUpdateRequest request);
 
@@ -36,6 +40,4 @@ public interface UserService {
     String forgotPassword(ForgotPasswordRequest request);
 
     String resetPassword(ResetPasswordRequest request);
-
-    UserResponse uploadAvatar(MultipartFile file);
 }

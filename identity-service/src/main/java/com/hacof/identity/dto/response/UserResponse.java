@@ -8,11 +8,13 @@ import com.hacof.identity.constant.Status;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -30,10 +32,12 @@ public class UserResponse {
     String bio;
     Set<String> skills;
     String avatarUrl;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
-    Set<RoleResponse> roles;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
+    Set<UserRoleResponse> userRoles;
+    Set<UserHackathonResponse> userHackathons;
+    Set<UserTeamResponse> userTeams;
 
     public Boolean getIsVerified() {
         return isVerified != null ? isVerified : false;

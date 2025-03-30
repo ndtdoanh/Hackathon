@@ -21,7 +21,7 @@ public class DeviceResponse {
     String name;
     String description;
     DeviceStatus status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }

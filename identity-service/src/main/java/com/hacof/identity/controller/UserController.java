@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
@@ -58,7 +56,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<UserResponse>builder()
                         .message("User created successfully")
-                        .result(userResponse)
+                        .data(userResponse)
                         .build());
     }
 
@@ -79,7 +77,7 @@ public class UserController {
     public ApiResponse<List<UserResponse>> getUsers() {
 
         return ApiResponse.<List<UserResponse>>builder()
-                .result(userService.getUsers())
+                .data(userService.getUsers())
                 .message("Get all users")
                 .build();
     }
@@ -88,8 +86,35 @@ public class UserController {
     @PreAuthorize("hasAuthority('GET_USER')")
     public ApiResponse<UserResponse> getUser(@PathVariable("Id") long userId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(userId))
+                .data(userService.getUserById(userId))
                 .message("Get user by Id")
+                .build();
+    }
+
+    @GetMapping("username/{username}")
+    @PreAuthorize("hasAuthority('GET_USER')")
+    public ApiResponse<UserResponse> getUser(@PathVariable String username) {
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.getUserByUserName(username))
+                .message("Get user by Username")
+                .build();
+    }
+
+    @GetMapping("/users-by-roles")
+    @PreAuthorize("hasAuthority('GET_USER')")
+    public ApiResponse<List<UserResponse>> getUsersByRoles() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .data(userService.getUsersByRoles())
+                .message("Get users by roles: ORGANIZATION, JUDGE, MENTOR")
+                .build();
+    }
+
+    @GetMapping("/team-members")
+    @PreAuthorize("hasAuthority('GET_USER')")
+    public ApiResponse<List<UserResponse>> getTeamMembers() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .data(userService.getTeamMembers())
+                .message("Get team members")
                 .build();
     }
 
@@ -97,7 +122,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('GET_MY_INFO')")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getMyInfo())
+                .data(userService.getMyInfo())
                 .message("Get my-info")
                 .build();
     }
@@ -106,7 +131,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('UPDATE_MY_INFO')")
     public ApiResponse<UserResponse> updateUser(@Valid @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.updateMyInfo(request))
+                .data(userService.updateMyInfo(request))
                 .message("User updated successfully")
                 .build();
     }
@@ -115,7 +140,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('DELETE_USER')")
     public ApiResponse<String> deleteUser(@PathVariable("Id") long userId) {
         userService.deleteUser(userId);
-        return ApiResponse.<String>builder().result("User has been deleted").build();
+        return ApiResponse.<String>builder().data("User has been deleted").build();
     }
 
     @PostMapping("/add-email")
@@ -192,17 +217,5 @@ public class UserController {
         return ApiResponse.<String>builder()
                 .message(userService.resetPassword(request))
                 .build();
-    }
-
-    @PostMapping("/avatar")
-    @PreAuthorize("hasAuthority('UPLOAD_AVATAR')")
-    public ResponseEntity<ApiResponse<UserResponse>> uploadAvatar(@RequestParam("file") MultipartFile file) {
-        UserResponse userResponse = userService.uploadAvatar(file);
-        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
-                .result(userResponse)
-                .message("Avatar uploaded successfully")
-                .build();
-
-        return ResponseEntity.ok(response);
     }
 }

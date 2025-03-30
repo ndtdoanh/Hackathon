@@ -14,8 +14,10 @@ public interface DeviceMapper {
 
     @Mapping(target = "id", expression = "java(String.valueOf(device.getId()))")
     @Mapping(
-            target = "createdByUserId",
-            expression = "java(device.getCreatedBy() != null ? String.valueOf(device.getCreatedBy().getId()) : null)")
+            target = "createdByUserName",
+            expression = "java(device.getCreatedBy() != null ? device.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     DeviceResponse toDeviceResponse(Device device);
 
     @Mapping(target = "id", ignore = true)

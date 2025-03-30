@@ -18,9 +18,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDeviceTrackResponse {
     String id;
-    long userDeviceId;
+    String userDeviceId;
     String note;
     DeviceQualityStatus status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

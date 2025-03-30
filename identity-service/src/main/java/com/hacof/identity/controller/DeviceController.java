@@ -30,7 +30,7 @@ public class DeviceController {
     public ResponseEntity<ApiResponse<DeviceResponse>> createDevice(@RequestBody @Valid DeviceRequest request) {
         DeviceResponse deviceResponse = deviceService.createDevice(request);
         ApiResponse<DeviceResponse> response = ApiResponse.<DeviceResponse>builder()
-                .result(deviceResponse)
+                .data(deviceResponse)
                 .message("Device created successfully")
                 .build();
 
@@ -41,7 +41,7 @@ public class DeviceController {
     @PreAuthorize("hasAuthority('GET_DEVICES')")
     public ApiResponse<List<DeviceResponse>> getAllDevices() {
         return ApiResponse.<List<DeviceResponse>>builder()
-                .result(deviceService.getDevices())
+                .data(deviceService.getDevices())
                 .message("Get all devices")
                 .build();
     }
@@ -50,7 +50,7 @@ public class DeviceController {
     @PreAuthorize("hasAuthority('GET_DEVICE')")
     public ApiResponse<DeviceResponse> getDeviceById(@PathVariable("Id") Long id) {
         return ApiResponse.<DeviceResponse>builder()
-                .result(deviceService.getDevice(id))
+                .data(deviceService.getDevice(id))
                 .message("Get device by Id")
                 .build();
     }
@@ -59,7 +59,7 @@ public class DeviceController {
     @PreAuthorize("hasAuthority('UPDATE_DEVICE')")
     public ApiResponse<DeviceResponse> updateDevice(@PathVariable("Id") Long id, @RequestBody DeviceRequest request) {
         return ApiResponse.<DeviceResponse>builder()
-                .result(deviceService.updateDevice(id, request))
+                .data(deviceService.updateDevice(id, request))
                 .message("Device updated successfully")
                 .build();
     }

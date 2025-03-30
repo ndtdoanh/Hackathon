@@ -15,10 +15,9 @@ public interface UserDeviceMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "device.id", target = "deviceId")
     @Mapping(
-            target = "createdByUserId",
-            expression =
-                    "java(userDevice.getCreatedBy() != null ? String.valueOf(userDevice.getCreatedBy().getId()) : null)")
-    @Mapping(source = "createdDate", target = "createdDate")
-    @Mapping(source = "lastModifiedDate", target = "lastModifiedDate")
+            target = "createdByUserName",
+            expression = "java(userDevice.getCreatedBy() != null ? userDevice.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     UserDeviceResponse toUserDeviceResponse(UserDevice userDevice);
 }

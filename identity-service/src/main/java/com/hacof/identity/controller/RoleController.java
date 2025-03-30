@@ -39,7 +39,7 @@ public class RoleController {
     public ResponseEntity<ApiResponse<RoleResponse>> createRole(@RequestBody @Valid RoleCreateRequest request) {
         RoleResponse roleResponse = roleService.createRole(request);
         ApiResponse<RoleResponse> response = ApiResponse.<RoleResponse>builder()
-                .result(roleResponse)
+                .data(roleResponse)
                 .message("Role created successfully")
                 .build();
 
@@ -50,7 +50,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('GET_ROLES')")
     public ApiResponse<List<RoleResponse>> getRoles() {
         return ApiResponse.<List<RoleResponse>>builder()
-                .result(roleService.getRoles())
+                .data(roleService.getRoles())
                 .message("Get all roles")
                 .build();
     }
@@ -59,7 +59,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('GET_ROLE')")
     public ApiResponse<RoleResponse> getRole(@PathVariable("Id") Long Id) {
         return ApiResponse.<RoleResponse>builder()
-                .result(roleService.getRole(Id))
+                .data(roleService.getRole(Id))
                 .message("Get role by Id")
                 .build();
     }
@@ -70,7 +70,7 @@ public class RoleController {
         RoleResponse roleResponse = roleService.getRoleFromToken(token.replace("Bearer ", ""));
 
         return ApiResponse.<RoleResponse>builder()
-                .result(roleResponse)
+                .data(roleResponse)
                 .message("Get role from token")
                 .build();
     }
@@ -80,7 +80,7 @@ public class RoleController {
     public ApiResponse<RoleResponse> updateRole(@PathVariable("Id") Long Id, @RequestBody RoleUpdateRequest request) {
         RoleResponse roleResponse = roleService.updateRole(Id, request);
         return ApiResponse.<RoleResponse>builder()
-                .result(roleResponse)
+                .data(roleResponse)
                 .message("Role updated successfully")
                 .build();
     }
