@@ -1,5 +1,6 @@
 package com.hacof.submission.entity;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,8 +59,22 @@ public class User extends AuditUserBase {
     @OneToMany(mappedBy = "createdBy")
     List<User> createdUsers;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    UserProfile userProfile;
+    @Column(name = "phone", length = 10)
+    String phone;
+
+    @Column(name = "bio")
+    String bio;
+
+    @ElementCollection
+    @CollectionTable(name = "user_skills", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "skill")
+    Set<String> skills = new HashSet<>();
+
+    @Column(name = "avatar_url")
+    String avatarUrl;
+
+    @Column(name = "uploaded_at")
+    LocalDateTime uploadedAt;
 
     // User Roles
     @Builder.Default

@@ -33,11 +33,15 @@ public interface UserMapper {
             target = "createdByUserId",
             expression = "java(user.getCreatedBy() != null ? String.valueOf(user.getCreatedBy().getId()) : null)")
     @Mapping(target = "roles", source = "userRoles", qualifiedByName = "mapUserRolesToRoles")
-    @Mapping(target = "userProfile", source = "userProfile")
+    @Mapping(target = "phone", source = "phone")
+    @Mapping(target = "bio", source = "bio")
+    @Mapping(target = "skills", source = "skills")
+    @Mapping(target = "avatarUrl", source = "avatarUrl")
     UserResponse toUserResponse(User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "userRoles", ignore = true)
+    @Mapping(target = "avatarUrl", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
     @Named("mapUserRolesToRoles")

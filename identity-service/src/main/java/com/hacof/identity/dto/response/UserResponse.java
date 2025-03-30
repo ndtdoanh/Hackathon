@@ -26,10 +26,13 @@ public class UserResponse {
     Boolean isVerified;
     Status status;
     Boolean noPassword;
+    String phone;
+    String bio;
+    Set<String> skills;
+    String avatarUrl;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;
     String createdByUserId;
-    UserProfileResponse userProfile;
     Set<RoleResponse> roles;
 
     public Boolean getIsVerified() {

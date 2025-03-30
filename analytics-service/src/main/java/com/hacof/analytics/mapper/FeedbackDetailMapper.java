@@ -8,11 +8,14 @@ import com.hacof.analytics.dto.request.FeedbackDetailCreateRequest;
 import com.hacof.analytics.dto.response.FeedbackDetailResponse;
 import com.hacof.analytics.entity.Feedback;
 import com.hacof.analytics.entity.FeedbackDetail;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface FeedbackDetailMapper {
     FeedbackDetail toFeedbackDetail(FeedbackDetailCreateRequest request, Feedback feedback);
 
+    @Mapping(target = "id", expression = "java(String.valueOf(feedbackDetail.getId()))")
+    @Mapping(target = "feedbackId", expression = "java(String.valueOf(feedbackDetail.getFeedback().getId()))")
     FeedbackDetailResponse toFeedbackDetailResponse(FeedbackDetail feedbackDetail);
 
     List<FeedbackDetailResponse> toFeedbackDetailResponseList(List<FeedbackDetail> feedbackDetails);

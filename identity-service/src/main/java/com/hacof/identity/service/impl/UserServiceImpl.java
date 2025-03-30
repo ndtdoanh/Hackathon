@@ -1,12 +1,23 @@
 package com.hacof.identity.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
+
+import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.request.ChangePasswordRequest;
@@ -29,6 +40,7 @@ import com.hacof.identity.service.OtpService;
 import com.hacof.identity.service.RoleService;
 import com.hacof.identity.service.UserService;
 import com.hacof.identity.util.AuditContext;
+import com.hacof.identity.util.SecurityUtil;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +59,19 @@ public class UserServiceImpl implements UserService {
     RoleService roleService;
     EmailService emailService;
     OtpService otpService;
+
+    String UPLOAD_DIR = "D:\\ki 9\\uploads\\avatars\\";
+    List<String> ALLOWED_FILE_TYPES = Arrays.asList("image/jpeg", "image/png");
+
+    Long getCurrentUserId() {
+        String currentUsername = SecurityUtil.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHORIZED_PROFILE_ACCESS));
+
+        return userRepository
+                .findByUsername(currentUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED))
+                .getId();
+    }
 
     @Override
     public UserResponse createUser(String token, UserCreateRequest request) {
@@ -148,8 +173,8 @@ public class UserServiceImpl implements UserService {
 
         userMapper.updateUser(user, request);
 
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        if (request.getSkills() != null && !request.getSkills().isEmpty()) {
+            user.setSkills(request.getSkills());
         }
 
         return userMapper.toUserResponse(userRepository.save(user));
@@ -279,5 +304,47 @@ public class UserServiceImpl implements UserService {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
         return pattern.matcher(email).matches();
+    }
+
+    @Override
+    @Transactional
+    public UserResponse uploadAvatar(MultipartFile file) {
+        Long userId = getCurrentUserId();
+
+        if (!ALLOWED_FILE_TYPES.contains(file.getContentType())) {
+            throw new AppException(ErrorCode.INVALID_FILE_FORMAT);
+        }
+
+        User user =
+                userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
+
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path uploadPath = Paths.get(UPLOAD_DIR);
+
+        try {
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
+                try {
+                    String oldFilePath = user.getAvatarUrl().substring(1);
+                    Files.deleteIfExists(Paths.get(oldFilePath));
+                } catch (IOException | SecurityException e) {
+                    System.err.println("Could not delete old avatar: " + e.getMessage());
+                }
+            }
+
+            user.setAvatarUrl("/" + UPLOAD_DIR + fileName);
+            user.setUploadedAt(LocalDateTime.now());
+            userRepository.save(user);
+
+            return userMapper.toUserResponse(user);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store file", e);
+        }
     }
 }
