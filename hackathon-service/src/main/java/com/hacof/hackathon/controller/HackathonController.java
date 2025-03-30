@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.entity.Hackathon;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.service.HackathonService;
 import com.hacof.hackathon.specification.HackathonSpecification;
 import com.hacof.hackathon.util.CommonRequest;
@@ -79,10 +80,12 @@ public class HackathonController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
-            @RequestBody @Valid CommonRequest<HackathonDTO> request) {
+            @Valid @RequestBody CommonRequest<HackathonDTO> request) {
         log.debug("Received request to create hackathon: {}", request);
+        // validate unique title
+        validateUniqueTitleForCreate(request.getData().getTitle());
+
         HackathonDTO createdHackathon = hackathonService.create(request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
                 request.getRequestId(),
@@ -97,7 +100,11 @@ public class HackathonController {
     @PutMapping
     @PreAuthorize("hasAuthority('UPDATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(
-            @RequestBody @Valid CommonRequest<HackathonDTO> request) {
+            @Valid @RequestBody CommonRequest<HackathonDTO> request) {
+        // validate unique title
+        validateUniqueTitleForUpdate(
+                request.getData().getId(), request.getData().getTitle());
+
         HackathonDTO updatedHackathon =
                 hackathonService.update(request.getData().getId(), request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
@@ -123,5 +130,17 @@ public class HackathonController {
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon deleted successfully"),
                 null);
         return ResponseEntity.ok(response);
+    }
+
+    private void validateUniqueTitleForCreate(String title) {
+        if (hackathonService.existsByTitle(title)) {
+            throw new InvalidInputException("Hackathon title already exists");
+        }
+    }
+
+    private void validateUniqueTitleForUpdate(String id, String title) {
+        if (hackathonService.existsByTitleAndIdNot(title, Long.parseLong(id))) {
+            throw new InvalidInputException("Hackathon title already exists");
+        }
     }
 }
