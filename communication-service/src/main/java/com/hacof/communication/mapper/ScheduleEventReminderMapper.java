@@ -91,8 +91,6 @@ public class ScheduleEventReminderMapper {
                 .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .isVerified(user.getIsVerified())
-                .status(user.getStatus())
                 .build();
     }
 

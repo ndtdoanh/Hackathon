@@ -1,11 +1,7 @@
-package com.hacof.communication.dto.response;
-
-import java.util.Collections;
-import java.util.Set;
+package com.hacof.communication.dto.request;
 
 import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.constant.NotificationStatus;
-import com.hacof.communication.constant.RoleType;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,14 +15,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NotificationDeliveryResponse {
-    String id;
-    Set<UserResponse> recipients;
-    RoleType role;
+public class UpdateNotificationRequest {
+    String content;
+    String metadata;
     NotificationMethod method;
     NotificationStatus status;
-
-    public Set<UserResponse> getRecipients() {
-        return recipients != null ? recipients : Collections.emptySet();
-    }
 }

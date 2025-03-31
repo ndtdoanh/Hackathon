@@ -1,5 +1,7 @@
 package com.hacof.communication.constant;
 
+import java.util.Arrays;
+
 public enum RoleType {
     ADMIN,
     ORGANIZATION,
@@ -7,5 +9,12 @@ public enum RoleType {
     MENTOR,
     GUEST,
     TEAM_MEMBER,
-    TEAM_LEADER,
+    TEAM_LEADER;
+
+    public static RoleType fromString(String name) {
+        return Arrays.stream(RoleType.values())
+                .filter(role -> role.name().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid role type: " + name));
+    }
 }

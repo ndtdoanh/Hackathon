@@ -1,24 +1,28 @@
 package com.hacof.communication.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.constant.NotificationStatus;
+import com.hacof.communication.constant.RoleType;
 import com.hacof.communication.dto.request.NotificationDeliveryRequest;
 import com.hacof.communication.dto.request.NotificationRequest;
+import com.hacof.communication.dto.request.UpdateNotificationRequest;
 import com.hacof.communication.dto.response.NotificationResponse;
 import com.hacof.communication.entity.Notification;
 import com.hacof.communication.entity.NotificationDelivery;
 import com.hacof.communication.entity.Role;
 import com.hacof.communication.entity.User;
+import com.hacof.communication.entity.UserRole;
 import com.hacof.communication.exception.AppException;
 import com.hacof.communication.exception.ErrorCode;
-import com.hacof.communication.mapper.NotificationDeliveryMapper;
 import com.hacof.communication.mapper.NotificationMapper;
 import com.hacof.communication.repository.NotificationDeliveryRepository;
 import com.hacof.communication.repository.NotificationRepository;
@@ -38,7 +42,6 @@ import lombok.experimental.FieldDefaults;
 public class NotificationServiceImpl implements NotificationService {
     NotificationRepository notificationRepository;
     NotificationMapper notificationMapper;
-    NotificationDeliveryMapper notificationDeliveryMapper;
     UserRepository userRepository;
     SecurityUtil securityUtil;
     RoleRepository roleRepository;
@@ -47,24 +50,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationResponse createNotification(NotificationRequest request) {
-
         User sender = securityUtil.getCurrentUser().orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Notification notification = Notification.builder()
-                .sender(sender)
-                .notificationType(request.getNotificationType())
-                .content(request.getContent())
-                .metadata(request.getMetadata())
-                .isRead(false)
-                .build();
-
+        Notification notification = notificationMapper.toNotification(request, sender);
         notificationRepository.save(notification);
 
         NotificationDeliveryRequest deliveryRequest = request.getNotificationDeliveryRequest();
-        List<NotificationDelivery> deliveries = new ArrayList<>();
 
         if (deliveryRequest != null) {
-
             if ((deliveryRequest.getRecipientIds() != null
                             && !deliveryRequest.getRecipientIds().isEmpty())
                     && deliveryRequest.getRole() != null) {
@@ -78,6 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
             }
 
             Set<User> recipients = new HashSet<>();
+            Map<Long, Role> userRoleMap = new HashMap<>();
 
             if (deliveryRequest.getRecipientIds() != null
                     && !deliveryRequest.getRecipientIds().isEmpty()) {
@@ -86,6 +80,9 @@ public class NotificationServiceImpl implements NotificationService {
                 if (recipients.size() != deliveryRequest.getRecipientIds().size()) {
                     throw new AppException(ErrorCode.USER_NOT_EXISTED);
                 }
+
+                List<UserRole> userRoles = userRoleRepository.findUserRolesByUsers(new ArrayList<>(recipients));
+                userRoles.forEach(ur -> userRoleMap.put(ur.getUser().getId(), ur.getRole()));
             } else if (deliveryRequest.getRole() != null) {
                 Role role = roleRepository
                         .findByName(deliveryRequest.getRole().name())
@@ -98,22 +95,23 @@ public class NotificationServiceImpl implements NotificationService {
                 }
 
                 recipients.addAll(usersWithRole);
+                usersWithRole.forEach(user -> userRoleMap.put(user.getId(), role));
             }
 
-            deliveries = recipients.stream()
+            List<NotificationDelivery> deliveries = recipients.stream()
                     .map(user -> NotificationDelivery.builder()
                             .notification(notification)
                             .recipient(user)
-                            .role(deliveryRequest.getRole())
+                            .role(RoleType.fromString(
+                                    userRoleMap.get(user.getId()).getName()))
                             .method(deliveryRequest.getMethod())
                             .status(NotificationStatus.PENDING)
                             .build())
                     .collect(Collectors.toList());
 
             notificationDeliveryRepository.saveAll(deliveries);
+            notification.setNotificationDeliveries(deliveries);
         }
-
-        notification.setNotificationDeliveries(deliveries);
 
         return notificationMapper.toNotificationResponse(notification);
     }
@@ -134,13 +132,40 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationResponse updateNotification(Long id, NotificationRequest request) {
+    public List<NotificationResponse> getNotificationsBySenderId(Long senderId) {
+        List<Notification> notifications = notificationRepository.findBySenderId(senderId);
+        return notifications.stream()
+                .map(notificationMapper::toNotificationResponse)
+                .toList();
+    }
+
+    @Override
+    public NotificationResponse updateNotification(Long id, UpdateNotificationRequest request) {
         Notification notification = notificationRepository
                 .findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
 
-        notificationMapper.updateNotificationFromRequest(request, notification);
+        if (request.getContent() != null) {
+            notification.setContent(request.getContent());
+        }
+        if (request.getMetadata() != null) {
+            notification.setMetadata(request.getMetadata());
+        }
+
         notification = notificationRepository.save(notification);
+
+        List<NotificationDelivery> deliveries = notificationDeliveryRepository.findByNotification(notification);
+        if (!deliveries.isEmpty()) {
+            deliveries.forEach(delivery -> {
+                if (request.getMethod() != null) {
+                    delivery.setMethod(request.getMethod());
+                }
+                if (request.getStatus() != null) {
+                    delivery.setStatus(request.getStatus());
+                }
+            });
+            notificationDeliveryRepository.saveAll(deliveries);
+        }
 
         return notificationMapper.toNotificationResponse(notification);
     }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.ApiResponse;
 import com.hacof.communication.dto.request.NotificationRequest;
+import com.hacof.communication.dto.request.UpdateNotificationRequest;
 import com.hacof.communication.dto.response.NotificationResponse;
 import com.hacof.communication.service.NotificationService;
 
@@ -55,10 +56,19 @@ public class NotificationController {
                 .build();
     }
 
+    @GetMapping("/sender/{senderId}")
+    //    @PreAuthorize("hasAuthority('GET_NOTIFICATION')")
+    public ApiResponse<List<NotificationResponse>> getNotificationsBySenderId(@PathVariable Long senderId) {
+        return ApiResponse.<List<NotificationResponse>>builder()
+                .data(notificationService.getNotificationsBySenderId(senderId))
+                .message("Notifications retrieved successfully")
+                .build();
+    }
+
     @PutMapping("/{id}")
-    //    @PreAuthorize("hasAuthority('UPDATE_NOTIFICATION')")
+    // @PreAuthorize("hasAuthority('UPDATE_NOTIFICATION')")
     public ApiResponse<NotificationResponse> updateNotification(
-            @PathVariable("id") Long id, @RequestBody @Valid NotificationRequest request) {
+            @PathVariable("id") Long id, @RequestBody @Valid UpdateNotificationRequest request) {
         return ApiResponse.<NotificationResponse>builder()
                 .data(notificationService.updateNotification(id, request))
                 .message("Notification updated successfully")
