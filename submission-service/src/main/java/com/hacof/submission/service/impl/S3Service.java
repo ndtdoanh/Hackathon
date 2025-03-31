@@ -21,17 +21,18 @@ public class S3Service {
         this.amazonS3 = amazonS3;
     }
 
-    public String uploadFile(InputStream inputStream, String originalFileName, long fileSize) throws IOException {
+    public String uploadFile(InputStream inputStream, String originalFileName, long fileSize, String contentType) throws IOException {
         // Tạo tên file ngẫu nhiên với UUID và tên file gốc
         String fileName = "hacofpt/" + UUID.randomUUID().toString() + "_" + originalFileName;
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(fileSize);
+        metadata.setContentType(contentType);
 
-        // Tải file lên S3 với đường dẫn đầy đủ (bao gồm cả thư mục 'hacofpt/')
-        amazonS3.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, inputStream, metadata);
 
-        // Trả về URL của file đã tải lên
+        amazonS3.putObject(putObjectRequest);
+
         return amazonS3.getUrl(bucketName, fileName).toString();
     }
 }
