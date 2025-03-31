@@ -14,6 +14,7 @@ import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
 import com.hacof.hackathon.service.LocationService;
+import com.hacof.hackathon.specification.LocationSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
@@ -33,17 +34,19 @@ public class LocationController {
     public ResponseEntity<CommonResponse<List<LocationDTO>>> getLocations(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String address) {
-        Specification<Location> spec = Specification.where(null);
-        if (id != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("id"), id));
-        }
-        if (name != null) {
-            spec = spec.and((root, query, cb) -> cb.like(root.get("name"), "%" + name + "%"));
-        }
-        if (address != null) {
-            spec = spec.and((root, query, cb) -> cb.like(root.get("address"), "%" + address + "%"));
-        }
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) Double longitude,
+            @RequestParam(required = false) Double latitude,
+            @RequestParam(required = false) String createdBy,
+            @RequestParam(required = false) String lastModifiedBy) {
+
+        Specification<Location> spec = Specification.where(LocationSpecification.hasId(id))
+                .and(LocationSpecification.hasName(name))
+                .and(LocationSpecification.hasAddress(address))
+                .and(LocationSpecification.hasLongitude(longitude))
+                .and(LocationSpecification.hasCreatedBy(createdBy))
+                .and(LocationSpecification.hasLastModifiedBy(lastModifiedBy))
+                .and(LocationSpecification.hasLatitude(latitude));
 
         List<LocationDTO> locationDTOs = locationService.getLocations(spec);
 

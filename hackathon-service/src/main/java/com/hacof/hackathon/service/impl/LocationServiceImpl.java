@@ -6,13 +6,17 @@ import java.util.stream.Collectors;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
+import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.LocationMapper;
 import com.hacof.hackathon.repository.LocationRepository;
+import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.LocationService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LocationServiceImpl implements LocationService {
     LocationRepository locationRepository;
     LocationMapper locationMapper;
+    UserRepository userRepository;
 
     @Override
     public LocationDTO create(LocationDTO locationDTO) {
@@ -41,15 +46,34 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationDTO update(Long id, LocationDTO locationDTO) {
-        Location existingLocation =
-                locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+        Location existingLocation = locationRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
 
-        locationMapper.updateEntityFromDto(locationDTO, existingLocation);
-        if (!locationDTO.getName().equals(existingLocation.getName())
-                && locationRepository.existsByName(locationDTO.getName())) {
+        // validate Name unique
+        if (locationRepository.existsByName(locationDTO.getName())) {
             throw new ResourceNotFoundException("Location name already exists");
         }
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        String username = authentication.getName();
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+        existingLocation.setName(locationDTO.getName());
+        existingLocation.setAddress(locationDTO.getAddress());
+        existingLocation.setLongitude(locationDTO.getLongitude());
+        existingLocation.setLatitude(locationDTO.getLatitude());
+
+        User createdBy = existingLocation.getCreatedBy();
+        existingLocation.setLastModifiedDate(locationDTO.getUpdatedAt());
+        existingLocation.setLastModifiedBy(currentUser);
+        existingLocation.setCreatedBy(createdBy);
         return locationMapper.toDto(locationRepository.save(existingLocation));
     }
 
@@ -66,6 +90,7 @@ public class LocationServiceImpl implements LocationService {
         if (locationRepository.findAll(spec).isEmpty()) {
             throw new ResourceNotFoundException("Location not found");
         }
+
         return locationRepository.findAll(spec).stream()
                 .map(locationMapper::toDto)
                 .collect(Collectors.toList());

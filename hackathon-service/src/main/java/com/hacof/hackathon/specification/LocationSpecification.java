@@ -5,7 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.hacof.hackathon.entity.Location;
 
 public class LocationSpecification {
-    public static Specification<Location> hasId(Long id) {
+    public static Specification<Location> hasId(String id) {
         return (root, query, cb) -> {
             if (id == null) return null;
             return cb.equal(root.get("id"), id);
@@ -26,6 +26,20 @@ public class LocationSpecification {
         };
     }
 
+    public static Specification<Location> hasLatitude(Double latitude) {
+        return (root, query, cb) -> {
+            if (latitude == null) return null;
+            return cb.equal(root.get("latitude"), latitude);
+        };
+    }
+
+    public static Specification<Location> hasLongitude(Double longitude) {
+        return (root, query, cb) -> {
+            if (longitude == null) return null;
+            return cb.equal(root.get("longitude"), longitude);
+        };
+    }
+
     public static Specification<Location> hasLatitudeBetween(Double minLat, Double maxLat) {
         return (root, query, cb) -> {
             if (minLat == null || maxLat == null) return null;
@@ -40,13 +54,13 @@ public class LocationSpecification {
         };
     }
 
-    public static Specification<Location> createdBy(String createdBy) {
+    public static Specification<Location> hasCreatedBy(String createdBy) {
         return (root, query, criteriaBuilder) -> createdBy == null
                 ? criteriaBuilder.conjunction()
                 : criteriaBuilder.equal(root.get("createdBy"), createdBy);
     }
 
-    public static Specification<Location> lastModifiedBy(String lastModifiedBy) {
+    public static Specification<Location> hasLastModifiedBy(String lastModifiedBy) {
         return (root, query, criteriaBuilder) -> lastModifiedBy == null
                 ? criteriaBuilder.conjunction()
                 : criteriaBuilder.equal(root.get("lastModifiedBy"), lastModifiedBy);
