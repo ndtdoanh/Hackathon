@@ -14,7 +14,7 @@ public class TeamRoundJudgeResponseDTO {
     String id;
     TeamRoundResponseDTO teamRound;
     UserResponse judge;
-    String createdBy;
-    String createdDate;
-    String lastModifiedDate;
+    String createdByUserName;
+    String createdAt;
+    String updatedAt;
 }

@@ -1,5 +1,6 @@
 package com.hacof.submission.dto.response;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,26 +24,27 @@ public class JudgeSubmissionResponseDTO {
     SubmissionResponseDTO submission;
     int score;
     String note;
-    String createdDate;
-    String lastModifiedDate;
-    Set<JudgeSubmissionDetailResponseDTO> judgeSubmissionDetails;
+    String createdAt;
+    String updatedAt;
+    List<JudgeSubmissionDetailResponseDTO> judgeSubmissionDetails;
 
     public JudgeSubmissionResponseDTO(JudgeSubmission entity) {
         this.id = String.valueOf(entity.getId());
         this.judge = entity.getJudge() != null ? new UserResponse() : null;
         this.score = entity.getScore();
         this.note = entity.getNote();
-        this.createdDate =
+        this.createdAt =
                 entity.getCreatedDate() != null ? entity.getCreatedDate().toString() : null;
-        this.lastModifiedDate = entity.getLastModifiedDate() != null
+        this.updatedAt = entity.getLastModifiedDate() != null
                 ? entity.getLastModifiedDate().toString()
                 : null;
 
-        this.judgeSubmissionDetails = entity.getJudgeSubmissionDetails() != null
+        this.judgeSubmissionDetails = entity.getJudgeSubmissionDetails() != null && !entity.getJudgeSubmissionDetails().isEmpty()
                 ? entity.getJudgeSubmissionDetails().stream()
-                        .map(JudgeSubmissionDetailResponseDTO::new)
-                        .collect(Collectors.toSet())
-                : new HashSet<>();
+                .map(detail -> new JudgeSubmissionDetailResponseDTO(detail))
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+
 
         if (entity.getSubmission() != null) {
             SubmissionResponseDTO submissionResponseDTO = new SubmissionResponseDTO();

@@ -16,7 +16,7 @@ public class JudgeRoundResponseDTO {
     UserResponse judge;
     RoundResponseDTO round;
     boolean isDeleted;
-    String createdBy;
-    String createdDate;
-    String lastModifiedDate;
+    String createdByUserName;
+    String createdAt;
+    String updatedAt;
 }

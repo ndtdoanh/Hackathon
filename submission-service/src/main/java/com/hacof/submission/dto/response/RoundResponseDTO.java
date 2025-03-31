@@ -24,6 +24,6 @@ public class RoundResponseDTO {
     int roundNumber;
     String roundTitle;
     String status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

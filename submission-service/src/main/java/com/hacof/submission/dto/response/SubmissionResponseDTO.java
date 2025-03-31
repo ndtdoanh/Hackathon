@@ -22,6 +22,9 @@ public class SubmissionResponseDTO {
     List<FileUrlResponseDTO> fileUrls;
     List<JudgeSubmissionResponseDTO> judgeSubmissions;
     Integer finalScore;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 
     public SubmissionResponseDTO(Submission submission) {
         if (submission != null) {
@@ -44,6 +47,10 @@ public class SubmissionResponseDTO {
                         .map(JudgeSubmissionResponseDTO::new)
                         .collect(Collectors.toList());
             }
+            this.createdAt = submission.getCreatedDate();
+            this.updatedAt = submission.getLastModifiedDate();
+            this.createdByUserName = submission.getCreatedBy() != null ? submission.getCreatedBy().getUsername() : "Unknown";
+
         }
     }
 }

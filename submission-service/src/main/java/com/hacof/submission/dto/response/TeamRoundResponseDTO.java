@@ -19,7 +19,7 @@ public class TeamRoundResponseDTO {
     String roundId;
     TeamRoundStatus status;
     String description;
-    String createdBy;
-    String createdDate;
-    String lastModifiedDate;
+    String createdByUserName;
+    String createdAt;
+    String updatedAt;
 }

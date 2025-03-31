@@ -26,7 +26,7 @@ public class HackathonResponseDTO {
     String contact;
     String category;
     String status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdBy;
+    LocalDateTime createAt;
+    LocalDateTime updateAt;
+    String createdByUserName;
 }
