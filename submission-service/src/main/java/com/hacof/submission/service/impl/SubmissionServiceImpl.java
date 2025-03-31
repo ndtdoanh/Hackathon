@@ -150,7 +150,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
 
         // Upload file lên S3
-        String fileUrl = s3Service.uploadFile(file.getInputStream(), file.getOriginalFilename(), file.getSize());
+        String fileUrl = s3Service.uploadFile(file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
 
         // Lưu thông tin file vào database
         FileUrl fileUrlEntity = new FileUrl();
@@ -163,4 +163,14 @@ public class SubmissionServiceImpl implements SubmissionService {
         fileUrlRepository.save(fileUrlEntity);
         submission.getFileUrls().add(fileUrlEntity);
     }
+
+    @Override
+    public List<SubmissionResponseDTO> getSubmissionsByRoundAndCreatedBy(Long roundId, String createdByUsername) {
+        List<Submission> submissions = submissionRepository.findByRoundIdAndCreatedByUsername(roundId, createdByUsername);
+        return submissions.stream()
+                .map(submissionMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+
 }

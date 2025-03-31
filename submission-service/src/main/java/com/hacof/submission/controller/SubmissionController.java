@@ -139,4 +139,29 @@ public class SubmissionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+
+    @GetMapping("/by-round-created")
+    public ResponseEntity<CommonResponse<List<SubmissionResponseDTO>>> getSubmissionsByRoundAndCreatedBy(
+            @RequestParam Long roundId, @RequestParam String createdByUsername) {
+        CommonResponse<List<SubmissionResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<SubmissionResponseDTO> responseDTOs =
+                    submissionService.getSubmissionsByRoundAndCreatedBy(roundId, createdByUsername);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Fetched submissions by round and creator successfully.");
+            response.setData(responseDTOs);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Internal Server Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
 }

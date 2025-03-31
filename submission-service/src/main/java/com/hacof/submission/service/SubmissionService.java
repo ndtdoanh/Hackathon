@@ -20,4 +20,7 @@ public interface SubmissionService {
     SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files) throws IOException;
 
     boolean deleteSubmission(Long id);
+
+    List<SubmissionResponseDTO> getSubmissionsByRoundAndCreatedBy(Long roundId, String createdByUsername);
+
 }
