@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationRequest {
-    NotificationType notificationType;
+    NotificationType type;
     String content;
     String metadata;
     NotificationDeliveryRequest notificationDeliveryRequest;
