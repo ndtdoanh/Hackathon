@@ -18,4 +18,5 @@ public class NotificationRequest {
     NotificationType notificationType;
     String content;
     String metadata;
+    NotificationDeliveryRequest notificationDeliveryRequest;
 }
