@@ -88,7 +88,7 @@ public class SubmissionMapper {
                         .collect(Collectors.toList())
                         : null)
                 .bio(team.getBio())
-                .isDeleted(team.isDeleted())
+                .isDeleted(team.getIsDeleted())
                 .build();
     }
 

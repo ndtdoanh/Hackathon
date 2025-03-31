@@ -27,7 +27,7 @@ public class TeamResponseDTO {
             this.name = team.getName();
             this.teamLeader = team.getTeamLeader() != null ? new UserResponse() : null;
             this.bio = team.getBio();
-            this.isDeleted = team.isDeleted();
+            this.isDeleted = team.getIsDeleted();
 
             if (team.getTeamMembers() != null) {
                 this.teamMembers = team.getTeamMembers().stream()
