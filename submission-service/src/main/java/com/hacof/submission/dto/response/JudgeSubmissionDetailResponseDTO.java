@@ -21,15 +21,15 @@ public class JudgeSubmissionDetailResponseDTO {
     String note;
     Long judgeSubmissionId;
     RoundMarkCriterionResponseDTO roundMarkCriterion;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 
     public JudgeSubmissionDetailResponseDTO(JudgeSubmissionDetail entity) {
         this.id = String.valueOf(entity.getId());
         this.score = entity.getScore();
         this.note = entity.getNote();
-        this.createdDate = entity.getCreatedDate();
-        this.lastModifiedDate = entity.getLastModifiedDate();
+        this.createdAt = entity.getCreatedDate();
+        this.updatedAt = entity.getLastModifiedDate();
 
         if (entity.getJudgeSubmission() != null) {
             this.judgeSubmissionId = entity.getJudgeSubmission().getId();
@@ -41,14 +41,14 @@ public class JudgeSubmissionDetailResponseDTO {
                     .name(entity.getRoundMarkCriterion().getName())
                     .maxScore(entity.getRoundMarkCriterion().getMaxScore())
                     .note(entity.getRoundMarkCriterion().getNote())
-                    .createdBy(
+                    .createdByUserName(
                             entity.getRoundMarkCriterion().getCreatedBy() != null
                                     ? entity.getRoundMarkCriterion()
                                             .getCreatedBy()
                                             .getUsername()
                                     : null)
-                    .createdDate(entity.getRoundMarkCriterion().getCreatedDate())
-                    .lastModifiedDate(entity.getRoundMarkCriterion().getLastModifiedDate())
+                    .createdAt(entity.getRoundMarkCriterion().getCreatedDate())
+                    .updatedAt(entity.getRoundMarkCriterion().getLastModifiedDate())
                     .judgeSubmissionDetails(null)
                     .build();
         }
