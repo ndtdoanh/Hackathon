@@ -38,7 +38,7 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
     public List<RoundMarkCriterionResponseDTO> getAll() {
         List<RoundMarkCriterion> criterionList = repository.findAll();
         return criterionList.stream()
-                .map(mapper::toRoundMarkCriterionResponseDTO) // Ensure correct mapping method
+                .map(mapper::toRoundMarkCriterionResponseDTO)
                 .collect(Collectors.toList());
     }
 
@@ -50,57 +50,43 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
     @Override
     public RoundMarkCriterionResponseDTO create(RoundMarkCriterionRequestDTO criterionDTO) {
-        Optional<Round> roundOpt = roundRepository.findById(criterionDTO.getRoundId());
-        if (!roundOpt.isPresent()) {
-            throw new IllegalArgumentException("Round not found with id " + criterionDTO.getRoundId());
-        }
+        Round round = roundRepository.findById(criterionDTO.getRoundId())
+                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + criterionDTO.getRoundId()));
 
-        RoundMarkCriterion criterion = mapper.toEntity(criterionDTO);
-        criterion.setRound(roundOpt.get());
+        RoundMarkCriterion criterion = mapper.toEntity(criterionDTO, round);
 
-        /// Lấy thông tin người dùng hiện tại từ SecurityUtil
-        String currentUser = SecurityUtil.getCurrentUserLogin().orElse("anonymousUser");
-        if ("anonymousUser".equals(currentUser)) {
-            currentUser = "admin";
-        }
+        String currentUser = SecurityUtil.getCurrentUserLogin().orElse("admin");
+        User user = userRepository.findByUsername(currentUser)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + currentUser));
 
-        Optional<User> userOpt = userRepository.findByUsername(currentUser);
-        User user = userOpt.orElseThrow(() -> new IllegalArgumentException("User not found with username "));
         criterion.setCreatedBy(user);
 
         RoundMarkCriterion savedCriterion = repository.save(criterion);
-        return mapper.toRoundMarkCriterionResponseDTO(savedCriterion); // Fix method call
+        return mapper.toRoundMarkCriterionResponseDTO(savedCriterion);
     }
 
     @Override
     public RoundMarkCriterionResponseDTO update(Long id, RoundMarkCriterionRequestDTO updatedCriterionDTO) {
-        RoundMarkCriterion updated = repository
-                .findById(id)
-                .map(criterion -> {
-                    Optional<Round> roundOpt = roundRepository.findById(updatedCriterionDTO.getRoundId());
-                    if (!roundOpt.isPresent()) {
-                        throw new IllegalArgumentException(
-                                "Round not found with id " + updatedCriterionDTO.getRoundId());
-                    }
-
-                    criterion.setName(updatedCriterionDTO.getName());
-                    criterion.setNote(updatedCriterionDTO.getNote());
-                    criterion.setMaxScore(updatedCriterionDTO.getMaxScore());
-                    criterion.setRound(roundOpt.get());
-                    return repository.save(criterion);
-                })
+        RoundMarkCriterion criterion = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("RoundMarkCriterion not found with id " + id));
 
+        Round round = roundRepository.findById(updatedCriterionDTO.getRoundId())
+                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + updatedCriterionDTO.getRoundId()));
+
+        criterion.setName(updatedCriterionDTO.getName());
+        criterion.setMaxScore(updatedCriterionDTO.getMaxScore());
+        criterion.setNote(updatedCriterionDTO.getNote());
+        criterion.setRound(round);
+
+        RoundMarkCriterion updated = repository.save(criterion);
         return mapper.toRoundMarkCriterionResponseDTO(updated);
     }
 
     @Override
     public void delete(Long id) {
-        Optional<RoundMarkCriterion> criterionOptional = repository.findById(id);
-        if (criterionOptional.isPresent()) {
-            repository.delete(criterionOptional.get());
-        } else {
-            throw new IllegalArgumentException("Round mark criterion with id " + id + " not found");
-        }
+        RoundMarkCriterion criterion = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Round mark criterion with id " + id + " not found"));
+
+        repository.delete(criterion);
     }
 }
