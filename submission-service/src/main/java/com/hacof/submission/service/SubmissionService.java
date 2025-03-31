@@ -23,4 +23,5 @@ public interface SubmissionService {
 
     List<SubmissionResponseDTO> getSubmissionsByRoundAndCreatedBy(Long roundId, String createdByUsername);
 
+    List<SubmissionResponseDTO> getSubmissionsByTeamAndRound(Long teamId, Long roundId);
 }

@@ -172,5 +172,11 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public List<SubmissionResponseDTO> getSubmissionsByTeamAndRound(Long teamId, Long roundId) {
+        List<Submission> submissions = submissionRepository.findByTeamIdAndRoundId(teamId, roundId);
+        return submissions.stream()
+                .map(submissionMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
 }
