@@ -51,7 +51,7 @@ public class Notification extends AuditBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "notification_type")
-    NotificationType notificationType;
+    NotificationType type;
 
     @Column(name = "content", columnDefinition = "TEXT")
     String content;
