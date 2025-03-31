@@ -1,17 +1,18 @@
 package com.hacof.submission.controller;
 
-import java.util.List;
+import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.dto.response.SubmissionResponseDTO;
+import com.hacof.submission.dto.response.UserResponse;
+import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.service.JudgeSubmissionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.hacof.submission.dto.request.AssignJudgeRequest;
-import com.hacof.submission.dto.request.UpdateScoreRequest;
-import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-import com.hacof.submission.response.CommonResponse;
-import com.hacof.submission.service.JudgeSubmissionService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/judge-submissions")
@@ -20,68 +21,40 @@ public class JudgeSubmissionController {
     @Autowired
     private JudgeSubmissionService judgeSubmissionService;
 
-    @PostMapping("/assign")
-    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> assignJudgeToSubmission(
-            @RequestBody AssignJudgeRequest assignJudgeRequest) {
+    @PostMapping
+    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> createJudgeSubmission(
+            @RequestBody JudgeSubmissionRequestDTO requestDTO) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO responseDTO = judgeSubmissionService.assignJudgeToSubmission(assignJudgeRequest);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Judge assigned to submission successfully");
-            response.setData(responseDTO);
-            return ResponseEntity.ok(response);
+            JudgeSubmissionResponseDTO createdJudgeSubmission = judgeSubmissionService.createJudgeSubmission(requestDTO);
+            response.setStatus(HttpStatus.CREATED.value());
+            response.setMessage("JudgeSubmission created successfully!");
+            response.setData(createdJudgeSubmission);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
+            response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
-    @PutMapping("/update-score")
-    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> updateScoreAndNoteForSubmission(
-            @RequestBody UpdateScoreRequest updateScoreRequest) {
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> getJudgeSubmissionById(@PathVariable Long id) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO responseDTO =
-                    judgeSubmissionService.updateScoreAndNoteForSubmission(updateScoreRequest);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Score and note updated successfully");
-            response.setData(responseDTO);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    @GetMapping("/{submissionId}")
-    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> getJudgeSubmissionBySubmissionId(
-            @PathVariable Long submissionId) {
-        CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
-        try {
-            JudgeSubmissionResponseDTO responseDTO =
-                    judgeSubmissionService.getJudgeSubmissionBySubmissionId(submissionId);
+            JudgeSubmissionResponseDTO judgeSubmission = judgeSubmissionService.getJudgeSubmissionById(id);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Judge submission fetched successfully");
-            response.setData(responseDTO);
+            response.setData(judgeSubmission);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -96,33 +69,48 @@ public class JudgeSubmissionController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
+            response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
-    @DeleteMapping("/{submissionId}")
-    public ResponseEntity<CommonResponse<Boolean>> deleteJudgeSubmission(@PathVariable Long submissionId) {
-        CommonResponse<Boolean> response = new CommonResponse<>();
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> updateJudgeSubmission(
+            @PathVariable Long id, @RequestBody JudgeSubmissionRequestDTO requestDTO) {
+        CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            boolean deleted = judgeSubmissionService.deleteJudgeSubmission(submissionId);
-            if (deleted) {
-                response.setStatus(HttpStatus.NO_CONTENT.value());
-                response.setMessage("Judge submission deleted successfully");
-                response.setData(true);
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
-            } else {
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                response.setMessage("Judge submission not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-            }
+            JudgeSubmissionResponseDTO updatedJudgeSubmission = judgeSubmissionService.updateJudgeSubmission(id, requestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Score and note updated successfully");
+            response.setData(updatedJudgeSubmission);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<Boolean>> deleteJudgeSubmission(@PathVariable Long id) {
+        CommonResponse<Boolean> response = new CommonResponse<>();
+        try {
+            judgeSubmissionService.deleteJudgeSubmission(id);
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            response.setMessage("Judge submission deleted successfully");
+            response.setData(true);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
@@ -143,7 +131,7 @@ public class JudgeSubmissionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
+            response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
@@ -164,7 +152,7 @@ public class JudgeSubmissionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
+            response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

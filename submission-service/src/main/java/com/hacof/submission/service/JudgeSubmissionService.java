@@ -1,25 +1,25 @@
 package com.hacof.submission.service;
 
+import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.dto.response.SubmissionResponseDTO;
+import com.hacof.submission.dto.response.UserResponse;
+
 import java.util.List;
 
-import com.hacof.submission.dto.request.AssignJudgeRequest;
-import com.hacof.submission.dto.request.UpdateScoreRequest;
-import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-
 public interface JudgeSubmissionService {
-    JudgeSubmissionResponseDTO assignJudgeToSubmission(AssignJudgeRequest assignJudgeDTO);
+    JudgeSubmissionResponseDTO createJudgeSubmission(JudgeSubmissionRequestDTO requestDTO);
 
-    JudgeSubmissionResponseDTO updateScoreAndNoteForSubmission(UpdateScoreRequest updateScoreDTO);
-
-    JudgeSubmissionResponseDTO getJudgeSubmissionBySubmissionId(Long submissionId);
+    JudgeSubmissionResponseDTO getJudgeSubmissionById(Long id);
 
     List<JudgeSubmissionResponseDTO> getAllJudgeSubmissions();
 
-    boolean deleteJudgeSubmission(Long submissionId);
+    JudgeSubmissionResponseDTO updateJudgeSubmission(Long id, JudgeSubmissionRequestDTO requestDTO);
+
+    void deleteJudgeSubmission(Long id);
 
     List<JudgeSubmissionResponseDTO> getSubmissionsByJudgeId(Long judgeId);
 
     List<JudgeSubmissionResponseDTO> getSubmissionsByRoundId(Long roundId);
 
-    //    JudgeSubmissionResponseDTO getSubmissionScore(Long submissionId);
-}
+    }
