@@ -19,8 +19,8 @@ public class RoundMarkCriterionResponseDTO {
     String name;
     int maxScore;
     String note;
-    String createdBy;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    String createdByUserName;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
     List<JudgeSubmissionDetailResponseDTO> judgeSubmissionDetails;
 }
