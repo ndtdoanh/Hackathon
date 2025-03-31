@@ -26,11 +26,13 @@ import com.hacof.identity.dto.response.RoleResponse;
 import com.hacof.identity.dto.response.UserResponse;
 import com.hacof.identity.entity.Role;
 import com.hacof.identity.entity.User;
+import com.hacof.identity.entity.UserRole;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.UserMapper;
 import com.hacof.identity.repository.RoleRepository;
 import com.hacof.identity.repository.UserRepository;
+import com.hacof.identity.repository.UserRoleRepository;
 import com.hacof.identity.service.EmailService;
 import com.hacof.identity.service.OtpService;
 import com.hacof.identity.service.RoleService;
@@ -55,6 +57,7 @@ public class UserServiceImpl implements UserService {
     EmailService emailService;
     OtpService otpService;
     S3Service s3Service;
+    UserRoleRepository userRoleRepository;
 
     @Override
     public UserResponse createUser(String token, UserCreateRequest request) {
@@ -71,40 +74,35 @@ public class UserServiceImpl implements UserService {
         user.setVerified(false);
         user.setStatus(Status.ACTIVE);
 
-        Role assignedRole = null;
+        if (request.getUserRoles() == null || request.getUserRoles().getRoleId().isBlank()) {
+            throw new AppException(ErrorCode.ROLE_ID_IS_REQUIRED);
+        }
 
-        if (creatorRole.getName().equals("ADMIN")) {
-            if (request.getAssignedRole() != null && !request.getAssignedRole().equals("ORGANIZATION")) {
+        Role assignedRole = roleRepository
+                .findById(Long.valueOf(request.getUserRoles().getRoleId()))
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+
+        if ("ADMIN".equals(creatorRole.getName())) {
+            if (!"ORGANIZATION".equals(assignedRole.getName())) {
                 throw new AppException(ErrorCode.UNAUTHORIZED);
             }
-
-            assignedRole = roleRepository
-                    .findByName("ORGANIZATION")
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-
-        } else if (creatorRole.getName().equals("ORGANIZATION")) {
-            if (request.getAssignedRole() == null || request.getAssignedRole().isBlank()) {
-                throw new AppException(ErrorCode.ASSIGNED_ROLE_IS_REQUIRED);
-            }
-
-            if (!request.getAssignedRole().equals("JUDGE")
-                    && !request.getAssignedRole().equals("MENTOR")) {
+        } else if ("ORGANIZATION".equals(creatorRole.getName())) {
+            if (!"JUDGE".equals(assignedRole.getName()) && !"MENTOR".equals(assignedRole.getName())) {
                 throw new AppException(ErrorCode.INVALID_ASSIGNED_ROLE);
             }
-
-            assignedRole = roleRepository
-                    .findByName(request.getAssignedRole())
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-
         } else {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
-        user.addRole(assignedRole);
-        user = userRepository.save(user);
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(assignedRole);
+        user.getUserRoles().add(userRole);
 
-        UserResponse userResponse = userMapper.toUserResponse(user);
-        return userResponse;
+        user = userRepository.save(user);
+        user = userRepository.findById(user.getId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return userMapper.toUserResponse(user);
     }
 
     @Override

@@ -25,7 +25,7 @@ public interface NotificationMapper {
     @Mapping(target = "sender", source = "sender")
     @Mapping(target = "createdAt", source = "createdDate")
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
-    @Mapping(target = "notificationType", source = "notificationType")
+    @Mapping(target = "type", source = "type")
     @Mapping(
             target = "notificationDeliveries",
             expression = "java(mapNotificationDeliveries(notification.getNotificationDeliveries()))")
@@ -43,7 +43,7 @@ public interface NotificationMapper {
     default Notification toNotification(NotificationRequest request, User sender) {
         return Notification.builder()
                 .sender(sender)
-                .notificationType(request.getNotificationType())
+                .type(request.getType())
                 .content(request.getContent())
                 .metadata(request.getMetadata())
                 .isRead(false)
