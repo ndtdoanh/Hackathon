@@ -170,4 +170,26 @@ public class JudgeRoundController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @DeleteMapping("/by-judge-round")
+    public ResponseEntity<CommonResponse<Void>> deleteJudgeRoundByJudgeIdAndRoundId(
+            @RequestParam Long judgeId,
+            @RequestParam Long roundId) {
+        CommonResponse<Void> response = new CommonResponse<>();
+        try {
+            judgeRoundService.deleteJudgeRoundByJudgeIdAndRoundId(judgeId, roundId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("JudgeRound deleted successfully!");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Internal Server Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

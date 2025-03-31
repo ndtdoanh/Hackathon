@@ -19,4 +19,6 @@ public interface JudgeRoundService {
     JudgeRoundResponseDTO updateJudgeRoundByJudgeId(Long judgeId, JudgeRoundRequestDTO dto);
 
     List<JudgeRoundResponseDTO> getJudgeRoundsByRoundId(Long roundId);
+
+    void deleteJudgeRoundByJudgeIdAndRoundId(Long judgeId, Long roundId);
 }

@@ -108,4 +108,17 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
 
         return judgeRounds.stream().map(judgeRoundMapper::toResponseDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteJudgeRoundByJudgeIdAndRoundId(Long judgeId, Long roundId) {
+        Optional<JudgeRound> judgeRoundOptional = judgeRoundRepository.findByJudgeIdAndRoundId(judgeId, roundId);
+
+        if (judgeRoundOptional.isPresent()) {
+            JudgeRound judgeRound = judgeRoundOptional.get();
+            judgeRoundRepository.delete(judgeRound);
+        } else {
+            throw new IllegalArgumentException("JudgeRound not found for judgeId: " + judgeId + " and roundId: " + roundId);
+        }
+    }
+
 }
