@@ -1,6 +1,7 @@
 package com.hacof.submission.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface TeamRoundJudgeRepository extends JpaRepository<TeamRoundJudge, 
     List<User> findJudgesByRoundAndTeam(@Param("roundId") Long roundId, @Param("teamId") Long teamId);
 
     List<TeamRoundJudge> findByTeamRoundId(Long teamRoundId);
+
+    Optional<TeamRoundJudge> findByTeamRoundIdAndJudgeId(Long teamRoundId, Long judgeId);
 }

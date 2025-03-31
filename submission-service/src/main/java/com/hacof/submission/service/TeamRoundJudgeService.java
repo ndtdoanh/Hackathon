@@ -18,4 +18,7 @@ public interface TeamRoundJudgeService {
     List<TeamRoundJudgeResponseDTO> getAllTeamRoundJudges();
 
     List<TeamRoundJudgeResponseDTO> getTeamRoundJudgesByTeamRoundId(Long teamRoundId);
+
+    void deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(Long teamRoundId, Long judgeId);
+
 }

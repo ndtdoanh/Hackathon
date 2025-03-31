@@ -104,4 +104,16 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
 
         return teamRoundJudges.stream().map(teamRoundJudgeMapper::toResponseDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(Long teamRoundId, Long judgeId) {
+        Optional<TeamRoundJudge> teamRoundJudge = teamRoundJudgeRepository.findByTeamRoundIdAndJudgeId(teamRoundId, judgeId);
+
+        if (!teamRoundJudge.isPresent()) {
+            throw new IllegalArgumentException("No TeamRoundJudge found for teamRoundId: " + teamRoundId + " and judgeId: " + judgeId);
+        }
+
+        teamRoundJudgeRepository.delete(teamRoundJudge.get());
+    }
+
 }
