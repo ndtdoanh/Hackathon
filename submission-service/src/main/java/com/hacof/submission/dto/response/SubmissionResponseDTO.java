@@ -3,7 +3,9 @@ package com.hacof.submission.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import com.hacof.submission.entity.Submission;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -31,7 +33,8 @@ public class SubmissionResponseDTO {
             this.id = String.valueOf(submission.getId());
             this.round = submission.getRound() != null ? new RoundResponseDTO() : null;
             this.team = submission.getTeam() != null ? new TeamResponseDTO(submission.getTeam()) : null;
-            this.status = submission.getStatus() != null ? submission.getStatus().toString() : null;
+            this.status =
+                    submission.getStatus() != null ? submission.getStatus().toString() : null;
             this.submittedAt = submission.getSubmittedAt();
             this.finalScore = submission.getFinalScore();
 
@@ -49,8 +52,9 @@ public class SubmissionResponseDTO {
             }
             this.createdAt = submission.getCreatedDate();
             this.updatedAt = submission.getLastModifiedDate();
-            this.createdByUserName = submission.getCreatedBy() != null ? submission.getCreatedBy().getUsername() : "Unknown";
-
+            this.createdByUserName = submission.getCreatedBy() != null
+                    ? submission.getCreatedBy().getUsername()
+                    : "Unknown";
         }
     }
 }

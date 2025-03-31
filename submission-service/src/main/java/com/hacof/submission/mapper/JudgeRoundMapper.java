@@ -47,7 +47,8 @@ public class JudgeRoundMapper {
                 .judge(mapUserToDto(entity.getJudge()))
                 .round(mapRoundToDto(entity.getRound()))
                 .isDeleted(entity.isDeleted())
-                .createdByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
+                .createdByUserName(
+                        entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
                 .createdAt(
                         entity.getCreatedDate() != null
                                 ? entity.getCreatedDate().toString()

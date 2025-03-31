@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamRoundJudgeRequestDTO {
-    private Long teamRoundId;  // ID of the TeamRound to which this Judge belongs
-    private Long judgeId;      // ID of the Judge associated with this TeamRoundJudge
+    private Long teamRoundId;
+    private Long judgeId;
 }

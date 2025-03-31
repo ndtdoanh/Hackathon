@@ -50,13 +50,16 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
     @Override
     public RoundMarkCriterionResponseDTO create(RoundMarkCriterionRequestDTO criterionDTO) {
-        Round round = roundRepository.findById(criterionDTO.getRoundId())
-                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + criterionDTO.getRoundId()));
+        Round round = roundRepository
+                .findById(criterionDTO.getRoundId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Round not found with ID " + criterionDTO.getRoundId()));
 
         RoundMarkCriterion criterion = mapper.toEntity(criterionDTO, round);
 
         String currentUser = SecurityUtil.getCurrentUserLogin().orElse("admin");
-        User user = userRepository.findByUsername(currentUser)
+        User user = userRepository
+                .findByUsername(currentUser)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + currentUser));
 
         criterion.setCreatedBy(user);
@@ -67,11 +70,14 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
     @Override
     public RoundMarkCriterionResponseDTO update(Long id, RoundMarkCriterionRequestDTO updatedCriterionDTO) {
-        RoundMarkCriterion criterion = repository.findById(id)
+        RoundMarkCriterion criterion = repository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("RoundMarkCriterion not found with id " + id));
 
-        Round round = roundRepository.findById(updatedCriterionDTO.getRoundId())
-                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + updatedCriterionDTO.getRoundId()));
+        Round round = roundRepository
+                .findById(updatedCriterionDTO.getRoundId())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Round not found with ID " + updatedCriterionDTO.getRoundId()));
 
         criterion.setName(updatedCriterionDTO.getName());
         criterion.setMaxScore(updatedCriterionDTO.getMaxScore());
@@ -84,7 +90,8 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
     @Override
     public void delete(Long id) {
-        RoundMarkCriterion criterion = repository.findById(id)
+        RoundMarkCriterion criterion = repository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Round mark criterion with id " + id + " not found"));
 
         repository.delete(criterion);

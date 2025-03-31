@@ -1,22 +1,22 @@
 package com.hacof.submission.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
 import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
 import com.hacof.submission.entity.TeamRound;
 import com.hacof.submission.entity.TeamRoundJudge;
-import com.hacof.submission.entity.User;
 import com.hacof.submission.mapper.TeamRoundJudgeMapper;
 import com.hacof.submission.repository.JudgeRoundRepository;
 import com.hacof.submission.repository.TeamRoundJudgeRepository;
 import com.hacof.submission.repository.TeamRoundRepository;
 import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.service.TeamRoundJudgeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
@@ -38,14 +38,17 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
 
     @Override
     public TeamRoundJudgeResponseDTO createTeamRoundJudge(TeamRoundJudgeRequestDTO requestDTO) {
-        TeamRound teamRound = teamRoundRepository.findById(requestDTO.getTeamRoundId())
-                .orElseThrow(() -> new IllegalArgumentException("TeamRound not found with ID " + requestDTO.getTeamRoundId()));
+        TeamRound teamRound = teamRoundRepository
+                .findById(requestDTO.getTeamRoundId())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("TeamRound not found with ID " + requestDTO.getTeamRoundId()));
 
         boolean isJudgeInRound = judgeRoundRepository.existsByJudgeIdAndRoundId(
                 requestDTO.getJudgeId(), teamRound.getRound().getId());
 
         if (!isJudgeInRound) {
-            throw new IllegalArgumentException("Judge is not assigned to this round and cannot be added to TeamRoundJudge.");
+            throw new IllegalArgumentException(
+                    "Judge is not assigned to this round and cannot be added to TeamRoundJudge.");
         }
         TeamRoundJudge entity = teamRoundJudgeMapper.toEntity(requestDTO, teamRoundRepository, userRepository);
         TeamRoundJudge savedEntity = teamRoundJudgeRepository.save(entity);
@@ -78,7 +81,8 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
 
     @Override
     public TeamRoundJudgeResponseDTO getTeamRoundJudgeById(Long id) {
-        TeamRoundJudge entity = teamRoundJudgeRepository.findById(id)
+        TeamRoundJudge entity = teamRoundJudgeRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("TeamRoundJudge not found with ID " + id));
         return teamRoundJudgeMapper.toResponseDTO(entity);
     }
@@ -87,9 +91,7 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
     public List<TeamRoundJudgeResponseDTO> getAllTeamRoundJudges() {
         List<TeamRoundJudge> teamRoundJudges = teamRoundJudgeRepository.findAll();
 
-        return teamRoundJudges.stream()
-                .map(teamRoundJudgeMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return teamRoundJudges.stream().map(teamRoundJudgeMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -100,9 +102,6 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
             throw new IllegalArgumentException("No TeamRoundJudge found for teamRoundId: " + teamRoundId);
         }
 
-        return teamRoundJudges.stream()
-                .map(teamRoundJudgeMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return teamRoundJudges.stream().map(teamRoundJudgeMapper::toResponseDTO).collect(Collectors.toList());
     }
-
 }

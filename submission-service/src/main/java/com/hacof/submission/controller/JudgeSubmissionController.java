@@ -1,18 +1,16 @@
 package com.hacof.submission.controller;
 
-import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
-import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-import com.hacof.submission.dto.response.SubmissionResponseDTO;
-import com.hacof.submission.dto.response.UserResponse;
-import com.hacof.submission.response.CommonResponse;
-import com.hacof.submission.service.JudgeSubmissionService;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.service.JudgeSubmissionService;
 
 @RestController
 @RequestMapping("/api/v1/judge-submissions")
@@ -26,7 +24,8 @@ public class JudgeSubmissionController {
             @RequestBody JudgeSubmissionRequestDTO requestDTO) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO createdJudgeSubmission = judgeSubmissionService.createJudgeSubmission(requestDTO);
+            JudgeSubmissionResponseDTO createdJudgeSubmission =
+                    judgeSubmissionService.createJudgeSubmission(requestDTO);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("JudgeSubmission created successfully!");
             response.setData(createdJudgeSubmission);
@@ -79,7 +78,8 @@ public class JudgeSubmissionController {
             @PathVariable Long id, @RequestBody JudgeSubmissionRequestDTO requestDTO) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO updatedJudgeSubmission = judgeSubmissionService.updateJudgeSubmission(id, requestDTO);
+            JudgeSubmissionResponseDTO updatedJudgeSubmission =
+                    judgeSubmissionService.updateJudgeSubmission(id, requestDTO);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Score and note updated successfully");
             response.setData(updatedJudgeSubmission);

@@ -1,15 +1,16 @@
 package com.hacof.submission.controller;
 
-import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
-import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
-import com.hacof.submission.response.CommonResponse;
-import com.hacof.submission.service.TeamRoundJudgeService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
+import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
+import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.service.TeamRoundJudgeService;
 
 @RestController
 @RequestMapping("/api/v1/teamroundjudges")
@@ -56,7 +57,6 @@ public class TeamRoundJudgeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 
     @PostMapping
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> create(
@@ -121,7 +121,8 @@ public class TeamRoundJudgeController {
     }
 
     @GetMapping("/by-team-round/{teamRoundId}")
-    public ResponseEntity<CommonResponse<List<TeamRoundJudgeResponseDTO>>> getByTeamRoundId(@PathVariable Long teamRoundId) {
+    public ResponseEntity<CommonResponse<List<TeamRoundJudgeResponseDTO>>> getByTeamRoundId(
+            @PathVariable Long teamRoundId) {
         CommonResponse<List<TeamRoundJudgeResponseDTO>> response = new CommonResponse<>();
         try {
             List<TeamRoundJudgeResponseDTO> data = service.getTeamRoundJudgesByTeamRoundId(teamRoundId);
@@ -139,5 +140,4 @@ public class TeamRoundJudgeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

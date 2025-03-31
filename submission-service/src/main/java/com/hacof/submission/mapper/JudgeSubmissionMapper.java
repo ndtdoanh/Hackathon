@@ -1,20 +1,22 @@
 package com.hacof.submission.mapper;
 
-import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
-import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
-import com.hacof.submission.dto.response.*;
-import com.hacof.submission.entity.*;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
+import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
+import com.hacof.submission.dto.response.*;
+import com.hacof.submission.entity.*;
 
 @Component
 public class JudgeSubmissionMapper {
 
     // **Chuyển DTO thành Entity**
-    public JudgeSubmission toEntity(JudgeSubmissionRequestDTO dto, User judge, Submission submission, Set<JudgeSubmissionDetail> details) {
+    public JudgeSubmission toEntity(
+            JudgeSubmissionRequestDTO dto, User judge, Submission submission, Set<JudgeSubmissionDetail> details) {
         return JudgeSubmission.builder()
                 .judge(judge)
                 .submission(submission)
@@ -24,7 +26,8 @@ public class JudgeSubmissionMapper {
                 .build();
     }
 
-    public JudgeSubmissionDetail toDetailEntity(JudgeSubmissionDetailRequestDTO dto, RoundMarkCriterion criterion, JudgeSubmission judgeSubmission) {
+    public JudgeSubmissionDetail toDetailEntity(
+            JudgeSubmissionDetailRequestDTO dto, RoundMarkCriterion criterion, JudgeSubmission judgeSubmission) {
         return JudgeSubmissionDetail.builder()
                 .judgeSubmission(judgeSubmission)
                 .roundMarkCriterion(criterion)
@@ -42,13 +45,12 @@ public class JudgeSubmissionMapper {
                 .score(entity.getScore())
                 .note(entity.getNote())
                 .judgeSubmissionDetails(
-                        entity.getJudgeSubmissionDetails() != null && !entity.getJudgeSubmissionDetails().isEmpty()
+                        entity.getJudgeSubmissionDetails() != null
+                                        && !entity.getJudgeSubmissionDetails().isEmpty()
                                 ? entity.getJudgeSubmissionDetails().stream()
-                                .map(this::mapJudgeSubmissionDetailToDto)
-                                .collect(Collectors.toList())
-                                : Collections.emptyList()
-                )
-
+                                        .map(this::mapJudgeSubmissionDetailToDto)
+                                        .collect(Collectors.toList())
+                                : Collections.emptyList())
                 .createdAt(entity.getCreatedDate().toString())
                 .updatedAt(entity.getLastModifiedDate().toString())
                 .build();
@@ -133,12 +135,12 @@ public class JudgeSubmissionMapper {
                 .fileUrls(
                         submission.getFileUrls() != null
                                 ? submission.getFileUrls().stream()
-                                .map(file -> new FileUrlResponseDTO(
-                                        file.getFileName(),
-                                        file.getFileUrl(),
-                                        file.getFileType(),
-                                        file.getFileSize()))
-                                .collect(Collectors.toList())
+                                        .map(file -> new FileUrlResponseDTO(
+                                                file.getFileName(),
+                                                file.getFileUrl(),
+                                                file.getFileType(),
+                                                file.getFileSize()))
+                                        .collect(Collectors.toList())
                                 : Collections.emptyList())
                 .createdAt(submission.getCreatedDate())
                 .updatedAt(submission.getLastModifiedDate())
@@ -198,14 +200,14 @@ public class JudgeSubmissionMapper {
                 .id(team.getId())
                 .name(team.getName())
                 .teamLeader(team.getTeamLeader() != null ? mapUserToDto(team.getTeamLeader()) : null)
-                .teamMembers(team.getTeamMembers() != null
-                        ? team.getTeamMembers().stream()
-                        .map(userTeam -> mapUserToDto(userTeam.getUser()))
-                        .collect(Collectors.toList())
-                        : null)
+                .teamMembers(
+                        team.getTeamMembers() != null
+                                ? team.getTeamMembers().stream()
+                                        .map(userTeam -> mapUserToDto(userTeam.getUser()))
+                                        .collect(Collectors.toList())
+                                : null)
                 .bio(team.getBio())
                 .isDeleted(team.getIsDeleted())
                 .build();
     }
-
 }

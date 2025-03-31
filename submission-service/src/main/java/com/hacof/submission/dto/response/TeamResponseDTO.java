@@ -1,11 +1,12 @@
 package com.hacof.submission.dto.response;
 
-import com.hacof.submission.entity.Team;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.hacof.submission.entity.Team;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter

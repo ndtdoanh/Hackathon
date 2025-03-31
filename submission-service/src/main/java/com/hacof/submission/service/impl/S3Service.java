@@ -1,19 +1,21 @@
 package com.hacof.submission.service.impl;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
 @Service
 public class S3Service {
 
     private final AmazonS3 amazonS3;
+
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
 
@@ -21,8 +23,8 @@ public class S3Service {
         this.amazonS3 = amazonS3;
     }
 
-    public String uploadFile(InputStream inputStream, String originalFileName, long fileSize, String contentType) throws IOException {
-        // Tạo tên file ngẫu nhiên với UUID và tên file gốc
+    public String uploadFile(InputStream inputStream, String originalFileName, long fileSize, String contentType)
+            throws IOException {
         String fileName = "hacofpt/" + UUID.randomUUID().toString() + "_" + originalFileName;
 
         ObjectMetadata metadata = new ObjectMetadata();

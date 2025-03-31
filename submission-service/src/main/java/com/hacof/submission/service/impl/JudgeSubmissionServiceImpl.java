@@ -1,26 +1,25 @@
 package com.hacof.submission.service.impl;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
 import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-import com.hacof.submission.dto.response.UserResponse;
 import com.hacof.submission.entity.JudgeSubmission;
 import com.hacof.submission.entity.JudgeSubmissionDetail;
 import com.hacof.submission.entity.RoundMarkCriterion;
 import com.hacof.submission.entity.Submission;
 import com.hacof.submission.entity.User;
 import com.hacof.submission.mapper.JudgeSubmissionMapper;
-import com.hacof.submission.mapper.TeamRoundJudgeMapper;
 import com.hacof.submission.repository.*;
 import com.hacof.submission.service.JudgeSubmissionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
@@ -53,21 +52,27 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
             throw new IllegalArgumentException("The judge has already evaluated this submission!");
         }
 
-        User judge = userRepository.findById(requestDTO.getJudgeId())
+        User judge = userRepository
+                .findById(requestDTO.getJudgeId())
                 .orElseThrow(() -> new IllegalArgumentException("Judge not found with ID: " + requestDTO.getJudgeId()));
 
-        Submission submission = submissionRepository.findById(requestDTO.getSubmissionId())
-                .orElseThrow(() -> new IllegalArgumentException("Submission not found with ID: " + requestDTO.getSubmissionId()));
+        Submission submission = submissionRepository
+                .findById(requestDTO.getSubmissionId())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Submission not found with ID: " + requestDTO.getSubmissionId()));
 
         boolean isAssigned = teamRoundJudgeRepository.existsByJudgeAndRoundAndTeam(
-                judge.getId(), submission.getRound().getId(), submission.getTeam().getId());
+                judge.getId(),
+                submission.getRound().getId(),
+                submission.getTeam().getId());
 
         if (!isAssigned) {
             throw new IllegalArgumentException("The judge has not been assigned to this round and cannot evaluate.");
         }
 
         // Lấy danh sách tiêu chí của round
-        List<Long> requiredCriteria = roundMarkCriterionRepository.findCriterionIdsByRound(submission.getRound().getId());
+        List<Long> requiredCriteria = roundMarkCriterionRepository.findCriterionIdsByRound(
+                submission.getRound().getId());
         Set<Long> judgedCriteria = new HashSet<>();
         int totalScore = 0;
 
@@ -81,14 +86,15 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
         JudgeSubmission savedJudgeSubmission = judgeSubmissionRepository.save(judgeSubmission);
 
-
         for (JudgeSubmissionDetailRequestDTO detailRequest : requestDTO.getJudgeSubmissionDetails()) {
             if (judgedCriteria.contains(detailRequest.getRoundMarkCriterionId())) {
                 throw new IllegalArgumentException("Each criterion can only be evaluated once.");
             }
 
-            RoundMarkCriterion criterion = roundMarkCriterionRepository.findById(detailRequest.getRoundMarkCriterionId())
-                    .orElseThrow(() -> new IllegalArgumentException("Criterion not found with ID: " + detailRequest.getRoundMarkCriterionId()));
+            RoundMarkCriterion criterion = roundMarkCriterionRepository
+                    .findById(detailRequest.getRoundMarkCriterionId())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Criterion not found with ID: " + detailRequest.getRoundMarkCriterionId()));
 
             if (detailRequest.getScore() > criterion.getMaxScore()) {
                 throw new IllegalArgumentException("Score exceeds max for criterion ID " + criterion.getId());
@@ -121,7 +127,6 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         return judgeSubmissionMapper.toResponseDTO(savedJudgeSubmission);
     }
 
-
     @Transactional
     public void updateFinalScoreIfAllJudgesSubmitted(Submission submission) {
         // Lấy danh sách các giám khảo được giao chấm bài trong TeamRoundJudge
@@ -148,10 +153,10 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         submissionRepository.save(submission);
     }
 
-
     @Override
     public JudgeSubmissionResponseDTO getJudgeSubmissionById(Long id) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findById(id)
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("JudgeSubmission not found with ID: " + id));
         return judgeSubmissionMapper.toResponseDTO(judgeSubmission);
     }
@@ -166,11 +171,13 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
     @Transactional
     @Override
     public JudgeSubmissionResponseDTO updateJudgeSubmission(Long id, JudgeSubmissionRequestDTO requestDTO) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findById(id)
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("JudgeSubmission not found with ID: " + id));
 
         Submission submission = judgeSubmission.getSubmission();
-        List<Long> requiredCriteria = roundMarkCriterionRepository.findCriterionIdsByRound(submission.getRound().getId());
+        List<Long> requiredCriteria = roundMarkCriterionRepository.findCriterionIdsByRound(
+                submission.getRound().getId());
 
         judgeSubmission.getJudgeSubmissionDetails().clear();
 
@@ -182,8 +189,10 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
                 throw new IllegalArgumentException("Each criterion can only be evaluated once.");
             }
 
-            RoundMarkCriterion criterion = roundMarkCriterionRepository.findById(detailRequest.getRoundMarkCriterionId())
-                    .orElseThrow(() -> new IllegalArgumentException("Criterion not found with ID: " + detailRequest.getRoundMarkCriterionId()));
+            RoundMarkCriterion criterion = roundMarkCriterionRepository
+                    .findById(detailRequest.getRoundMarkCriterionId())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Criterion not found with ID: " + detailRequest.getRoundMarkCriterionId()));
 
             if (detailRequest.getScore() > criterion.getMaxScore()) {
                 throw new IllegalArgumentException("Score exceeds max for criterion ID " + criterion.getId());
@@ -215,11 +224,10 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         return judgeSubmissionMapper.toResponseDTO(updatedJudgeSubmission);
     }
 
-
-
     @Override
     public void deleteJudgeSubmission(Long id) {
-        JudgeSubmission judgeSubmission = judgeSubmissionRepository.findById(id)
+        JudgeSubmission judgeSubmission = judgeSubmissionRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("JudgeSubmission not found with ID: " + id));
         judgeSubmissionRepository.delete(judgeSubmission);
     }
@@ -245,5 +253,4 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
                 .map(judgeSubmissionMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
-
 }

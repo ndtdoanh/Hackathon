@@ -1,23 +1,25 @@
 package com.hacof.submission.repository;
 
-import com.hacof.submission.entity.TeamRoundJudge;
-import com.hacof.submission.entity.User;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hacof.submission.entity.TeamRoundJudge;
+import com.hacof.submission.entity.User;
 
 @Repository
 public interface TeamRoundJudgeRepository extends JpaRepository<TeamRoundJudge, Long> {
-    @Query("SELECT COUNT(trj) > 0 FROM TeamRoundJudge trj WHERE trj.judge.id = :judgeId AND trj.teamRound.round.id = :roundId AND trj.teamRound.team.id = :teamId")
-    boolean existsByJudgeAndRoundAndTeam(@Param("judgeId") Long judgeId, @Param("roundId") Long roundId, @Param("teamId") Long teamId);
+    @Query(
+            "SELECT COUNT(trj) > 0 FROM TeamRoundJudge trj WHERE trj.judge.id = :judgeId AND trj.teamRound.round.id = :roundId AND trj.teamRound.team.id = :teamId")
+    boolean existsByJudgeAndRoundAndTeam(
+            @Param("judgeId") Long judgeId, @Param("roundId") Long roundId, @Param("teamId") Long teamId);
 
-    @Query("SELECT trj.judge FROM TeamRoundJudge trj WHERE trj.teamRound.round.id = :roundId AND trj.teamRound.team.id = :teamId")
+    @Query(
+            "SELECT trj.judge FROM TeamRoundJudge trj WHERE trj.teamRound.round.id = :roundId AND trj.teamRound.team.id = :teamId")
     List<User> findJudgesByRoundAndTeam(@Param("roundId") Long roundId, @Param("teamId") Long teamId);
 
     List<TeamRoundJudge> findByTeamRoundId(Long teamRoundId);
-
-    boolean existsByJudgeIdAndTeamRound_Round_Id(Long judgeId, Long roundId);
 }

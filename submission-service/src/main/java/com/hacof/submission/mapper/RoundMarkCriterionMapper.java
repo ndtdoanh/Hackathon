@@ -32,7 +32,8 @@ public class RoundMarkCriterionMapper {
                 .name(entity.getName())
                 .maxScore(entity.getMaxScore())
                 .note(entity.getNote())
-                .createdByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
+                .createdByUserName(
+                        entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
                 .createdAt(entity.getCreatedDate())
                 .updatedAt(entity.getLastModifiedDate())
                 .round(entity.getRound() != null ? mapRoundToDto(entity.getRound()) : null) // Ensure Round is mapped
@@ -76,8 +77,9 @@ public class RoundMarkCriterionMapper {
                 .createAt(hackathon.getCreatedDate())
                 .updateAt(hackathon.getLastModifiedDate())
                 .createdByUserName(
-                        hackathon.getCreatedBy() != null ? hackathon.getCreatedBy().getUsername() : "Unknown"
-                )
+                        hackathon.getCreatedBy() != null
+                                ? hackathon.getCreatedBy().getUsername()
+                                : "Unknown")
                 .build();
     }
 }

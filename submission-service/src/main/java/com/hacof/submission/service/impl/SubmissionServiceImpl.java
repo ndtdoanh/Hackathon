@@ -3,8 +3,8 @@ package com.hacof.submission.service.impl;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +21,6 @@ import com.hacof.submission.repository.FileUrlRepository;
 import com.hacof.submission.repository.RoundRepository;
 import com.hacof.submission.repository.SubmissionRepository;
 import com.hacof.submission.repository.TeamRepository;
-import com.hacof.submission.service.impl.S3Service;
 import com.hacof.submission.service.SubmissionService;
 
 @Service
@@ -46,25 +45,29 @@ public class SubmissionServiceImpl implements SubmissionService {
     private S3Service s3Service;
 
     private static final List<String> ALLOWED_FILE_TYPES = List.of(
-            "image/jpeg", "image/png", "application/pdf",
-            "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            "text/plain"
-    );
+            "image/jpeg",
+            "image/png",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "text/plain");
 
     @Override
     public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
             throws IOException {
-        // Kiểm tra xem Round có tồn tại không
-        Round round = roundRepository.findById(submissionDTO.getRoundId())
-                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + submissionDTO.getRoundId()));
+        Round round = roundRepository
+                .findById(submissionDTO.getRoundId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Round not found with ID " + submissionDTO.getRoundId()));
 
-        // Kiểm tra xem Team có tồn tại không
-        Team team = teamRepository.findById(submissionDTO.getTeamId())
+        Team team = teamRepository
+                .findById(submissionDTO.getTeamId())
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + submissionDTO.getTeamId()));
 
-        // Tạo entity Submission
         Submission submission = new Submission();
         submission.setRound(round);
         submission.setTeam(team);
@@ -73,7 +76,6 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         submission = submissionRepository.save(submission);
 
-        // Xử lý upload file lên S3
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
                 processAndSaveFile(file, submission);
@@ -83,10 +85,10 @@ public class SubmissionServiceImpl implements SubmissionService {
         return submissionMapper.toResponseDTO(submission);
     }
 
-
     @Override
     public SubmissionResponseDTO getSubmissionById(Long id) {
-        Submission submission = submissionRepository.findById(id)
+        Submission submission = submissionRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Submission not found with ID " + id));
         return submissionMapper.toResponseDTO(submission);
     }
@@ -94,30 +96,30 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public List<SubmissionResponseDTO> getAllSubmissions() {
         List<Submission> submissions = submissionRepository.findAll();
-        return submissions.stream()
-                .map(submissionMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return submissions.stream().map(submissionMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
-    public SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
-            throws IOException {
-        Submission submission = submissionRepository.findById(id)
+    public SubmissionResponseDTO updateSubmission(
+            Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files) throws IOException {
+        Submission submission = submissionRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Submission not found for ID: " + id));
 
-        // Cập nhật thông tin vòng đấu và đội
-        Round round = roundRepository.findById(submissionDTO.getRoundId())
-                .orElseThrow(() -> new IllegalArgumentException("Round not found for ID: " + submissionDTO.getRoundId()));
+        Round round = roundRepository
+                .findById(submissionDTO.getRoundId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Round not found for ID: " + submissionDTO.getRoundId()));
         submission.setRound(round);
 
-        Team team = teamRepository.findById(submissionDTO.getTeamId())
+        Team team = teamRepository
+                .findById(submissionDTO.getTeamId())
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + submissionDTO.getTeamId()));
         submission.setTeam(team);
 
         submission.setStatus(Status.valueOf(submissionDTO.getStatus().toUpperCase()));
         submission.setSubmittedAt(LocalDateTime.now());
 
-        // Xử lý upload file lên S3 và lưu metadata vào database
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
                 processAndSaveFile(file, submission);
@@ -149,10 +151,9 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new IllegalArgumentException("File size exceeds the 15MB limit.");
         }
 
-        // Upload file lên S3
-        String fileUrl = s3Service.uploadFile(file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
+        String fileUrl = s3Service.uploadFile(
+                file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
 
-        // Lưu thông tin file vào database
         FileUrl fileUrlEntity = new FileUrl();
         fileUrlEntity.setFileName(file.getOriginalFilename());
         fileUrlEntity.setFileUrl(fileUrl);
@@ -166,17 +167,14 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public List<SubmissionResponseDTO> getSubmissionsByRoundAndCreatedBy(Long roundId, String createdByUsername) {
-        List<Submission> submissions = submissionRepository.findByRoundIdAndCreatedByUsername(roundId, createdByUsername);
-        return submissions.stream()
-                .map(submissionMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        List<Submission> submissions =
+                submissionRepository.findByRoundIdAndCreatedByUsername(roundId, createdByUsername);
+        return submissions.stream().map(submissionMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<SubmissionResponseDTO> getSubmissionsByTeamAndRound(Long teamId, Long roundId) {
         List<Submission> submissions = submissionRepository.findByTeamIdAndRoundId(teamId, roundId);
-        return submissions.stream()
-                .map(submissionMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return submissions.stream().map(submissionMapper::toResponseDTO).collect(Collectors.toList());
     }
 }

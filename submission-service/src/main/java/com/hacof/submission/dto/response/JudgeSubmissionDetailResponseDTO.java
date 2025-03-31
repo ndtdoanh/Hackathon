@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class JudgeSubmissionDetailResponseDTO {
     String id;
     Integer score;

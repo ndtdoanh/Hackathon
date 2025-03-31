@@ -1,11 +1,9 @@
 package com.hacof.submission.dto.response;
 
 import com.hacof.submission.constant.TeamRoundStatus;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

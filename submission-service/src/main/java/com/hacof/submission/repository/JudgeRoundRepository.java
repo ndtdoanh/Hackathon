@@ -15,5 +15,4 @@ public interface JudgeRoundRepository extends JpaRepository<JudgeRound, Long> {
     List<JudgeRound> findByRoundId(Long roundId);
 
     boolean existsByJudgeIdAndRoundId(Long judgeId, Long roundId);
-
 }

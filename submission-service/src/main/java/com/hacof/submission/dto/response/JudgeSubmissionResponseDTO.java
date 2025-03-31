@@ -1,9 +1,7 @@
 package com.hacof.submission.dto.response;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.hacof.submission.entity.JudgeSubmission;
@@ -17,7 +15,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class JudgeSubmissionResponseDTO {
     String id;
     UserResponse judge;
@@ -39,12 +36,12 @@ public class JudgeSubmissionResponseDTO {
                 ? entity.getLastModifiedDate().toString()
                 : null;
 
-        this.judgeSubmissionDetails = entity.getJudgeSubmissionDetails() != null && !entity.getJudgeSubmissionDetails().isEmpty()
+        this.judgeSubmissionDetails = entity.getJudgeSubmissionDetails() != null
+                        && !entity.getJudgeSubmissionDetails().isEmpty()
                 ? entity.getJudgeSubmissionDetails().stream()
-                .map(detail -> new JudgeSubmissionDetailResponseDTO(detail))
-                .collect(Collectors.toList())
+                        .map(detail -> new JudgeSubmissionDetailResponseDTO(detail))
+                        .collect(Collectors.toList())
                 : Collections.emptyList();
-
 
         if (entity.getSubmission() != null) {
             SubmissionResponseDTO submissionResponseDTO = new SubmissionResponseDTO();

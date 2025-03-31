@@ -17,7 +17,8 @@ public interface SubmissionService {
 
     List<SubmissionResponseDTO> getAllSubmissions();
 
-    SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files) throws IOException;
+    SubmissionResponseDTO updateSubmission(Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
+            throws IOException;
 
     boolean deleteSubmission(Long id);
 

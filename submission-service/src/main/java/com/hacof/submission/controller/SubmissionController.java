@@ -167,8 +167,7 @@ public class SubmissionController {
             @RequestParam Long teamId, @RequestParam Long roundId) {
         CommonResponse<List<SubmissionResponseDTO>> response = new CommonResponse<>();
         try {
-            List<SubmissionResponseDTO> responseDTOs =
-                    submissionService.getSubmissionsByTeamAndRound(teamId, roundId);
+            List<SubmissionResponseDTO> responseDTOs = submissionService.getSubmissionsByTeamAndRound(teamId, roundId);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched submissions by team and round successfully.");
             response.setData(responseDTOs);
