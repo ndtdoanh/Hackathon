@@ -2,8 +2,11 @@ package com.hacof.submission.service.impl;
 
 import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
 import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
+import com.hacof.submission.entity.TeamRound;
 import com.hacof.submission.entity.TeamRoundJudge;
+import com.hacof.submission.entity.User;
 import com.hacof.submission.mapper.TeamRoundJudgeMapper;
+import com.hacof.submission.repository.JudgeRoundRepository;
 import com.hacof.submission.repository.TeamRoundJudgeRepository;
 import com.hacof.submission.repository.TeamRoundRepository;
 import com.hacof.submission.repository.UserRepository;
@@ -28,10 +31,22 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
     private UserRepository userRepository;
 
     @Autowired
+    private JudgeRoundRepository judgeRoundRepository;
+
+    @Autowired
     private TeamRoundJudgeMapper teamRoundJudgeMapper;
 
     @Override
     public TeamRoundJudgeResponseDTO createTeamRoundJudge(TeamRoundJudgeRequestDTO requestDTO) {
+        TeamRound teamRound = teamRoundRepository.findById(requestDTO.getTeamRoundId())
+                .orElseThrow(() -> new IllegalArgumentException("TeamRound not found with ID " + requestDTO.getTeamRoundId()));
+
+        boolean isJudgeInRound = judgeRoundRepository.existsByJudgeIdAndRoundId(
+                requestDTO.getJudgeId(), teamRound.getRound().getId());
+
+        if (!isJudgeInRound) {
+            throw new IllegalArgumentException("Judge is not assigned to this round and cannot be added to TeamRoundJudge.");
+        }
         TeamRoundJudge entity = teamRoundJudgeMapper.toEntity(requestDTO, teamRoundRepository, userRepository);
         TeamRoundJudge savedEntity = teamRoundJudgeRepository.save(entity);
         return teamRoundJudgeMapper.toResponseDTO(savedEntity);
