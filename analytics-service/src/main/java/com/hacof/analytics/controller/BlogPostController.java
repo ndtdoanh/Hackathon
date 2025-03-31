@@ -27,7 +27,7 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('CREATE_BLOG_POST')")
     public ResponseEntity<ApiResponse<BlogPostResponse>> createBlogPost(@RequestBody BlogPostRequest request) {
         ApiResponse<BlogPostResponse> response = ApiResponse.<BlogPostResponse>builder()
-                .result(blogPostService.createBlogPost(request))
+                .data(blogPostService.createBlogPost(request))
                 .message("Blog post created successfully")
                 .build();
 
@@ -38,7 +38,7 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('GET_BLOG_POSTS')")
     public ApiResponse<List<BlogPostResponse>> getBlogPosts() {
         return ApiResponse.<List<BlogPostResponse>>builder()
-                .result(blogPostService.getBlogPosts())
+                .data(blogPostService.getBlogPosts())
                 .message("List of blog posts")
                 .build();
     }
@@ -47,7 +47,7 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('GET_BLOG_POST')")
     public ApiResponse<BlogPostResponse> getBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
-                .result(blogPostService.getBlogPost(id))
+                .data(blogPostService.getBlogPost(id))
                 .message("Blog post retrieved")
                 .build();
     }
@@ -56,7 +56,7 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('UPDATE_BLOG_POST')")
     public ApiResponse<BlogPostResponse> updateBlogPost(@PathVariable Long id, @RequestBody BlogPostRequest request) {
         return ApiResponse.<BlogPostResponse>builder()
-                .result(blogPostService.updateBlogPost(id, request))
+                .data(blogPostService.updateBlogPost(id, request))
                 .message("Blog post updated successfully")
                 .build();
     }
@@ -65,7 +65,7 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('SUBMIT_BLOG_POST')")
     public ApiResponse<BlogPostResponse> submitBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
-                .result(blogPostService.submitBlogPost(id))
+                .data(blogPostService.submitBlogPost(id))
                 .message("Blog post submitted for review")
                 .build();
     }
@@ -74,7 +74,7 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('APPROVE_BLOG_POST')")
     public ApiResponse<BlogPostResponse> approveBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
-                .result(blogPostService.approveBlogPost(id))
+                .data(blogPostService.approveBlogPost(id))
                 .message("Blog post approved and published")
                 .build();
     }
@@ -83,7 +83,7 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('REJECT_BLOG_POST')")
     public ApiResponse<BlogPostResponse> rejectBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
-                .result(blogPostService.rejectBlogPost(id))
+                .data(blogPostService.rejectBlogPost(id))
                 .message("Blog post rejected")
                 .build();
     }

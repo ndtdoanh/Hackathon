@@ -11,8 +11,16 @@ import com.hacof.communication.entity.Message;
 
 @Mapper(componentModel = "spring")
 public interface MessageMapper {
-    @Mapping(target = "createdByUserId", source = "createdBy.id")
-    @Mapping(target = "conversationId", source = "conversation.id")
+    @Mapping(target = "id", expression = "java(String.valueOf(message.getId()))")
+    @Mapping(
+            target = "createdByUserName",
+            expression = "java(message.getCreatedBy() != null ? message.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
+    @Mapping(
+            target = "conversationId",
+            expression =
+                    "java(message.getConversation() != null ? String.valueOf(message.getConversation().getId()) : null)")
     MessageResponse toMessageResponse(Message message);
 
     @Mapping(target = "id", ignore = true)

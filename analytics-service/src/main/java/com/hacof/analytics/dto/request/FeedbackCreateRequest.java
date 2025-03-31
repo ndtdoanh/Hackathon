@@ -11,9 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FeedbackCreateRequest {
-    Long teamId;
-
+    String teamId;
     FeedbackType feedbackType;
-
-    Long targetId;
+    String targetId;
 }

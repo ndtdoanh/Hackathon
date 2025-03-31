@@ -2,24 +2,23 @@ package com.hacof.communication.dto.response;
 
 import java.util.List;
 
-import com.hacof.communication.entity.ForumThread;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ForumThreadResponseDTO {
 
-    private Long id;
-    private String title;
-    private ForumCategoryResponseDTO forumCategory; // Include ForumCategory DTO
-    private boolean isLocked;
-    private boolean isPinned;
-    private String createdBy;
-    private String createdDate;
-    private String lastModifiedDate;
-    private List<ThreadPostResponseDTO> threadPosts; // Include List of ThreadPost DTOs
-
-
-
+    String id;
+    String title;
+    ForumCategoryResponseDTO forumCategory; // Include ForumCategory DTO
+    boolean isLocked;
+    boolean isPinned;
+    String createdBy;
+    String createdDate;
+    String lastModifiedDate;
+    List<ThreadPostResponseDTO> threadPosts; // Include List of ThreadPost DTOs
 }

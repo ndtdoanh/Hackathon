@@ -3,65 +3,121 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
+import org.hibernate.validator.constraints.URL;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.hackathon.entity.*;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HackathonDTO {
-    private long id;
+    String id;
 
-    @NotBlank(message = "Name is mandatory")
-    private String name;
+    @NotBlank(message = "Title is required")
+    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
+    String title;
 
-    @NotBlank(message = "Banner image url is mandatory")
-    private String bannerImageUrl;
+    @NotBlank(message = "Sub Title is required")
+    @Size(max = 250, message = "Sub Title must be less than 250 characters")
+    String subTitle;
 
-    private String description;
+    @NotBlank(message = "Banner Image URL is required")
+    @URL(message = "Banner Image URL must be a valid URL")
+    String bannerImageUrl;
 
-    @NotNull(message = "Start date is mandatory")
-    private LocalDateTime startDate;
+    @NotBlank(message = "Information is required")
+    String information;
 
-    @NotNull(message = "Start date is mandatory")
-    private LocalDateTime endDate;
+    String description;
 
-    @NotNull(message = "Number round is mandatory")
-    Integer numberRound;
+    @Min(value = 1, message = "Minimum Team Members must be greater than 0")
+    @Max(value = 5, message = "Minimum Team Members must be less than 5")
+    int minimumTeamMembers; // minTeamSize
 
-    @NotNull(message = "Max teams is mandatory")
-    int maxTeams;
+    @Min(value = 1, message = "Maximum Team Members must be greater than 0")
+    @Max(value = 5, message = "Maximum Team Members must be less than 5")
+    int maximumTeamMembers; // maxTeamSize
 
-    @NotNull(message = "Min team size is mandatory")
-    int minTeamSize;
+    @NotBlank(message = "Contact is required")
+    String contact;
 
-    @NotNull(message = "Max team size is mandatory")
-    int maxTeamSize;
+    @NotBlank(message = "Category is required")
+    String category; // Used for category filtering
 
-    @NotNull(message = "Status is mandatory")
-    private String status;
+    @NotNull(message = "Status is required")
+    String enrollmentStatus; // status
 
-    private List<String> roundNames; // Thêm để hiển thị tên các vòng
-    private int currentTeamCount; // Số team đã đăng ký
-    private int registrationCount; // Số người đăng ký
-    private int mentorCount; // Số mentor
-    private int sponsorCount;
-    // private Long organizerId;
-    // private String organizerName;
+    @NotNull(message = "Start Date is required")
+    @FutureOrPresent(message = "Start Date must be in the present or future")
+    LocalDateTime enrollStartDate;
 
-    //    List<RoundDTO> rounds;
-    //    List<TeamHackathon> teamHackathons;
-    //    List<HackathonResult> hackathonResults;
-    //    List<UserHackathon> userHackathons;
-    //    List<TeamRequest> teamRequests;
-    //    List<IndividualRegistrationRequest> individualRegistrationRequests;
-    //    List<MentorshipRequest> mentorshipRequests;
-    //    List<MentorshipSessionRequest> mentorshipSessionRequests;
-    //    List<SponsorshipHackathon> sponsorshipHackathons;
-    //    List<Device> devices;
-    //    List<Feedback> feedbacks;
+    @NotNull(message = "End Date is required")
+    @FutureOrPresent(message = "End Date must be in the present or future")
+    LocalDateTime enrollEndDate;
+
+    @NotNull(message = "Max Teams is required")
+    int enrollmentCount;
+
+    @JsonIgnore
+    List<String> documentation; // Document public URLs
+
+    @JsonIgnore
+    String organization; // Used for organization filtering
+
+    @JsonIgnore
+    List<Long> roundIds;
+
+    @JsonIgnore
+    List<TeamHackathon> teamHackathons;
+
+    @JsonIgnore
+    List<HackathonResult> hackathonResults;
+
+    @JsonIgnore
+    List<UserHackathon> userHackathons;
+
+    @JsonIgnore
+    List<TeamRequest> teamRequests;
+
+    @JsonIgnore
+    List<IndividualRegistrationRequest> individualRegistrationRequests;
+
+    @JsonIgnore
+    List<MentorshipRequest> mentorshipRequests;
+
+    @JsonIgnore
+    List<MentorshipSessionRequest> mentorshipSessionRequests;
+
+    @JsonIgnore
+    List<SponsorshipHackathon> sponsorshipHackathons;
+
+    @JsonIgnore
+    List<Device> devices;
+
+    @JsonIgnore
+    List<Feedback> feedbacks;
+
+    // Audit fields
+    String createdByUserName; // save username
+    LocalDateTime createdAt;
+    String lastModifiedByUserName; // save username
+    LocalDateTime updatedAt;
+
+    @AssertTrue(message = "Start Date must be before End Date")
+    private boolean isEndDateAfterStartDate() {
+        return enrollEndDate == null || enrollStartDate == null || enrollEndDate.isAfter(enrollStartDate);
+    }
+
+    @AssertTrue(message = "Minimum Team Members must be less than or equal to Maximum Team Members")
+    private boolean isMaxTeamSizeValid() {
+        return maximumTeamMembers >= minimumTeamMembers;
+    }
 }

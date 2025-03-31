@@ -17,11 +17,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDeviceResponse {
-    long id;
+    String id;
     long userId;
     long deviceId;
     UserDeviceStatus status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    Long createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }

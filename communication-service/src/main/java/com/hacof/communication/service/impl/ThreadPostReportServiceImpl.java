@@ -28,10 +28,10 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
 
     @Override
     public ThreadPostReportResponseDTO createThreadPostReport(ThreadPostReportRequestDTO requestDTO) {
+        Long threadPostId = Long.parseLong(requestDTO.getThreadPostId());
         ThreadPost threadPost = threadPostRepository
-                .findById(requestDTO.getThreadPostId())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("ThreadPost not found with id " + requestDTO.getThreadPostId()));
+                .findById(threadPostId)
+                .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + threadPostId));
 
         User createdBy = AuditContext.getCurrentUser();
         ThreadPostReport threadPostReport = ThreadPostReportMapper.toEntity(requestDTO, threadPost, createdBy);

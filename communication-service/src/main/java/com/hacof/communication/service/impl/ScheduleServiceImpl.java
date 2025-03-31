@@ -30,7 +30,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO) {
-        Optional<Team> teamOptional = teamRepository.findById(scheduleRequestDTO.getTeamId());
+        Long teamId = Long.parseLong(scheduleRequestDTO.getTeamId());
+        Optional<Team> teamOptional = teamRepository.findById(teamId);
+
         if (!teamOptional.isPresent()) {
             throw new IllegalArgumentException("Team not found!");
         }
@@ -48,7 +50,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Schedule not found!");
         }
 
-        Optional<Team> teamOptional = teamRepository.findById(scheduleRequestDTO.getTeamId());
+        Long teamId = Long.parseLong(scheduleRequestDTO.getTeamId());
+        Optional<Team> teamOptional = teamRepository.findById(teamId);
         if (!teamOptional.isPresent()) {
             throw new IllegalArgumentException("Team not found!");
         }

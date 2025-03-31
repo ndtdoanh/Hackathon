@@ -32,7 +32,7 @@ public class UserDeviceController {
         UserDeviceResponse response = userDeviceService.assignDevice(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<UserDeviceResponse>builder()
-                        .result(response)
+                        .data(response)
                         .message("Device assigned successfully")
                         .build());
     }
@@ -41,7 +41,7 @@ public class UserDeviceController {
     @PreAuthorize("hasAuthority('GET_USER_DEVICES')")
     public ApiResponse<List<UserDeviceResponse>> getUserDevices() {
         return ApiResponse.<List<UserDeviceResponse>>builder()
-                .result(userDeviceService.getUserDevices())
+                .data(userDeviceService.getUserDevices())
                 .message("Get all assigned devices")
                 .build();
     }
@@ -50,7 +50,7 @@ public class UserDeviceController {
     @PreAuthorize("hasAuthority('GET_USER_DEVICE')")
     public ApiResponse<UserDeviceResponse> getUserDevice(@PathVariable("Id") Long id) {
         return ApiResponse.<UserDeviceResponse>builder()
-                .result(userDeviceService.getUserDevice(id))
+                .data(userDeviceService.getUserDevice(id))
                 .message("Get user device by ID")
                 .build();
     }

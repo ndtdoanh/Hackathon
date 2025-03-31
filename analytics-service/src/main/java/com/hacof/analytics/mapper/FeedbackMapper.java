@@ -13,15 +13,22 @@ import com.hacof.analytics.entity.FeedbackDetail;
 
 @Mapper(componentModel = "spring")
 public interface FeedbackMapper {
-    @Mapping(target = "teamId", source = "team.id")
+    @Mapping(target = "id", expression = "java(String.valueOf(feedback.getId()))")
+    @Mapping(target = "teamId", expression = "java(String.valueOf(feedback.getTeam().getId()))")
+    @Mapping(
+            target = "createdByUserName",
+            expression = "java(feedback.getCreatedBy() != null ? feedback.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     @Mapping(
             target = "targetId",
-            expression =
-                    "java(feedback.getHackathon() != null ? feedback.getHackathon().getId() : feedback.getMentor().getId())")
+            expression = "java(feedback.getHackathon() != null ? String.valueOf(feedback.getHackathon().getId()) : String.valueOf(feedback.getMentor().getId()))"
+    )
     FeedbackResponse toFeedbackResponse(Feedback feedback);
 
     List<FeedbackResponse> toFeedbackResponses(List<Feedback> feedbacks);
 
+    @Mapping(target = "feedbackId", expression = "java(String.valueOf(feedbackDetail.getFeedback().getId()))")
     FeedbackDetailResponse toFeedbackDetailResponse(FeedbackDetail feedbackDetail);
 
     @Mapping(target = "id", ignore = true)

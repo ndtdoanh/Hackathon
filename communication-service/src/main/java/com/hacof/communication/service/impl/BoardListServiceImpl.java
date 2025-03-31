@@ -30,7 +30,7 @@ public class BoardListServiceImpl implements BoardListService {
 
     @Override
     public BoardListResponseDTO createBoardList(BoardListRequestDTO boardListRequestDTO) {
-        Optional<Board> boardOptional = boardRepository.findById(boardListRequestDTO.getBoardId());
+        Optional<Board> boardOptional = boardRepository.findById(Long.parseLong(boardListRequestDTO.getBoardId()));
         if (!boardOptional.isPresent()) {
             throw new IllegalArgumentException("Board not found!");
         }
@@ -48,7 +48,7 @@ public class BoardListServiceImpl implements BoardListService {
             throw new IllegalArgumentException("BoardList not found!");
         }
 
-        Optional<Board> boardOptional = boardRepository.findById(boardListRequestDTO.getBoardId());
+        Optional<Board> boardOptional = boardRepository.findById(Long.parseLong(boardListRequestDTO.getBoardId()));
         if (!boardOptional.isPresent()) {
             throw new IllegalArgumentException("Board not found!");
         }

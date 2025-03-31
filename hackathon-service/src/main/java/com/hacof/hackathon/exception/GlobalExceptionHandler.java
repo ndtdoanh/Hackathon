@@ -1,9 +1,9 @@
 package com.hacof.hackathon.exception;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -33,14 +33,34 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(statusCode, ex.getMessage());
     }
 
+    //    @ExceptionHandler(MethodArgumentNotValidException.class)
+    //    public ResponseEntity<CommonResponse<List<String>>> handleValidationExceptions(MethodArgumentNotValidException
+    // ex) {
+    //        List<String> errors = ex.getBindingResult().getAllErrors().stream()
+    //                .map(error -> ((FieldError) error).getField() + ": " + error.getDefaultMessage())
+    //                .collect(Collectors.toList());
+    //
+    //        log.error("Validation failed: {}", errors);
+    //        return buildResponseEntity(StatusCode.INVALID_INPUT, "Validation failed", errors);
+    //    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CommonResponse<List<String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        List<String> errors = ex.getBindingResult().getAllErrors().stream()
-                .map(error -> ((FieldError) error).getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.toList());
+    public ResponseEntity<CommonResponse<Map<String, String>>> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
 
-        log.error("Validation failed: {}", errors);
-        return buildResponseEntity(StatusCode.INVALID_INPUT, "Validation failed", errors);
+        CommonResponse<Map<String, String>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(StatusCode.INVALID_INPUT.getCode(), "Invalid input"),
+                errors);
+
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(Exception.class)

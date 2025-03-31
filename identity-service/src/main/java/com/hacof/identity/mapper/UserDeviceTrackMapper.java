@@ -11,8 +11,12 @@ import com.hacof.identity.entity.UserDeviceTrack;
 public interface UserDeviceTrackMapper {
     UserDeviceTrack toUserDeviceTrack(LogDeviceStatusRequest request);
 
-    @Mapping(source = "userDevice.id", target = "userDeviceId")
-    @Mapping(source = "createdDate", target = "createdDate")
-    @Mapping(source = "lastModifiedDate", target = "lastModifiedDate")
+    @Mapping(target = "id", expression = "java(String.valueOf(userDeviceTrack.getId()))")
+    @Mapping(
+            target = "userDeviceId",
+            expression =
+                    "java(userDeviceTrack.getUserDevice() != null ? String.valueOf(userDeviceTrack.getUserDevice().getId()) : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     UserDeviceTrackResponse toUserDeviceTrackResponse(UserDeviceTrack userDeviceTrack);
 }

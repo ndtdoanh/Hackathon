@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.hacof.hackathon.entity.Location;
 
-public interface LocationRepository extends JpaRepository<Location, Long>, JpaSpecificationExecutor<Location> {}
+public interface LocationRepository extends JpaRepository<Location, Long>, JpaSpecificationExecutor<Location> {
+    boolean existsByName(String name);
+}

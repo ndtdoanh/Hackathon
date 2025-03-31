@@ -6,14 +6,12 @@ import java.util.UUID;
 
 import jakarta.validation.Valid;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.dto.RoundDTO;
-import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.service.RoundService;
-import com.hacof.hackathon.specification.RoundSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
@@ -23,40 +21,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/rounds")
 @RequiredArgsConstructor
 public class RoundController {
-    final RoundService roundService;
-
-    @GetMapping
-    public ResponseEntity<CommonResponse<List<RoundDTO>>> getAllRounds(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Integer maxTeam,
-            @RequestParam(required = false) Boolean isVideoRound) {
-        Specification<Round> spec = Specification.where(null);
-        spec = spec.and(id != null ? RoundSpecification.hasId(id) : null);
-        spec = spec.and(name != null ? RoundSpecification.hasName(name) : null);
-        spec = spec.and(description != null ? RoundSpecification.hasDescription(description) : null);
-        spec = spec.and(startDate != null ? RoundSpecification.hasStartDate(startDate) : null);
-        spec = spec.and(endDate != null ? RoundSpecification.hasEndDate(endDate) : null);
-        spec = spec.and(maxTeam != null ? RoundSpecification.hasMaxTeam(maxTeam) : null);
-        spec = spec.and(isVideoRound != null ? RoundSpecification.hasIsVideoRound(isVideoRound) : null);
-
-        List<RoundDTO> rounds = roundService.getRounds(spec);
-        CommonResponse<List<RoundDTO>> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched all rounds successfully"),
-                rounds);
-        return ResponseEntity.ok(response);
-    }
+    private final RoundService roundService;
 
     @PostMapping
-    // @PreAuthorize("hasAuthority('CREATE_ROUND')")
+    @PreAuthorize("hasAuthority('CREATE_ROUND')")
     public ResponseEntity<CommonResponse<RoundDTO>> createRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
-        RoundDTO roundDTO = roundService.createRound(request.getData());
+        RoundDTO roundDTO = roundService.create(request.getData());
         CommonResponse<RoundDTO> response = new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
@@ -67,9 +37,9 @@ public class RoundController {
     }
 
     @PutMapping
-    // @PreAuthorize("hasAuthority('UPDATE_ROUND')")
+    @PreAuthorize("hasAuthority('UPDATE_ROUND')")
     public ResponseEntity<CommonResponse<RoundDTO>> updateRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
-        RoundDTO roundDTO = roundService.updateRound(request.getData().getId(), request.getData());
+        RoundDTO roundDTO = roundService.update(request.getData().getId(), request.getData());
         CommonResponse<RoundDTO> response = new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
@@ -80,15 +50,39 @@ public class RoundController {
     }
 
     @DeleteMapping
-    // @PreAuthorize("hasAuthority('DELETE_ROUND')")
-    public ResponseEntity<CommonResponse<Void>> deleteRound(@RequestBody CommonRequest<RoundDTO> request) {
-        roundService.deleteRound(request.getData().getId());
-        CommonResponse<Void> response = new CommonResponse<>(
+    @PreAuthorize("hasAuthority('DELETE_ROUND')")
+    public ResponseEntity<CommonResponse<RoundDTO>> deleteRound(@RequestBody CommonRequest<RoundDTO> request) {
+        roundService.delete(Long.parseLong(request.getData().getId()));
+        CommonResponse<RoundDTO> response = new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
                 new CommonResponse.Result("0000", "Round deleted successfully"),
                 null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<RoundDTO>>> getAllRounds() {
+        List<RoundDTO> rounds = roundService.getAll();
+        CommonResponse<List<RoundDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all rounds successfully"),
+                rounds);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<RoundDTO>> getRoundById(@PathVariable Long id) {
+        RoundDTO round = roundService.getById(id);
+        CommonResponse<RoundDTO> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched round successfully"),
+                round);
         return ResponseEntity.ok(response);
     }
 }

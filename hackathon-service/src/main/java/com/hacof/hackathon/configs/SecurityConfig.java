@@ -25,7 +25,8 @@ public class SecurityConfig {
         "/api/v1/auth/outbound/authentication",
         "/v3/api-docs/**",
         "/swagger-ui/**",
-        "/swagger-ui/index.html"
+        "/swagger-ui/index.html",
+        "/api/v1/teams/**"
     };
 
     private final CustomJwtDecoder customJwtDecoder;

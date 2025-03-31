@@ -18,12 +18,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConversationResponse {
-    Long id;
+    String id;
     String name;
     ConversationType type;
-    Long teamId;
+    String teamId;
     Set<ConversationUserResponse> users;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    Long createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
 }

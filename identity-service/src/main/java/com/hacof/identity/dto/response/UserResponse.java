@@ -8,27 +8,36 @@ import com.hacof.identity.constant.Status;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    long id;
+    String id;
     String username;
+    String email;
     String firstName;
     String lastName;
     Boolean isVerified;
     Status status;
     Boolean noPassword;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    Long createdByUserId;
-    Set<RoleResponse> roles;
+    String phone;
+    String bio;
+    Set<String> skills;
+    String avatarUrl;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
+    Set<UserRoleResponse> userRoles;
+    Set<UserHackathonResponse> userHackathons;
+    Set<UserTeamResponse> userTeams;
 
     public Boolean getIsVerified() {
         return isVerified != null ? isVerified : false;

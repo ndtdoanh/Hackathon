@@ -11,10 +11,13 @@ import com.hacof.identity.entity.UserDevice;
 public interface UserDeviceMapper {
     UserDevice toUserDevice(AssignDeviceRequest request);
 
+    @Mapping(target = "id", expression = "java(String.valueOf(userDevice.getId()))")
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "device.id", target = "deviceId")
-    @Mapping(source = "createdBy.id", target = "createdByUserId")
-    @Mapping(source = "createdDate", target = "createdDate")
-    @Mapping(source = "lastModifiedDate", target = "lastModifiedDate")
+    @Mapping(
+            target = "createdByUserName",
+            expression = "java(userDevice.getCreatedBy() != null ? userDevice.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     UserDeviceResponse toUserDeviceResponse(UserDevice userDevice);
 }

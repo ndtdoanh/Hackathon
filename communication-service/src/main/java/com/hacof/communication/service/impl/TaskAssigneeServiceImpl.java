@@ -35,11 +35,13 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
 
     @Override
     public TaskAssigneeResponseDTO createTaskAssignee(TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
-        Optional<Task> taskOptional = taskRepository.findById(taskAssigneeRequestDTO.getTaskId());
+        Long taskId = Long.parseLong(taskAssigneeRequestDTO.getTaskId());
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
             throw new IllegalArgumentException("Task not found!");
         }
-        Optional<User> userOptional = userRepository.findById(taskAssigneeRequestDTO.getUserId());
+        Long userId = Long.parseLong(taskAssigneeRequestDTO.getUserId());
+        Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new IllegalArgumentException("User not found!");
         }
@@ -54,14 +56,18 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
     @Override
     public TaskAssigneeResponseDTO updateTaskAssignee(Long id, TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
         Optional<TaskAssignee> taskAssigneeOptional = taskAssigneeRepository.findById(id);
+
+        Long taskId = Long.parseLong(taskAssigneeRequestDTO.getTaskId());
+        Long userId = Long.parseLong(taskAssigneeRequestDTO.getUserId());
+
         if (!taskAssigneeOptional.isPresent()) {
             throw new IllegalArgumentException("TaskAssignee not found!");
         }
-        Optional<Task> taskOptional = taskRepository.findById(taskAssigneeRequestDTO.getTaskId());
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
             throw new IllegalArgumentException("Task not found!");
         }
-        Optional<User> userOptional = userRepository.findById(taskAssigneeRequestDTO.getUserId());
+        Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new IllegalArgumentException("User not found!");
         }

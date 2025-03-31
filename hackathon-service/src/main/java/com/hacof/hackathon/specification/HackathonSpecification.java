@@ -1,83 +1,81 @@
 package com.hacof.hackathon.specification;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.criteria.Predicate;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.hacof.hackathon.entity.Hackathon;
 
+import io.micrometer.common.util.StringUtils;
+
 public class HackathonSpecification {
-    public static Specification<Hackathon> hasId(Long id) {
+    public static Specification<Hackathon> searchByKeyword(String keyword) {
         return (root, query, cb) -> {
-            if (id == null) return null;
-            return cb.equal(root.get("id"), id);
-        };
-    }
-
-    public static Specification<Hackathon> hasName(String name) {
-        return (root, query, cb) -> {
-            if (name == null) return null;
-            return cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
-        };
-    }
-
-    public static Specification<Hackathon> hasDescription(String description) {
-        return (root, query, cb) -> {
-            if (description == null) return null;
-            return cb.like(cb.lower(root.get("description")), "%" + description.toLowerCase() + "%");
+            if (StringUtils.isBlank(keyword)) {
+                return null;
+            }
+            String likePattern = "%" + keyword.toLowerCase() + "%";
+            return cb.or(
+                    cb.like(cb.lower(root.get("title")), likePattern),
+                    cb.like(cb.lower(root.get("subTitle")), likePattern),
+                    cb.like(cb.lower(root.get("description")), likePattern),
+                    cb.like(cb.lower(root.get("information")), likePattern),
+                    cb.like(cb.lower(root.get("category")), likePattern),
+                    cb.like(cb.lower(root.get("organization")), likePattern));
         };
     }
 
     public static Specification<Hackathon> hasStatus(String status) {
         return (root, query, cb) -> {
-            if (status == null) return null;
+            if (StringUtils.isBlank(status)) {
+                return null;
+            }
             return cb.equal(root.get("status"), status);
         };
     }
 
-    public static Specification<Hackathon> startDateBetween(LocalDateTime startFrom, LocalDateTime startTo) {
+    public static Specification<Hackathon> datesBetween(LocalDateTime startDate, LocalDateTime endDate) {
         return (root, query, cb) -> {
-            if (startFrom == null || startTo == null) return null;
-            return cb.between(root.get("startDate"), startFrom, startTo);
+            if (startDate == null && endDate == null) {
+                return null;
+            }
+            List<Predicate> predicates = new ArrayList<>();
+            if (startDate != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("startDate"), startDate));
+            }
+            if (endDate != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("endDate"), endDate));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 
-    public static Specification<Hackathon> endDateBetween(LocalDateTime endFrom, LocalDateTime endTo) {
+    public static Specification<Hackathon> teamSizeRange(Integer minTeamSize, Integer maxTeamSize) {
         return (root, query, cb) -> {
-            if (endFrom == null || endTo == null) return null;
-            return cb.between(root.get("endDate"), endFrom, endTo);
+            if (minTeamSize == null && maxTeamSize == null) {
+                return null;
+            }
+            List<Predicate> predicates = new ArrayList<>();
+            if (minTeamSize != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("minTeamSize"), minTeamSize));
+            }
+            if (maxTeamSize != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("maxTeamSize"), maxTeamSize));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 
-    public static Specification<Hackathon> hasTeamSizeRange(Integer minSize, Integer maxSize) {
+    public static Specification<Hackathon> byCategory(String category) {
         return (root, query, cb) -> {
-            if (minSize == null || maxSize == null) return null;
-            return cb.and(
-                    cb.greaterThanOrEqualTo(root.get("minTeamSize"), minSize),
-                    cb.lessThanOrEqualTo(root.get("maxTeamSize"), maxSize));
+            if (StringUtils.isBlank(category)) {
+                return null;
+            }
+            return cb.equal(root.get("category"), category);
         };
-    }
-
-    public static Specification<Hackathon> hasMaxTeamsGreaterThan(Integer maxTeams) {
-        return (root, query, cb) -> {
-            if (maxTeams == null) return null;
-            return cb.greaterThanOrEqualTo(root.get("maxTeams"), maxTeams);
-        };
-    }
-
-    public static Specification<Hackathon> hasNumberRound(Integer numberRound) {
-        return (root, query, cb) -> {
-            if (numberRound == null) return null;
-            return cb.equal(root.get("numberRound"), numberRound);
-        };
-    }
-
-    public static Specification<Hackathon> isActive() {
-        return (root, query, cb) ->
-                cb.or(cb.equal(root.get("status"), "OPEN"), cb.equal(root.get("status"), "IN_PROGRESS"));
-    }
-
-    public static Specification<Hackathon> isUpcoming() {
-        return (root, query, cb) -> cb.greaterThan(root.get("startDate"), LocalDateTime.now());
     }
 }

@@ -16,11 +16,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleResponse {
-    long id;
+    String id;
     String name;
     String description;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    Long createdByUserId;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    String createdByUserName;
     Set<PermissionResponse> permissions;
 }

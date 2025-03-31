@@ -20,12 +20,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationDeliveryResponse {
-    Long id;
+    String id;
     NotificationResponse notification;
     Set<UserResponse> recipients;
     RoleType role;
     NotificationMethod method;
     NotificationStatus status;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

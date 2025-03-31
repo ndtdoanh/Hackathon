@@ -1,63 +1,51 @@
 package com.hacof.hackathon.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.mapstruct.*;
 
 import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.entity.*;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface HackathonMapper {
+    @Mapping(target = "id", expression = "java(String.valueOf(hackathon.getId()))")
+    @Mapping(
+            target = "createdByUserName",
+            expression = "java(hackathon.getCreatedBy() != null ? hackathon.getCreatedBy().getUsername() : null)")
+    @Mapping(
+            target = "lastModifiedByUserName",
+            expression =
+                    "java(hackathon.getLastModifiedBy() != null ? hackathon.getLastModifiedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
+    @Mapping(target = "minimumTeamMembers", source = "minTeamSize")
+    @Mapping(target = "maximumTeamMembers", source = "maxTeamSize")
+    @Mapping(target = "enrollmentStatus", source = "status")
+    @Mapping(target = "enrollStartDate", source = "startDate")
+    @Mapping(target = "enrollEndDate", source = "endDate")
+    @Mapping(target = "enrollmentCount", source = "maxTeams")
+    HackathonDTO toDto(Hackathon hackathon);
 
-    @Mapping(target = "roundNames", source = "rounds", qualifiedByName = "roundsToNames")
-    @Mapping(target = "currentTeamCount", source = "teamHackathons", qualifiedByName = "countTeams")
-    @Mapping(target = "registrationCount", source = "userHackathons", qualifiedByName = "countRegistrations")
-    @Mapping(target = "mentorCount", source = "mentorshipRequests", qualifiedByName = "countMentors")
-    @Mapping(target = "sponsorCount", source = "sponsorshipHackathons", qualifiedByName = "countSponsors")
-    HackathonDTO toDTO(Hackathon hackathon);
-
-    @Mapping(target = "rounds", ignore = true)
-    @Mapping(target = "teamHackathons", ignore = true)
-    @Mapping(target = "hackathonResults", ignore = true)
-    @Mapping(target = "userHackathons", ignore = true)
-    @Mapping(target = "teamRequests", ignore = true)
-    @Mapping(target = "individualRegistrationRequests", ignore = true)
-    @Mapping(target = "mentorshipRequests", ignore = true)
-    @Mapping(target = "mentorshipSessionRequests", ignore = true)
-    @Mapping(target = "sponsorshipHackathons", ignore = true)
-    @Mapping(target = "devices", ignore = true)
-    @Mapping(target = "feedbacks", ignore = true)
+    @Mapping(target = "minTeamSize", source = "minimumTeamMembers")
+    @Mapping(target = "maxTeamSize", source = "maximumTeamMembers")
+    @Mapping(target = "status", source = "enrollmentStatus")
+    @Mapping(target = "startDate", source = "enrollStartDate")
+    @Mapping(target = "endDate", source = "enrollEndDate")
+    @Mapping(target = "maxTeams", source = "enrollmentCount")
     Hackathon toEntity(HackathonDTO hackathonDTO);
 
-    @Named("roundsToNames")
-    default List<String> roundsToNames(List<Round> rounds) {
-        if (rounds == null) return List.of();
-        return rounds.stream().map(Round::getRoundTitle).collect(Collectors.toList());
-    }
+    //    @Mapping(target = "id", ignore = true)
+    //    @Mapping(target = "createdBy", ignore = true)
+    //    @Mapping(target = "createdDate", ignore = true)
+    //    @Mapping(target = "lastModifiedBy", expression = "java(mapStringToUser(dto.getLastModifiedByUserName()))")
+    //    @Mapping(target = "lastModifiedDate", source = "lastModifiedAt")
+    //    void updateEntityFromDto(HackathonDTO dto, @MappingTarget Hackathon entity);
 
-    @Named("countTeams")
-    default int countTeams(List<TeamHackathon> teams) {
-        return teams != null ? teams.size() : 0;
-    }
-
-    @Named("countRegistrations")
-    default int countRegistrations(List<UserHackathon> registrations) {
-        return registrations != null ? registrations.size() : 0;
-    }
-
-    @Named("countMentors")
-    default int countMentors(List<MentorshipRequest> mentors) {
-        return mentors != null ? mentors.size() : 0;
-    }
-
-    @Named("countSponsors")
-    default int countSponsors(List<SponsorshipHackathon> sponsors) {
-        return sponsors != null ? sponsors.size() : 0;
-    }
-
-    default List<HackathonDTO> toDTOs(List<Hackathon> hackathons) {
-        return hackathons.stream().map(this::toDTO).collect(Collectors.toList());
+    default User mapStringToUser(String username) {
+        if (username == null) {
+            return null;
+        }
+        User user = new User();
+        user.setUsername(username);
+        return user;
     }
 }

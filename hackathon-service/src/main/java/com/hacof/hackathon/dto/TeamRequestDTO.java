@@ -1,27 +1,28 @@
 package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import com.hacof.hackathon.constant.Status;
+import com.hacof.hackathon.constant.TeamRequestStatus;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamRequestDTO {
-    private long id;
-    private String teamName;
-    private String description;
-    private long hackathonId;
-    private long leaderId;
-    private Status status; // PENDING, APPROVED, REJECTED, PROCESSING
-    private long reviewedBy;
-    private LocalDateTime reviewedAt;
+    String id;
+    // HackathonDTO hackathon;
+    String hackathonId;
+    String name;
+    TeamRequestStatus status;
+    LocalDateTime confirmationDeadline;
+    private String note;
     private String createdBy;
     private LocalDateTime createdDate;
+    private String reviewedById;
+    private List<TeamRequestMemberDTO> teamRequestMembers;
 }

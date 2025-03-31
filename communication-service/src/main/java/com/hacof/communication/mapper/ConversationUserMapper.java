@@ -8,7 +8,15 @@ import com.hacof.communication.entity.ConversationUser;
 
 @Mapper(componentModel = "spring")
 public interface ConversationUserMapper {
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "deletedByUserId", source = "deletedBy.id")
+    @Mapping(
+            target = "userId",
+            expression =
+                    "java(conversationUser.getUser() != null ? String.valueOf(conversationUser.getUser().getId()) : null)")
+    @Mapping(
+            target = "deletedByUserName",
+            expression =
+                    "java(conversationUser.getDeletedBy() != null ? conversationUser.getDeletedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     ConversationUserResponse toConversationUserResponse(ConversationUser conversationUser);
 }

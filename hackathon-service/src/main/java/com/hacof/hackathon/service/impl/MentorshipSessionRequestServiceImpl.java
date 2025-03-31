@@ -1,17 +1,14 @@
 package com.hacof.hackathon.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
-import com.hacof.hackathon.entity.MentorshipRequest;
 import com.hacof.hackathon.entity.MentorshipSessionRequest;
-import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.MentorshipSessionRequestMapper;
-import com.hacof.hackathon.repository.MentorshipRequestRepository;
 import com.hacof.hackathon.repository.MentorshipSessionRequestRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.MentorshipSessionRequestService;
@@ -19,36 +16,39 @@ import com.hacof.hackathon.service.MentorshipSessionRequestService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MentorshipSessionRequestServiceImpl implements MentorshipSessionRequestService {
     private final MentorshipSessionRequestRepository mentorshipSessionRequestRepository;
     private final MentorshipSessionRequestMapper mentorshipSessionRequestMapper;
     private final UserRepository userRepository;
-    private final MentorshipRequestRepository mentorshipRequestRepository;
 
     @Override
-    public MentorshipSessionRequestDTO createSessionRequest(Long mentorshipRequestId, String sessionDetails) {
-        MentorshipRequest mentorshipRequest = mentorshipRequestRepository
-                .findById(mentorshipRequestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Mentorship request not found"));
-
-        MentorshipSessionRequest sessionRequest = new MentorshipSessionRequest();
-        sessionRequest.setMentorshipRequest(mentorshipRequest);
-        sessionRequest.setSessionDetails(sessionDetails);
-        sessionRequest.setStatus(Status.PENDING);
-
-        sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
-        return mentorshipSessionRequestMapper.toDTO(sessionRequest);
+    public MentorshipSessionRequestDTO requestSession(
+            String mentorTeamId, LocalDateTime startTime, LocalDateTime endTime, String location, String description) {
+        //        MentorshipSessionRequest sessionRequest = new MentorshipSessionRequest();
+        //        sessionRequest.setMentor(userRepository
+        //                .findById(Long.parseLong(mentorTeamId))
+        //                .orElseThrow(() -> new IllegalArgumentException("Invalid mentor team ID")));
+        //        sessionRequest.setStartTime(startTime);
+        //        sessionRequest.setEndTime(endTime);
+        //        sessionRequest.setLocation(location);
+        //        sessionRequest.setDescription(description);
+        //        sessionRequest.setStatus(Status.PENDING);
+        //        sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
+        //        return mentorshipSessionRequestMapper.toDTO(sessionRequest);
+        return null;
     }
 
     @Override
     public MentorshipSessionRequestDTO approveSession(Long sessionId, Long mentorId) {
         MentorshipSessionRequest sessionRequest = mentorshipSessionRequestRepository
                 .findById(sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Session request not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid session ID"));
         sessionRequest.setStatus(Status.APPROVED);
         sessionRequest.setEvaluatedBy(
-                userRepository.findById(mentorId).orElseThrow(() -> new ResourceNotFoundException("Mentor not found")));
+                userRepository.findById(mentorId).orElseThrow(() -> new IllegalArgumentException("Invalid mentor ID")));
+        sessionRequest.setEvaluatedAt(LocalDateTime.now());
         sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
         return mentorshipSessionRequestMapper.toDTO(sessionRequest);
     }
@@ -57,18 +57,12 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     public MentorshipSessionRequestDTO rejectSession(Long sessionId, Long mentorId) {
         MentorshipSessionRequest sessionRequest = mentorshipSessionRequestRepository
                 .findById(sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Session request not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid session ID"));
         sessionRequest.setStatus(Status.REJECTED);
         sessionRequest.setEvaluatedBy(
-                userRepository.findById(mentorId).orElseThrow(() -> new ResourceNotFoundException("Mentor not found")));
+                userRepository.findById(mentorId).orElseThrow(() -> new IllegalArgumentException("Invalid mentor ID")));
+        sessionRequest.setEvaluatedAt(LocalDateTime.now());
         sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
         return mentorshipSessionRequestMapper.toDTO(sessionRequest);
-    }
-
-    @Override
-    public List<MentorshipSessionRequestDTO> getSessionsByMentorshipRequest(Long mentorshipRequestId) {
-        List<MentorshipSessionRequest> sessions =
-                mentorshipSessionRequestRepository.findByMentorshipRequestId(mentorshipRequestId);
-        return sessions.stream().map(mentorshipSessionRequestMapper::toDTO).collect(Collectors.toList());
     }
 }

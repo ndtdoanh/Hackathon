@@ -34,7 +34,7 @@ public class FeedbackDetailController {
         FeedbackDetailResponse response = feedbackDetailService.createFeedbackDetail(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<FeedbackDetailResponse>builder()
-                        .result(response)
+                        .data(response)
                         .message("Feedback Detail created successfully")
                         .build());
     }
@@ -43,7 +43,7 @@ public class FeedbackDetailController {
     @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetails() {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
-                .result(feedbackDetailService.getFeedbackDetails())
+                .data(feedbackDetailService.getFeedbackDetails())
                 .message("Retrieved all feedback details")
                 .build();
     }
@@ -52,7 +52,7 @@ public class FeedbackDetailController {
     @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAIL')")
     public ApiResponse<FeedbackDetailResponse> getFeedbackDetail(@PathVariable Long id) {
         return ApiResponse.<FeedbackDetailResponse>builder()
-                .result(feedbackDetailService.getFeedbackDetail(id))
+                .data(feedbackDetailService.getFeedbackDetail(id))
                 .message("Retrieved feedback detail")
                 .build();
     }
@@ -63,7 +63,7 @@ public class FeedbackDetailController {
             @PathVariable Long id, @RequestBody @Valid FeedbackDetailUpdateRequest request) {
 
         return ApiResponse.<FeedbackDetailResponse>builder()
-                .result(feedbackDetailService.updateFeedbackDetail(id, request))
+                .data(feedbackDetailService.updateFeedbackDetail(id, request))
                 .message("Feedback Detail updated successfully")
                 .build();
     }
@@ -81,7 +81,7 @@ public class FeedbackDetailController {
     @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackId(@RequestParam Long feedbackId) {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
-                .result(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
+                .data(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
                 .message("Retrieved feedback details by feedbackId")
                 .build();
     }
@@ -90,7 +90,7 @@ public class FeedbackDetailController {
     @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_MENTOR')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByMentorId(@RequestParam Long mentorId) {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
-                .result(feedbackDetailService.getFeedbackDetailsByMentorId(mentorId))
+                .data(feedbackDetailService.getFeedbackDetailsByMentorId(mentorId))
                 .message("Retrieved feedback details by mentorId")
                 .build();
     }
@@ -100,7 +100,7 @@ public class FeedbackDetailController {
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByHackathonId(@RequestParam Long hackathonId) {
         List<FeedbackDetailResponse> response = feedbackDetailService.getFeedbackDetailsByHackathonId(hackathonId);
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
-                .result(response)
+                .data(response)
                 .message("Retrieved feedback details by hackathon")
                 .build();
     }

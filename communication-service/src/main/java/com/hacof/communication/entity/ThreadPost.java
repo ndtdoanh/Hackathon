@@ -1,5 +1,8 @@
 package com.hacof.communication.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.OnDelete;
@@ -7,9 +10,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

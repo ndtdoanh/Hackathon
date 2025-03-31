@@ -28,7 +28,7 @@ public class ThreadPostLikeServiceImpl implements ThreadPostLikeService {
 
     @Override
     public ThreadPostLikeResponseDTO createThreadPostLike(ThreadPostLikeRequestDTO requestDTO) {
-        Long threadPostId = requestDTO.getThreadPostId();
+        Long threadPostId = Long.parseLong(requestDTO.getThreadPostId());
         ThreadPost threadPost = threadPostRepository
                 .findById(threadPostId)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + threadPostId));

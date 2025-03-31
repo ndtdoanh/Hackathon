@@ -9,13 +9,31 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.entity.User;
+import com.hacof.hackathon.exception.CustomException;
 import com.hacof.hackathon.repository.UserRepository;
 
 @Component
 public class SecurityUtil {
 
     private final UserRepository userRepository;
+
+    public static String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new CustomException(StatusCode.ERROR, "User is not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        }
+
+        return principal.toString();
+    }
 
     public SecurityUtil(UserRepository userRepository) {
         this.userRepository = userRepository;

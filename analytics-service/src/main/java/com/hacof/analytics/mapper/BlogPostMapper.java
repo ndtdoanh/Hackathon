@@ -15,6 +15,12 @@ public interface BlogPostMapper {
     @Mapping(target = "status", ignore = true)
     BlogPost toEntity(BlogPostRequest request);
 
+    @Mapping(target = "id", expression = "java(String.valueOf(blogPost.getId()))")
+    @Mapping(
+            target = "createdByUserName",
+            expression = "java(blogPost.getCreatedBy() != null ? blogPost.getCreatedBy().getUsername() : null)")
+    @Mapping(target = "createdAt", source = "createdDate")
+    @Mapping(target = "updatedAt", source = "lastModifiedDate")
     BlogPostResponse toResponse(BlogPost blogPost);
 
     @Mapping(target = "id", ignore = true)

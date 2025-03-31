@@ -30,7 +30,9 @@ public class TaskCommentServiceImpl implements TaskCommentService {
 
     @Override
     public TaskCommentResponseDTO createTaskComment(TaskCommentRequestDTO taskCommentRequestDTO) {
-        Optional<Task> taskOptional = taskRepository.findById(taskCommentRequestDTO.getTaskId());
+        Long taskId = Long.parseLong(taskCommentRequestDTO.getTaskId());
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+
         if (!taskOptional.isPresent()) {
             throw new IllegalArgumentException("Task not found!");
         }
@@ -50,7 +52,9 @@ public class TaskCommentServiceImpl implements TaskCommentService {
             throw new IllegalArgumentException("TaskComment not found!");
         }
 
-        Optional<Task> taskOptional = taskRepository.findById(taskCommentRequestDTO.getTaskId());
+        Long taskId = Long.parseLong(taskCommentRequestDTO.getTaskId());
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+
         if (!taskOptional.isPresent()) {
             throw new IllegalArgumentException("Task not found!");
         }

@@ -14,7 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import com.hacof.identity.constant.Status;
+import com.hacof.identity.constant.TeamRequestMemberStatus;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -48,7 +48,7 @@ public class TeamRequestMember extends AuditBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    TeamRequestMemberStatus status;
 
     @Column(name = "responded_at")
     LocalDateTime respondedAt;

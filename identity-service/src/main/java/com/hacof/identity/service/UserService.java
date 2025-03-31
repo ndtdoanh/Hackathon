@@ -1,6 +1,10 @@
 package com.hacof.identity.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
@@ -8,6 +12,7 @@ import com.hacof.identity.dto.request.PasswordCreateRequest;
 import com.hacof.identity.dto.request.ResetPasswordRequest;
 import com.hacof.identity.dto.request.UserCreateRequest;
 import com.hacof.identity.dto.request.UserUpdateRequest;
+import com.hacof.identity.dto.response.AvatarResponse;
 import com.hacof.identity.dto.response.UserResponse;
 
 public interface UserService {
@@ -19,7 +24,13 @@ public interface UserService {
 
     List<UserResponse> getUsers();
 
-    UserResponse getUser(Long id);
+    UserResponse getUserById(Long id);
+
+    UserResponse getUserByUserName(String username);
+
+    List<UserResponse> getUsersByRoles();
+
+    List<UserResponse> getTeamMembers();
 
     UserResponse updateMyInfo(UserUpdateRequest request);
 
@@ -34,4 +45,6 @@ public interface UserService {
     String forgotPassword(ForgotPasswordRequest request);
 
     String resetPassword(ResetPasswordRequest request);
+
+    AvatarResponse uploadAvatar(MultipartFile file, Authentication authentication) throws IOException;
 }

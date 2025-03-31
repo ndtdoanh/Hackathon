@@ -29,7 +29,7 @@ public class ConversationController {
     public ApiResponse<ConversationResponse> createSingleConversation(
             @RequestBody @Valid ConversationCreateRequest request) {
         return ApiResponse.<ConversationResponse>builder()
-                .result(conversationService.createSingleConversation(request))
+                .data(conversationService.createSingleConversation(request))
                 .message("Single conversation created successfully")
                 .build();
     }
@@ -39,7 +39,7 @@ public class ConversationController {
     public ApiResponse<ConversationResponse> createGroupConversation(
             @RequestBody @Valid ConversationCreateRequest request) {
         return ApiResponse.<ConversationResponse>builder()
-                .result(conversationService.createGroupConversation(request))
+                .data(conversationService.createGroupConversation(request))
                 .message("Group conversation created successfully")
                 .build();
     }
@@ -48,7 +48,7 @@ public class ConversationController {
     //    @PreAuthorize("hasAuthority('GET_CONVERSATION')")
     public ApiResponse<ConversationResponse> getConversationById(@PathVariable("id") Long id) {
         return ApiResponse.<ConversationResponse>builder()
-                .result(conversationService.getConversationById(id))
+                .data(conversationService.getConversationById(id))
                 .message("Conversation retrieved successfully")
                 .build();
     }
@@ -57,7 +57,7 @@ public class ConversationController {
     //    @PreAuthorize("hasAuthority('GET_USER_CONVERSATIONS')")
     public ApiResponse<List<ConversationResponse>> getConversationsByUserId(@PathVariable("userId") Long userId) {
         return ApiResponse.<List<ConversationResponse>>builder()
-                .result(conversationService.getConversationsByUserId(userId))
+                .data(conversationService.getConversationsByUserId(userId))
                 .message("User conversations retrieved successfully")
                 .build();
     }
@@ -67,7 +67,7 @@ public class ConversationController {
     public ApiResponse<ConversationResponse> updateConversation(
             @PathVariable("id") Long id, @RequestBody ConversationUpdateRequest request) {
         return ApiResponse.<ConversationResponse>builder()
-                .result(conversationService.updateConversation(id, request))
+                .data(conversationService.updateConversation(id, request))
                 .message("Conversation updated successfully")
                 .build();
     }

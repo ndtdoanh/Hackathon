@@ -1,27 +1,28 @@
 package com.hacof.communication.mapper;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.constant.ScheduleEventStatus;
 import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
 import com.hacof.communication.dto.response.*;
 import com.hacof.communication.dto.response.RoleResponse;
 import com.hacof.communication.entity.*;
 
-import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Component
 public class ScheduleEventAttendeeMapper {
 
     // Chuyển từ ScheduleEventAttendeeRequestDTO sang ScheduleEventAttendee entity
-    public ScheduleEventAttendee toEntity(ScheduleEventAttendeeRequestDTO requestDTO, ScheduleEvent scheduleEvent, User user) {
+    public ScheduleEventAttendee toEntity(
+            ScheduleEventAttendeeRequestDTO requestDTO, ScheduleEvent scheduleEvent, User user) {
         return ScheduleEventAttendee.builder()
                 .scheduleEvent(scheduleEvent)
                 .user(user)
-                .statusD(ScheduleEventStatus.INVITED)  // Mặc định là INVITED
+                .status(ScheduleEventStatus.INVITED) // Mặc định là INVITED
                 .build();
     }
 
@@ -35,10 +36,10 @@ public class ScheduleEventAttendeeMapper {
         User user = scheduleEventAttendee.getUser();
 
         return ScheduleEventAttendeeResponseDTO.builder()
-                .id(scheduleEventAttendee.getId())
+                .id(String.valueOf(scheduleEvent.getId()))
                 .scheduleEvent(scheduleEvent != null ? mapScheduleEventToDto(scheduleEvent) : null)
                 .user(user != null ? mapUserToDto(user) : null) // Trả về toàn bộ thông tin UserResponse
-                .status(scheduleEventAttendee.getStatusD())
+                .status(scheduleEventAttendee.getStatus())
                 .createdDate(scheduleEventAttendee.getCreatedDate())
                 .lastModifiedDate(scheduleEventAttendee.getLastModifiedDate())
                 .build();
@@ -47,8 +48,11 @@ public class ScheduleEventAttendeeMapper {
     // Chuyển đổi ScheduleEvent sang ScheduleEventResponseDTO
     private ScheduleEventResponseDTO mapScheduleEventToDto(ScheduleEvent scheduleEvent) {
         return ScheduleEventResponseDTO.builder()
-                .id(scheduleEvent.getId())
-                .schedule(scheduleEvent.getSchedule() != null ? mapScheduleToDto(scheduleEvent.getSchedule()) : null) // Fix Schedule null
+                .id(String.valueOf(scheduleEvent.getId()))
+                .schedule(
+                        scheduleEvent.getSchedule() != null
+                                ? mapScheduleToDto(scheduleEvent.getSchedule())
+                                : null) // Fix Schedule null
                 .name(scheduleEvent.getName())
                 .description(scheduleEvent.getDescription())
                 .location(scheduleEvent.getLocation())
@@ -58,15 +62,18 @@ public class ScheduleEventAttendeeMapper {
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
                 .createdDate(scheduleEvent.getCreatedDate())
                 .lastModifiedDate(scheduleEvent.getLastModifiedDate())
-                .createdBy(scheduleEvent.getCreatedBy() != null ? scheduleEvent.getCreatedBy().getUsername() : null)
+                .createdBy(
+                        scheduleEvent.getCreatedBy() != null
+                                ? scheduleEvent.getCreatedBy().getUsername()
+                                : null)
                 .fileUrls(mapFileUrls(scheduleEvent))
                 .build();
     }
 
     private ScheduleResponseDTO mapScheduleToDto(Schedule schedule) {
         return ScheduleResponseDTO.builder()
-                .id(schedule.getId())
-                .teamId(schedule.getTeam().getId())
+                .id(String.valueOf(schedule.getId()))
+                .teamId(String.valueOf(schedule.getTeam().getId()))
                 .name(schedule.getName())
                 .description(schedule.getDescription())
                 .createdDate(schedule.getCreatedDate())
@@ -78,18 +85,13 @@ public class ScheduleEventAttendeeMapper {
     // Chuyển đổi User sang UserResponse
     private UserResponse mapUserToDto(User user) {
         return UserResponse.builder()
-                .id(user.getId())
+                .id(String.valueOf(user.getId()))
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .isVerified(user.getIsVerified())
                 .status(user.getStatus())
-                .noPassword(false) // Mặc định là false nếu không có giá trị
-                .createdDate(user.getCreatedDate())
-                .lastModifiedDate(user.getLastModifiedDate())
-                .createdByUserId(user.getCreatedBy() != null ? user.getCreatedBy().getId() : null)
-                .roles(mapUserRoles(user.getUserRoles())) // Convert roles
                 .build();
     }
 
@@ -97,38 +99,45 @@ public class ScheduleEventAttendeeMapper {
     private Set<RoleResponse> mapUserRoles(Set<UserRole> userRoles) {
         return userRoles != null
                 ? userRoles.stream()
-                .map(userRole -> RoleResponse.builder()
-                        .id(userRole.getRole().getId())
-                        .name(userRole.getRole().getName())
-                        .description(userRole.getRole().getDescription()) // Ensure Role entity has getDescription()
-                        .createdDate(userRole.getRole().getCreatedDate())
-                        .lastModifiedDate(userRole.getRole().getLastModifiedDate())
-                        .createdByUserId(userRole.getRole().getCreatedBy() != null ? userRole.getRole().getCreatedBy().getId() : null)
-                        .permissions(mapPermissions(userRole.getRole().getPermissions())) // Convert permissions
-                        .build())
-                .collect(Collectors.toSet())
+                        .map(userRole -> RoleResponse.builder()
+                                .id(String.valueOf(userRole.getRole().getId()))
+                                .name(userRole.getRole().getName())
+                                .description(
+                                        userRole.getRole().getDescription()) // Ensure Role entity has getDescription()
+                                .createdDate(userRole.getRole().getCreatedDate())
+                                .lastModifiedDate(userRole.getRole().getLastModifiedDate())
+                                .createdByUserId(
+                                        userRole.getRole().getCreatedBy() != null
+                                                ? String.valueOf(userRole.getRole()
+                                                        .getCreatedBy()
+                                                        .getId())
+                                                : null)
+                                .permissions(mapPermissions(userRole.getRole().getPermissions())) // Convert permissions
+                                .build())
+                        .collect(Collectors.toSet())
                 : Collections.emptySet();
     }
 
     private Set<PermissionResponse> mapPermissions(Set<Permission> permissions) {
         return permissions != null
                 ? permissions.stream()
-                .map(permission -> PermissionResponse.builder()
-                        .id(permission.getId())
-                        .name(permission.getName())
-                        .apiPath(permission.getApiPath())
-                        .method(permission.getMethod())
-                        .module(permission.getModule())
-                        .build())
-                .collect(Collectors.toSet())
+                        .map(permission -> PermissionResponse.builder()
+                                .id(String.valueOf(permission.getId()))
+                                .name(permission.getName())
+                                .apiPath(permission.getApiPath())
+                                .method(permission.getMethod())
+                                .module(permission.getModule())
+                                .build())
+                        .collect(Collectors.toSet())
                 : Collections.emptySet();
     }
-
 
     // Ánh xạ fileUrls từ ScheduleEvent để tránh null
     private List<String> mapFileUrls(ScheduleEvent scheduleEvent) {
         return scheduleEvent.getFileUrls() != null
-                ? scheduleEvent.getFileUrls().stream().map(file -> file.getFileUrl()).collect(Collectors.toList())
+                ? scheduleEvent.getFileUrls().stream()
+                        .map(file -> file.getFileUrl())
+                        .collect(Collectors.toList())
                 : Collections.emptyList();
     }
 }

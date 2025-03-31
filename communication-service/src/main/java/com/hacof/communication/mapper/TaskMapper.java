@@ -24,7 +24,7 @@ public class TaskMapper {
     // Chuyển từ Task entity sang TaskResponseDTO
     public TaskResponseDTO toDto(Task task) {
         return TaskResponseDTO.builder()
-                .id(task.getId())
+                .id(String.valueOf(task.getId())) // Chuyển đổi long -> String
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .position(task.getPosition())

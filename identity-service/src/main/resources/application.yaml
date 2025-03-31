@@ -1,7 +1,5 @@
 server:
   port: 8080
-#  servlet:
-#    context-path: /identity
 
 spring:
   application:
@@ -43,6 +41,13 @@ jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
   valid-duration: 3600
   refreshable-duration: 864000
+
+aws:
+  s3:
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region: ${AWS_REGION}
+    bucket-name: ${AWS_S3_BUCKET_NAME}
 
 eureka:
   client:
