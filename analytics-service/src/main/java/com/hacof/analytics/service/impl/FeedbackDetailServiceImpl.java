@@ -39,7 +39,8 @@ public class FeedbackDetailServiceImpl implements FeedbackDetailService {
         User currentUser = AuditContext.getCurrentUser();
 
         feedbackDetailRepository
-                .findByFeedback_IdAndFeedback_CreatedBy_Id(Long.parseLong(request.getFeedbackId()), currentUser.getId()) // Ép kiểu
+                .findByFeedback_IdAndFeedback_CreatedBy_Id(
+                        Long.parseLong(request.getFeedbackId()), currentUser.getId()) // Ép kiểu
                 .ifPresent(feedbackDetail -> {
                     throw new AppException(ErrorCode.FEEDBACK_DETAIL_ALREADY_EXISTS);
                 });

@@ -143,8 +143,7 @@ public class TeamRoundJudgeController {
 
     @DeleteMapping("/by-team-round-judge")
     public ResponseEntity<CommonResponse<Void>> deleteByTeamRoundAndJudge(
-            @RequestParam Long teamRoundId,
-            @RequestParam Long judgeId) {
+            @RequestParam Long teamRoundId, @RequestParam Long judgeId) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
             service.deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(teamRoundId, judgeId);
@@ -161,5 +160,4 @@ public class TeamRoundJudgeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

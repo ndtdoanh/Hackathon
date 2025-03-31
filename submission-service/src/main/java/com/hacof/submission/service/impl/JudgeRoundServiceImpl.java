@@ -117,8 +117,8 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
             JudgeRound judgeRound = judgeRoundOptional.get();
             judgeRoundRepository.delete(judgeRound);
         } else {
-            throw new IllegalArgumentException("JudgeRound not found for judgeId: " + judgeId + " and roundId: " + roundId);
+            throw new IllegalArgumentException(
+                    "JudgeRound not found for judgeId: " + judgeId + " and roundId: " + roundId);
         }
     }
-
 }

@@ -22,8 +22,8 @@ public interface FeedbackMapper {
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
     @Mapping(
             target = "targetId",
-            expression = "java(feedback.getHackathon() != null ? String.valueOf(feedback.getHackathon().getId()) : String.valueOf(feedback.getMentor().getId()))"
-    )
+            expression =
+                    "java(feedback.getHackathon() != null ? String.valueOf(feedback.getHackathon().getId()) : String.valueOf(feedback.getMentor().getId()))")
     FeedbackResponse toFeedbackResponse(Feedback feedback);
 
     List<FeedbackResponse> toFeedbackResponses(List<Feedback> feedbacks);

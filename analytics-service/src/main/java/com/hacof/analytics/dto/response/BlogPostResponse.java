@@ -1,5 +1,7 @@
 package com.hacof.analytics.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.hacof.analytics.constant.BlogPostStatus;
 
 import lombok.AccessLevel;
@@ -8,8 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor

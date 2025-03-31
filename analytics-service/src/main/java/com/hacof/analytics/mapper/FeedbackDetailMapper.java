@@ -3,12 +3,12 @@ package com.hacof.analytics.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.hacof.analytics.dto.request.FeedbackDetailCreateRequest;
 import com.hacof.analytics.dto.response.FeedbackDetailResponse;
 import com.hacof.analytics.entity.Feedback;
 import com.hacof.analytics.entity.FeedbackDetail;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface FeedbackDetailMapper {

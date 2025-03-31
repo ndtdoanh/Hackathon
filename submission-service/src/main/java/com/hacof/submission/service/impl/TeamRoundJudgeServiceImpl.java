@@ -107,13 +107,14 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
 
     @Override
     public void deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(Long teamRoundId, Long judgeId) {
-        Optional<TeamRoundJudge> teamRoundJudge = teamRoundJudgeRepository.findByTeamRoundIdAndJudgeId(teamRoundId, judgeId);
+        Optional<TeamRoundJudge> teamRoundJudge =
+                teamRoundJudgeRepository.findByTeamRoundIdAndJudgeId(teamRoundId, judgeId);
 
         if (!teamRoundJudge.isPresent()) {
-            throw new IllegalArgumentException("No TeamRoundJudge found for teamRoundId: " + teamRoundId + " and judgeId: " + judgeId);
+            throw new IllegalArgumentException(
+                    "No TeamRoundJudge found for teamRoundId: " + teamRoundId + " and judgeId: " + judgeId);
         }
 
         teamRoundJudgeRepository.delete(teamRoundJudge.get());
     }
-
 }

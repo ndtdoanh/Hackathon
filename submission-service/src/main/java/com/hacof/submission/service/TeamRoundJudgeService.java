@@ -20,5 +20,4 @@ public interface TeamRoundJudgeService {
     List<TeamRoundJudgeResponseDTO> getTeamRoundJudgesByTeamRoundId(Long teamRoundId);
 
     void deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(Long teamRoundId, Long judgeId);
-
 }

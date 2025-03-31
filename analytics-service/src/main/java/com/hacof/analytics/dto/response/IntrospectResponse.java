@@ -1,7 +1,5 @@
 package com.hacof.analytics.dto.response;
 
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
