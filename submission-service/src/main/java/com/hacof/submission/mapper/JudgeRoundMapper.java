@@ -47,12 +47,12 @@ public class JudgeRoundMapper {
                 .judge(mapUserToDto(entity.getJudge()))
                 .round(mapRoundToDto(entity.getRound()))
                 .isDeleted(entity.isDeleted())
-                .createdBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
-                .createdDate(
+                .createdByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
+                .createdAt(
                         entity.getCreatedDate() != null
                                 ? entity.getCreatedDate().toString()
                                 : null)
-                .lastModifiedDate(
+                .updatedAt(
                         entity.getLastModifiedDate() != null
                                 ? entity.getLastModifiedDate().toString()
                                 : null)
@@ -77,9 +77,9 @@ public class JudgeRoundMapper {
                         .id(String.valueOf(userRole.getRole().getId()))
                         .name(userRole.getRole().getName())
                         .description(userRole.getRole().getDescription())
-                        .createdDate(userRole.getRole().getCreatedDate())
-                        .lastModifiedDate(userRole.getRole().getLastModifiedDate())
-                        .createdByUserId(
+                        .createdAt(userRole.getRole().getCreatedDate())
+                        .updatedAt(userRole.getRole().getLastModifiedDate())
+                        .createdByUserName(
                                 userRole.getRole().getCreatedBy() != null
                                         ? userRole.getRole().getCreatedBy().getId()
                                         : null)
@@ -112,8 +112,8 @@ public class JudgeRoundMapper {
                 .roundNumber(round.getRoundNumber())
                 .roundTitle(round.getRoundTitle())
                 .status(round.getStatus() != null ? round.getStatus().name() : "UNKNOWN")
-                .createdDate(round.getCreatedDate())
-                .lastModifiedDate(round.getLastModifiedDate())
+                .createdAt(round.getCreatedDate())
+                .updatedAt(round.getLastModifiedDate())
                 .build();
     }
 
@@ -137,9 +137,9 @@ public class JudgeRoundMapper {
                 .contact(hackathon.getContact())
                 .category(hackathon.getCategory())
                 .status(hackathon.getStatus() != null ? hackathon.getStatus().name() : "UNKNOWN")
-                .createdDate(hackathon.getCreatedDate())
-                .lastModifiedDate(hackathon.getLastModifiedDate())
-                .createdBy(
+                .createAt(hackathon.getCreatedDate())
+                .updateAt(hackathon.getLastModifiedDate())
+                .createdByUserName(
                         hackathon.getCreatedBy() != null
                                 ? hackathon.getCreatedBy().getUsername()
                                 : null)
