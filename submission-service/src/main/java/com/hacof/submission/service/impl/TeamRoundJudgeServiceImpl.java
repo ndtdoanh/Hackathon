@@ -39,32 +39,25 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
 
     @Override
     public TeamRoundJudgeResponseDTO updateTeamRoundJudge(Long id, TeamRoundJudgeRequestDTO requestDTO) {
-        // Find the existing TeamRoundJudge entity by ID
         Optional<TeamRoundJudge> teamRoundJudgeOptional = teamRoundJudgeRepository.findById(id);
         if (!teamRoundJudgeOptional.isPresent()) {
             throw new IllegalArgumentException("TeamRoundJudge not found with ID " + id);
         }
 
-        // Get the existing TeamRoundJudge entity
         TeamRoundJudge teamRoundJudge = teamRoundJudgeOptional.get();
 
-        // Update the entity using the provided request DTO
         teamRoundJudgeMapper.updateEntityFromDTO(requestDTO, teamRoundJudge);
 
-        // Save the updated entity back to the repository
         teamRoundJudge = teamRoundJudgeRepository.save(teamRoundJudge);
 
-        // Return the updated response DTO
         return teamRoundJudgeMapper.toResponseDTO(teamRoundJudge);
     }
 
     @Override
     public void deleteTeamRoundJudge(Long id) {
-        // Check if the TeamRoundJudge exists
         if (!teamRoundJudgeRepository.existsById(id)) {
             throw new IllegalArgumentException("TeamRoundJudge not found with ID " + id);
         }
-        // Delete the TeamRoundJudge by ID
         teamRoundJudgeRepository.deleteById(id);
     }
 
@@ -72,17 +65,29 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
     public TeamRoundJudgeResponseDTO getTeamRoundJudgeById(Long id) {
         TeamRoundJudge entity = teamRoundJudgeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("TeamRoundJudge not found with ID " + id));
-        return teamRoundJudgeMapper.toResponseDTO(entity); // Map to response DTO after finding the entity
+        return teamRoundJudgeMapper.toResponseDTO(entity);
     }
 
     @Override
     public List<TeamRoundJudgeResponseDTO> getAllTeamRoundJudges() {
-        // Fetch all TeamRoundJudges from the repository
         List<TeamRoundJudge> teamRoundJudges = teamRoundJudgeRepository.findAll();
 
-        // Convert the list of entities to response DTOs
         return teamRoundJudges.stream()
                 .map(teamRoundJudgeMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<TeamRoundJudgeResponseDTO> getTeamRoundJudgesByTeamRoundId(Long teamRoundId) {
+        List<TeamRoundJudge> teamRoundJudges = teamRoundJudgeRepository.findByTeamRoundId(teamRoundId);
+
+        if (teamRoundJudges.isEmpty()) {
+            throw new IllegalArgumentException("No TeamRoundJudge found for teamRoundId: " + teamRoundId);
+        }
+
+        return teamRoundJudges.stream()
+                .map(teamRoundJudgeMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

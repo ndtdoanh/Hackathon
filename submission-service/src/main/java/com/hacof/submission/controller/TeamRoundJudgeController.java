@@ -119,4 +119,25 @@ public class TeamRoundJudgeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/by-team-round/{teamRoundId}")
+    public ResponseEntity<CommonResponse<List<TeamRoundJudgeResponseDTO>>> getByTeamRoundId(@PathVariable Long teamRoundId) {
+        CommonResponse<List<TeamRoundJudgeResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TeamRoundJudgeResponseDTO> data = service.getTeamRoundJudgesByTeamRoundId(teamRoundId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Fetched team round judges successfully!");
+            response.setData(data);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

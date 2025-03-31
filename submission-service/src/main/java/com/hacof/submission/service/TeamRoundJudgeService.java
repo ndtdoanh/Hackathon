@@ -16,4 +16,7 @@ public interface TeamRoundJudgeService {
     TeamRoundJudgeResponseDTO getTeamRoundJudgeById(Long id);
 
     List<TeamRoundJudgeResponseDTO> getAllTeamRoundJudges();
+
+    List<TeamRoundJudgeResponseDTO> getTeamRoundJudgesByTeamRoundId(Long teamRoundId);
+
 }
