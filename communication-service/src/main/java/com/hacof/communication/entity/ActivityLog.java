@@ -1,7 +1,5 @@
 package com.hacof.communication.entity;
 
-import java.util.Map;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,10 +13,8 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.type.SqlTypes;
 
 import com.hacof.communication.constant.Status;
 
@@ -54,9 +50,9 @@ public class ActivityLog extends AuditBase {
     @Column(name = "target")
     String target;
 
-//    @Column(name = "changed_fields")
-//    @JdbcTypeCode(SqlTypes.JSON)
-//    Map<String, Object> changedFields;
+    //    @Column(name = "changed_fields")
+    //    @JdbcTypeCode(SqlTypes.JSON)
+    //    Map<String, Object> changedFields;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

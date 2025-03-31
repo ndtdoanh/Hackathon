@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Set;
 
 import com.hacof.communication.constant.NotificationMethod;
@@ -21,11 +22,16 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationDeliveryResponse {
     String id;
-    NotificationResponse notification;
+//    NotificationResponse notification;
+    String notificationId;
     Set<UserResponse> recipients;
     RoleType role;
     NotificationMethod method;
     NotificationStatus status;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
+    public Set<UserResponse> getRecipients() {
+        return recipients != null ? recipients : Collections.emptySet();
+    }
 }

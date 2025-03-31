@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.hacof.communication.constant.NotificationType;
 
@@ -23,6 +24,7 @@ public class NotificationResponse {
     String content;
     String metadata;
     boolean isRead;
+    List<NotificationDeliveryResponse> notificationDeliveries;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 }
