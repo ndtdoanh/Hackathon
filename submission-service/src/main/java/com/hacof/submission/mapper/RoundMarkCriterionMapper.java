@@ -13,11 +13,12 @@ import com.hacof.submission.entity.RoundMarkCriterion;
 @Component
 public class RoundMarkCriterionMapper {
 
-    public RoundMarkCriterion toEntity(RoundMarkCriterionRequestDTO requestDTO) {
+    public RoundMarkCriterion toEntity(RoundMarkCriterionRequestDTO requestDTO, Round round) {
         return RoundMarkCriterion.builder()
                 .name(requestDTO.getName())
                 .maxScore(requestDTO.getMaxScore())
                 .note(requestDTO.getNote())
+                .round(round)
                 .build();
     }
 
@@ -31,9 +32,9 @@ public class RoundMarkCriterionMapper {
                 .name(entity.getName())
                 .maxScore(entity.getMaxScore())
                 .note(entity.getNote())
-                .createdBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
-                .createdDate(entity.getCreatedDate())
-                .lastModifiedDate(entity.getLastModifiedDate())
+                .createdByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null)
+                .createdAt(entity.getCreatedDate())
+                .updatedAt(entity.getLastModifiedDate())
                 .round(entity.getRound() != null ? mapRoundToDto(entity.getRound()) : null) // Ensure Round is mapped
                 .build();
     }
@@ -47,8 +48,8 @@ public class RoundMarkCriterionMapper {
                 .roundNumber(round.getRoundNumber())
                 .roundTitle(round.getRoundTitle())
                 .status(round.getStatus() != null ? round.getStatus().name() : "UNKNOWN")
-                .createdDate(round.getCreatedDate())
-                .lastModifiedDate(round.getLastModifiedDate())
+                .createdAt(round.getCreatedDate())
+                .updatedAt(round.getLastModifiedDate())
                 .build();
     }
 
@@ -72,12 +73,11 @@ public class RoundMarkCriterionMapper {
                 .contact(hackathon.getContact())
                 .category(hackathon.getCategory())
                 .status(hackathon.getStatus() != null ? hackathon.getStatus().name() : "UNKNOWN")
-                .createdDate(hackathon.getCreatedDate())
-                .lastModifiedDate(hackathon.getLastModifiedDate())
-                .createdBy(
-                        hackathon.getCreatedBy() != null
-                                ? hackathon.getCreatedBy().getUsername()
-                                : null)
+                .createAt(hackathon.getCreatedDate())
+                .updateAt(hackathon.getLastModifiedDate())
+                .createdByUserName(
+                        hackathon.getCreatedBy() != null ? hackathon.getCreatedBy().getUsername() : "Unknown"
+                )
                 .build();
     }
 }

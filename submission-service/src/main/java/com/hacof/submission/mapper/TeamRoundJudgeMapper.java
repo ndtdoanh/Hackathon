@@ -36,9 +36,9 @@ public class TeamRoundJudgeMapper {
     public TeamRoundJudgeResponseDTO toResponseDTO(TeamRoundJudge entity) {
         TeamRoundJudgeResponseDTO responseDTO = new TeamRoundJudgeResponseDTO();
         responseDTO.setId(String.valueOf(entity.getId()));
-        responseDTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
-        responseDTO.setCreatedDate(entity.getCreatedDate() != null ? entity.getCreatedDate().toString() : null);
-        responseDTO.setLastModifiedDate(entity.getLastModifiedDate() != null ? entity.getLastModifiedDate().toString() : null);
+        responseDTO.setCreatedByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        responseDTO.setCreatedAt(entity.getCreatedDate() != null ? entity.getCreatedDate().toString() : null);
+        responseDTO.setUpdatedAt(entity.getLastModifiedDate() != null ? entity.getLastModifiedDate().toString() : null);
 
         responseDTO.setTeamRound(mapTeamRoundToDto(entity.getTeamRound()));
         responseDTO.setJudge(mapUserToDto(entity.getJudge()));
@@ -52,8 +52,8 @@ public class TeamRoundJudgeMapper {
         teamRoundResponseDTO.setRoundId(String.valueOf(teamRound.getRound().getId()));
         teamRoundResponseDTO.setStatus(teamRound.getStatus());
         teamRoundResponseDTO.setDescription(teamRound.getDescription());
-        teamRoundResponseDTO.setCreatedDate(teamRound.getCreatedDate().toString());
-        teamRoundResponseDTO.setLastModifiedDate(teamRound.getLastModifiedDate().toString());
+        teamRoundResponseDTO.setCreatedAt(teamRound.getCreatedDate().toString());
+        teamRoundResponseDTO.setUpdatedAt(teamRound.getLastModifiedDate().toString());
         return teamRoundResponseDTO;
     }
 

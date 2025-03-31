@@ -1,6 +1,7 @@
 package com.hacof.submission.mapper;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +46,9 @@ public class SubmissionMapper {
                 .fileUrls(mapFileUrls(submission))
                 .judgeSubmissions(mapJudgeSubmissions(submission))
                 .finalScore(submission.getFinalScore())
+                .createdAt(submission.getCreatedDate())
+                .updatedAt(submission.getLastModifiedDate())
+                .createdByUserName(submission.getCreatedBy() != null ? submission.getCreatedBy().getUsername() : null)
                 .build();
     }
 
@@ -64,13 +68,28 @@ public class SubmissionMapper {
                 .roundNumber(round.getRoundNumber())
                 .roundTitle(round.getRoundTitle())
                 .status(round.getStatus() != null ? round.getStatus().name() : "UNKNOWN")
-                .createdDate(round.getCreatedDate())
-                .lastModifiedDate(round.getLastModifiedDate())
+                .createdAt(round.getCreatedDate())
+                .updatedAt(round.getLastModifiedDate())
                 .build();
     }
 
     private TeamResponseDTO mapTeamToDto(Team team) {
-        return team != null ? new TeamResponseDTO(team) : null;
+        if (team == null) {
+            return null;
+        }
+
+        return TeamResponseDTO.builder()
+                .id(team.getId())
+                .name(team.getName())
+                .teamLeader(team.getTeamLeader() != null ? mapUserToDto(team.getTeamLeader()) : null)
+                .teamMembers(team.getTeamMembers() != null
+                        ? team.getTeamMembers().stream()
+                        .map(userTeam -> mapUserToDto(userTeam.getUser()))
+                        .collect(Collectors.toList())
+                        : null)
+                .bio(team.getBio())
+                .isDeleted(team.isDeleted())
+                .build();
     }
 
     private HackathonResponseDTO mapHackathonToDto(Hackathon hackathon) {
@@ -93,9 +112,9 @@ public class SubmissionMapper {
                 .contact(hackathon.getContact())
                 .category(hackathon.getCategory())
                 .status(hackathon.getStatus() != null ? hackathon.getStatus().name() : "UNKNOWN")
-                .createdDate(hackathon.getCreatedDate())
-                .lastModifiedDate(hackathon.getLastModifiedDate())
-                .createdBy(hackathon.getCreatedBy() != null ? hackathon.getCreatedBy().getUsername() : null)
+                .createAt(hackathon.getCreatedDate())
+                .updateAt(hackathon.getLastModifiedDate())
+                .createdByUserName(hackathon.getCreatedBy() != null ? hackathon.getCreatedBy().getUsername() : null)
                 .build();
     }
 
@@ -121,8 +140,15 @@ public class SubmissionMapper {
                         .judge(mapUserToDto(judgeSubmission.getJudge()))
                         .score(judgeSubmission.getScore())
                         .note(judgeSubmission.getNote())
-                        .createdDate(judgeSubmission.getCreatedDate() != null ? judgeSubmission.getCreatedDate().toString() : null)
-                        .lastModifiedDate(judgeSubmission.getLastModifiedDate() != null ? judgeSubmission.getLastModifiedDate().toString() : null)
+                        .judgeSubmissionDetails(
+                                judgeSubmission.getJudgeSubmissionDetails() != null && !judgeSubmission.getJudgeSubmissionDetails().isEmpty()
+                                        ? judgeSubmission.getJudgeSubmissionDetails().stream()
+                                        .map(this::mapJudgeSubmissionDetailToDto)
+                                        .collect(Collectors.toList())
+                                        : Collections.emptyList()
+                        )
+                        .createdAt(judgeSubmission.getCreatedDate() != null ? judgeSubmission.getCreatedDate().toString() : null)
+                        .updatedAt(judgeSubmission.getLastModifiedDate() != null ? judgeSubmission.getLastModifiedDate().toString() : null)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -153,9 +179,9 @@ public class SubmissionMapper {
                         .id(String.valueOf(userRole.getRole().getId()))
                         .name(userRole.getRole().getName())
                         .description(userRole.getRole().getDescription())
-                        .createdDate(userRole.getRole().getCreatedDate())
-                        .lastModifiedDate(userRole.getRole().getLastModifiedDate())
-                        .createdByUserId(userRole.getRole().getCreatedBy() != null ? userRole.getRole().getCreatedBy().getId() : null)
+                        .createdAt(userRole.getRole().getCreatedDate())
+                        .updatedAt(userRole.getRole().getLastModifiedDate())
+                        .createdByUserName(userRole.getRole().getCreatedBy() != null ? userRole.getRole().getCreatedBy().getId() : null)
                         .permissions(mapPermissions(userRole.getRole().getPermissions()))
                         .build())
                 .collect(Collectors.toSet());
@@ -176,4 +202,29 @@ public class SubmissionMapper {
                         .build())
                 .collect(Collectors.toSet());
     }
+
+    public JudgeSubmissionDetailResponseDTO mapJudgeSubmissionDetailToDto(JudgeSubmissionDetail detail) {
+        return JudgeSubmissionDetailResponseDTO.builder()
+                .id(String.valueOf(detail.getId()))
+                .roundMarkCriterion(mapRoundMarkCriterionToDto(detail.getRoundMarkCriterion())) // ✅ Gọi hàm map
+                .score(detail.getScore())
+                .note(detail.getNote())
+                .createdAt(detail.getCreatedDate())
+                .updatedAt(detail.getLastModifiedDate())
+                .build();
+    }
+
+    private RoundMarkCriterionResponseDTO mapRoundMarkCriterionToDto(RoundMarkCriterion criterion) {
+        return RoundMarkCriterionResponseDTO.builder()
+                .id(String.valueOf(criterion.getId()))
+                .name(criterion.getName())
+                .round(mapRoundToDto(criterion.getRound()))
+                .maxScore(criterion.getMaxScore())
+                .note(criterion.getNote())
+                .createdAt(criterion.getCreatedDate())
+                .updatedAt(criterion.getLastModifiedDate())
+                .createdByUserName(criterion.getCreatedBy().getUsername())
+                .build();
+    }
+
 }
