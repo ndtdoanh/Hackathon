@@ -1,5 +1,7 @@
 package com.hacof.hackathon.mapper;
 
+import java.time.LocalDateTime;
+
 import org.mapstruct.*;
 
 import com.hacof.hackathon.dto.HackathonDTO;
@@ -19,26 +21,26 @@ public interface HackathonMapper {
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
     @Mapping(target = "minimumTeamMembers", source = "minTeamSize")
     @Mapping(target = "maximumTeamMembers", source = "maxTeamSize")
-    @Mapping(target = "enrollmentStatus", source = "status")
-    @Mapping(target = "enrollStartDate", source = "startDate")
-    @Mapping(target = "enrollEndDate", source = "endDate")
     @Mapping(target = "enrollmentCount", source = "maxTeams")
+    @Mapping(target = "enrollmentStatus", expression = "java(determineEnrollmentStatus(hackathon))")
     HackathonDTO toDto(Hackathon hackathon);
 
     @Mapping(target = "minTeamSize", source = "minimumTeamMembers")
     @Mapping(target = "maxTeamSize", source = "maximumTeamMembers")
-    @Mapping(target = "status", source = "enrollmentStatus")
-    @Mapping(target = "startDate", source = "enrollStartDate")
-    @Mapping(target = "endDate", source = "enrollEndDate")
     @Mapping(target = "maxTeams", source = "enrollmentCount")
     Hackathon toEntity(HackathonDTO hackathonDTO);
 
-    //    @Mapping(target = "id", ignore = true)
-    //    @Mapping(target = "createdBy", ignore = true)
-    //    @Mapping(target = "createdDate", ignore = true)
-    //    @Mapping(target = "lastModifiedBy", expression = "java(mapStringToUser(dto.getLastModifiedByUserName()))")
-    //    @Mapping(target = "lastModifiedDate", source = "lastModifiedAt")
-    //    void updateEntityFromDto(HackathonDTO dto, @MappingTarget Hackathon entity);
+    @Named("determineEnrollmentStatus")
+    default String determineEnrollmentStatus(Hackathon hackathon) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(hackathon.getStartDate())) {
+            return "UPCOMING";
+        } else if (now.isAfter(hackathon.getStartDate()) && now.isBefore(hackathon.getEndDate())) {
+            return "OPEN";
+        } else {
+            return "CLOSED";
+        }
+    }
 
     default User mapStringToUser(String username) {
         if (username == null) {

@@ -63,19 +63,25 @@ public class HackathonServiceImpl implements HackathonService {
         existingHackathon.setTitle(hackathonDTO.getTitle());
         existingHackathon.setSubTitle(hackathonDTO.getSubTitle());
         existingHackathon.setBannerImageUrl(hackathonDTO.getBannerImageUrl());
-        existingHackathon.setDescription(hackathonDTO.getDescription());
-        existingHackathon.setInformation(hackathonDTO.getInformation());
+        existingHackathon.setEnrollStartDate(hackathonDTO.getEnrollStartDate());
+        existingHackathon.setEnrollEndDate(hackathonDTO.getEnrollEndDate());
         existingHackathon.setStartDate(hackathonDTO.getEnrollStartDate());
         existingHackathon.setEndDate(hackathonDTO.getEnrollEndDate());
+        existingHackathon.setDescription(hackathonDTO.getDescription());
+        existingHackathon.setInformation(hackathonDTO.getInformation());
         existingHackathon.setMinTeamSize(hackathonDTO.getMinimumTeamMembers());
         existingHackathon.setMaxTeamSize(hackathonDTO.getMaximumTeamMembers());
         existingHackathon.setContact(hackathonDTO.getContact());
         existingHackathon.setCategory(hackathonDTO.getCategory());
+        existingHackathon.setOrganization(hackathonDTO.getOrganization());
         existingHackathon.setMaxTeams(hackathonDTO.getEnrollmentCount());
-        existingHackathon.setStatus(Status.valueOf(hackathonDTO.getEnrollmentStatus()));
+        existingHackathon.setStatus(Status.valueOf(hackathonDTO.getStatus()));
 
+        // still not change createdBy
+        User createdBy = existingHackathon.getCreatedBy();
         existingHackathon.setLastModifiedBy(currentUser);
         existingHackathon.setLastModifiedDate(LocalDateTime.now());
+        existingHackathon.setCreatedBy(createdBy);
         return hackathonMapper.toDto(hackathonRepository.save(existingHackathon));
     }
 
@@ -97,7 +103,7 @@ public class HackathonServiceImpl implements HackathonService {
         List<Hackathon> hackathons = hackathonRepository.findAll(spec);
 
         if (hackathons.isEmpty()) {
-            throw new ResourceNotFoundException("No hackathons found matching the criteria");
+            throw new ResourceNotFoundException("No hackathons found");
         }
 
         log.debug("Found {} hackathons matching the criteria", hackathons.size());

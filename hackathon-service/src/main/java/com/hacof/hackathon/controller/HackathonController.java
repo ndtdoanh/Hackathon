@@ -22,7 +22,6 @@ import com.hacof.hackathon.specification.HackathonSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,36 +34,23 @@ public class HackathonController {
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
-            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false) Integer minTeamSize,
             @RequestParam(required = false) Integer maxTeamSize) {
-        log.debug(
-                "Searching hackathons with criteria - keyword: {}, status: {}, category: {}",
-                keyword,
-                status,
-                category);
 
-        Specification<Hackathon> spec = Specification.where(null);
-
-        if (StringUtils.isNotBlank(keyword)) {
-            spec = spec.and(HackathonSpecification.searchByKeyword(keyword));
-        }
-        if (StringUtils.isNotBlank(status)) {
-            spec = spec.and(HackathonSpecification.hasStatus(status));
-        }
-        if (StringUtils.isNotBlank(category)) {
-            spec = spec.and(HackathonSpecification.byCategory(category));
-        }
-        if (startDate != null || endDate != null) {
-            spec = spec.and(HackathonSpecification.datesBetween(startDate, endDate));
-        }
-        if (minTeamSize != null || maxTeamSize != null) {
-            spec = spec.and(HackathonSpecification.teamSizeRange(minTeamSize, maxTeamSize));
-        }
+        Specification<Hackathon> spec = Specification.where(HackathonSpecification.hasId(id)
+                .and(HackathonSpecification.hasTitle(title))
+                .and(HackathonSpecification.hasDescription(description))
+                .and(HackathonSpecification.hasStatus(status))
+                .and(HackathonSpecification.hasCategory(category))
+                .and(HackathonSpecification.hasMaximumTeamMembers(maxTeamSize))
+                .and(HackathonSpecification.hasMinimumTeamMembers(minTeamSize)));
 
         List<HackathonDTO> hackathons = hackathonService.getHackathons(spec);
 

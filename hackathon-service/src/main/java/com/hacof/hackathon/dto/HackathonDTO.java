@@ -33,10 +33,43 @@ public class HackathonDTO {
     @URL(message = "Banner Image URL must be a valid URL")
     String bannerImageUrl;
 
+    @NotNull(message = "Enroll Start Date is required")
+    @FutureOrPresent(message = "Enroll Start Date must be in the present or future")
+    LocalDateTime enrollStartDate;
+
+    @NotNull(message = "Enroll End Date is required")
+    @FutureOrPresent(message = "Enroll End Date must be in the present or future")
+    LocalDateTime enrollEndDate;
+
+    @NotNull(message = "Max Teams is required")
+    int enrollmentCount;
+
+    @NotNull(message = " Start Date is required")
+    @FutureOrPresent(message = "Start Date must be in the present or future")
+    LocalDateTime startDate;
+
+    @NotNull(message = " End Date is required")
+    @FutureOrPresent(message = " End Date must be in the present or future")
+    LocalDateTime endDate;
+
     @NotBlank(message = "Information is required")
     String information;
 
     String description;
+
+    @NotBlank(message = "Contact is required")
+    String contact;
+
+    @NotBlank(message = "Category is required")
+    String category; // Used for category filtering
+
+    @NotBlank(message = "Organization is required")
+    String organization;
+
+    String enrollmentStatus; // OPEN - UP_COMING - CLOSED
+
+    @NotNull(message = "Hackathon Status is required")
+    String status; // DRAFT - OPEN - ON_GOING - CLOSED
 
     @Min(value = 1, message = "Minimum Team Members must be greater than 0")
     @Max(value = 5, message = "Minimum Team Members must be less than 5")
@@ -46,31 +79,8 @@ public class HackathonDTO {
     @Max(value = 5, message = "Maximum Team Members must be less than 5")
     int maximumTeamMembers; // maxTeamSize
 
-    @NotBlank(message = "Contact is required")
-    String contact;
-
-    @NotBlank(message = "Category is required")
-    String category; // Used for category filtering
-
-    @NotNull(message = "Status is required")
-    String enrollmentStatus; // status
-
-    @NotNull(message = "Start Date is required")
-    @FutureOrPresent(message = "Start Date must be in the present or future")
-    LocalDateTime enrollStartDate;
-
-    @NotNull(message = "End Date is required")
-    @FutureOrPresent(message = "End Date must be in the present or future")
-    LocalDateTime enrollEndDate;
-
-    @NotNull(message = "Max Teams is required")
-    int enrollmentCount;
-
     @JsonIgnore
     List<String> documentation; // Document public URLs
-
-    @JsonIgnore
-    String organization; // Used for organization filtering
 
     @JsonIgnore
     List<Long> roundIds;

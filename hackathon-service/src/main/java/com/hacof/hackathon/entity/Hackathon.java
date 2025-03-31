@@ -38,6 +38,12 @@ public class Hackathon extends AuditUserBase {
     @Column(name = "banner_image_url")
     String bannerImageUrl;
 
+    @Column(name = "enroll_start_date", columnDefinition = "datetime(6)")
+    LocalDateTime enrollStartDate;
+
+    @Column(name = "enroll_end_date", columnDefinition = "datetime(6)")
+    LocalDateTime enrollEndDate;
+
     @Lob
     @Column(name = "description")
     String description;
@@ -67,9 +73,12 @@ public class Hackathon extends AuditUserBase {
     @Column(name = "category")
     String category;
 
+    @Column(name = "organization")
+    String organization;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    Status status; // DRAFT - OPEN - ON_GOING - CLOSED
 
     @OneToMany(
             mappedBy = "hackathon",
@@ -86,7 +95,6 @@ public class Hackathon extends AuditUserBase {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<HackathonResult> hackathonResults = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OneToMany(
             mappedBy = "hackathon",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
@@ -112,7 +120,6 @@ public class Hackathon extends AuditUserBase {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<SponsorshipHackathon> sponsorshipHackathons = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(
             mappedBy = "hackathon",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
