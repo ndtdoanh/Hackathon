@@ -90,8 +90,6 @@ public class ScheduleEventAttendeeMapper {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .isVerified(user.getIsVerified())
-                .status(user.getStatus())
                 .build();
     }
 

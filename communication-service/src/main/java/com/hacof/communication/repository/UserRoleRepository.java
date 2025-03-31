@@ -15,4 +15,7 @@ import com.hacof.communication.entity.UserRole;
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     @Query("SELECT ur.user FROM UserRole ur WHERE ur.role = :role")
     List<User> findUsersByRole(@Param("role") Role role);
+
+    @Query("SELECT ur FROM UserRole ur WHERE ur.user IN :users")
+    List<UserRole> findUserRolesByUsers(@Param("users") List<User> users);
 }
