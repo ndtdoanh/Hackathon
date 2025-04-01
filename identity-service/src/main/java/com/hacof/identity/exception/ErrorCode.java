@@ -38,7 +38,10 @@ public enum ErrorCode {
     ROUND_LOCATION_NOT_FOUND(1028, "Round location not found", HttpStatus.NOT_FOUND),
     FILE_UPLOAD_FAILED(1029, "File upload failed", HttpStatus.BAD_REQUEST),
     USER_DEVICE_TRACK_NOT_EXISTED(1030, "User device track not existed", HttpStatus.BAD_REQUEST),
-    DEVICE_NOT_FOUND(1031, "Device not found", HttpStatus.NOT_FOUND);
+    INVALID_ROLE(1031, "Invalid role", HttpStatus.BAD_REQUEST),
+    USER_HACKATHON_NOT_EXISTED(1032, "User hackathon not existed", HttpStatus.BAD_REQUEST),
+    USER_HACKATHON_ALREADY_EXISTS(1033, "User hackathon already exists", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1034, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
