@@ -1,5 +1,6 @@
 package com.hacof.identity.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.DeviceRequest;
@@ -27,8 +29,13 @@ public class DeviceController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_DEVICE')")
-    public ResponseEntity<ApiResponse<DeviceResponse>> createDevice(@RequestBody @Valid DeviceRequest request) {
-        DeviceResponse deviceResponse = deviceService.createDevice(request);
+    public ResponseEntity<ApiResponse<DeviceResponse>> createDevice(
+            @ModelAttribute @Valid DeviceRequest request,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files)
+            throws IOException {
+
+        DeviceResponse deviceResponse = deviceService.createDevice(request, files);
+
         ApiResponse<DeviceResponse> response = ApiResponse.<DeviceResponse>builder()
                 .data(deviceResponse)
                 .message("Device created successfully")
@@ -55,13 +62,20 @@ public class DeviceController {
                 .build();
     }
 
-    @PutMapping("/{Id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE_DEVICE')")
-    public ApiResponse<DeviceResponse> updateDevice(@PathVariable("Id") Long id, @RequestBody DeviceRequest request) {
-        return ApiResponse.<DeviceResponse>builder()
-                .data(deviceService.updateDevice(id, request))
+    public ResponseEntity<ApiResponse<DeviceResponse>> updateDevice(
+            @PathVariable("id") Long id,
+            @ModelAttribute DeviceRequest request,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files)
+            throws IOException {
+
+        DeviceResponse updatedDevice = deviceService.updateDevice(id, request, files);
+
+        return ResponseEntity.ok(ApiResponse.<DeviceResponse>builder()
+                .data(updatedDevice)
                 .message("Device updated successfully")
-                .build();
+                .build());
     }
 
     @DeleteMapping("/{Id}")

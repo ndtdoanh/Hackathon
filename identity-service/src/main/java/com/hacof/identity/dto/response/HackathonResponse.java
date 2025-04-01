@@ -1,6 +1,6 @@
 package com.hacof.identity.dto.response;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.hacof.identity.constant.Status;
@@ -23,8 +23,8 @@ public class HackathonResponse {
     String id;
     String bannerImageUrl;
     String title;
-    LocalDate startDate;
-    LocalDate endDate;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
     Status status;
     List<HackathonResultResponse> hackathonResults;
 }
