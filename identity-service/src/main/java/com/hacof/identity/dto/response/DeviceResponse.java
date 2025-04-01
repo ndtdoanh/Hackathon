@@ -1,6 +1,7 @@
 package com.hacof.identity.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.hacof.identity.constant.DeviceStatus;
 
@@ -18,9 +19,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceResponse {
     String id;
+    String hackathonId;
+    String roundId;
+    String roundLocationId;
     String name;
     String description;
     DeviceStatus status;
+    List<FileUrlResponse> fileUrls;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     String createdByUserName;

@@ -33,7 +33,11 @@ public enum ErrorCode {
     NEW_PASSWORD_SAME_AS_OLD(1023, "New password must not be the same as the old password", HttpStatus.BAD_REQUEST),
     INVALID_FILE_TYPE(1024, "Invalid file type. Only JPEG and PNG are allowed.", HttpStatus.BAD_REQUEST),
     ROLE_ID_IS_REQUIRED(1025, "RoleId is required", HttpStatus.BAD_REQUEST),
-    LOG_NOT_FOUND(1026, "Log not found", HttpStatus.NOT_FOUND);
+    HACKATHON_NOT_FOUND(1026, "Hackathon not found", HttpStatus.NOT_FOUND),
+    ROUND_NOT_FOUND(1027, "Round not found", HttpStatus.NOT_FOUND),
+    ROUND_LOCATION_NOT_FOUND(1028, "Round location not found", HttpStatus.NOT_FOUND),
+    FILE_UPLOAD_FAILED(1029, "File upload failed", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1030, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
