@@ -62,4 +62,12 @@ public class FileUrl extends AuditCreatedBase {
     @ManyToOne
     @JoinColumn(name = "user_device_track_id")
     UserDeviceTrack userDeviceTrack;
+
+    public FileUrl(String fileName, String fileUrl, String fileType, int fileSize, Device device) {
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
+        this.fileType = fileType;
+        this.fileSize = fileSize;
+        this.device = device;
+    }
 }

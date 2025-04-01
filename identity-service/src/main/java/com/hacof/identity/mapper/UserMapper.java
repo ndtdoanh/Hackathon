@@ -1,5 +1,6 @@
 package com.hacof.identity.mapper;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -87,14 +88,14 @@ public interface UserMapper {
                                 .id(String.valueOf(userHackathon.getHackathon().getId()))
                                 .bannerImageUrl(userHackathon.getHackathon().getBannerImageUrl())
                                 .title(userHackathon.getHackathon().getTitle())
-                                .startDate(userHackathon
+                                .startDate(LocalDateTime.from(userHackathon
                                         .getHackathon()
                                         .getStartDate()
-                                        .toLocalDate())
-                                .endDate(userHackathon
+                                        .toLocalDate()))
+                                .endDate(LocalDateTime.from(userHackathon
                                         .getHackathon()
                                         .getEndDate()
-                                        .toLocalDate())
+                                        .toLocalDate()))
                                 .status(userHackathon.getHackathon().getStatus())
                                 .hackathonResults(userHackathon.getHackathon().getHackathonResults().stream()
                                         .map(result -> HackathonResultResponse.builder()
