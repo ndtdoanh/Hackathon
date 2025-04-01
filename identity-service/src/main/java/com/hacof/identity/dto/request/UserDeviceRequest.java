@@ -1,6 +1,8 @@
 package com.hacof.identity.dto.request;
 
-import jakarta.validation.constraints.Min;
+import java.time.LocalDateTime;
+
+import com.hacof.identity.constant.UserDeviceStatus;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,10 +16,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AssignDeviceRequest {
-    @Min(value = 1, message = "User ID must be greater than 0")
-    long userId;
-
-    @Min(value = 1, message = "Device ID must be greater than 0")
-    long deviceId;
+public class UserDeviceRequest {
+    String userId;
+    String deviceId;
+    LocalDateTime timeFrom;
+    LocalDateTime timeTo;
+    UserDeviceStatus status;
 }
