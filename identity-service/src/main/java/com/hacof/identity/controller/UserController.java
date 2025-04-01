@@ -123,6 +123,15 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/users-by-created-by/{createdByUserName}")
+    @PreAuthorize("hasAuthority('GET_USER')")
+    public ApiResponse<List<UserResponse>> getUsersByCreatedByUserName(@PathVariable String createdByUserName) {
+        return ApiResponse.<List<UserResponse>>builder()
+                .data(userService.getUsersByCreatedByUserName(createdByUserName))
+                .message("Get users created by: " + createdByUserName)
+                .build();
+    }
+
     @GetMapping("/my-info")
     @PreAuthorize("hasAuthority('GET_MY_INFO')")
     public ApiResponse<UserResponse> getMyInfo() {
