@@ -70,4 +70,12 @@ public class FileUrl extends AuditCreatedBase {
         this.fileSize = fileSize;
         this.device = device;
     }
+
+    public FileUrl(String fileName, String fileUrl, String fileType, int fileSize, UserDevice userDevice) {
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
+        this.fileType = fileType;
+        this.fileSize = fileSize;
+        this.userDevice = userDevice;
+    }
 }
