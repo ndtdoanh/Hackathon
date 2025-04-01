@@ -1,20 +1,21 @@
 package com.hacof.identity.service.impl;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.hacof.identity.constant.UserDeviceStatus;
-import com.hacof.identity.dto.request.AssignDeviceRequest;
+import com.hacof.identity.dto.request.UserDeviceRequest;
 import com.hacof.identity.dto.response.UserDeviceResponse;
-import com.hacof.identity.entity.Device;
-import com.hacof.identity.entity.User;
+import com.hacof.identity.entity.FileUrl;
 import com.hacof.identity.entity.UserDevice;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.UserDeviceMapper;
 import com.hacof.identity.repository.DeviceRepository;
+import com.hacof.identity.repository.FileUrlRepository;
 import com.hacof.identity.repository.UserDeviceRepository;
 import com.hacof.identity.repository.UserRepository;
 import com.hacof.identity.service.UserDeviceService;
@@ -31,26 +32,50 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     UserRepository userRepository;
     DeviceRepository deviceRepository;
     UserDeviceMapper userDeviceMapper;
+    S3Service s3Service;
+    FileUrlRepository fileUrlRepository;
 
     @Override
-    public UserDeviceResponse assignDevice(AssignDeviceRequest request) {
-        User user = userRepository
-                .findById(request.getUserId())
+    public UserDeviceResponse createUserDevice(UserDeviceRequest request, List<MultipartFile> files)
+            throws IOException {
+
+        userRepository
+                .findById(Long.valueOf(request.getUserId()))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Device device = deviceRepository
-                .findById(request.getDeviceId())
-                .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_EXISTED));
+        deviceRepository
+                .findById(Long.valueOf(request.getDeviceId()))
+                .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
 
-        UserDevice userDevice = UserDevice.builder()
-                .user(user)
-                .device(device)
-                .status(UserDeviceStatus.ASSIGNED)
-                .timeFrom(LocalDateTime.now())
-                .build();
+        UserDevice userDevice = userDeviceMapper.toUserDevice(request);
+        UserDevice savedUserDevice = userDeviceRepository.save(userDevice);
 
-        userDeviceRepository.save(userDevice);
-        return userDeviceMapper.toUserDeviceResponse(userDevice);
+        if (files != null && !files.isEmpty()) {
+            List<FileUrl> fileUrlList = files.stream()
+                    .map(file -> {
+                        try {
+                            String fileUrl = s3Service.uploadFile(
+                                    file.getInputStream(),
+                                    file.getOriginalFilename(),
+                                    file.getSize(),
+                                    file.getContentType());
+
+                            return new FileUrl(
+                                    file.getOriginalFilename(),
+                                    fileUrl,
+                                    file.getContentType(),
+                                    (int) file.getSize(),
+                                    savedUserDevice);
+                        } catch (IOException e) {
+                            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                        }
+                    })
+                    .collect(Collectors.toList());
+            fileUrlRepository.saveAll(fileUrlList);
+            savedUserDevice.setFileUrls(fileUrlList);
+        }
+
+        return userDeviceMapper.toUserDeviceResponse(savedUserDevice);
     }
 
     @Override
@@ -66,5 +91,61 @@ public class UserDeviceServiceImpl implements UserDeviceService {
                 .findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED));
         return userDeviceMapper.toUserDeviceResponse(userDevice);
+    }
+
+    @Override
+    public UserDeviceResponse updateUserDevice(Long id, UserDeviceRequest request, List<MultipartFile> files)
+            throws IOException {
+        UserDevice existingUserDevice = userDeviceRepository
+                .findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED));
+
+        userDeviceMapper.updateUserDeviceFromRequest(request, existingUserDevice);
+
+        if (request.getUserId() != null) {
+            existingUserDevice.setUser(userRepository
+                    .findById(Long.valueOf(request.getUserId()))
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+        }
+        if (request.getDeviceId() != null) {
+            existingUserDevice.setDevice(deviceRepository
+                    .findById(Long.valueOf(request.getDeviceId()))
+                    .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND)));
+        }
+        if (files != null && !files.isEmpty()) {
+            List<FileUrl> fileUrlList = files.stream()
+                    .map(file -> {
+                        try {
+                            String fileUrl = s3Service.uploadFile(
+                                    file.getInputStream(),
+                                    file.getOriginalFilename(),
+                                    file.getSize(),
+                                    file.getContentType());
+
+                            return new FileUrl(
+                                    file.getOriginalFilename(),
+                                    fileUrl,
+                                    file.getContentType(),
+                                    (int) file.getSize(),
+                                    existingUserDevice);
+                        } catch (IOException e) {
+                            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                        }
+                    })
+                    .collect(Collectors.toList());
+            fileUrlRepository.saveAll(fileUrlList);
+            existingUserDevice.setFileUrls(fileUrlList);
+        }
+
+        UserDevice updatedUserDevice = userDeviceRepository.save(existingUserDevice);
+        return userDeviceMapper.toUserDeviceResponse(updatedUserDevice);
+    }
+
+    @Override
+    public void deleteUserDevice(Long id) {
+        if (!userDeviceRepository.existsById(id)) {
+            throw new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED);
+        }
+        userDeviceRepository.deleteById(id);
     }
 }
