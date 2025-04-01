@@ -166,6 +166,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserResponse> getUsersByCreatedByUserName(String createdByUserName) {
+        return userRepository.findAllByCreatedByUsername(createdByUserName).stream()
+                .map(userMapper::toUserResponse)
+                .toList();
+    }
+
+    @Override
     public UserResponse updateMyInfo(UserUpdateRequest request) {
         String currentUsername =
                 SecurityContextHolder.getContext().getAuthentication().getName();

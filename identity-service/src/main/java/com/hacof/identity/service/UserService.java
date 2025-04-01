@@ -32,6 +32,8 @@ public interface UserService {
 
     List<UserResponse> getTeamMembers();
 
+    List<UserResponse> getUsersByCreatedByUserName(String createdByUserName);
+
     UserResponse updateMyInfo(UserUpdateRequest request);
 
     void deleteUser(Long userId);
