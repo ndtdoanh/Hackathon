@@ -28,7 +28,7 @@ public class UserDeviceController {
     UserDeviceService userDeviceService;
 
     @PostMapping
-//    @PreAuthorize("hasAuthority('CREATE_USER_DEVICE')")
+    //    @PreAuthorize("hasAuthority('CREATE_USER_DEVICE')")
     public ResponseEntity<ApiResponse<UserDeviceResponse>> createUserDevice(
             @ModelAttribute @Valid UserDeviceRequest request,
             @RequestParam(value = "files", required = false) List<MultipartFile> files)
@@ -45,7 +45,7 @@ public class UserDeviceController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('GET_USER_DEVICES')")
+//    @PreAuthorize("hasAuthority('GET_USER_DEVICES')")
     public ApiResponse<List<UserDeviceResponse>> getUserDevices() {
         return ApiResponse.<List<UserDeviceResponse>>builder()
                 .data(userDeviceService.getUserDevices())
@@ -54,7 +54,7 @@ public class UserDeviceController {
     }
 
     @GetMapping("/{Id}")
-    @PreAuthorize("hasAuthority('GET_USER_DEVICE')")
+//    @PreAuthorize("hasAuthority('GET_USER_DEVICE')")
     public ApiResponse<UserDeviceResponse> getUserDevice(@PathVariable("Id") Long id) {
         return ApiResponse.<UserDeviceResponse>builder()
                 .data(userDeviceService.getUserDevice(id))
@@ -63,7 +63,7 @@ public class UserDeviceController {
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE')")
+    //    @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE')")
     public ResponseEntity<ApiResponse<UserDeviceResponse>> updateUserDevice(
             @PathVariable("id") Long id,
             @ModelAttribute UserDeviceRequest request,
@@ -79,7 +79,7 @@ public class UserDeviceController {
     }
 
     @DeleteMapping("/{Id}")
-    @PreAuthorize("hasAuthority('DELETE_USER_DEVICE')")
+//    @PreAuthorize("hasAuthority('DELETE_USER_DEVICE')")
     public ApiResponse<Void> deleteUserDevice(@PathVariable("Id") Long id) {
         userDeviceService.deleteUserDevice(id);
         return ApiResponse.<Void>builder()

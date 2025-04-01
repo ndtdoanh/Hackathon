@@ -37,7 +37,8 @@ public enum ErrorCode {
     ROUND_NOT_FOUND(1027, "Round not found", HttpStatus.NOT_FOUND),
     ROUND_LOCATION_NOT_FOUND(1028, "Round location not found", HttpStatus.NOT_FOUND),
     FILE_UPLOAD_FAILED(1029, "File upload failed", HttpStatus.BAD_REQUEST),
-    DEVICE_NOT_FOUND(1030, "Device not found", HttpStatus.NOT_FOUND);
+    USER_DEVICE_TRACK_NOT_EXISTED(1030, "User device track not existed", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1031, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

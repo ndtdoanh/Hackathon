@@ -1,7 +1,4 @@
-package com.hacof.identity.dto.response;
-
-import java.time.LocalDateTime;
-import java.util.List;
+package com.hacof.identity.dto.request;
 
 import com.hacof.identity.constant.DeviceQualityStatus;
 
@@ -17,12 +14,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDeviceTrackResponse {
-    String id;
+public class UserDeviceTrackRequest {
     String userDeviceId;
     DeviceQualityStatus deviceQualityStatus;
     String note;
-    List<FileUrlResponse> fileUrls;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
 }

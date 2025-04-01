@@ -1,16 +1,20 @@
 package com.hacof.identity.service.impl;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.hacof.identity.dto.request.LogDeviceStatusRequest;
+import com.hacof.identity.dto.request.UserDeviceTrackRequest;
 import com.hacof.identity.dto.response.UserDeviceTrackResponse;
-import com.hacof.identity.entity.UserDevice;
+import com.hacof.identity.entity.FileUrl;
 import com.hacof.identity.entity.UserDeviceTrack;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.UserDeviceTrackMapper;
+import com.hacof.identity.repository.FileUrlRepository;
 import com.hacof.identity.repository.UserDeviceRepository;
 import com.hacof.identity.repository.UserDeviceTrackRepository;
 import com.hacof.identity.service.UserDeviceTrackService;
@@ -26,27 +30,109 @@ public class UserDeviceTrackServiceImpl implements UserDeviceTrackService {
     UserDeviceTrackRepository userDeviceTrackRepository;
     UserDeviceRepository userDeviceRepository;
     UserDeviceTrackMapper userDeviceTrackMapper;
+    S3Service s3Service;
+    FileUrlRepository fileUrlRepository;
 
     @Override
-    public UserDeviceTrackResponse addDeviceTrack(LogDeviceStatusRequest request) {
-        UserDevice userDevice = userDeviceRepository
-                .findById(request.getUserDeviceId())
+    public UserDeviceTrackResponse createUserDeviceTrack(UserDeviceTrackRequest request, List<MultipartFile> files)
+            throws Exception {
+        userDeviceRepository
+                .findById(Long.valueOf(request.getUserDeviceId()))
                 .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED));
 
-        UserDeviceTrack track = UserDeviceTrack.builder()
-                .userDevice(userDevice)
-                .deviceQualityStatus(request.getStatus())
-                .note(request.getNote())
-                .build();
+        UserDeviceTrack userDeviceTrack = userDeviceTrackMapper.toUserDeviceTrack(request);
+        UserDeviceTrack savedUserDeviceTrack = userDeviceTrackRepository.save(userDeviceTrack);
 
-        userDeviceTrackRepository.save(track);
-        return userDeviceTrackMapper.toUserDeviceTrackResponse(track);
+        if (files != null && !files.isEmpty()) {
+            List<FileUrl> fileUrlList = files.stream()
+                    .map(file -> {
+                        try {
+                            String fileUrl = s3Service.uploadFile(
+                                    file.getInputStream(),
+                                    file.getOriginalFilename(),
+                                    file.getSize(),
+                                    file.getContentType());
+
+                            return new FileUrl(
+                                    file.getOriginalFilename(),
+                                    fileUrl,
+                                    file.getContentType(),
+                                    (int) file.getSize(),
+                                    savedUserDeviceTrack);
+                        } catch (IOException e) {
+                            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                        }
+                    })
+                    .collect(Collectors.toList());
+            fileUrlRepository.saveAll(fileUrlList);
+            savedUserDeviceTrack.setFileUrls(fileUrlList);
+        }
+
+        return userDeviceTrackMapper.toUserDeviceTrackResponse(savedUserDeviceTrack);
     }
 
     @Override
-    public List<UserDeviceTrackResponse> getDeviceTracks() {
+    public List<UserDeviceTrackResponse> getUserDeviceTracks() {
         return userDeviceTrackRepository.findAll().stream()
                 .map(userDeviceTrackMapper::toUserDeviceTrackResponse)
-                .toList();
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDeviceTrackResponse getUserDeviceTrack(Long id) {
+        return userDeviceTrackRepository
+                .findById(id)
+                .map(userDeviceTrackMapper::toUserDeviceTrackResponse)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_TRACK_NOT_EXISTED));
+    }
+
+    @Override
+    public UserDeviceTrackResponse updateUserDeviceTrack(
+            Long id, UserDeviceTrackRequest request, List<MultipartFile> files) throws Exception {
+        UserDeviceTrack existingUserDeviceTrack = userDeviceTrackRepository
+                .findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_TRACK_NOT_EXISTED));
+
+        userDeviceTrackMapper.updateUserDeviceTrack(request, existingUserDeviceTrack);
+
+        if (request.getUserDeviceId() != null) {
+            userDeviceRepository
+                    .findById(Long.valueOf(request.getUserDeviceId()))
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED));
+        }
+
+        if (files != null && !files.isEmpty()) {
+            List<FileUrl> fileUrlList = files.stream()
+                    .map(file -> {
+                        try {
+                            String fileUrl = s3Service.uploadFile(
+                                    file.getInputStream(),
+                                    file.getOriginalFilename(),
+                                    file.getSize(),
+                                    file.getContentType());
+
+                            return new FileUrl(
+                                    file.getOriginalFilename(),
+                                    fileUrl,
+                                    file.getContentType(),
+                                    (int) file.getSize(),
+                                    existingUserDeviceTrack);
+                        } catch (IOException e) {
+                            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                        }
+                    })
+                    .collect(Collectors.toList());
+
+            fileUrlRepository.saveAll(fileUrlList);
+            existingUserDeviceTrack.setFileUrls(fileUrlList);
+        }
+
+        UserDeviceTrack updatedUserDeviceTrack = userDeviceTrackRepository.save(existingUserDeviceTrack);
+        return userDeviceTrackMapper.toUserDeviceTrackResponse(updatedUserDeviceTrack);
+    }
+
+    @Override
+    public void deleteUserDeviceTrack(Long id) {
+        userDeviceTrackRepository.deleteById(id);
     }
 }
