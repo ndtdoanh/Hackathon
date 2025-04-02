@@ -1,6 +1,8 @@
 package com.hacof.hackathon.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,5 +66,11 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         sessionRequest.setEvaluatedAt(LocalDateTime.now());
         sessionRequest = mentorshipSessionRequestRepository.save(sessionRequest);
         return mentorshipSessionRequestMapper.toDTO(sessionRequest);
+    }
+
+    @Override
+    public List<MentorshipSessionRequestDTO> getAllByMentorTeamId(String mentorTeamId) {
+        List<MentorshipSessionRequest> requests = mentorshipSessionRequestRepository.findAllByMentorTeamId(Long.parseLong(mentorTeamId));
+        return requests.stream().map(mentorshipSessionRequestMapper::toDTO).collect(Collectors.toList());
     }
 }

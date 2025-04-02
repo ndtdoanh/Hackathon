@@ -5,5 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.hackathon.entity.MentorshipSessionRequest;
 
+import java.util.List;
+
 @Repository
-public interface MentorshipSessionRequestRepository extends JpaRepository<MentorshipSessionRequest, Long> {}
+public interface MentorshipSessionRequestRepository extends JpaRepository<MentorshipSessionRequest, Long> {
+    List<MentorshipSessionRequest> findAllByMentorTeamId(Long mentorTeamId);
+
+}
