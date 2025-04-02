@@ -1,11 +1,38 @@
 package com.hacof.hackathon.dto;
 
-import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.Set;
 
-@Data
+import jakarta.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hacof.hackathon.entity.SponsorshipHackathonDetail;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SponsorshipHackathonDTO {
-    private Long id;
-    private Long hackathonId;
-    private Long sponsorshipId;
-    private double totalMoney;
+    String id;
+
+    @NotNull(message = "Hackathon ID is required")
+    String hackathonId;
+
+    @NotNull(message = "Sponsorship ID is required")
+    String sponsorshipId;
+
+    @NotNull(message = "Total money is required")
+    double totalMoney;
+
+    String createdByUserName; // save username
+    LocalDateTime createdAt;
+    String lastModifiedByUserName; // save username
+    LocalDateTime updatedAt;
+
+    @JsonIgnore
+    Set<SponsorshipHackathonDetail> sponsorshipHackathonDetails;
 }

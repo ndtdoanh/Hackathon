@@ -27,7 +27,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "sponsorship_hackathon_details")
-public class SponsorshipHackathonDetail extends AuditBase {
+public class SponsorshipHackathonDetail extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +55,8 @@ public class SponsorshipHackathonDetail extends AuditBase {
     @Column(name = "time_to")
     LocalDateTime timeTo;
 
-    @OneToMany(mappedBy = "sponsorshipHackathonDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "sponsorshipHackathonDetail",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<FileUrl> fileUrls = new ArrayList<>();
 }
