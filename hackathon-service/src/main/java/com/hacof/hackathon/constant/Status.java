@@ -22,4 +22,6 @@ public enum Status {
     PUBLISHED,
     DELETED,
     DRAFT,
-}
+    SUBMITTED,
+    REVIEWED
+    }
