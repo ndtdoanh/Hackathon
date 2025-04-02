@@ -36,9 +36,9 @@ public class ActivityLogController {
                 .build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{Id}")
     @PreAuthorize("hasAuthority('GET_LOG')")
-    public ApiResponse<ActivityLogResponse> getLog(@PathVariable("id") Long id) {
+    public ApiResponse<ActivityLogResponse> getLog(@PathVariable("Id") Long id) {
         return ApiResponse.<ActivityLogResponse>builder()
                 .data(activityLogService.getLog(id))
                 .message("Get log by ID successfully")

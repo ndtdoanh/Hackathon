@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +27,7 @@ public class UserDeviceTrackController {
     UserDeviceTrackService userDeviceTrackService;
 
     @PostMapping
-    //    @PreAuthorize("hasAuthority('CREATE_USER_DEVICE_TRACK')")
+        @PreAuthorize("hasAuthority('CREATE_USER_DEVICE_TRACK')")
     public ResponseEntity<ApiResponse<UserDeviceTrackResponse>> createUserDeviceTrack(
             @ModelAttribute @Valid UserDeviceTrackRequest request,
             @RequestParam(value = "files", required = false) List<MultipartFile> files)
@@ -43,7 +44,6 @@ public class UserDeviceTrackController {
     }
 
     @GetMapping
-    //    @PreAuthorize("hasAuthority('GET_USER_DEVICE_TRACKS')")
     public ApiResponse<List<UserDeviceTrackResponse>> getUserDeviceTracks() {
         return ApiResponse.<List<UserDeviceTrackResponse>>builder()
                 .data(userDeviceTrackService.getUserDeviceTracks())
@@ -52,7 +52,6 @@ public class UserDeviceTrackController {
     }
 
     @GetMapping("/{Id}")
-    //    @PreAuthorize("hasAuthority('GET_USER_DEVICE_TRACK')")
     public ApiResponse<UserDeviceTrackResponse> getUserDeviceTrackById(@PathVariable("Id") Long id) {
         return ApiResponse.<UserDeviceTrackResponse>builder()
                 .data(userDeviceTrackService.getUserDeviceTrack(id))
@@ -61,7 +60,7 @@ public class UserDeviceTrackController {
     }
 
     @PutMapping("/{Id}")
-    //    @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE_TRACK')")
+        @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE_TRACK')")
     public ResponseEntity<ApiResponse<UserDeviceTrackResponse>> updateUserDeviceTrack(
             @PathVariable("Id") Long id,
             @ModelAttribute @Valid UserDeviceTrackRequest request,
@@ -78,7 +77,7 @@ public class UserDeviceTrackController {
     }
 
     @DeleteMapping("/{Id}")
-    //    @PreAuthorize("hasAuthority('DELETE_USER_DEVICE_TRACK')")
+        @PreAuthorize("hasAuthority('DELETE_USER_DEVICE_TRACK')")
     public ApiResponse<Void> deleteUserDeviceTrack(@PathVariable("Id") Long id) {
         userDeviceTrackService.deleteUserDeviceTrack(id);
         return ApiResponse.<Void>builder()
