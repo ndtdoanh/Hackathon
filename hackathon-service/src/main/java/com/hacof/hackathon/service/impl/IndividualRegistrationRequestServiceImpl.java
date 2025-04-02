@@ -112,9 +112,10 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     }
 
     @Override
-    public List<IndividualRegistrationRequestDTO> getAllByCreatedByUsernameAndHackathonId(String createdByUsername, String hackathonId) {
-        List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsernameAndHackathonId(createdByUsername, Long.parseLong(hackathonId));
+    public List<IndividualRegistrationRequestDTO> getAllByCreatedByUsernameAndHackathonId(
+            String createdByUsername, String hackathonId) {
+        List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsernameAndHackathonId(
+                createdByUsername, Long.parseLong(hackathonId));
         return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
     }
-
 }

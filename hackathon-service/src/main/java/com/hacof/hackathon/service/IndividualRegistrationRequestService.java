@@ -17,6 +17,6 @@ public interface IndividualRegistrationRequestService {
 
     List<IndividualRegistrationRequestDTO> getAllByCreatedByUsername(String createdByUsername);
 
-    List<IndividualRegistrationRequestDTO> getAllByCreatedByUsernameAndHackathonId(String createdByUsername, String hackathonId);
+    List<IndividualRegistrationRequestDTO> getAllByCreatedByUsernameAndHackathonId(
+            String createdByUsername, String hackathonId);
 }
-
