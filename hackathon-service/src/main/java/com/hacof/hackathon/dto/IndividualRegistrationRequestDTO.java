@@ -1,11 +1,31 @@
 package com.hacof.hackathon.dto;
 
-import lombok.Data;
+import java.time.LocalDateTime;
 
-@Data
+import jakarta.validation.constraints.NotNull;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IndividualRegistrationRequestDTO {
-    private String id;
-    private String hackathonId;
-    private String status;
-    private String reviewedById;
+    String id;
+
+    @NotNull(message = "Hackathon ID is required")
+    String hackathonId;
+
+    @NotNull(message = "User ID is required")
+    String status;
+
+    @NotNull(message = "User ID is required")
+    String reviewedById;
+
+    String createdByUserName; // save username
+    LocalDateTime createdAt;
+    String lastModifiedByUserName; // save username
+    LocalDateTime updatedAt;
 }

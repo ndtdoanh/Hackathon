@@ -8,27 +8,47 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
+import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.IndividualRegistrationRequest;
+import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.IndividualRegistrationRequestMapper;
+import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.IndividualRegistrationRequestRepository;
+import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.IndividualRegistrationRequestService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class IndividualRegistrationRequestServiceImpl implements IndividualRegistrationRequestService {
-    private final IndividualRegistrationRequestRepository requestRepository;
-    private final IndividualRegistrationRequestMapper requestMapper;
+    IndividualRegistrationRequestRepository requestRepository;
+    HackathonRepository hackathonRepository;
+    UserRepository userRepository;
+    IndividualRegistrationRequestMapper requestMapper;
 
     @Override
     public IndividualRegistrationRequestDTO create(IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
         log.info("Creating new individual registration request");
+
+        Hackathon hackathon = hackathonRepository
+                .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+
+        User reviewedBy = userRepository
+                .findById(Long.parseLong(individualRegistrationRequestDTO.getReviewedById()))
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         IndividualRegistrationRequest request = requestMapper.toEntity(individualRegistrationRequestDTO);
+        request.setHackathon(hackathon);
+        request.setReviewedBy(reviewedBy);
+
         request = requestRepository.save(request);
         return requestMapper.toDto(request);
     }
@@ -37,10 +57,23 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     public IndividualRegistrationRequestDTO update(
             Long id, IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
         log.info("Updating individual registration request with id: {}", id);
+
         IndividualRegistrationRequest request = requestRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Individual registration request not found"));
+
+        Hackathon hackathon = hackathonRepository
+                .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+
+        User reviewedBy = userRepository
+                .findById(Long.parseLong(individualRegistrationRequestDTO.getReviewedById()))
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         requestMapper.updateEntityFromDto(individualRegistrationRequestDTO, request);
+        request.setHackathon(hackathon);
+        request.setReviewedBy(reviewedBy);
+
         request = requestRepository.save(request);
         return requestMapper.toDto(request);
     }
@@ -57,6 +90,9 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     @Override
     public List<IndividualRegistrationRequestDTO> getAll() {
         log.info("Fetching all individual registration requests");
+        if (requestRepository.findAll().isEmpty()) {
+            throw new ResourceNotFoundException("No individual registration requests found");
+        }
         return requestRepository.findAll().stream().map(requestMapper::toDto).collect(Collectors.toList());
     }
 

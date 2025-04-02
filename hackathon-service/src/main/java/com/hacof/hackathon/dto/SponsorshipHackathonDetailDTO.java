@@ -1,16 +1,48 @@
 package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
-@Data
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hacof.hackathon.entity.FileUrl;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SponsorshipHackathonDetailDTO {
-    private Long id;
-    private Long sponsorshipHackathonId;
-    private double moneySpent;
-    private String content;
-    private String status;
-    private LocalDateTime timeFrom;
-    private LocalDateTime timeTo;
+    String id;
+
+    @NotNull(message = "SponsorshipHackathonId is required")
+    String sponsorshipHackathonId;
+
+    @NotNull(message = "MoneySpent is required")
+    double moneySpent;
+
+    @NotNull(message = "Content is required")
+    String content;
+
+    @NotNull(message = "Status is required")
+    String status;
+
+    @NotNull(message = "TimeFrom is required")
+    LocalDateTime timeFrom;
+
+    @NotNull(message = "TimeTo is required")
+    LocalDateTime timeTo;
+
+    String createdByUserName; // save username
+    LocalDateTime createdAt;
+    String lastModifiedByUserName; // save username
+    LocalDateTime updatedAt;
+
+    @JsonIgnore
+    List<FileUrl> fileUrls = new ArrayList<>();
 }

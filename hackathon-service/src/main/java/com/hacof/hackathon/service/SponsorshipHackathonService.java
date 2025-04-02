@@ -7,7 +7,7 @@ import com.hacof.hackathon.dto.SponsorshipHackathonDTO;
 public interface SponsorshipHackathonService {
     SponsorshipHackathonDTO create(SponsorshipHackathonDTO sponsorshipHackathonDTO);
 
-    SponsorshipHackathonDTO update(Long id, SponsorshipHackathonDTO sponsorshipHackathonDTO);
+    SponsorshipHackathonDTO update(String id, SponsorshipHackathonDTO sponsorshipHackathonDTO);
 
     void delete(Long id);
 

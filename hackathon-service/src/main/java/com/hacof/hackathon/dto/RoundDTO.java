@@ -59,6 +59,7 @@ public class RoundDTO {
     String lastModifiedByUserName; // save username
     LocalDateTime updatedAt;
 
+    @JsonIgnore
     @AssertTrue(message = "Start Time must be before End Time")
     public boolean isStartTimeBeforeEndTime() {
         return startTime.isBefore(endTime);

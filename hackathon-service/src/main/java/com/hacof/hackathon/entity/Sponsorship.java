@@ -1,6 +1,7 @@
 package com.hacof.hackathon.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -33,7 +34,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "sponsorships")
-public class Sponsorship extends AuditCreatedBase {
+public class Sponsorship extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +63,8 @@ public class Sponsorship extends AuditCreatedBase {
     @Column(name = "status")
     SponsorshipStatus status;
 
-    @OneToMany(mappedBy = "sponsorship", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<SponsorshipHackathon> sponsorshipHackathons;
+    @OneToMany(
+            mappedBy = "sponsorship",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    Set<SponsorshipHackathon> sponsorshipHackathons = new HashSet<>();
 }

@@ -31,7 +31,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "mentorship_requests")
-public class MentorshipRequest extends AuditCreatedBase {
+public class MentorshipRequest extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
