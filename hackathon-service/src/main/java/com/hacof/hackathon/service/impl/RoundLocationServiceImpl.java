@@ -97,4 +97,22 @@ public class RoundLocationServiceImpl implements RoundLocationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Round location not found"));
         return roundLocationMapper.toDto(roundLocation);
     }
+
+    @Override
+    public void deleteByLocationId(Long locationId) {
+        List<RoundLocation> roundLocations = roundLocationRepository.findByLocationId(locationId);
+        if (roundLocations.isEmpty()) {
+            throw new ResourceNotFoundException("Round locations not found for locationId: " + locationId);
+        }
+        roundLocationRepository.deleteAll(roundLocations);
+    }
+
+    @Override
+    public void deleteByRoundId(Long roundId) {
+        List<RoundLocation> roundLocations = roundLocationRepository.findByRoundId(roundId);
+        if (roundLocations.isEmpty()) {
+            throw new ResourceNotFoundException("Round locations not found for roundId: " + roundId);
+        }
+        roundLocationRepository.deleteAll(roundLocations);
+    }
 }

@@ -12,11 +12,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.RoundDTO;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.Round;
-import com.hacof.hackathon.entity.User;
+import com.hacof.hackathon.dto.RoundLocationDTO;
+import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
+import com.hacof.hackathon.mapper.RoundLocationMapper;
 import com.hacof.hackathon.mapper.RoundMapper;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.RoundRepository;
@@ -24,17 +24,20 @@ import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.RoundService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@FieldDefaults(makeFinal = true)
 public class RoundServiceImpl implements RoundService {
-    private final RoundRepository roundRepository;
-    private final HackathonRepository hackathonRepository;
-    private final UserRepository userRepository;
-    private final RoundMapper roundMapper;
+    RoundRepository roundRepository;
+    HackathonRepository hackathonRepository;
+    UserRepository userRepository;
+    RoundMapper roundMapper;
+    RoundLocationMapper roundLocationMapper;
 
     @Override
     public RoundDTO create(RoundDTO roundDTO) {
@@ -96,7 +99,32 @@ public class RoundServiceImpl implements RoundService {
         existingRound.setLastModifiedDate(roundDTO.getUpdatedAt());
         existingRound.setCreatedBy(createdBy);
 
-        return roundMapper.toDto(roundRepository.save(existingRound));
+        // Update round locations
+        List<RoundLocation> roundLocations = roundDTO.getRoundLocations().stream()
+                .map(roundLocationDTO -> {
+                    RoundLocation roundLocation = new RoundLocation();
+                    roundLocation.setId(Long.parseLong(roundLocationDTO.getId()));
+                    roundLocation.setRound(existingRound);
+                    Location location = new Location();
+                    location.setId(Long.parseLong(roundLocationDTO.getLocationId()));
+                    roundLocation.setLocation(location);
+                    roundLocation.setType(roundLocationDTO.getType());
+
+                    return roundLocation;
+                })
+                .collect(Collectors.toList());
+        existingRound.setRoundLocations(roundLocations);
+
+        Round updatedRound = roundRepository.save(existingRound);
+        RoundDTO updatedRoundDTO = roundMapper.toDto(updatedRound);
+
+        // Map round locations to DTOs
+        List<RoundLocationDTO> roundLocationDTOs = updatedRound.getRoundLocations().stream()
+                .map(roundLocationMapper::toDto)
+                .collect(Collectors.toList());
+        updatedRoundDTO.setRoundLocations(roundLocationDTOs);
+
+        return updatedRoundDTO;
     }
 
     @Override
@@ -138,5 +166,11 @@ public class RoundServiceImpl implements RoundService {
         if (startTime.isBefore(hackathon.getStartDate()) || endTime.isAfter(hackathon.getEndDate())) {
             throw new InvalidInputException("Round dates must be within hackathon dates");
         }
+    }
+
+    @Override
+    public List<RoundDTO> getAllByHackathonId(String hackathonId) {
+        List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
+        return rounds.stream().map(roundMapper::toDto).collect(Collectors.toList());
     }
 }

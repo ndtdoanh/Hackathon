@@ -120,7 +120,7 @@ public class RoundController {
 
     @DeleteMapping("/locations")
     public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteRoundLocation(
-            @RequestBody @Valid CommonRequest<RoundLocationDTO> request) {
+            @RequestBody CommonRequest<RoundLocationDTO> request) {
         String id = request.getData().getId();
         roundLocationService.delete(Long.parseLong(id));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
@@ -155,4 +155,17 @@ public class RoundController {
                 roundLocationDTO);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/filter-by-hackathon")
+    public ResponseEntity<CommonResponse<List<RoundDTO>>> getAllByHackathonId(@RequestParam String hackathonId) {
+        List<RoundDTO> rounds = roundService.getAllByHackathonId(hackathonId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched rounds successfully"),
+                rounds));
+    }
+
+
 }

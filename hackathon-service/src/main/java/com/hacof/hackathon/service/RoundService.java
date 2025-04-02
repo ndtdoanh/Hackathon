@@ -15,4 +15,6 @@ public interface RoundService {
     void delete(Long id);
 
     List<RoundDTO> getRounds(Specification<Round> spec);
+
+    List<RoundDTO> getAllByHackathonId(String hackathonId);
 }

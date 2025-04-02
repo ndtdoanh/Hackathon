@@ -10,7 +10,7 @@ import com.hacof.hackathon.entity.Round;
 public interface RoundRepository extends JpaRepository<Round, Long>, JpaSpecificationExecutor<Round> {
     List<Round> findByHackathonIdOrderByRoundNumber(Long hackathonId);
 
-    boolean existsByRoundNumberAndHackathonId(Integer roundNumber, Long hackathonId);
+    List<Round> findAllByHackathonId(Long hackathonId);
 
     boolean existsByRoundNumberAndHackathonIdAndIdNot(Integer roundNumber, Long hackathonId, Long roundId);
 }

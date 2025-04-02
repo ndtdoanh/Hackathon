@@ -50,14 +50,13 @@ public class RoundDTO {
     @JsonIgnore
     List<TeamRoundDTO> teamRounds;
 
-    @JsonIgnore
     List<RoundLocationDTO> roundLocations;
 
     // Audit fields
     String createdByUserName; // save username
     LocalDateTime createdAt;
     String lastModifiedByUserName; // save username
-    LocalDateTime updatedAt;
+    LocalDateTime updatedAt = LocalDateTime.now();
 
     @JsonIgnore
     @AssertTrue(message = "Start Time must be before End Time")
