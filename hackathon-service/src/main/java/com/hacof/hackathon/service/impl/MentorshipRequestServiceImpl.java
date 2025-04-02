@@ -130,7 +130,8 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
 
     @Override
     public List<MentorshipRequestDTO> getAllByTeamIdAndHackathonId(String teamId, String hackathonId) {
-        List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByTeamIdAndHackathonId(Long.parseLong(teamId), Long.parseLong(hackathonId));
+        List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByTeamIdAndHackathonId(
+                Long.parseLong(teamId), Long.parseLong(hackathonId));
         return requests.stream().map(mentorshipRequestMapper::toDto).collect(Collectors.toList());
     }
 
