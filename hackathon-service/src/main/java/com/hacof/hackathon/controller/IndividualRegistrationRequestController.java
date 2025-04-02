@@ -93,4 +93,27 @@ public class IndividualRegistrationRequestController {
                 individualRegistration);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/filter-by-username")
+    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByCreatedByUsername(@RequestParam String createdByUsername) {
+        List<IndividualRegistrationRequestDTO> requests = individualRegistrationRequestService.getAllByCreatedByUsername(createdByUsername);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests));
+    }
+
+    @GetMapping("/filter-by-username-and-hackathon")
+    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByCreatedByUsernameAndHackathonId(@RequestParam String createdByUsername, @RequestParam String hackathonId) {
+        List<IndividualRegistrationRequestDTO> requests = individualRegistrationRequestService.getAllByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests));
+    }
+
 }

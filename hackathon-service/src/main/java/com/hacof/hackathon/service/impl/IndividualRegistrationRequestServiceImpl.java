@@ -104,4 +104,17 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
                 .orElseThrow(() -> new ResourceNotFoundException("Individual registration request not found"));
         return requestMapper.toDto(request);
     }
+
+    @Override
+    public List<IndividualRegistrationRequestDTO> getAllByCreatedByUsername(String createdByUsername) {
+        List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsername(createdByUsername);
+        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<IndividualRegistrationRequestDTO> getAllByCreatedByUsernameAndHackathonId(String createdByUsername, String hackathonId) {
+        List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsernameAndHackathonId(createdByUsername, Long.parseLong(hackathonId));
+        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+    }
+
 }
