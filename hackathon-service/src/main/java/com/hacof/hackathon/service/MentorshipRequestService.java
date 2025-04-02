@@ -14,4 +14,8 @@ public interface MentorshipRequestService {
     List<MentorshipRequestDTO> getAll();
 
     MentorshipRequestDTO getById(Long id);
+
+    List<MentorshipRequestDTO> getAllByTeamIdAndHackathonId(String teamId, String hackathonId);
+
+    List<MentorshipRequestDTO> getAllByMentorId(String mentorId);
 }

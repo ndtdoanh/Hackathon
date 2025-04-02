@@ -127,4 +127,16 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException("Mentorship request not found"));
         return mentorshipRequestMapper.toDto(mentorshipRequest);
     }
+
+    @Override
+    public List<MentorshipRequestDTO> getAllByTeamIdAndHackathonId(String teamId, String hackathonId) {
+        List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByTeamIdAndHackathonId(Long.parseLong(teamId), Long.parseLong(hackathonId));
+        return requests.stream().map(mentorshipRequestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MentorshipRequestDTO> getAllByMentorId(String mentorId) {
+        List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByMentorId(Long.parseLong(mentorId));
+        return requests.stream().map(mentorshipRequestMapper::toDto).collect(Collectors.toList());
+    }
 }
