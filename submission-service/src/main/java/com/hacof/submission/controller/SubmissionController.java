@@ -24,19 +24,19 @@ public class SubmissionController {
     @PostMapping
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> createSubmission(
             @RequestParam(value = "files", required = false) List<MultipartFile> files,
-            @RequestParam(value = "roundId", required = false) Long roundId,
-            @RequestParam(value = "teamId", required = false) Long teamId,
+            @RequestParam(value = "roundId", required = false) String roundIdStr,
+            @RequestParam(value = "teamId", required = false) String teamIdStr,
             @RequestParam("status") String status) {
 
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            if (roundId == null || teamId == null) {
-                throw new IllegalArgumentException("Round ID and Team ID must not be null.");
+            if (roundIdStr == null || teamIdStr == null || roundIdStr.isEmpty() || teamIdStr.isEmpty()) {
+                throw new IllegalArgumentException("Round ID and Team ID must not be null or empty.");
             }
 
             SubmissionRequestDTO submissionRequestDTO = new SubmissionRequestDTO();
-            submissionRequestDTO.setRoundId(String.valueOf(roundId));
-            submissionRequestDTO.setTeamId(String.valueOf(teamId));
+            submissionRequestDTO.setRoundId(roundIdStr);
+            submissionRequestDTO.setTeamId(teamIdStr);
             submissionRequestDTO.setStatus(status);
 
             SubmissionResponseDTO createdSubmission = submissionService.createSubmission(submissionRequestDTO, files);
