@@ -1,8 +1,8 @@
 package com.hacof.hackathon.service;
 
-import com.hacof.hackathon.dto.MentorTeamLimitDTO;
-
 import java.util.List;
+
+import com.hacof.hackathon.dto.MentorTeamLimitDTO;
 
 public interface MentorTeamLimitService {
     MentorTeamLimitDTO create(MentorTeamLimitDTO mentorTeamLimitDTO);

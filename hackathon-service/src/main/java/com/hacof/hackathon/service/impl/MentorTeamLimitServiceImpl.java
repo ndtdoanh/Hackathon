@@ -1,5 +1,12 @@
 package com.hacof.hackathon.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import jakarta.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
 import com.hacof.hackathon.dto.MentorTeamLimitDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.MentorTeamLimit;
@@ -12,14 +19,10 @@ import com.hacof.hackathon.repository.MentorTeamLimitRepository;
 import com.hacof.hackathon.repository.TeamRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.MentorTeamLimitService;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +40,16 @@ public class MentorTeamLimitServiceImpl implements MentorTeamLimitService {
     public MentorTeamLimitDTO create(MentorTeamLimitDTO mentorTeamLimitDTO) {
         log.info("Creating new mentor team limit");
 
-        Hackathon hackathon = hackathonRepository.findById(Long.parseLong(mentorTeamLimitDTO.getHackathonId()))
+        Hackathon hackathon = hackathonRepository
+                .findById(Long.parseLong(mentorTeamLimitDTO.getHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
-        User mentor = userRepository.findById(Long.parseLong(mentorTeamLimitDTO.getMentorId()))
+        User mentor = userRepository
+                .findById(Long.parseLong(mentorTeamLimitDTO.getMentorId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
 
-        Team team = teamRepository.findById(Long.parseLong(mentorTeamLimitDTO.getTeamId()))
+        Team team = teamRepository
+                .findById(Long.parseLong(mentorTeamLimitDTO.getTeamId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
 
         MentorTeamLimit mentorTeamLimit = mentorTeamLimitMapper.toEntity(mentorTeamLimitDTO);
@@ -59,16 +65,20 @@ public class MentorTeamLimitServiceImpl implements MentorTeamLimitService {
     public MentorTeamLimitDTO update(Long id, MentorTeamLimitDTO mentorTeamLimitDTO) {
         log.info("Updating mentor team limit with id: {}", id);
 
-        MentorTeamLimit mentorTeamLimit = mentorTeamLimitRepository.findById(id)
+        MentorTeamLimit mentorTeamLimit = mentorTeamLimitRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentor team limit not found"));
 
-        Hackathon hackathon = hackathonRepository.findById(Long.parseLong(mentorTeamLimitDTO.getHackathonId()))
+        Hackathon hackathon = hackathonRepository
+                .findById(Long.parseLong(mentorTeamLimitDTO.getHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
-        User mentor = userRepository.findById(Long.parseLong(mentorTeamLimitDTO.getMentorId()))
+        User mentor = userRepository
+                .findById(Long.parseLong(mentorTeamLimitDTO.getMentorId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
 
-        Team team = teamRepository.findById(Long.parseLong(mentorTeamLimitDTO.getTeamId()))
+        Team team = teamRepository
+                .findById(Long.parseLong(mentorTeamLimitDTO.getTeamId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
 
         mentorTeamLimitMapper.updateEntityFromDto(mentorTeamLimitDTO, mentorTeamLimit);
@@ -92,7 +102,7 @@ public class MentorTeamLimitServiceImpl implements MentorTeamLimitService {
     @Override
     public List<MentorTeamLimitDTO> getAll() {
         log.info("Fetching all mentor team limits");
-        if(mentorTeamLimitRepository.findAll().isEmpty()) {
+        if (mentorTeamLimitRepository.findAll().isEmpty()) {
             throw new ResourceNotFoundException("No mentor team limits found");
         }
         return mentorTeamLimitRepository.findAll().stream()
@@ -103,7 +113,8 @@ public class MentorTeamLimitServiceImpl implements MentorTeamLimitService {
     @Override
     public MentorTeamLimitDTO getById(Long id) {
         log.info("Fetching mentor team limit with id: {}", id);
-        MentorTeamLimit mentorTeamLimit = mentorTeamLimitRepository.findById(id)
+        MentorTeamLimit mentorTeamLimit = mentorTeamLimitRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentor team limit not found"));
         return mentorTeamLimitMapper.toDto(mentorTeamLimit);
     }
