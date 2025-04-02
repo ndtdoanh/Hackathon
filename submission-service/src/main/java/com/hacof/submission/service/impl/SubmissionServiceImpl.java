@@ -60,12 +60,12 @@ public class SubmissionServiceImpl implements SubmissionService {
     public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
             throws IOException {
         Round round = roundRepository
-                .findById(submissionDTO.getRoundId())
+                .findById(Long.valueOf(submissionDTO.getRoundId()))
                 .orElseThrow(
                         () -> new IllegalArgumentException("Round not found with ID " + submissionDTO.getRoundId()));
 
         Team team = teamRepository
-                .findById(submissionDTO.getTeamId())
+                .findById(Long.valueOf(submissionDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + submissionDTO.getTeamId()));
 
         Submission submission = new Submission();
@@ -107,13 +107,13 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .orElseThrow(() -> new IllegalArgumentException("Submission not found for ID: " + id));
 
         Round round = roundRepository
-                .findById(submissionDTO.getRoundId())
+                .findById(Long.valueOf(submissionDTO.getRoundId()))
                 .orElseThrow(
                         () -> new IllegalArgumentException("Round not found for ID: " + submissionDTO.getRoundId()));
         submission.setRound(round);
 
         Team team = teamRepository
-                .findById(submissionDTO.getTeamId())
+                .findById(Long.valueOf(submissionDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + submissionDTO.getTeamId()));
         submission.setTeam(team);
 

@@ -50,7 +50,6 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    //    @PreAuthorize("hasAuthority('CREATE_USER')")
     public ResponseEntity<ApiResponse> createUser(
             @RequestHeader("Authorization") String authorizationToken, @Valid @RequestBody UserCreateRequest request) {
 
@@ -66,7 +65,6 @@ public class UserController {
     }
 
     @PostMapping("/create-password")
-    @PreAuthorize("hasAuthority('CREATE_PASSWORD')")
     public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid PasswordCreateRequest request) {
         userService.createPassword(request);
 
@@ -78,7 +76,6 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('GET_USERS')")
     public ApiResponse<List<UserResponse>> getUsers() {
 
         return ApiResponse.<List<UserResponse>>builder()
@@ -88,7 +85,6 @@ public class UserController {
     }
 
     @GetMapping("/{Id}")
-    @PreAuthorize("hasAuthority('GET_USER')")
     public ApiResponse<UserResponse> getUser(@PathVariable("Id") long userId) {
         return ApiResponse.<UserResponse>builder()
                 .data(userService.getUserById(userId))
@@ -97,7 +93,6 @@ public class UserController {
     }
 
     @GetMapping("username/{username}")
-    @PreAuthorize("hasAuthority('GET_USER')")
     public ApiResponse<UserResponse> getUser(@PathVariable String username) {
         return ApiResponse.<UserResponse>builder()
                 .data(userService.getUserByUserName(username))
@@ -106,7 +101,6 @@ public class UserController {
     }
 
     @GetMapping("/users-by-roles")
-    @PreAuthorize("hasAuthority('GET_USER')")
     public ApiResponse<List<UserResponse>> getUsersByRoles() {
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getUsersByRoles())
@@ -115,7 +109,6 @@ public class UserController {
     }
 
     @GetMapping("/team-members")
-    @PreAuthorize("hasAuthority('GET_USER')")
     public ApiResponse<List<UserResponse>> getTeamMembers() {
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getTeamMembers())
@@ -124,7 +117,6 @@ public class UserController {
     }
 
     @GetMapping("/users-by-created-by/{createdByUserName}")
-    @PreAuthorize("hasAuthority('GET_USER')")
     public ApiResponse<List<UserResponse>> getUsersByCreatedByUserName(@PathVariable String createdByUserName) {
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getUsersByCreatedByUserName(createdByUserName))
@@ -133,7 +125,6 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-    @PreAuthorize("hasAuthority('GET_MY_INFO')")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .data(userService.getMyInfo())
@@ -142,7 +133,6 @@ public class UserController {
     }
 
     @PutMapping("/my-info")
-    @PreAuthorize("hasAuthority('UPDATE_MY_INFO')")
     public ApiResponse<UserResponse> updateUser(@Valid @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .data(userService.updateMyInfo(request))
@@ -158,7 +148,6 @@ public class UserController {
     }
 
     @PostMapping("/add-email")
-    @PreAuthorize("hasAuthority('ADD_EMAIL')")
     public ResponseEntity<ApiResponse<String>> addEmail(
             @Valid @RequestBody AddEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
         try {
@@ -183,7 +172,6 @@ public class UserController {
     }
 
     @PostMapping("/verify-email")
-    @PreAuthorize("hasAuthority('VERIFY_EMAIL')")
     public ResponseEntity<ApiResponse<String>> verifyEmail(
             @Valid @RequestBody VerifyEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
         try {
@@ -212,7 +200,6 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    @PreAuthorize("hasAuthority('CHANGE_PASSWORD')")
     public ApiResponse<String> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         return ApiResponse.<String>builder()
                 .message(userService.changePassword(request))

@@ -5,5 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.communication.entity.Schedule;
 
+import java.util.List;
+
 @Repository
-public interface ScheduleRepository extends JpaRepository<Schedule, Long> {}
+public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
+    List<Schedule> findByTeamId(Long teamId);
+
+    List<Schedule> findByCreatedByUsernameAndHackathonId(String createdByUsername, Long hackathonId);
+}

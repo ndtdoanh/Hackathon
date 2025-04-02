@@ -50,9 +50,8 @@ public class ActivityLog extends AuditBase {
     @Column(name = "target")
     String target;
 
-    //    @Column(name = "changed_fields")
-    //    @JdbcTypeCode(SqlTypes.JSON)
-    //    Map<String, Object> changedFields;
+    @Column(name = "changed_fields", columnDefinition = "TEXT")
+    String changedFields;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
