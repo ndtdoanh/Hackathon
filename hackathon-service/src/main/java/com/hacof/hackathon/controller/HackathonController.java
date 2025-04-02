@@ -10,27 +10,31 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.dto.HackathonResultDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.exception.InvalidInputException;
+import com.hacof.hackathon.service.HackathonResultService;
 import com.hacof.hackathon.service.HackathonService;
 import com.hacof.hackathon.specification.HackathonSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/hackathons")
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class HackathonController {
-    final HackathonService hackathonService;
+    HackathonService hackathonService;
+    HackathonResultService hackathonResultService;
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
@@ -84,7 +88,6 @@ public class HackathonController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('UPDATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(
             @Valid @RequestBody CommonRequest<HackathonDTO> request) {
         // validate unique title
@@ -104,7 +107,6 @@ public class HackathonController {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAuthority('DELETE_HACKATHON')")
     public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody CommonResponse<HackathonDTO> request) {
         Long id = Long.parseLong((request.getData().getId()));
         log.debug("Received request to delete hackathon with id: {}", id);
@@ -128,5 +130,83 @@ public class HackathonController {
         if (hackathonService.existsByTitleAndIdNot(title, Long.parseLong(id))) {
             throw new InvalidInputException("Hackathon title already exists");
         }
+    }
+
+    // --- ENDPOINTS FOR HACKATHON RESULTS ---
+    @PostMapping("/results")
+    public ResponseEntity<CommonResponse<HackathonResultDTO>> createHackathonResult(
+            @Valid @RequestBody CommonRequest<HackathonResultDTO> request) {
+        log.debug("Creating hackathon result: {}", request.getData());
+        HackathonResultDTO created = hackathonResultService.create(request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Hackathon result created successfully"),
+                created));
+    }
+
+    @PutMapping("/results")
+    public ResponseEntity<CommonResponse<HackathonResultDTO>> updateHackathonResult(
+            @Valid @RequestBody CommonRequest<HackathonResultDTO> request) {
+        String id = request.getData().getId();
+        HackathonResultDTO updated = hackathonResultService.update(id, request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Hackathon result updated successfully"),
+                updated));
+    }
+
+    @DeleteMapping("/results")
+    public ResponseEntity<CommonResponse<HackathonResultDTO>> deleteHackathonResult(
+            @RequestBody CommonRequest<HackathonResultDTO> request) {
+        hackathonResultService.delete(request.getData().getId());
+
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Hackathon result deleted successfully"),
+                null));
+    }
+
+    @PostMapping("/results/bulk-create")
+    public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> createBulkHackathonResults(
+            @Valid @RequestBody CommonRequest<List<HackathonResultDTO>> request) {
+        log.debug("Bulk creating hackathon results");
+        List<HackathonResultDTO> created = hackathonResultService.createBulk(request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Bulk hackathon results created successfully"),
+                created));
+    }
+
+    @PutMapping("/results/bulk-update")
+    public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> updateBulkHackathonResults(
+            @Valid @RequestBody CommonRequest<List<HackathonResultDTO>> request) {
+        log.debug("Bulk updating hackathon results");
+        List<HackathonResultDTO> updated = hackathonResultService.updateBulk(request.getData());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Bulk hackathon results updated successfully"),
+                updated));
+    }
+
+    @GetMapping("/results/{hackathonId}")
+    public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> getAllByHackathonId(
+            @PathVariable String hackathonId) {
+        List<HackathonResultDTO> results = hackathonResultService.getAllByHackathonId(hackathonId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched hackathon results successfully"),
+                results));
     }
 }
