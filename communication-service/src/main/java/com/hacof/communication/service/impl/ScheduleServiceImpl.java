@@ -101,4 +101,17 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public List<ScheduleResponseDTO> getSchedulesByCreatedByUsernameAndHackathonId(String createdByUsername, Long hackathonId) {
+        List<Schedule> schedules = scheduleRepository.findByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
+        if (schedules.isEmpty()) {
+            throw new IllegalArgumentException("No schedules found for the given createdByUsername and hackathonId.");
+        }
+        return schedules.stream()
+                .map(scheduleMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
 }

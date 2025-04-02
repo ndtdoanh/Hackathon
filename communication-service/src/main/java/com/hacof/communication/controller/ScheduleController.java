@@ -136,4 +136,25 @@ public class ScheduleController {
         }
     }
 
+    @GetMapping("/by-created-and-hackathon")
+    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getSchedulesByCreatedByUsernameAndHackathonId(
+            @RequestParam String createdByUsername, @RequestParam Long hackathonId) {
+        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getSchedulesByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedules filtered by createdByUsername and hackathonId fetched successfully!");
+            response.setData(schedules);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Internal Server Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

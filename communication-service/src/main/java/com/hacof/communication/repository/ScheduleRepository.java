@@ -11,4 +11,5 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByTeamId(Long teamId);
 
+    List<Schedule> findByCreatedByUsernameAndHackathonId(String createdByUsername, Long hackathonId);
 }
