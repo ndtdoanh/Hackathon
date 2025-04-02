@@ -47,7 +47,6 @@ public class PermissionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('GET_PERMISSIONS')")
     public ApiResponse<List<PermissionResponse>> getPermissions() {
         return ApiResponse.<List<PermissionResponse>>builder()
                 .data(permissionService.getPermissions())
@@ -56,7 +55,6 @@ public class PermissionController {
     }
 
     @GetMapping("/{Id}")
-    @PreAuthorize("hasAuthority('GET_PERMISSION')")
     public ApiResponse<PermissionResponse> getPermission(@PathVariable("Id") Long Id) {
         return ApiResponse.<PermissionResponse>builder()
                 .data(permissionService.getPermission(Id))

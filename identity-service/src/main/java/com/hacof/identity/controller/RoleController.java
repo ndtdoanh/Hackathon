@@ -47,7 +47,6 @@ public class RoleController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('GET_ROLES')")
     public ApiResponse<List<RoleResponse>> getRoles() {
         return ApiResponse.<List<RoleResponse>>builder()
                 .data(roleService.getRoles())
@@ -56,7 +55,6 @@ public class RoleController {
     }
 
     @GetMapping("/{Id}")
-    @PreAuthorize("hasAuthority('GET_ROLE')")
     public ApiResponse<RoleResponse> getRole(@PathVariable("Id") Long Id) {
         return ApiResponse.<RoleResponse>builder()
                 .data(roleService.getRole(Id))
@@ -65,7 +63,6 @@ public class RoleController {
     }
 
     @GetMapping("/role-from-token")
-    @PreAuthorize("hasAuthority('GET_ROLE_FROM_TOKEN')")
     public ApiResponse<RoleResponse> getRoleFromToken(@RequestHeader("Authorization") String token) {
         RoleResponse roleResponse = roleService.getRoleFromToken(token.replace("Bearer ", ""));
 
