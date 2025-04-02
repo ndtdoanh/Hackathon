@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -191,5 +192,38 @@ public class MentorshipController {
                 new CommonResponse.Result("0000", "Fetched mentorship request successfully"),
                 mentorshipRequest);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/filter-by-team-and-hackathon")
+    public ResponseEntity<CommonResponse<List<MentorshipRequestDTO>>> getAllByTeamIdAndHackathonId(@RequestParam String teamId, @RequestParam String hackathonId) {
+        List<MentorshipRequestDTO> requests = mentorshipRequestService.getAllByTeamIdAndHackathonId(teamId, hackathonId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship requests successfully"),
+                requests));
+    }
+
+    @GetMapping("/filter-by-mentor")
+    public ResponseEntity<CommonResponse<List<MentorshipRequestDTO>>> getAllByMentorId(@RequestParam String mentorId) {
+        List<MentorshipRequestDTO> requests = mentorshipRequestService.getAllByMentorId(mentorId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship requests successfully"),
+                requests));
+    }
+
+    @GetMapping("/sessions/filter-by-mentor-team")
+    public ResponseEntity<CommonResponse<List<MentorshipSessionRequestDTO>>> getAllByMentorTeamId(@RequestParam String mentorTeamId) {
+        List<MentorshipSessionRequestDTO> requests = mentorshipSessionRequestService.getAllByMentorTeamId(mentorTeamId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship session requests successfully"),
+                requests));
     }
 }

@@ -3,6 +3,8 @@ package com.hacof.hackathon.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -296,5 +298,23 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
 
         return hackathon;
+    }
+
+    @Override
+    public List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId) {
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonIdAndUserId(Long.parseLong(hackathonId), Long.parseLong(userId));
+        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamRequestDTO> filterByUserId(String userId) {
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByUserId(Long.parseLong(userId));
+        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamRequestDTO> filterByHackathonId(String hackathonId) {
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
+        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
     }
 }

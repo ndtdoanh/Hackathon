@@ -7,6 +7,8 @@ import com.hacof.hackathon.constant.TeamRequestStatus;
 import com.hacof.hackathon.dto.TeamRequestDTO;
 import com.hacof.hackathon.dto.TeamRequestSearchDTO;
 
+import java.util.List;
+
 public interface TeamRequestService {
     TeamRequestDTO createTeamRequest(TeamRequestDTO request);
 
@@ -15,4 +17,10 @@ public interface TeamRequestService {
     TeamRequestDTO reviewTeamRequest(String requestId, TeamRequestStatus status, String note);
 
     Page<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO);
+
+    List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId);
+
+    List<TeamRequestDTO> filterByUserId(String userId);
+
+    List<TeamRequestDTO> filterByHackathonId(String hackathonId);
 }

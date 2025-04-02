@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import com.hacof.hackathon.dto.TeamRoundDTO;
 import com.hacof.hackathon.dto.TeamRoundSearchDTO;
 
+import java.util.List;
+
 public interface TeamRoundService {
     TeamRoundDTO create(TeamRoundDTO teamRoundDTO);
 
@@ -13,4 +15,9 @@ public interface TeamRoundService {
     void delete(String id);
 
     Page<TeamRoundDTO> searchTeamRounds(TeamRoundSearchDTO searchDTO);
+
+    List<TeamRoundDTO> getAllByRoundId(String roundId);
+
+    List<TeamRoundDTO> getAllByJudgeIdAndRoundId(String judgeId, String roundId);
+
 }

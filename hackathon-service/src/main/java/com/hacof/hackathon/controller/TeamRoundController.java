@@ -1,6 +1,8 @@
 package com.hacof.hackathon.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
@@ -28,7 +30,6 @@ public class TeamRoundController {
     private final TeamRoundService teamRoundService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_TEAM_ROUND')")
     public ResponseEntity<CommonResponse<TeamRoundDTO>> createTeamRound(
             @Valid @RequestBody CommonRequest<TeamRoundDTO> request) {
         log.debug("Tạo team round mới: {}", request.getData());
@@ -42,7 +43,6 @@ public class TeamRoundController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('UPDATE_TEAM_ROUND')")
     public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(
             @PathVariable String id, @Valid @RequestBody CommonRequest<TeamRoundDTO> request) {
         log.debug("Cập nhật team round: {}", id);
@@ -56,7 +56,6 @@ public class TeamRoundController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('DELETE_TEAM_ROUND')")
     public ResponseEntity<CommonResponse<Void>> deleteTeamRound(@PathVariable String id) {
         log.debug("Xóa team round: {}", id);
         teamRoundService.delete(id);
@@ -97,10 +96,31 @@ public class TeamRoundController {
                 new CommonResponse.Result("0000", "Tìm kiếm thành công"),
                 result));
     }
+
+    @PostMapping("/filter-by-round")
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundId(@RequestBody CommonRequest<Map<String, String>> request) {
+        String roundId = request.getData().get("roundId");
+        List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
+                teamRounds));
+    }
+
+    @PostMapping("/filter-by-judge-and-round")
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByJudgeIdAndRoundId(@RequestBody CommonRequest<Map<String, String>> request) {
+        String judgeId = request.getData().get("judgeId");
+        String roundId = request.getData().get("roundId");
+        List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(judgeId, roundId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
+                teamRounds));
+    }
+
 }
-/**
- *          "teamId": "1",
- *         "roundId": "1",
- *         "status": "IN_PROGRESS",
- *         "description": "Team ABC đang thi vòng 1"
- */
+

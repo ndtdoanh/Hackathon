@@ -2,6 +2,7 @@ package com.hacof.hackathon.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -109,6 +110,45 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Tìm kiếm thành công"),
                 result));
     }
+
+    @PostMapping("/requests/filter-by-hackathon-and-user")
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> getAllByHackathonIdAndUserId(@RequestBody CommonRequest<Map<String, String>> request) {
+        String hackathonId = request.getData().get("hackathonId");
+        String userId = request.getData().get("userId");
+        List<TeamRequestDTO> teamRequests = teamRequestService.getAllByHackathonIdAndUserId(hackathonId, userId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team requests successfully"),
+                teamRequests));
+    }
+
+    @PostMapping("/requests/filter-by-user")
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByUserId(@RequestBody CommonRequest<Map<String, String>> request) {
+        String userId = request.getData().get("userId");
+        List<TeamRequestDTO> teamRequests = teamRequestService.filterByUserId(userId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team requests successfully"),
+                teamRequests));
+    }
+
+    @PostMapping("/requests/filter-by-hackathon")
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByHackathonId(@RequestBody CommonRequest<Map<String, String>> request) {
+        String hackathonId = request.getData().get("hackathonId");
+        List<TeamRequestDTO> teamRequests = teamRequestService.filterByHackathonId(hackathonId);
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team requests successfully"),
+                teamRequests));
+    }
+
+
 
     //    @PostMapping("/request/reject")
     //    public ResponseEntity<CommonResponse<TeamRequestDTO>> rejectTeamRequest(

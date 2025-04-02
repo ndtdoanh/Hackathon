@@ -1,6 +1,8 @@
 package com.hacof.hackathon.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -153,5 +155,17 @@ public class TeamRoundServiceImpl implements TeamRoundService {
         return teamRoundRepository
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy team round"));
+    }
+
+    @Override
+    public List<TeamRoundDTO> getAllByRoundId(String roundId) {
+        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundId(Long.parseLong(roundId));
+        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamRoundDTO> getAllByJudgeIdAndRoundId(String judgeId, String roundId) {
+        List<TeamRound> teamRounds = teamRoundRepository.findAllByJudgeIdAndRoundId(Long.parseLong(judgeId), Long.parseLong(roundId));
+        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
     }
 }
