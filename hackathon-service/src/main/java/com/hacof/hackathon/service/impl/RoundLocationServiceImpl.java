@@ -18,50 +18,73 @@ import com.hacof.hackathon.repository.RoundRepository;
 import com.hacof.hackathon.service.RoundLocationService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@FieldDefaults(makeFinal = true)
 public class RoundLocationServiceImpl implements RoundLocationService {
-    private final RoundLocationRepository roundLocationRepository;
-    private final RoundLocationMapper roundLocationMapper;
-    private final RoundRepository roundRepository;
-    private final LocationRepository locationRepository;
+    RoundLocationRepository roundLocationRepository;
+    RoundRepository roundRepository;
+    LocationRepository locationRepository;
+    RoundLocationMapper roundLocationMapper;
 
     @Override
     public RoundLocationDTO create(RoundLocationDTO roundLocationDTO) {
         Round round = roundRepository
-                .findById(Long.parseLong(roundLocationDTO.getRound().getId()))
+                .findById(Long.parseLong(roundLocationDTO.getRoundId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
 
         Location location = locationRepository
-                .findById(Long.parseLong(roundLocationDTO.getLocation().getId()))
+                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+
         RoundLocation roundLocation = roundLocationMapper.toEntity(roundLocationDTO);
         roundLocation.setRound(round);
         roundLocation.setLocation(location);
-        return roundLocationMapper.toDto(roundLocationRepository.save(roundLocation));
+
+        roundLocation = roundLocationRepository.save(roundLocation);
+        return roundLocationMapper.toDto(roundLocation);
     }
 
     @Override
     public RoundLocationDTO update(Long id, RoundLocationDTO roundLocationDTO) {
-        RoundLocation existingRoundLocation = roundLocationRepository
+
+        RoundLocation roundLocation = roundLocationRepository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("RoundLocation not found"));
-        roundLocationMapper.updateEntityFromDto(roundLocationDTO, existingRoundLocation);
-        return roundLocationMapper.toDto(roundLocationRepository.save(existingRoundLocation));
+                .orElseThrow(() -> new ResourceNotFoundException("Round location not found"));
+
+        Round round = roundRepository
+                .findById(Long.parseLong(roundLocationDTO.getRoundId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
+
+        Location location = locationRepository
+                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+
+        roundLocationMapper.updateEntityFromDto(roundLocationDTO, roundLocation);
+        roundLocation.setRound(round);
+        roundLocation.setLocation(location);
+
+        roundLocation = roundLocationRepository.save(roundLocation);
+        return roundLocationMapper.toDto(roundLocation);
     }
 
     @Override
     public void delete(Long id) {
         if (!roundLocationRepository.existsById(id)) {
-            throw new ResourceNotFoundException("RoundLocation not found");
+            throw new ResourceNotFoundException("Round location not found");
         }
         roundLocationRepository.deleteById(id);
     }
 
     @Override
     public List<RoundLocationDTO> getAll() {
+        if (roundLocationRepository.findAll().isEmpty()) {
+            throw new ResourceNotFoundException("No round locations found");
+        }
+
         return roundLocationRepository.findAll().stream()
                 .map(roundLocationMapper::toDto)
                 .collect(Collectors.toList());
@@ -71,7 +94,7 @@ public class RoundLocationServiceImpl implements RoundLocationService {
     public RoundLocationDTO getById(Long id) {
         RoundLocation roundLocation = roundLocationRepository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("RoundLocation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Round location not found"));
         return roundLocationMapper.toDto(roundLocation);
     }
 }
