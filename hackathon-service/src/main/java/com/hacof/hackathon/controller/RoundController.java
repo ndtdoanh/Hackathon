@@ -166,6 +166,4 @@ public class RoundController {
                 new CommonResponse.Result("0000", "Fetched rounds successfully"),
                 rounds));
     }
-
-
 }

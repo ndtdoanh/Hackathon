@@ -15,9 +15,10 @@ public interface TeamRequestMapper {
             target = "createdBy",
             expression = "java(teamRequest.getCreatedBy() != null ? teamRequest.getCreatedBy().getUsername() : null)")
     @Mapping(target = "createdDate", source = "createdDate")
+    @Mapping(source = "hackathon.id", target = "hackathonId")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 
-    // @Mapping(target = "createdBy", expression = "java(mapStringToUser(teamRequestDTO.getCreatedBy()))")
+    @Mapping(source = "hackathonId", target = "hackathon.id")
     TeamRequest toEntity(TeamRequestDTO teamRequestDTO);
 
     void updateEntityFromDto(TeamRequestDTO teamRequestDTO, @MappingTarget TeamRequest teamRequest);

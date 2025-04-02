@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.hackathon.constant.TeamRoundStatus;
@@ -98,7 +97,8 @@ public class TeamRoundController {
     }
 
     @PostMapping("/filter-by-round")
-    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundId(@RequestBody CommonRequest<Map<String, String>> request) {
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundId(
+            @RequestBody CommonRequest<Map<String, String>> request) {
         String roundId = request.getData().get("roundId");
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
         return ResponseEntity.ok(new CommonResponse<>(
@@ -110,7 +110,8 @@ public class TeamRoundController {
     }
 
     @PostMapping("/filter-by-judge-and-round")
-    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByJudgeIdAndRoundId(@RequestBody CommonRequest<Map<String, String>> request) {
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByJudgeIdAndRoundId(
+            @RequestBody CommonRequest<Map<String, String>> request) {
         String judgeId = request.getData().get("judgeId");
         String roundId = request.getData().get("roundId");
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(judgeId, roundId);
@@ -121,6 +122,4 @@ public class TeamRoundController {
                 new CommonResponse.Result("0000", "Fetched team rounds successfully"),
                 teamRounds));
     }
-
 }
-

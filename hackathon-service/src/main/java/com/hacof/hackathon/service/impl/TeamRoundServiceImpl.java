@@ -165,7 +165,8 @@ public class TeamRoundServiceImpl implements TeamRoundService {
 
     @Override
     public List<TeamRoundDTO> getAllByJudgeIdAndRoundId(String judgeId, String roundId) {
-        List<TeamRound> teamRounds = teamRoundRepository.findAllByJudgeIdAndRoundId(Long.parseLong(judgeId), Long.parseLong(roundId));
+        List<TeamRound> teamRounds =
+                teamRoundRepository.findAllByJudgeIdAndRoundId(Long.parseLong(judgeId), Long.parseLong(roundId));
         return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
     }
 }

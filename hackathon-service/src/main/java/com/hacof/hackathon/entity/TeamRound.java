@@ -1,5 +1,6 @@
 package com.hacof.hackathon.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -37,7 +38,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_rounds")
-public class TeamRound extends AuditCreatedBase {
+public class TeamRound extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -59,6 +60,8 @@ public class TeamRound extends AuditCreatedBase {
     @Column(nullable = false)
     String description;
 
-    @OneToMany(mappedBy = "teamRound", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TeamRoundJudge> teamRoundJudges;
+    @OneToMany(
+            mappedBy = "teamRound",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<TeamRoundJudge> teamRoundJudges = new ArrayList<>();
 }

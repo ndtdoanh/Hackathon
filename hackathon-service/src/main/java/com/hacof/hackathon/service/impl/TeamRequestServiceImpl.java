@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.Status;
@@ -216,6 +218,18 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         request.setNote(note);
         request.setReviewedAt(LocalDateTime.now());
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        String username = authentication.getName();
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+        request.setReviewedBy(currentUser);
+
         // If approved, create team
         if (status == TeamRequestStatus.APPROVED) {
             createTeam(request);
@@ -302,7 +316,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     @Override
     public List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId) {
-        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonIdAndUserId(Long.parseLong(hackathonId), Long.parseLong(userId));
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonIdAndUserId(
+                Long.parseLong(hackathonId), Long.parseLong(userId));
         return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
     }
 

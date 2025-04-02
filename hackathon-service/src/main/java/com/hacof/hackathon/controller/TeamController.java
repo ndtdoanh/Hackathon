@@ -112,7 +112,8 @@ public class TeamController {
     }
 
     @PostMapping("/requests/filter-by-hackathon-and-user")
-    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> getAllByHackathonIdAndUserId(@RequestBody CommonRequest<Map<String, String>> request) {
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> getAllByHackathonIdAndUserId(
+            @RequestBody CommonRequest<Map<String, String>> request) {
         String hackathonId = request.getData().get("hackathonId");
         String userId = request.getData().get("userId");
         List<TeamRequestDTO> teamRequests = teamRequestService.getAllByHackathonIdAndUserId(hackathonId, userId);
@@ -125,7 +126,8 @@ public class TeamController {
     }
 
     @PostMapping("/requests/filter-by-user")
-    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByUserId(@RequestBody CommonRequest<Map<String, String>> request) {
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByUserId(
+            @RequestBody CommonRequest<Map<String, String>> request) {
         String userId = request.getData().get("userId");
         List<TeamRequestDTO> teamRequests = teamRequestService.filterByUserId(userId);
         return ResponseEntity.ok(new CommonResponse<>(
@@ -137,7 +139,8 @@ public class TeamController {
     }
 
     @PostMapping("/requests/filter-by-hackathon")
-    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByHackathonId(@RequestBody CommonRequest<Map<String, String>> request) {
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByHackathonId(
+            @RequestBody CommonRequest<Map<String, String>> request) {
         String hackathonId = request.getData().get("hackathonId");
         List<TeamRequestDTO> teamRequests = teamRequestService.filterByHackathonId(hackathonId);
         return ResponseEntity.ok(new CommonResponse<>(
@@ -147,8 +150,6 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Fetched team requests successfully"),
                 teamRequests));
     }
-
-
 
     //    @PostMapping("/request/reject")
     //    public ResponseEntity<CommonResponse<TeamRequestDTO>> rejectTeamRequest(

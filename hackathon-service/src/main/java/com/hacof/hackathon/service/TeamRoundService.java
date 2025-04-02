@@ -1,11 +1,11 @@
 package com.hacof.hackathon.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.hacof.hackathon.dto.TeamRoundDTO;
 import com.hacof.hackathon.dto.TeamRoundSearchDTO;
-
-import java.util.List;
 
 public interface TeamRoundService {
     TeamRoundDTO create(TeamRoundDTO teamRoundDTO);
@@ -19,5 +19,4 @@ public interface TeamRoundService {
     List<TeamRoundDTO> getAllByRoundId(String roundId);
 
     List<TeamRoundDTO> getAllByJudgeIdAndRoundId(String judgeId, String roundId);
-
 }
