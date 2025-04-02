@@ -21,7 +21,7 @@ spring:
     test-connection: true
   datasource:
     url: "jdbc:mysql://localhost:3306/hacof"
-#    driverClassName: "com.mysql.cj.jdbc.Driver"
+    #    driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
     password: trungkien
 
@@ -29,20 +29,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-#
-#outbound:
-#  identity:
-#    client-id: "626901727884-1tjqf1ktfgb32384892hu1dd2360dg0h.apps.googleusercontent.com"
-#    client-secret: "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"
-#    redirect-uri: "http://localhost:3000/authenticate"
-
-#aws:
-#  s3:
-#    access-key: AKIARLJEWHZF3TPT6UX2
-#    secret-key: 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
-#    region: ap-southeast-1
-#    bucket-name: greenscapehub-media
-
 
 jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
