@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +28,7 @@ public class UserDeviceController {
     UserDeviceService userDeviceService;
 
     @PostMapping
-    //    @PreAuthorize("hasAuthority('CREATE_USER_DEVICE')")
+        @PreAuthorize("hasAuthority('CREATE_USER_DEVICE')")
     public ResponseEntity<ApiResponse<UserDeviceResponse>> createUserDevice(
             @ModelAttribute @Valid UserDeviceRequest request,
             @RequestParam(value = "files", required = false) List<MultipartFile> files)
@@ -44,7 +45,6 @@ public class UserDeviceController {
     }
 
     @GetMapping
-    //    @PreAuthorize("hasAuthority('GET_USER_DEVICES')")
     public ApiResponse<List<UserDeviceResponse>> getUserDevices() {
         return ApiResponse.<List<UserDeviceResponse>>builder()
                 .data(userDeviceService.getUserDevices())
@@ -53,7 +53,6 @@ public class UserDeviceController {
     }
 
     @GetMapping("/{Id}")
-    //    @PreAuthorize("hasAuthority('GET_USER_DEVICE')")
     public ApiResponse<UserDeviceResponse> getUserDevice(@PathVariable("Id") Long id) {
         return ApiResponse.<UserDeviceResponse>builder()
                 .data(userDeviceService.getUserDevice(id))
@@ -61,10 +60,10 @@ public class UserDeviceController {
                 .build();
     }
 
-    @PutMapping("/{id}")
-    //    @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE')")
+    @PutMapping("/{Id}")
+        @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE')")
     public ResponseEntity<ApiResponse<UserDeviceResponse>> updateUserDevice(
-            @PathVariable("id") Long id,
+            @PathVariable("Id") Long id,
             @ModelAttribute UserDeviceRequest request,
             @RequestParam(value = "files", required = false) List<MultipartFile> files)
             throws IOException {
@@ -78,7 +77,7 @@ public class UserDeviceController {
     }
 
     @DeleteMapping("/{Id}")
-    //    @PreAuthorize("hasAuthority('DELETE_USER_DEVICE')")
+        @PreAuthorize("hasAuthority('DELETE_USER_DEVICE')")
     public ApiResponse<Void> deleteUserDevice(@PathVariable("Id") Long id) {
         userDeviceService.deleteUserDevice(id);
         return ApiResponse.<Void>builder()

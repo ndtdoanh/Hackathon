@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ public class UserHackathonController {
     UserHackathonService userHackathonService;
 
     @PostMapping
-    //    @PreAuthorize("hasAuthority('CREATE_USER_HACKATHON')")
+        @PreAuthorize("hasAuthority('CREATE_USER_HACKATHON')")
     public ResponseEntity<ApiResponse<UserHackathonResponseDTO>> createUserHackathon(
             @RequestBody @Valid UserHackathonRequestDTO request) {
         UserHackathonResponseDTO response = userHackathonService.createUserHackathon(request);
@@ -46,7 +47,6 @@ public class UserHackathonController {
     }
 
     @GetMapping
-    //    @PreAuthorize("hasAuthority('GET_USER_HACKATHONS')")
     public ApiResponse<List<UserHackathonResponseDTO>> getUserHackathons() {
         return ApiResponse.<List<UserHackathonResponseDTO>>builder()
                 .data(userHackathonService.getUserHackathons())
@@ -54,9 +54,8 @@ public class UserHackathonController {
                 .build();
     }
 
-    @GetMapping("/{id}")
-    //    @PreAuthorize("hasAuthority('GET_USER_HACKATHON')")
-    public ApiResponse<UserHackathonResponseDTO> getUserHackathon(@PathVariable("id") Long id) {
+    @GetMapping("/{Id}")
+    public ApiResponse<UserHackathonResponseDTO> getUserHackathon(@PathVariable("Id") Long id) {
         return ApiResponse.<UserHackathonResponseDTO>builder()
                 .data(userHackathonService.getUserHackathon(id))
                 .message("Get UserHackathon by Id")
@@ -64,7 +63,6 @@ public class UserHackathonController {
     }
 
     @GetMapping("/hackathon/{hackathonId}")
-    // @PreAuthorize("hasAuthority('GET_USER_HACKATHON')")
     public ApiResponse<List<UserHackathonResponseDTO>> getUserHackathonsByHackathonId(
             @PathVariable("hackathonId") Long hackathonId) {
         List<UserHackathonResponseDTO> response = userHackathonService.getUserHackathonsByHackathonId(hackathonId);
@@ -76,7 +74,6 @@ public class UserHackathonController {
     }
 
     @GetMapping("/hackathon/{hackathonId}/roles")
-    // @PreAuthorize("hasAuthority('GET_USER_HACKATHON')")
     public ResponseEntity<List<UserHackathonResponseDTO>> getUserHackathonsByHackathonIdAndRoles(
             @PathVariable Long hackathonId, @RequestParam List<String> roles) {
 
@@ -85,19 +82,19 @@ public class UserHackathonController {
         return ResponseEntity.ok(userHackathons);
     }
 
-    @PutMapping("/{id}")
-    // @PreAuthorize("hasAuthority('UPDATE_USER_HACKATHON')")
+    @PutMapping("/{Id}")
+     @PreAuthorize("hasAuthority('UPDATE_USER_HACKATHON')")
     public ApiResponse<UserHackathonResponseDTO> updateUserHackathon(
-            @PathVariable("id") Long id, @RequestBody UserHackathonRequestDTO request) {
+            @PathVariable("Id") Long id, @RequestBody UserHackathonRequestDTO request) {
         return ApiResponse.<UserHackathonResponseDTO>builder()
                 .data(userHackathonService.updateUserHackathon(id, request))
                 .message("UserHackathon updated successfully")
                 .build();
     }
 
-    @DeleteMapping("/{id}")
-    // @PreAuthorize("hasAuthority('DELETE_USER_HACKATHON')")
-    public ApiResponse<Void> deletePermission(@PathVariable("id") Long id) {
+    @DeleteMapping("/{Id}")
+     @PreAuthorize("hasAuthority('DELETE_USER_HACKATHON')")
+    public ApiResponse<Void> deletePermission(@PathVariable("Id") Long id) {
         userHackathonService.deleteUserHackathon(id);
         return ApiResponse.<Void>builder()
                 .message("UserHackathon has been deleted")
