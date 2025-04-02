@@ -5,11 +5,13 @@ import java.util.List;
 import com.hacof.hackathon.dto.MentorshipRequestDTO;
 
 public interface MentorshipRequestService {
-    MentorshipRequestDTO requestMentor(Long teamId, Long mentorId);
+    MentorshipRequestDTO create(MentorshipRequestDTO mentorshipRequestDTO);
 
-    MentorshipRequestDTO approveRequest(Long requestId, Long mentorId);
+    MentorshipRequestDTO update(Long id, MentorshipRequestDTO mentorshipRequestDTO);
 
-    MentorshipRequestDTO rejectRequest(Long requestId, Long mentorId);
+    void delete(Long id);
 
-    List<MentorshipRequestDTO> getRequestsByTeam(Long teamId);
+    List<MentorshipRequestDTO> getAll();
+
+    MentorshipRequestDTO getById(Long id);
 }

@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MentorshipRequestDTO {
+public class MentorTeamLimitDTO {
     String id;
 
     @NotNull(message = "Hackathon ID is required")
@@ -24,13 +24,11 @@ public class MentorshipRequestDTO {
     @NotNull(message = "Team ID is required")
     String teamId;
 
-    @NotNull(message = "Status is required")
-    String status;
+    @NotNull(message = "Max Teams is required")
+    int maxTeams;
 
-    LocalDateTime evaluatedAt = LocalDateTime.now();
-
-    @NotNull(message = "Evaluated By ID is required")
-    String evaluatedById;
+    @NotNull(message = "Max Mentors is required")
+    int maxMentors;
 
     String createdByUserName; // save username
     LocalDateTime createdAt;
