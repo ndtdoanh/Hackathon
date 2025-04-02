@@ -1,5 +1,7 @@
 package com.hacof.identity.mapper;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,12 +61,13 @@ public interface UserMapper {
 
     @Named("mapUserRoles")
     default Set<UserRoleResponse> mapUserRoles(Set<UserRole> userRoles) {
-        if (userRoles == null) {
-            return null;
+        if (userRoles == null || userRoles.isEmpty()) {
+            return new HashSet<>();
         }
         return userRoles.stream()
+                .filter(userRole -> userRole.getRole() != null)
                 .map(userRole -> UserRoleResponse.builder()
-                        .id(String.valueOf(userRole.getId()))
+                        .id(String.valueOf(userRole.getRole().getId()))
                         .role(new SimpleRoleResponse(
                                 String.valueOf(userRole.getRole().getId()),
                                 userRole.getRole().getName()))
@@ -85,14 +88,14 @@ public interface UserMapper {
                                 .id(String.valueOf(userHackathon.getHackathon().getId()))
                                 .bannerImageUrl(userHackathon.getHackathon().getBannerImageUrl())
                                 .title(userHackathon.getHackathon().getTitle())
-                                .startDate(userHackathon
+                                .startDate(LocalDateTime.from(userHackathon
                                         .getHackathon()
                                         .getStartDate()
-                                        .toLocalDate())
-                                .endDate(userHackathon
+                                        .toLocalDate()))
+                                .endDate(LocalDateTime.from(userHackathon
                                         .getHackathon()
                                         .getEndDate()
-                                        .toLocalDate())
+                                        .toLocalDate()))
                                 .status(userHackathon.getHackathon().getStatus())
                                 .hackathonResults(userHackathon.getHackathon().getHackathonResults().stream()
                                         .map(result -> HackathonResultResponse.builder()

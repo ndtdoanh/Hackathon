@@ -32,7 +32,16 @@ public enum ErrorCode {
     INVALID_CURRENT_PASSWORD(1022, "Current password is incorrect", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_SAME_AS_OLD(1023, "New password must not be the same as the old password", HttpStatus.BAD_REQUEST),
     INVALID_FILE_TYPE(1024, "Invalid file type. Only JPEG and PNG are allowed.", HttpStatus.BAD_REQUEST),
-    LOG_NOT_FOUND(1025, "Log not found", HttpStatus.NOT_FOUND);
+    ROLE_ID_IS_REQUIRED(1025, "RoleId is required", HttpStatus.BAD_REQUEST),
+    HACKATHON_NOT_FOUND(1026, "Hackathon not found", HttpStatus.NOT_FOUND),
+    ROUND_NOT_FOUND(1027, "Round not found", HttpStatus.NOT_FOUND),
+    ROUND_LOCATION_NOT_FOUND(1028, "Round location not found", HttpStatus.NOT_FOUND),
+    FILE_UPLOAD_FAILED(1029, "File upload failed", HttpStatus.BAD_REQUEST),
+    USER_DEVICE_TRACK_NOT_EXISTED(1030, "User device track not existed", HttpStatus.BAD_REQUEST),
+    INVALID_ROLE(1031, "Invalid role", HttpStatus.BAD_REQUEST),
+    USER_HACKATHON_NOT_EXISTED(1032, "User hackathon not existed", HttpStatus.BAD_REQUEST),
+    USER_HACKATHON_ALREADY_EXISTS(1033, "User hackathon already exists", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1034, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

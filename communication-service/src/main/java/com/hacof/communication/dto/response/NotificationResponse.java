@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 public class NotificationResponse {
     String id;
     UserResponse sender;
-    NotificationType notificationType;
+    NotificationType type;
     String content;
     String metadata;
     boolean isRead;

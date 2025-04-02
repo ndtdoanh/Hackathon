@@ -1,7 +1,5 @@
 package com.hacof.identity.dto.request;
 
-import jakarta.validation.constraints.Min;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,10 +12,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AssignDeviceRequest {
-    @Min(value = 1, message = "User ID must be greater than 0")
-    long userId;
-
-    @Min(value = 1, message = "Device ID must be greater than 0")
-    long deviceId;
+public class UserHackathonRequestDTO {
+    String userId;
+    String hackathonId;
+    String role;
 }

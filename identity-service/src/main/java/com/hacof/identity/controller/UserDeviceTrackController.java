@@ -4,11 +4,13 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.LogDeviceStatusRequest;
+import com.hacof.identity.dto.request.UserDeviceTrackRequest;
 import com.hacof.identity.dto.response.UserDeviceTrackResponse;
 import com.hacof.identity.service.UserDeviceTrackService;
 
@@ -24,20 +26,63 @@ public class UserDeviceTrackController {
     UserDeviceTrackService userDeviceTrackService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_USER_DEVICE_TRACK')")
-    public ApiResponse<UserDeviceTrackResponse> addDeviceTrack(@RequestBody @Valid LogDeviceStatusRequest request) {
-        return ApiResponse.<UserDeviceTrackResponse>builder()
-                .data(userDeviceTrackService.addDeviceTrack(request))
-                .message("Device track added successfully")
+    //    @PreAuthorize("hasAuthority('CREATE_USER_DEVICE_TRACK')")
+    public ResponseEntity<ApiResponse<UserDeviceTrackResponse>> createUserDeviceTrack(
+            @ModelAttribute @Valid UserDeviceTrackRequest request,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files)
+            throws Exception {
+
+        UserDeviceTrackResponse userDeviceTrackResponse = userDeviceTrackService.createUserDeviceTrack(request, files);
+
+        ApiResponse<UserDeviceTrackResponse> response = ApiResponse.<UserDeviceTrackResponse>builder()
+                .data(userDeviceTrackResponse)
+                .message("UserDeviceTrack created successfully")
                 .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('GET_USER_DEVICE_TRACKS')")
-    public ApiResponse<List<UserDeviceTrackResponse>> getDeviceTracks() {
+    //    @PreAuthorize("hasAuthority('GET_USER_DEVICE_TRACKS')")
+    public ApiResponse<List<UserDeviceTrackResponse>> getUserDeviceTracks() {
         return ApiResponse.<List<UserDeviceTrackResponse>>builder()
-                .data(userDeviceTrackService.getDeviceTracks())
+                .data(userDeviceTrackService.getUserDeviceTracks())
                 .message("Get all device tracks")
+                .build();
+    }
+
+    @GetMapping("/{Id}")
+    //    @PreAuthorize("hasAuthority('GET_USER_DEVICE_TRACK')")
+    public ApiResponse<UserDeviceTrackResponse> getUserDeviceTrackById(@PathVariable("Id") Long id) {
+        return ApiResponse.<UserDeviceTrackResponse>builder()
+                .data(userDeviceTrackService.getUserDeviceTrack(id))
+                .message("Get device track by id")
+                .build();
+    }
+
+    @PutMapping("/{Id}")
+    //    @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE_TRACK')")
+    public ResponseEntity<ApiResponse<UserDeviceTrackResponse>> updateUserDeviceTrack(
+            @PathVariable("Id") Long id,
+            @ModelAttribute @Valid UserDeviceTrackRequest request,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files)
+            throws Exception {
+
+        UserDeviceTrackResponse userDeviceTrackResponse =
+                userDeviceTrackService.updateUserDeviceTrack(id, request, files);
+
+        return ResponseEntity.ok(ApiResponse.<UserDeviceTrackResponse>builder()
+                .data(userDeviceTrackResponse)
+                .message("UserDeviceTrack updated successfully")
+                .build());
+    }
+
+    @DeleteMapping("/{Id}")
+    //    @PreAuthorize("hasAuthority('DELETE_USER_DEVICE_TRACK')")
+    public ApiResponse<Void> deleteUserDeviceTrack(@PathVariable("Id") Long id) {
+        userDeviceTrackService.deleteUserDeviceTrack(id);
+        return ApiResponse.<Void>builder()
+                .message("UserDeviceTrack deleted successfully")
                 .build();
     }
 }
