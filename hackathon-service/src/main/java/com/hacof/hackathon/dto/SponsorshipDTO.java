@@ -40,7 +40,7 @@ public class SponsorshipDTO {
     String createdByUserName; // save username
     LocalDateTime createdAt;
     String lastModifiedByUserName; // save username
-    LocalDateTime updatedAt;
+    LocalDateTime updatedAt = LocalDateTime.now();
 
     @JsonIgnore
     Set<SponsorshipHackathonDTO> sponsorshipHackathons;

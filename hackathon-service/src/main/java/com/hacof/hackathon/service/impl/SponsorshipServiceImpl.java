@@ -1,6 +1,8 @@
 package com.hacof.hackathon.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -9,7 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.SponsorshipDTO;
+import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.Sponsorship;
+import com.hacof.hackathon.entity.SponsorshipHackathon;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.SponsorshipMapper;
@@ -62,6 +66,25 @@ public class SponsorshipServiceImpl implements SponsorshipService {
         sponsorship.setLastModifiedBy(currentUser);
         sponsorship.setLastModifiedDate(sponsorshipDTO.getUpdatedAt());
 
+        // Update sponsorship hackathons
+        final Sponsorship finalSponsorship = sponsorship;
+        Set<SponsorshipHackathon> sponsorshipHackathons = sponsorshipDTO.getSponsorshipHackathons() != null
+                ? sponsorshipDTO.getSponsorshipHackathons().stream()
+                        .map(sponsorshipHackathonDTO -> {
+                            SponsorshipHackathon sponsorshipHackathon = new SponsorshipHackathon();
+                            if (sponsorshipHackathonDTO.getId() != null) {
+                                sponsorshipHackathon.setId(Long.parseLong(sponsorshipHackathonDTO.getId()));
+                            }
+                            sponsorshipHackathon.setSponsorship(finalSponsorship);
+                            Hackathon hackathon = new Hackathon();
+                            hackathon.setId(Long.parseLong(sponsorshipHackathonDTO.getHackathonId()));
+                            sponsorshipHackathon.setHackathon(hackathon);
+                            sponsorshipHackathon.setTotalMoney(sponsorshipHackathonDTO.getTotalMoney());
+                            return sponsorshipHackathon;
+                        })
+                        .collect(Collectors.toSet())
+                : new HashSet<>();
+        sponsorship.setSponsorshipHackathons(sponsorshipHackathons);
         sponsorship = sponsorshipRepository.save(sponsorship);
         return sponsorshipMapper.toDto(sponsorship);
     }

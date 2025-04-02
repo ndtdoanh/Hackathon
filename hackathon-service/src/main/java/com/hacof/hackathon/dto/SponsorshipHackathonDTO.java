@@ -28,9 +28,16 @@ public class SponsorshipHackathonDTO {
     @NotNull(message = "Total money is required")
     double totalMoney;
 
+    @JsonIgnore
     String createdByUserName; // save username
+
+    @JsonIgnore
     LocalDateTime createdAt;
+
+    @JsonIgnore
     String lastModifiedByUserName; // save username
+
+    @JsonIgnore
     LocalDateTime updatedAt;
 
     @JsonIgnore
