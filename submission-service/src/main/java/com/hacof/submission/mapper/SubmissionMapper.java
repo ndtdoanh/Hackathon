@@ -22,12 +22,12 @@ public class SubmissionMapper {
         Submission submission = new Submission();
 
         Round round = roundRepository
-                .findById(dto.getRoundId())
+                .findById(Long.valueOf(dto.getRoundId()))
                 .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + dto.getRoundId()));
         submission.setRound(round);
 
         Team team = teamRepository
-                .findById(dto.getTeamId())
+                .findById(Long.valueOf(dto.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + dto.getTeamId()));
         submission.setTeam(team);
 

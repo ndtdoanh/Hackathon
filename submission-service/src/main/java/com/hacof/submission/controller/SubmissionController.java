@@ -35,8 +35,8 @@ public class SubmissionController {
             }
 
             SubmissionRequestDTO submissionRequestDTO = new SubmissionRequestDTO();
-            submissionRequestDTO.setRoundId(roundId);
-            submissionRequestDTO.setTeamId(teamId);
+            submissionRequestDTO.setRoundId(String.valueOf(roundId));
+            submissionRequestDTO.setTeamId(String.valueOf(teamId));
             submissionRequestDTO.setStatus(status);
 
             SubmissionResponseDTO createdSubmission = submissionService.createSubmission(submissionRequestDTO, files);
@@ -103,8 +103,8 @@ public class SubmissionController {
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
             SubmissionRequestDTO submissionRequestDTO = new SubmissionRequestDTO();
-            submissionRequestDTO.setRoundId(roundId);
-            submissionRequestDTO.setTeamId(teamId);
+            submissionRequestDTO.setRoundId(String.valueOf(roundId));
+            submissionRequestDTO.setTeamId(String.valueOf(teamId));
             submissionRequestDTO.setStatus(status);
 
             SubmissionResponseDTO updatedSubmission =

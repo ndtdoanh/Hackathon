@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class SubmissionRequestDTO {
 
-    private Long roundId;
-    private Long teamId;
+    private String roundId;
+    private String teamId;
     private String status;
     private List<Long> fileIds;
 }
