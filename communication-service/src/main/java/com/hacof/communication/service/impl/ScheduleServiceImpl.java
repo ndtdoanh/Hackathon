@@ -89,4 +89,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> schedules = scheduleRepository.findAll();
         return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ScheduleResponseDTO> getSchedulesByTeamId(Long teamId) {
+        List<Schedule> schedules = scheduleRepository.findByTeamId(teamId);
+        if (schedules.isEmpty()) {
+            throw new IllegalArgumentException("No schedules found for the given teamId: " + teamId);
+        }
+        return schedules.stream()
+                .map(scheduleMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

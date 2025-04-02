@@ -115,4 +115,25 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/by-team/{teamId}")
+    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getSchedulesByTeamId(@PathVariable Long teamId) {
+        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getSchedulesByTeamId(teamId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedules for team fetched successfully!");
+            response.setData(schedules);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Internal Server Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }
