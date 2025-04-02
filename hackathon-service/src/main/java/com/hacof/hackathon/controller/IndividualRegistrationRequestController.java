@@ -17,14 +17,16 @@ import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/v1/individual-registrations")
+@RequestMapping("/api/v1/individuals")
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class IndividualRegistrationRequestController {
-    private final IndividualRegistrationRequestService individualRegistrationRequestService;
+    IndividualRegistrationRequestService individualRegistrationRequestService;
 
     @PostMapping
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> createIndividualRegistration(
