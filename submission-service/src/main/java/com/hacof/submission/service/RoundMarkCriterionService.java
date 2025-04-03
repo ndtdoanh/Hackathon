@@ -17,4 +17,6 @@ public interface RoundMarkCriterionService {
     RoundMarkCriterionResponseDTO update(Long id, RoundMarkCriterionRequestDTO updatedRoundMarkCriterionDTO);
 
     void delete(Long id);
+
+    List<RoundMarkCriterionResponseDTO> getByRoundId(Long roundId);
 }

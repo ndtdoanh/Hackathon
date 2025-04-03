@@ -96,4 +96,15 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
         repository.delete(criterion);
     }
+
+    public List<RoundMarkCriterionResponseDTO> getByRoundId(Long roundId) {
+        Round round = roundRepository
+                .findById(roundId)
+                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + roundId));
+
+        List<RoundMarkCriterion> criteriaList = repository.findByRound(round);
+        return criteriaList.stream()
+                .map(mapper::toRoundMarkCriterionResponseDTO)
+                .collect(Collectors.toList());
+    }
 }
