@@ -1,6 +1,7 @@
 package com.hacof.submission.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -33,7 +34,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "hackathons")
-public class Hackathon extends AuditCreatedBase {
+public class Hackathon extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -46,6 +47,12 @@ public class Hackathon extends AuditCreatedBase {
 
     @Column(name = "banner_image_url")
     String bannerImageUrl;
+
+    @Column(name = "enroll_start_date", columnDefinition = "datetime(6)")
+    LocalDateTime enrollStartDate;
+
+    @Column(name = "enroll_end_date", columnDefinition = "datetime(6)")
+    LocalDateTime enrollEndDate;
 
     @Lob
     @Column(name = "description")
@@ -76,37 +83,66 @@ public class Hackathon extends AuditCreatedBase {
     @Column(name = "category")
     String category;
 
+    @Column(name = "organization")
+    String organization;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    Status status; // DRAFT - OPEN - ON_GOING - CLOSED
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<Round> rounds = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<TeamHackathon> teamHackathons = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<HackathonResult> hackathonResults = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<UserHackathon> userHackathons = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<TeamRequest> teamRequests = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<IndividualRegistrationRequest> individualRegistrationRequests = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<MentorshipRequest> mentorshipRequests = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<SponsorshipHackathon> sponsorshipHackathons = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<Device> devices = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<Feedback> feedbacks = new ArrayList<>();
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Round> rounds;
+    List<Conversation> conversations;
 
     @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TeamHackathon> teamHackathons;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<HackathonResult> hackathonResults;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<UserHackathon> userHackathons;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TeamRequest> teamRequests;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<IndividualRegistrationRequest> individualRegistrationRequests;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MentorshipRequest> mentorshipRequests;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<SponsorshipHackathon> sponsorshipHackathons;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Device> devices;
-
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Feedback> feedbacks;
+    List<Board> boards;
 }

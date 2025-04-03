@@ -38,4 +38,7 @@ public class Message extends AuditCreatedBase {
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     List<FileUrl> fileUrls = new ArrayList<>();
+
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<MessageReaction> reactions = new ArrayList<>();
 }
