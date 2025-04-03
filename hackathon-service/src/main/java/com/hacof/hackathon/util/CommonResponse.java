@@ -2,6 +2,7 @@ package com.hacof.hackathon.util;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.AllArgsConstructor;
@@ -30,5 +31,10 @@ public class CommonResponse<T> {
     public static class Result {
         private String responseCode;
         private String description;
+    }
+
+    @JsonGetter("message")
+    public String getMessage() {
+        return (result != null) ? result.getDescription() : null;
     }
 }
