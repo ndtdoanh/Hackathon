@@ -3,8 +3,10 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.specification.TeamSpecification;
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.TeamDTO;
@@ -55,6 +57,15 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<TeamDTO> getAllTeams() {
         return teamRepository.findAll().stream().map(teamMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamDTO> getTeamsByUserIdAndHackathonId(Long userId, Long hackathonId) {
+        Specification<Team> spec = TeamSpecification.hasLeaderIdAndHackathonId(userId, hackathonId);
+        List<Team> teams = teamRepository.findAll(spec);
+        return teams.stream()
+                .map(teamMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     //    @Override

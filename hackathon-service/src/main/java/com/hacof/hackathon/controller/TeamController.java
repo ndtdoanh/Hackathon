@@ -226,5 +226,18 @@ public class TeamController {
                 teams);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/by-user-and-hackathon")
+    public ResponseEntity<CommonResponse<List<TeamDTO>>> getTeamsByUserIdAndHackathonId(
+            @RequestParam Long userId, @RequestParam Long hackathonId) {
+        List<TeamDTO> teams = teamService.getTeamsByUserIdAndHackathonId(userId, hackathonId);
+        CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Teams fetched successfully"),
+                teams);
+        return ResponseEntity.ok(response);
+    }
 }
 // JPA Specification
