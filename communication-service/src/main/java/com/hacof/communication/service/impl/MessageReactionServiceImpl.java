@@ -43,16 +43,14 @@ public class MessageReactionServiceImpl implements MessageReactionService {
         Optional<MessageReaction> existingReaction =
                 reactionRepository.findByMessageIdAndCreatedBy(messageId, currentUser);
 
-        MessageReaction reaction;
-        if (existingReaction.isPresent()) {
-            reaction = existingReaction.get();
-            reaction.setReactionType(request.getReactionType());
-        } else {
-            reaction = reactionMapper.toMessageReaction(request);
-            reaction.setMessage(message);
-            reaction.setCreatedBy(currentUser);
-        }
+        MessageReaction reaction = existingReaction.orElseGet(() -> {
+            MessageReaction newReaction = reactionMapper.toMessageReaction(request);
+            newReaction.setMessage(message);
+            newReaction.setCreatedBy(currentUser);
+            return newReaction;
+        });
 
+        reaction.setReactionType(request.getReactionType());
         reactionRepository.save(reaction);
         return reactionMapper.toMessageReactionResponse(reaction);
     }

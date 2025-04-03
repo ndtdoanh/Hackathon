@@ -45,13 +45,13 @@ public class MessageReactionController {
 
     @DeleteMapping("/{reactionId}")
     //    @PreAuthorize("hasAuthority('DELETE_REACTION')")
-    public ApiResponse<Void> removeReaction(@PathVariable Long reactionId) {
+    public ApiResponse<Void> deleteReaction(@PathVariable Long reactionId) {
         reactionService.removeReaction(reactionId);
         return ApiResponse.<Void>builder().message("Reaction has been removed").build();
     }
 
     @GetMapping("/message/{messageId}")
-    //    @PreAuthorize("hasAuthority('GET_REACTIONS')")
+    //    @PreAuthorize("hasAuthority('GET_REACTIONS_BY_MESSAGE')")
     public ApiResponse<List<MessageReactionResponse>> getReactionsByMessage(@PathVariable Long messageId) {
         return ApiResponse.<List<MessageReactionResponse>>builder()
                 .data(reactionService.getReactionsByMessage(messageId))

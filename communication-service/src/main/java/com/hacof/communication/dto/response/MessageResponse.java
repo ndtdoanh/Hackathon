@@ -19,7 +19,9 @@ public class MessageResponse {
     String id;
     String conversationId;
     String content;
-    List<FileUrlResponse> fileUrls;
+    boolean isDeleted;
+    List<String> fileUrls;
+    List<MessageReactionResponse> reactions;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     String createdByUserName;

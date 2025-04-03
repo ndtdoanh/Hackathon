@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import com.hacof.communication.constant.ConversationType;
@@ -19,10 +20,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConversationResponse {
     String id;
-    String name;
     ConversationType type;
-    String teamId;
-    Set<ConversationUserResponse> users;
+    String name;
+    Set<ConversationUserResponse> conversationUsers;
+    List<MessageResponse> messages;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     String createdByUserName;

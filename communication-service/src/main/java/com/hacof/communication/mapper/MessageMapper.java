@@ -1,31 +1,52 @@
 package com.hacof.communication.mapper;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
-import com.hacof.communication.dto.request.MessageCreateRequest;
-import com.hacof.communication.dto.request.MessageUpdateRequest;
+import com.hacof.communication.dto.request.MessageRequest;
 import com.hacof.communication.dto.response.MessageResponse;
+import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Message;
 
 @Mapper(componentModel = "spring")
 public interface MessageMapper {
+
+    @Mapping(target = "content", source = "content")
+    @Mapping(target = "fileUrls", source = "fileUrls")
+    Message toMessage(MessageRequest request);
+
     @Mapping(target = "id", expression = "java(String.valueOf(message.getId()))")
+    @Mapping(target = "conversationId", source = "conversation.id")
+    @Mapping(target = "content", source = "content")
+    @Mapping(target = "fileUrls", source = "fileUrls")
     @Mapping(
             target = "createdByUserName",
             expression = "java(message.getCreatedBy() != null ? message.getCreatedBy().getUsername() : null)")
     @Mapping(target = "createdAt", source = "createdDate")
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
-    @Mapping(
-            target = "conversationId",
-            expression =
-                    "java(message.getConversation() != null ? String.valueOf(message.getConversation().getId()) : null)")
     MessageResponse toMessageResponse(Message message);
 
-    @Mapping(target = "id", ignore = true)
-    Message toMessage(MessageCreateRequest request);
+    default List<FileUrl> map(List<String> fileUrls) {
+        if (fileUrls == null) {
+            return Collections.emptyList();
+        }
+        return fileUrls.stream()
+                .map(fileUrlString -> {
+                    FileUrl fileUrl = new FileUrl();
+                    fileUrl.setFileUrl(fileUrlString);
+                    return fileUrl;
+                })
+                .collect(Collectors.toList());
+    }
 
-    @Mapping(target = "id", ignore = true)
-    void updateMessageFromRequest(MessageUpdateRequest request, @MappingTarget Message message);
+    default List<String> mapFileUrlsToStrings(List<FileUrl> fileUrls) {
+        if (fileUrls == null) {
+            return Collections.emptyList();
+        }
+        return fileUrls.stream().map(FileUrl::getFileUrl).collect(Collectors.toList());
+    }
 }
