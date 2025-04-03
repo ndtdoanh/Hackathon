@@ -332,4 +332,11 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
         return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteTeamRequest(Long teamRequestId) {
+        TeamRequest teamRequest = teamRequestRepository.findById(teamRequestId)
+                .orElseThrow(() -> new ResourceNotFoundException("TeamRequest not found with ID " + teamRequestId));
+        teamRequestRepository.delete(teamRequest);
+    }
 }

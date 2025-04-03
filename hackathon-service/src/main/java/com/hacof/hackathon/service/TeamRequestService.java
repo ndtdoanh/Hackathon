@@ -23,4 +23,7 @@ public interface TeamRequestService {
     List<TeamRequestDTO> filterByUserId(String userId);
 
     List<TeamRequestDTO> filterByHackathonId(String hackathonId);
+
+    void deleteTeamRequest(Long teamRequestId);
+
 }

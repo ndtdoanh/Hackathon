@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -149,6 +150,19 @@ public class TeamController {
                 request.getChannel(),
                 new CommonResponse.Result("0000", "Fetched team requests successfully"),
                 teamRequests));
+    }
+
+    @DeleteMapping("/requests/{id}")
+    public ResponseEntity<CommonResponse<Void>> deleteTeamRequest(@PathVariable Long id) {
+        teamRequestService.deleteTeamRequest(id);
+        CommonResponse<Void> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Team request deleted successfully"),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
     //    @PostMapping("/request/reject")
