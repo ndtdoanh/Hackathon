@@ -150,7 +150,8 @@ public class MentorshipController {
     public ResponseEntity<CommonResponse<MentorshipSessionRequestDTO>> updateMentorshipSessionRequest(
             @Valid @RequestBody CommonRequest<MentorshipSessionRequestDTO> request) {
         log.debug("Updating mentorship session request: {}", request.getData().getId());
-        MentorshipSessionRequestDTO updated = mentorshipSessionRequestService.update(request.getData().getId(), request.getData());
+        MentorshipSessionRequestDTO updated =
+                mentorshipSessionRequestService.update(request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
@@ -161,7 +162,7 @@ public class MentorshipController {
 
     @DeleteMapping("/sessions")
     public ResponseEntity<CommonResponse<Void>> deleteMentorshipSessionRequest(
-             @RequestBody CommonRequest<String> request) {
+            @RequestBody CommonRequest<String> request) {
         log.debug("Deleting mentorship session request: {}", request.getData());
         mentorshipSessionRequestService.delete(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
@@ -184,7 +185,8 @@ public class MentorshipController {
     }
 
     @GetMapping("/sessions/{id}")
-    public ResponseEntity<CommonResponse<MentorshipSessionRequestDTO>> getMentorshipSessionRequestById(@PathVariable String id) {
+    public ResponseEntity<CommonResponse<MentorshipSessionRequestDTO>> getMentorshipSessionRequestById(
+            @PathVariable String id) {
         MentorshipSessionRequestDTO request = mentorshipSessionRequestService.getById(id);
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
@@ -197,7 +199,8 @@ public class MentorshipController {
     @PostMapping("/sessions/filter-by-mentor-team")
     public ResponseEntity<CommonResponse<List<MentorshipSessionRequestDTO>>> getAllByMentorTeamId(
             @RequestBody CommonRequest<MentorshipSessionRequestDTO> request) {
-        List<MentorshipSessionRequestDTO> requests = mentorshipSessionRequestService.getAllByMentorTeamId(request.getData().getMentorTeamId());
+        List<MentorshipSessionRequestDTO> requests = mentorshipSessionRequestService.getAllByMentorTeamId(
+                request.getData().getMentorTeamId());
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

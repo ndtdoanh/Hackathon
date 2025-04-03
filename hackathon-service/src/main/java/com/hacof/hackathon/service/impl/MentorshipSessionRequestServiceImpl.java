@@ -1,26 +1,25 @@
 package com.hacof.hackathon.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.entity.MentorshipSessionRequest;
-import com.hacof.hackathon.entity.User;
-import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.repository.MentorTeamRepository;
-import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
+import com.hacof.hackathon.entity.MentorshipSessionRequest;
+import com.hacof.hackathon.entity.User;
+import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.MentorshipSessionRequestMapper;
+import com.hacof.hackathon.repository.MentorTeamRepository;
 import com.hacof.hackathon.repository.MentorshipSessionRequestRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.MentorshipSessionRequestService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @Transactional
@@ -35,12 +34,15 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     @Override
     public MentorshipSessionRequestDTO create(MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
         validateForeignKeys(mentorshipSessionRequestDTO);
-        MentorshipSessionRequest mentorshipSessionRequest = mentorshipSessionRequestMapper.toEntity(mentorshipSessionRequestDTO);
+        MentorshipSessionRequest mentorshipSessionRequest =
+                mentorshipSessionRequestMapper.toEntity(mentorshipSessionRequestDTO);
 
-        mentorshipSessionRequest.setMentorTeam(mentorTeamRepository.findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
+        mentorshipSessionRequest.setMentorTeam(mentorTeamRepository
+                .findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
                 .orElseThrow(() -> new ResourceNotFoundException("MentorTeam not found")));
         if (mentorshipSessionRequestDTO.getEvaluatedById() != null) {
-            mentorshipSessionRequest.setEvaluatedBy(userRepository.findById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))
+            mentorshipSessionRequest.setEvaluatedBy(userRepository
+                    .findById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))
                     .orElseThrow(() -> new ResourceNotFoundException("User not found")));
         }
 
@@ -53,10 +55,12 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         MentorshipSessionRequest existingRequest = getMentorshipSessionRequest(id);
 
         // Manually set the foreign keys
-        existingRequest.setMentorTeam(mentorTeamRepository.findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
+        existingRequest.setMentorTeam(mentorTeamRepository
+                .findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
                 .orElseThrow(() -> new ResourceNotFoundException("MentorTeam not found")));
         if (mentorshipSessionRequestDTO.getEvaluatedById() != null) {
-            existingRequest.setEvaluatedBy(userRepository.findById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))
+            existingRequest.setEvaluatedBy(userRepository
+                    .findById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))
                     .orElseThrow(() -> new ResourceNotFoundException("User not found")));
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -84,7 +88,7 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
 
     @Override
     public List<MentorshipSessionRequestDTO> getAll() {
-        if(mentorshipSessionRequestRepository.findAll().isEmpty()) {
+        if (mentorshipSessionRequestRepository.findAll().isEmpty()) {
             throw new ResourceNotFoundException("No MentorshipSessionRequest found");
         }
         return mentorshipSessionRequestRepository.findAll().stream()
@@ -94,7 +98,7 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
 
     @Override
     public MentorshipSessionRequestDTO getById(String id) {
-        if(!mentorshipSessionRequestRepository.existsById(Long.parseLong(id))) {
+        if (!mentorshipSessionRequestRepository.existsById(Long.parseLong(id))) {
             throw new ResourceNotFoundException("MentorshipSessionRequest not found");
         }
         return mentorshipSessionRequestMapper.toDto(getMentorshipSessionRequest(id));
@@ -102,7 +106,9 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
 
     @Override
     public List<MentorshipSessionRequestDTO> getAllByMentorTeamId(String mentorTeamId) {
-        if(mentorshipSessionRequestRepository.findAllByMentorTeamId(Long.parseLong(mentorTeamId)).isEmpty()) {
+        if (mentorshipSessionRequestRepository
+                .findAllByMentorTeamId(Long.parseLong(mentorTeamId))
+                .isEmpty()) {
             throw new ResourceNotFoundException("No MentorshipSessionRequest found");
         }
         return mentorshipSessionRequestRepository.findAllByMentorTeamId(Long.parseLong(mentorTeamId)).stream()
@@ -114,14 +120,15 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         if (!mentorTeamRepository.existsById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))) {
             throw new ResourceNotFoundException("MentorTeam not found");
         }
-        if (mentorshipSessionRequestDTO.getEvaluatedById() != null &&
-                !userRepository.existsById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))) {
+        if (mentorshipSessionRequestDTO.getEvaluatedById() != null
+                && !userRepository.existsById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))) {
             throw new ResourceNotFoundException("User not found");
         }
     }
 
     private MentorshipSessionRequest getMentorshipSessionRequest(String id) {
-        return mentorshipSessionRequestRepository.findById(Long.parseLong(id))
+        return mentorshipSessionRequestRepository
+                .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("MentorshipSessionRequest not found"));
     }
 }
