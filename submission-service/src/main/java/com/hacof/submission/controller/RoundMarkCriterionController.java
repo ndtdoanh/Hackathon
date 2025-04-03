@@ -120,4 +120,25 @@ public class RoundMarkCriterionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+    @GetMapping("/by-round/{roundId}")
+    public ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> getByRoundId(@PathVariable Long roundId) {
+        CommonResponse<List<RoundMarkCriterionResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<RoundMarkCriterionResponseDTO> data = service.getByRoundId(roundId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Fetched round mark criteria by roundId successfully!");
+            response.setData(data);
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
