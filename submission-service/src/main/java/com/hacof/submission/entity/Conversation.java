@@ -29,6 +29,10 @@ public class Conversation extends AuditCreatedBase {
     @JoinColumn(name = "team_id")
     Team team;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hackathon_id")
+    Hackathon hackathon;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     ConversationType type;

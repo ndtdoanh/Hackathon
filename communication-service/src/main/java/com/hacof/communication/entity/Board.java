@@ -41,6 +41,10 @@ public class Board extends AuditCreatedBase {
     @JoinColumn(name = "team_id")
     Team team;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hackathon_id")
+    Hackathon hackathon;
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<BoardUser> boardUsers;
 
@@ -49,4 +53,5 @@ public class Board extends AuditCreatedBase {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     List<BoardLabel> boardLabels;
+
 }
