@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConversationUserResponse {
     String id;
+    String conversationId;
     String userId;
     boolean isDeleted;
     String deletedByUserName;
