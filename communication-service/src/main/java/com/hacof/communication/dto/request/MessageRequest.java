@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MessageCreateRequest {
+public class MessageRequest {
     String content;
-    List<FileUrlRequest> fileUrls;
+    List<String> fileUrls;
 }
