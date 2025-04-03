@@ -2,12 +2,7 @@ package com.hacof.hackathon.util;
 
 import java.time.LocalDateTime;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,18 +13,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonRequest<T> {
-//    @NotNull
-//    @Size(max = 36)
+    //    @NotNull
+    //    @Size(max = 36)
     private String requestId;
 
-//    @NotNull
-    //@JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
+    //    @NotNull
+    // @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     private LocalDateTime requestDateTime;
 
-//    @NotNull
-//    @Size(max = 30)
+    //    @NotNull
+    //    @Size(max = 30)
     private String channel;
 
-    //@Valid
+    // @Valid
+    @JsonUnwrapped
     private T data;
 }
