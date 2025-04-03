@@ -18,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageReactionResponse {
     String id;
+    String messageId;
     ReactionType reactionType;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
