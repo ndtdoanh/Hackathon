@@ -53,5 +53,4 @@ public class Board extends AuditCreatedBase {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     List<BoardLabel> boardLabels;
-
 }

@@ -94,7 +94,7 @@ public class UserHackathonController {
 
     @DeleteMapping("/{Id}")
      @PreAuthorize("hasAuthority('DELETE_USER_HACKATHON')")
-    public ApiResponse<Void> deletePermission(@PathVariable("Id") Long id) {
+    public ApiResponse<Void> deleteUserHackathon(@PathVariable("Id") Long id) {
         userHackathonService.deleteUserHackathon(id);
         return ApiResponse.<Void>builder()
                 .message("UserHackathon has been deleted")
