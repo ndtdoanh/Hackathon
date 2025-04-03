@@ -29,18 +29,20 @@ public class TeamSpecification {
     public static Specification<Team> hasMemberId(Long memberId) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("memberId"), memberId);
     }
+
     public static Specification<Team> hasLeaderId(Long leaderId) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("teamLeader").get("id"), leaderId);
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("teamLeader").get("id"), leaderId);
     }
 
     // Filter teams by hackathonId
     public static Specification<Team> hasHackathonId(Long hackathonId) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.join("teamHackathons").get("hackathon").get("id"), hackathonId);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(
+                root.join("teamHackathons").get("hackathon").get("id"), hackathonId);
     }
 
     // Combine the two filters: by leaderId and hackathonId
     public static Specification<Team> hasLeaderIdAndHackathonId(Long leaderId, Long hackathonId) {
         return Specification.where(hasLeaderId(leaderId)).and(hasHackathonId(hackathonId));
     }
-
 }

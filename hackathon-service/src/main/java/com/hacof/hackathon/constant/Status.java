@@ -24,4 +24,4 @@ public enum Status {
     DRAFT,
     SUBMITTED,
     REVIEWED
-    }
+}

@@ -335,7 +335,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     @Override
     public void deleteTeamRequest(Long teamRequestId) {
-        TeamRequest teamRequest = teamRequestRepository.findById(teamRequestId)
+        TeamRequest teamRequest = teamRequestRepository
+                .findById(teamRequestId)
                 .orElseThrow(() -> new ResourceNotFoundException("TeamRequest not found with ID " + teamRequestId));
         teamRequestRepository.delete(teamRequest);
     }

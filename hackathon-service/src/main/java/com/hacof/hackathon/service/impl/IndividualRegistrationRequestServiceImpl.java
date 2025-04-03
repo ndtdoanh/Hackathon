@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
@@ -37,6 +39,12 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     public IndividualRegistrationRequestDTO create(IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
         log.info("Creating new individual registration request");
 
+        Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUsername = jwt.getClaimAsString("preferred_username");
+        User currentUser = userRepository
+                .findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         Hackathon hackathon = hackathonRepository
                 .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
@@ -48,7 +56,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         IndividualRegistrationRequest request = requestMapper.toEntity(individualRegistrationRequestDTO);
         request.setHackathon(hackathon);
         request.setReviewedBy(reviewedBy);
-
+        request.setCreatedBy(currentUser);
         request = requestRepository.save(request);
         return requestMapper.toDto(request);
     }

@@ -160,8 +160,7 @@ public class TeamController {
                 LocalDateTime.now(),
                 "HACOF",
                 new CommonResponse.Result("0000", "Team request deleted successfully"),
-                null
-        );
+                null);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
@@ -252,6 +251,19 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Teams fetched successfully"),
                 teams);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/create-with-participants")
+    public ResponseEntity<CommonResponse<TeamDTO>> createTeamWithParticipants(
+            @RequestBody CommonRequest<CreateTeamRequestDTO> request) {
+        TeamDTO teamDTO = teamService.createTeamWithParticipants(
+                request.getData().getTeamName(), request.getData().getRequestIds());
+        return ResponseEntity.ok(new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Team created successfully"),
+                teamDTO));
     }
 }
 // JPA Specification
