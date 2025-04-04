@@ -14,12 +14,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleResponseDTO {
 
-    String id; // ID của Schedule
-    String teamId; // ID của Team liên kết với Schedule
-    String name; // Tên của Schedule
-    String description; // Mô tả về Schedule
-    LocalDateTime createdDate; // Thời gian tạo Schedule
-    LocalDateTime lastModifiedDate; // Thời gian sửa đổi Schedule
-    String createdBy; // Người tạo Schedule
-    List<ScheduleEventResponseDTO> scheduleEvents; // Danh sách các sự kiện liên quan
+    String id;
+    String teamId;
+    String name;
+    String description;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    String createdBy;
+    List<ScheduleEventResponseDTO> scheduleEvents;
 }
