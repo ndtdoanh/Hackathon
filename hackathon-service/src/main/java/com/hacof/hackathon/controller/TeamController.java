@@ -77,15 +77,13 @@ public class TeamController {
 
     // Step 4: Search team requests
     @GetMapping("/requests")
-    public ResponseEntity<CommonResponse<Page<TeamRequestDTO>>> searchTeamRequests(
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> searchTeamRequests(
             @RequestParam(required = false) String hackathonId,
             @RequestParam(required = false) String teamName,
             @RequestParam(required = false) TeamRequestStatus status,
             @RequestParam(required = false) String memberId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdDate") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDirection) {
 
@@ -96,20 +94,19 @@ public class TeamController {
                 .memberId(memberId)
                 .fromDate(fromDate)
                 .toDate(toDate)
-                .page(page)
-                .size(size)
                 .sortBy(sortBy)
                 .sortDirection(sortDirection)
                 .build();
 
-        Page<TeamRequestDTO> result = teamRequestService.searchTeamRequests(searchDTO);
+        List<TeamRequestDTO> result = teamRequestService.searchTeamRequests(searchDTO);
 
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
                 new CommonResponse.Result("0000", "Tìm kiếm thành công"),
-                result));
+                result
+        ));
     }
 
     @PostMapping("/requests/filter-by-hackathon-and-user")
@@ -161,7 +158,7 @@ public class TeamController {
                 "HACOF",
                 new CommonResponse.Result("0000", "Team request deleted successfully"),
                 null);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //    @PostMapping("/request/reject")

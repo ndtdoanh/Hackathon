@@ -57,7 +57,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     NotificationService notificationService;
 
     @Override
-    public Page<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO) {
+    public List<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO) {
         Specification<TeamRequest> spec = Specification.where(null);
 
         if (searchDTO.getHackathonId() != null) {
@@ -73,29 +73,13 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             spec = spec.and(TeamRequestSpecification.hasMemberId(searchDTO.getMemberId()));
         }
         if (searchDTO.getFromDate() != null || searchDTO.getToDate() != null) {
-            spec = spec.and(
-                    TeamRequestSpecification.createdDateBetween(searchDTO.getFromDate(), searchDTO.getToDate()));
+            spec = spec.and(TeamRequestSpecification.createdDateBetween(searchDTO.getFromDate(), searchDTO.getToDate()));
         }
 
-        // Pagination
-        int page = searchDTO.getPage() != null ? searchDTO.getPage() : 0;
-        int size = searchDTO.getSize() != null ? searchDTO.getSize() : 10;
-
-        // Sorting
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdDate");
-        if (searchDTO.getSortBy() != null) {
-            sort = Sort.by(
-                    searchDTO.getSortDirection() != null
-                                    && searchDTO.getSortDirection().equalsIgnoreCase("asc")
-                            ? Sort.Direction.ASC
-                            : Sort.Direction.DESC,
-                    searchDTO.getSortBy());
-        }
-
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-
-        return teamRequestRepository.findAll(spec, pageRequest).map(teamRequestMapper::toDto);
+        // Fetch all results without pagination
+        return teamRequestRepository.findAll(spec).stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
     }
+
 
     @Override
     public TeamRequestDTO createTeamRequest(TeamRequestDTO request) {

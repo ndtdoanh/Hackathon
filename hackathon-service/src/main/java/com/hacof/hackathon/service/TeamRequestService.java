@@ -16,7 +16,7 @@ public interface TeamRequestService {
 
     TeamRequestDTO reviewTeamRequest(String requestId, TeamRequestStatus status, String note);
 
-    Page<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO);
+    List<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO);
 
     List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId);
 
