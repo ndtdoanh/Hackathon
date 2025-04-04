@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleEventReminderRequestDTO {
 
-    String scheduleEventId; // ID của ScheduleEvent mà Reminder này thuộc về
-    String userId; // ID của User nhận Reminder
-    LocalDateTime remindAt; // Thời gian nhắc nhở
+    String scheduleEventId;
+    String userId;
+    LocalDateTime remindAt;
 }
