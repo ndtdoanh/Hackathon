@@ -16,17 +16,15 @@ import com.hacof.communication.entity.*;
 @Component
 public class ScheduleEventAttendeeMapper {
 
-    // Chuyển từ ScheduleEventAttendeeRequestDTO sang ScheduleEventAttendee entity
     public ScheduleEventAttendee toEntity(
             ScheduleEventAttendeeRequestDTO requestDTO, ScheduleEvent scheduleEvent, User user) {
         return ScheduleEventAttendee.builder()
                 .scheduleEvent(scheduleEvent)
                 .user(user)
-                .status(ScheduleEventStatus.INVITED) // Mặc định là INVITED
+                .status(ScheduleEventStatus.INVITED)
                 .build();
     }
 
-    // Convert từ ScheduleEventAttendee entity sang ScheduleEventAttendeeResponseDTO
     public ScheduleEventAttendeeResponseDTO toDto(ScheduleEventAttendee scheduleEventAttendee) {
         if (scheduleEventAttendee == null) {
             return null;
@@ -38,14 +36,13 @@ public class ScheduleEventAttendeeMapper {
         return ScheduleEventAttendeeResponseDTO.builder()
                 .id(String.valueOf(scheduleEvent.getId()))
                 .scheduleEvent(scheduleEvent != null ? mapScheduleEventToDto(scheduleEvent) : null)
-                .user(user != null ? mapUserToDto(user) : null) // Trả về toàn bộ thông tin UserResponse
+                .user(user != null ? mapUserToDto(user) : null)
                 .status(scheduleEventAttendee.getStatus())
                 .createdDate(scheduleEventAttendee.getCreatedDate())
                 .lastModifiedDate(scheduleEventAttendee.getLastModifiedDate())
                 .build();
     }
 
-    // Chuyển đổi ScheduleEvent sang ScheduleEventResponseDTO
     private ScheduleEventResponseDTO mapScheduleEventToDto(ScheduleEvent scheduleEvent) {
         return ScheduleEventResponseDTO.builder()
                 .id(String.valueOf(scheduleEvent.getId()))
@@ -82,7 +79,6 @@ public class ScheduleEventAttendeeMapper {
                 .build();
     }
 
-    // Chuyển đổi User sang UserResponse
     private UserResponse mapUserToDto(User user) {
         return UserResponse.builder()
                 .id(String.valueOf(user.getId()))
@@ -93,7 +89,6 @@ public class ScheduleEventAttendeeMapper {
                 .build();
     }
 
-    // Ánh xạ danh sách roles từ UserRole sang RoleResponse
     private Set<RoleResponse> mapUserRoles(Set<UserRole> userRoles) {
         return userRoles != null
                 ? userRoles.stream()
@@ -130,7 +125,6 @@ public class ScheduleEventAttendeeMapper {
                 : Collections.emptySet();
     }
 
-    // Ánh xạ fileUrls từ ScheduleEvent để tránh null
     private List<String> mapFileUrls(ScheduleEvent scheduleEvent) {
         return scheduleEvent.getFileUrls() != null
                 ? scheduleEvent.getFileUrls().stream()
