@@ -13,12 +13,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleEventRequestDTO {
 
-    String scheduleId; // ID của Schedule mà ScheduleEvent này thuộc về
-    String name; // Tên của ScheduleEvent
-    String description; // Mô tả về ScheduleEvent
-    String location; // Vị trí của ScheduleEvent
-    LocalDateTime startTime; // Thời gian bắt đầu
-    LocalDateTime endTime; // Thời gian kết thúc
-    boolean isRecurring; // Nếu sự kiện là định kỳ
-    String recurrenceRule; // Quy tắc định kỳ
+    String scheduleId;
+    String name;
+    String description;
+    String location;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
+    boolean isRecurring;
+    String recurrenceRule;
 }

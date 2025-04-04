@@ -14,17 +14,17 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleEventResponseDTO {
 
-    String id; // ID của ScheduleEvent
-    ScheduleResponseDTO schedule; // ID của Schedule mà ScheduleEvent này thuộc về
-    String name; // Tên của ScheduleEvent
-    String description; // Mô tả về ScheduleEvent
-    String location; // Vị trí của ScheduleEvent
-    LocalDateTime startTime; // Thời gian bắt đầu
-    LocalDateTime endTime; // Thời gian kết thúc
-    boolean isRecurring; // Nếu sự kiện là định kỳ
-    String recurrenceRule; // Quy tắc định kỳ
-    LocalDateTime createdDate; // Thời gian tạo
-    LocalDateTime lastModifiedDate; // Thời gian sửa đổi
-    String createdBy; // Người tạo
-    List<String> fileUrls; // List of URLs associated with the event
+    String id;
+    ScheduleResponseDTO schedule;
+    String name;
+    String description;
+    String location;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
+    boolean isRecurring;
+    String recurrenceRule;
+    LocalDateTime createdDate;
+    LocalDateTime lastModifiedDate;
+    String createdBy;
+    List<String> fileUrls;
 }
