@@ -86,15 +86,16 @@ public class LocationController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
-    public ResponseEntity<CommonResponse<LocationDTO>> deleteLocation(@RequestBody CommonRequest<LocationDTO> request) {
-        locationService.delete(Long.parseLong(request.getData().getId()));
-        CommonResponse<LocationDTO> response = new CommonResponse<>(
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<Void>> deleteLocation(@PathVariable Long id) {
+        locationService.delete(id);
+        CommonResponse<Void> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
                 new CommonResponse.Result("0000", "Location deleted successfully"),
-                null);
+                null
+        );
         return ResponseEntity.ok(response);
     }
 }

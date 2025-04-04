@@ -55,13 +55,13 @@ public class RoundController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
-    public ResponseEntity<CommonResponse<RoundDTO>> deleteRound(@RequestBody CommonRequest<RoundDTO> request) {
-        roundService.delete(Long.parseLong(request.getData().getId()));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<RoundDTO>> deleteRound(@PathVariable Long id) {
+        roundService.delete(id);
         CommonResponse<RoundDTO> response = new CommonResponse<>(
-                request.getRequestId(),
+                UUID.randomUUID().toString(),
                 LocalDateTime.now(),
-                request.getChannel(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Round deleted successfully"),
                 null);
         return ResponseEntity.ok(response);
