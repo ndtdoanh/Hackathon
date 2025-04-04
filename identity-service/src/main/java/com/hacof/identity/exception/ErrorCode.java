@@ -42,7 +42,8 @@ public enum ErrorCode {
     USER_HACKATHON_NOT_EXISTED(1032, "User hackathon not existed", HttpStatus.BAD_REQUEST),
     USER_HACKATHON_ALREADY_EXISTS(1033, "User hackathon already exists", HttpStatus.BAD_REQUEST),
     LOG_NOT_FOUND(1034, "Log not found", HttpStatus.NOT_FOUND),
-    DEVICE_NOT_FOUND(1035, "Device not found", HttpStatus.NOT_FOUND);
+    ROLE_NOT_ALLOWED(1035, "You can only assign roles: JUDGE or MENTOR", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1036, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
