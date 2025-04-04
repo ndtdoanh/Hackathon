@@ -3,6 +3,7 @@ package com.hacof.identity.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.hacof.identity.dto.request.OrganizationUpdateForJudgeMentor;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -137,6 +138,18 @@ public class UserController {
         return ApiResponse.<UserResponse>builder()
                 .data(userService.updateMyInfo(request))
                 .message("User updated successfully")
+                .build();
+    }
+
+    @PutMapping("/organization/{userId}")
+    @PreAuthorize("hasAuthority('UPDATE_JUDGE_MENTOR_BY_ORGANIZATION')")
+    public ApiResponse<UserResponse> updateJudgeMentorByOrganization(
+            @PathVariable Long userId,
+            @Valid @RequestBody OrganizationUpdateForJudgeMentor request) {
+
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.updateJudgeMentorByOrganization(userId, request))
+                .message("Updated Judge or Mentor by Organization successfully")
                 .build();
     }
 

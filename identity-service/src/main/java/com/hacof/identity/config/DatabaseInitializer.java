@@ -73,7 +73,11 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "UPDATE_USER_HACKATHON",
                             "DELETE_USER_HACKATHON"),
             "ORGANIZATION",
-                    Set.of(),
+                    Set.of(
+                            "CREATE_USER_HACKATHON",
+                            "UPDATE_USER_HACKATHON",
+                            "DELETE_USER_HACKATHON",
+                            "UPDATE_JUDGE_MENTOR_BY_ORGANIZATION"),
             "JUDGE",
                     Set.of(),
             "MENTOR",
@@ -137,6 +141,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("UPDATE_ROLE", "/api/v1/roles/{Id}", "PUT", "ROLES"),
                 new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"),
 
+                new Permission("UPDATE_JUDGE_MENTOR_BY_ORGANIZATION", "/api/v1/users/organization", "PUT", "USERS"),
                 new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"),
 
                 new Permission("CREATE_USER_DEVICE", "/api/v1/user-devices", "POST", "USER_DEVICES"),

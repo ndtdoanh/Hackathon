@@ -3,6 +3,7 @@ package com.hacof.identity.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.hacof.identity.dto.request.OrganizationUpdateForJudgeMentor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +36,8 @@ public interface UserService {
     List<UserResponse> getUsersByCreatedByUserName(String createdByUserName);
 
     UserResponse updateMyInfo(UserUpdateRequest request);
+
+    UserResponse updateJudgeMentorByOrganization(Long userId, OrganizationUpdateForJudgeMentor request);
 
     void deleteUser(Long userId);
 
