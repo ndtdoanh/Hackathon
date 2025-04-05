@@ -1,5 +1,6 @@
 package com.hacof.submission.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,19 +93,22 @@ public class JudgeRoundController {
         CommonResponse<JudgeRoundResponseDTO> response = new CommonResponse<>();
         try {
             JudgeRoundResponseDTO judgeRound = judgeRoundService.getJudgeRound(id);
+
             if (judgeRound == null) {
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                response.setMessage("Judge Round not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Judge Round not found, returning empty response");
+                response.setData(null);
+                return ResponseEntity.ok(response);
             }
+
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Judge Round fetched successfully");
             response.setData(judgeRound);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
@@ -155,11 +159,14 @@ public class JudgeRoundController {
         CommonResponse<List<JudgeRoundResponseDTO>> response = new CommonResponse<>();
         try {
             List<JudgeRoundResponseDTO> judgeRounds = judgeRoundService.getJudgeRoundsByRoundId(roundId);
+
             if (judgeRounds.isEmpty()) {
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                response.setMessage("No JudgeRounds found for the given roundId");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("No JudgeRounds found for the given roundId, returning empty list");
+                response.setData(new ArrayList<>());
+                return ResponseEntity.ok(response);
             }
+
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("JudgeRounds fetched successfully");
             response.setData(judgeRounds);
