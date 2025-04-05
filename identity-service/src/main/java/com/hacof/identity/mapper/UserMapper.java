@@ -88,14 +88,8 @@ public interface UserMapper {
                                 .id(String.valueOf(userHackathon.getHackathon().getId()))
                                 .bannerImageUrl(userHackathon.getHackathon().getBannerImageUrl())
                                 .title(userHackathon.getHackathon().getTitle())
-                                .startDate(LocalDateTime.from(userHackathon
-                                        .getHackathon()
-                                        .getStartDate()
-                                        .toLocalDate()))
-                                .endDate(LocalDateTime.from(userHackathon
-                                        .getHackathon()
-                                        .getEndDate()
-                                        .toLocalDate()))
+                                .startDate(userHackathon.getHackathon().getStartDate())
+                                .endDate(userHackathon.getHackathon().getEndDate())
                                 .status(userHackathon.getHackathon().getStatus())
                                 .hackathonResults(userHackathon.getHackathon().getHackathonResults().stream()
                                         .map(result -> HackathonResultResponse.builder()
