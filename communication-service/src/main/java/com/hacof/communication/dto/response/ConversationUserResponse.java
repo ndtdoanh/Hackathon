@@ -18,6 +18,8 @@ public class ConversationUserResponse {
     String id;
     String conversationId;
     String userId;
+    String firstName;
+    String lastName;
     boolean isDeleted;
     String deletedByUserName;
     LocalDateTime createdAt;

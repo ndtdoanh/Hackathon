@@ -42,8 +42,6 @@ import lombok.experimental.FieldDefaults;
 public class ConversationServiceImpl implements ConversationService {
     ConversationRepository conversationRepository;
     UserRepository userRepository;
-    ConversationUserRepository conversationUserRepository;
-    ConversationMapper conversationMapper;
     SecurityUtil securityUtil;
     MessageRepository messageRepository;
 
@@ -79,14 +77,15 @@ public class ConversationServiceImpl implements ConversationService {
         Conversation conversation = new Conversation();
         conversation.setType(ConversationType.PRIVATE);
 
-        String otherUsername = userRepository.getReferenceById(otherUserId).getUsername();
-        conversation.setName(otherUsername);
+        User otherUser = userRepository.getReferenceById(otherUserId);
+        String otherFullName = otherUser.getFirstName() + " " + otherUser.getLastName();
+        conversation.setName(otherFullName);
 
         Set<ConversationUser> conversationUsers = new HashSet<>();
         ConversationUser creatorUser = new ConversationUser(userRepository.getReferenceById(createdById), conversation);
-        ConversationUser otherUser = new ConversationUser(userRepository.getReferenceById(otherUserId), conversation);
+        ConversationUser otherUserConversation = new ConversationUser(userRepository.getReferenceById(otherUserId), conversation);
         conversationUsers.add(creatorUser);
-        conversationUsers.add(otherUser);
+        conversationUsers.add(otherUserConversation);
 
         conversation.setConversationUsers(conversationUsers);
         conversation = conversationRepository.save(conversation);
@@ -95,6 +94,9 @@ public class ConversationServiceImpl implements ConversationService {
         response.setId(String.valueOf(conversation.getId()));
         response.setType(conversation.getType());
         response.setName(conversation.getName());
+
+        String avatarUrl = otherUser.getAvatarUrl();
+        response.setAvatarUrl(avatarUrl);
 
         final String conversationId = String.valueOf(conversation.getId());
 
@@ -112,6 +114,13 @@ public class ConversationServiceImpl implements ConversationService {
                                     : null);
                     userResponse.setCreatedAt(conversationUser.getCreatedDate());
                     userResponse.setUpdatedAt(conversationUser.getLastModifiedDate());
+
+                    User user = conversationUser.getUser();
+                    if (user != null) {
+                        userResponse.setFirstName(user.getFirstName());
+                        userResponse.setLastName(user.getLastName());
+                    }
+
                     return userResponse;
                 })
                 .collect(Collectors.toSet());
@@ -226,7 +235,7 @@ public class ConversationServiceImpl implements ConversationService {
                     .filter(cu -> cu.getUser().getId() != currentUserId)
                     .findFirst();
 
-            String name = otherUser.map(cu -> cu.getUser().getUsername()).orElse("Unknown");
+            String name = otherUser.map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName()).orElse("Unknown");
             response.setName(name);
         } else {
             response.setName(conversation.getName());
@@ -246,6 +255,13 @@ public class ConversationServiceImpl implements ConversationService {
                                     : null);
                     userResponse.setCreatedAt(conversationUser.getCreatedDate());
                     userResponse.setUpdatedAt(conversationUser.getLastModifiedDate());
+
+                    User user = conversationUser.getUser();
+                    if (user != null) {
+                        userResponse.setFirstName(user.getFirstName());
+                        userResponse.setLastName(user.getLastName());
+                    }
+
                     return userResponse;
                 })
                 .collect(Collectors.toSet());
@@ -326,7 +342,7 @@ public class ConversationServiceImpl implements ConversationService {
                                 .filter(cu -> cu.getUser().getId() != currentUserId)
                                 .findFirst();
 
-                        String name = otherUser.map(cu -> cu.getUser().getUsername()).orElse("Unknown");
+                        String name = otherUser.map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName()).orElse("Unknown");
                         response.setName(name);
                     } else {
                         response.setName(conversation.getName());
@@ -349,6 +365,13 @@ public class ConversationServiceImpl implements ConversationService {
                                                         : null);
                                         userResponse.setCreatedAt(conversationUser.getCreatedDate());
                                         userResponse.setUpdatedAt(conversationUser.getLastModifiedDate());
+
+                                        User user = conversationUser.getUser();
+                                        if (user != null) {
+                                            userResponse.setFirstName(user.getFirstName());
+                                            userResponse.setLastName(user.getLastName());
+                                        }
+
                                         return userResponse;
                                     })
                                     .collect(Collectors.toSet());
