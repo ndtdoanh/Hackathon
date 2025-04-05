@@ -16,8 +16,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserHackathonResponseDTO {
     String id;
-    String userId;
-    String hackathonId;
+    UserResponse user;
+    HackathonResponse hackathon;
     String role;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
