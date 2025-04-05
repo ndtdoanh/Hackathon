@@ -22,6 +22,7 @@ public class ConversationResponse {
     String id;
     ConversationType type;
     String name;
+    String avatarUrl;
     Set<ConversationUserResponse> conversationUsers;
     List<MessageResponse> messages;
     LocalDateTime createdAt;
