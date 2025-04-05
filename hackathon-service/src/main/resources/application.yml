@@ -49,6 +49,7 @@ logging:
     com.hacof.hackathon.service.impl.EmailServiceImpl: DEBUG
     com.hacof.hackathon.service.impl.NotificationServiceImpl: DEBUG
     org.springframework.mail: DEBUG
+    com.hacof.hackathon: DEBUG
 
 aws:
   s3:

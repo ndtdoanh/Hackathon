@@ -214,4 +214,16 @@ public class User extends AuditUserBase {
             this.userRoles.add(userRole);
         }
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "id="
+                + id + ", username='"
+                + username + '\'' + ", email='"
+                + email + '\'' + ", lastName='"
+                + lastName + '\'' + ", isVerified="
+                + isVerified + ", status="
+                + status + ", userTeams="
+                + userTeams + '}';
+    }
 }
