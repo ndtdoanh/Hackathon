@@ -23,11 +23,10 @@ public class ScheduleMapper {
     }
 
     public ScheduleResponseDTO toDto(Schedule schedule) {
-        // Kiểm tra nếu scheduleEvents không phải là null và dùng stream, nếu null trả về danh sách trống
         List<ScheduleEventResponseDTO> scheduleEvents = (schedule.getScheduleEvents() != null)
                 ? schedule.getScheduleEvents().stream()
                         .map(scheduleEvent -> ScheduleEventResponseDTO.builder()
-                                .id(String.valueOf(scheduleEvent.getId())) // Chuyển đổi long -> String
+                                .id(String.valueOf(scheduleEvent.getId()))
                                 .name(scheduleEvent.getName())
                                 .description(scheduleEvent.getDescription())
                                 .location(scheduleEvent.getLocation())
@@ -42,11 +41,11 @@ public class ScheduleMapper {
                 : List.of();
 
         return ScheduleResponseDTO.builder()
-                .id(String.valueOf(schedule.getId())) // Chuyển đổi long -> String
+                .id(String.valueOf(schedule.getId()))
                 .teamId(
                         schedule.getTeam() != null
                                 ? String.valueOf(schedule.getTeam().getId())
-                                : null) // Kiểm tra null
+                                : null)
                 .name(schedule.getName())
                 .description(schedule.getDescription())
                 .createdDate(schedule.getCreatedDate())

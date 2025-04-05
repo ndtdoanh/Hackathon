@@ -5,5 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.communication.entity.ScheduleEventReminder;
 
+import java.util.List;
+
 @Repository
-public interface ScheduleEventReminderRepository extends JpaRepository<ScheduleEventReminder, Long> {}
+public interface ScheduleEventReminderRepository extends JpaRepository<ScheduleEventReminder, Long> {
+
+    List<ScheduleEventReminder> findByScheduleEventId(Long scheduleEventId);
+
+    List<ScheduleEventReminder> findByUserId(Long userId);
+}

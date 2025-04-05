@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.constant.ScheduleEventStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,42 +31,51 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
 
     @Override
     public ScheduleEventResponseDTO createScheduleEvent(ScheduleEventRequestDTO scheduleEventRequestDTO) {
-        // Tìm Schedule theo scheduleId
-        Long scheduleId = Long.parseLong(scheduleEventRequestDTO.getScheduleId());
-        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleId);
-
-        if (!scheduleOptional.isPresent()) {
-            throw new IllegalArgumentException("Schedule not found!");
+        if (scheduleEventRequestDTO.getScheduleId() == null) {
+            throw new IllegalArgumentException("ScheduleId must not be null");
         }
 
-        // Chuyển từ ScheduleEventRequestDTO thành ScheduleEvent entity
-        ScheduleEvent scheduleEvent = scheduleEventMapper.toEntity(scheduleEventRequestDTO, scheduleOptional.get());
+        Schedule schedule = scheduleRepository.findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found!"));
 
-        // Lưu ScheduleEvent vào cơ sở dữ liệu
+        if (scheduleEventRequestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Event name cannot be empty");
+        }
+
+        if (scheduleEventRequestDTO.getStartTime().isAfter(scheduleEventRequestDTO.getEndTime())) {
+            throw new IllegalArgumentException("Start time cannot be after end time");
+        }
+
+        ScheduleEvent scheduleEvent = scheduleEventMapper.toEntity(scheduleEventRequestDTO, schedule);
         scheduleEvent = scheduleEventRepository.save(scheduleEvent);
 
-        // Trả về ScheduleEventResponseDTO
         return scheduleEventMapper.toDto(scheduleEvent);
     }
 
     @Override
     public ScheduleEventResponseDTO updateScheduleEvent(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO) {
-        // Tìm ScheduleEvent theo ID
         Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(id);
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
 
-        // Tìm Schedule theo scheduleId
-        Long scheduleId = Long.parseLong(scheduleEventRequestDTO.getScheduleId());
-        Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleId);
-        if (!scheduleOptional.isPresent()) {
-            throw new IllegalArgumentException("Schedule not found!");
+        if (scheduleEventRequestDTO.getScheduleId() == null) {
+            throw new IllegalArgumentException("ScheduleId must not be null");
         }
 
-        // Cập nhật ScheduleEvent
+        Schedule schedule = scheduleRepository.findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found!"));
+
+        if (scheduleEventRequestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Event name cannot be empty");
+        }
+
+        if (scheduleEventRequestDTO.getStartTime().isAfter(scheduleEventRequestDTO.getEndTime())) {
+            throw new IllegalArgumentException("Start time cannot be after end time");
+        }
+
         ScheduleEvent scheduleEvent = scheduleEventOptional.get();
-        scheduleEvent.setSchedule(scheduleOptional.get());
+        scheduleEvent.setSchedule(schedule);
         scheduleEvent.setName(scheduleEventRequestDTO.getName());
         scheduleEvent.setDescription(scheduleEventRequestDTO.getDescription());
         scheduleEvent.setLocation(scheduleEventRequestDTO.getLocation());
@@ -74,16 +84,12 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         scheduleEvent.setRecurring(scheduleEventRequestDTO.isRecurring());
         scheduleEvent.setRecurrenceRule(scheduleEventRequestDTO.getRecurrenceRule());
 
-        // Lưu ScheduleEvent đã cập nhật vào cơ sở dữ liệu
         scheduleEvent = scheduleEventRepository.save(scheduleEvent);
-
-        // Trả về ScheduleEventResponseDTO
         return scheduleEventMapper.toDto(scheduleEvent);
     }
 
     @Override
     public void deleteScheduleEvent(Long id) {
-        // Tìm ScheduleEvent theo ID và xóa
         Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(id);
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
@@ -104,5 +110,16 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
     public List<ScheduleEventResponseDTO> getAllScheduleEvents() {
         List<ScheduleEvent> scheduleEvents = scheduleEventRepository.findAll();
         return scheduleEvents.stream().map(scheduleEventMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleEventResponseDTO> getScheduleEventsByScheduleId(Long scheduleId) {
+        List<ScheduleEvent> scheduleEvents = scheduleEventRepository.findByScheduleId(scheduleId);
+        if (scheduleEvents.isEmpty()) {
+            throw new IllegalArgumentException("No schedule events found for the given scheduleId: " + scheduleId);
+        }
+        return scheduleEvents.stream()
+                .map(scheduleEventMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

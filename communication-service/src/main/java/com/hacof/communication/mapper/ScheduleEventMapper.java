@@ -32,7 +32,7 @@ public class ScheduleEventMapper {
 
         return ScheduleEventResponseDTO.builder()
                 .id(String.valueOf(scheduleEvent.getId()))
-                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false)) // Tránh lặp vô hạn
+                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false))
                 .name(scheduleEvent.getName())
                 .description(scheduleEvent.getDescription())
                 .location(scheduleEvent.getLocation())
@@ -64,7 +64,7 @@ public class ScheduleEventMapper {
                 schedule.getCreatedBy() != null ? schedule.getCreatedBy().getUsername() : null,
                 includeEvents && schedule.getScheduleEvents() != null
                         ? schedule.getScheduleEvents().stream().map(this::toDto).collect(Collectors.toList())
-                        : List.of() // Tránh ánh xạ vòng lặp vô hạn
+                        : List.of()
                 );
     }
 

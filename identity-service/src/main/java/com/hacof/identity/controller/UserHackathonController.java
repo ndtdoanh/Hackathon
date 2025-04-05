@@ -74,12 +74,16 @@ public class UserHackathonController {
     }
 
     @GetMapping("/hackathon/{hackathonId}/roles")
-    public ResponseEntity<List<UserHackathonResponseDTO>> getUserHackathonsByHackathonIdAndRoles(
+    public ApiResponse<List<UserHackathonResponseDTO>> getUserHackathonsByHackathonIdAndRoles(
             @PathVariable Long hackathonId, @RequestParam List<String> roles) {
 
         List<UserHackathonResponseDTO> userHackathons =
                 userHackathonService.getUserHackathonsByHackathonIdAndRoles(hackathonId, roles);
-        return ResponseEntity.ok(userHackathons);
+
+        return ApiResponse.<List<UserHackathonResponseDTO>>builder()
+                .data(userHackathons)
+                .message("Get UserHackathons by Hackathon ID and Roles")
+                .build();
     }
 
     @PutMapping("/{Id}")

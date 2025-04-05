@@ -143,4 +143,26 @@ public class ScheduleEventAttendeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/by-event/{scheduleEventId}")
+    public ResponseEntity<CommonResponse<List<ScheduleEventAttendeeResponseDTO>>> getScheduleEventAttendeesByEventId(
+            @PathVariable Long scheduleEventId) {
+        CommonResponse<List<ScheduleEventAttendeeResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ScheduleEventAttendeeResponseDTO> attendees = scheduleEventAttendeeService.getScheduleEventAttendeesByEventId(scheduleEventId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedule event attendees fetched successfully!");
+            response.setData(attendees);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

@@ -30,14 +30,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO) {
-        Long teamId = Long.parseLong(scheduleRequestDTO.getTeamId());
-        Optional<Team> teamOptional = teamRepository.findById(teamId);
-
-        if (!teamOptional.isPresent()) {
-            throw new IllegalArgumentException("Team not found!");
+        if (scheduleRequestDTO.getTeamId() == null) {
+            throw new IllegalArgumentException("teamId must not be null");
         }
 
-        Schedule schedule = scheduleMapper.toEntity(scheduleRequestDTO, teamOptional.get());
+        Team team = teamRepository.findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
+                .orElseThrow(() -> new IllegalArgumentException("Team not found!"));
+
+        if (scheduleRequestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        Schedule schedule = scheduleMapper.toEntity(scheduleRequestDTO, team);
         schedule = scheduleRepository.save(schedule);
 
         return scheduleMapper.toDto(schedule);
@@ -50,14 +54,19 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Schedule not found!");
         }
 
-        Long teamId = Long.parseLong(scheduleRequestDTO.getTeamId());
-        Optional<Team> teamOptional = teamRepository.findById(teamId);
-        if (!teamOptional.isPresent()) {
-            throw new IllegalArgumentException("Team not found!");
+        if (scheduleRequestDTO.getTeamId() == null) {
+            throw new IllegalArgumentException("teamId must not be null");
+        }
+
+        Team team = teamRepository.findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
+                .orElseThrow(() -> new IllegalArgumentException("Team not found!"));
+
+        if (scheduleRequestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
         }
 
         Schedule schedule = scheduleOptional.get();
-        schedule.setTeam(teamOptional.get());
+        schedule.setTeam(team);
         schedule.setName(scheduleRequestDTO.getName());
         schedule.setDescription(scheduleRequestDTO.getDescription());
         schedule = scheduleRepository.save(schedule);
@@ -112,6 +121,5 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .map(scheduleMapper::toDto)
                 .collect(Collectors.toList());
     }
-
 
 }

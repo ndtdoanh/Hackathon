@@ -14,7 +14,6 @@ import com.hacof.communication.entity.*;
 @Component
 public class ScheduleEventReminderMapper {
 
-    // Convert from ScheduleEventReminderRequestDTO to ScheduleEventReminder entity
     public ScheduleEventReminder toEntity(
             ScheduleEventReminderRequestDTO requestDTO, ScheduleEvent scheduleEvent, User user) {
         return ScheduleEventReminder.builder()
@@ -24,7 +23,6 @@ public class ScheduleEventReminderMapper {
                 .build();
     }
 
-    // Convert from ScheduleEventReminder entity to ScheduleEventReminderResponseDTO
     public ScheduleEventReminderResponseDTO toDto(ScheduleEventReminder scheduleEventReminder) {
         if (scheduleEventReminder == null) {
             return null;
@@ -34,19 +32,18 @@ public class ScheduleEventReminderMapper {
         User user = scheduleEventReminder.getUser();
 
         return ScheduleEventReminderResponseDTO.builder()
-                .id(String.valueOf(scheduleEventReminder.getId())) // Chuyển đổi long thành String
+                .id(String.valueOf(scheduleEventReminder.getId()))
                 .scheduleEvent(scheduleEvent != null ? mapScheduleEventToDto(scheduleEvent) : null)
-                .user(user != null ? mapUserToDto(user) : null) // Map full UserResponse
+                .user(user != null ? mapUserToDto(user) : null)
                 .remindAt(scheduleEventReminder.getRemindAt())
                 .createdDate(scheduleEventReminder.getCreatedDate())
                 .lastModifiedDate(scheduleEventReminder.getLastModifiedDate())
                 .build();
     }
 
-    // Convert ScheduleEvent to ScheduleEventResponseDTO
     private ScheduleEventResponseDTO mapScheduleEventToDto(ScheduleEvent scheduleEvent) {
         return ScheduleEventResponseDTO.builder()
-                .id(String.valueOf(scheduleEvent.getId())) // Chuyển đổi long thành String
+                .id(String.valueOf(scheduleEvent.getId()))
                 .schedule(scheduleEvent.getSchedule() != null ? mapScheduleToDto(scheduleEvent.getSchedule()) : null)
                 .name(scheduleEvent.getName())
                 .description(scheduleEvent.getDescription())
@@ -65,14 +62,13 @@ public class ScheduleEventReminderMapper {
                 .build();
     }
 
-    // Convert Schedule to ScheduleResponseDTO
     private ScheduleResponseDTO mapScheduleToDto(Schedule schedule) {
         return ScheduleResponseDTO.builder()
-                .id(String.valueOf(schedule.getId())) // Chuyển đổi long thành String
+                .id(String.valueOf(schedule.getId()))
                 .teamId(
                         schedule.getTeam() != null
                                 ? String.valueOf(schedule.getTeam().getId())
-                                : null) // Chuyển Long -> String
+                                : null)
                 .name(schedule.getName())
                 .description(schedule.getDescription())
                 .createdDate(schedule.getCreatedDate())
@@ -84,7 +80,6 @@ public class ScheduleEventReminderMapper {
                 .build();
     }
 
-    // Convert User entity to UserResponse DTO
     private UserResponse mapUserToDto(User user) {
         return UserResponse.builder()
                 .id(String.valueOf(user.getId()))
@@ -94,7 +89,6 @@ public class ScheduleEventReminderMapper {
                 .build();
     }
 
-    // Convert Set<UserRole> to Set<RoleResponse>
     private Set<RoleResponse> mapUserRoles(Set<UserRole> userRoles) {
         return userRoles.stream()
                 .map(userRole -> RoleResponse.builder()
@@ -117,7 +111,6 @@ public class ScheduleEventReminderMapper {
                 .collect(Collectors.toSet());
     }
 
-    // Convert Set<Permission> to Set<PermissionResponse>
     private Set<PermissionResponse> mapPermissions(Set<Permission> permissions) {
         return permissions.stream()
                 .map(permission -> PermissionResponse.builder()
@@ -130,7 +123,6 @@ public class ScheduleEventReminderMapper {
                 .collect(Collectors.toSet());
     }
 
-    // Convert fileUrls from ScheduleEvent to List<String>
     private List<String> mapFileUrls(ScheduleEvent scheduleEvent) {
         return scheduleEvent.getFileUrls() != null
                 ? scheduleEvent.getFileUrls().stream()
