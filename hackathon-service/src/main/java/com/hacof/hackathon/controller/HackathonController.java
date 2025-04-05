@@ -106,28 +106,13 @@ public class HackathonController {
     }
 
     @DeleteMapping
-    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody CommonResponse<HackathonDTO> request) {
-        Long id = Long.parseLong((request.getData().getId()));
+    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody HackathonDTO request) {
+        Long id = Long.parseLong((request.getId()));
         log.debug("Received request to delete hackathon with id: {}", id);
         hackathonService.deleteHackathon(id);
         CommonResponse<Void> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon deleted successfully"), null);
         return ResponseEntity.ok(response);
-    }
-
-    private void validateUniqueTitleForCreate(String title) {
-        if (hackathonService.existsByTitle(title)) {
-            throw new InvalidInputException("Hackathon title already exists");
-        }
-    }
-
-    private void validateUniqueTitleForUpdate(String id, String title) {
-        if (hackathonService.existsByTitleAndIdNot(title, Long.parseLong(id))) {
-            throw new InvalidInputException("Hackathon title already exists");
-        }
     }
 
     // --- ENDPOINTS FOR HACKATHON RESULTS ---
@@ -200,5 +185,17 @@ public class HackathonController {
                 //                LocalDateTime.now(),
                 //                "HACOF",
                 new CommonResponse.Result("0000", "Fetched hackathon results successfully"), results));
+    }
+
+    private void validateUniqueTitleForCreate(String title) {
+        if (hackathonService.existsByTitle(title)) {
+            throw new InvalidInputException("Hackathon title already exists");
+        }
+    }
+
+    private void validateUniqueTitleForUpdate(String id, String title) {
+        if (hackathonService.existsByTitleAndIdNot(title, Long.parseLong(id))) {
+            throw new InvalidInputException("Hackathon title already exists");
+        }
     }
 }
