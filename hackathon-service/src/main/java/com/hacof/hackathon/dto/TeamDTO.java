@@ -3,13 +3,12 @@ package com.hacof.hackathon.dto;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamDTO {
     String id;
@@ -17,13 +16,27 @@ public class TeamDTO {
     String hackathonId;
     String teamLeaderId;
     Set<UserTeamDTO> teamMembers;
-    List<MentorshipSessionRequestDTO> mentorshipSessionRequests;
-    List<TeamHackathonDTO> teamHackathons;
-    List<TeamRoundDTO> teamRounds;
-    List<HackathonResultDTO> hackathonResults;
-    List<MentorshipRequestDTO> mentorshipRequests;
-    List<FeedbackDTO> feedbacks;
+    @JsonIgnore
     String bio;
     boolean isDeleted;
+    @JsonIgnore
     String deletedById;
+    @JsonIgnore
+    List<TeamHackathonDTO> teamHackathons;
+    @JsonIgnore
+    List<MentorshipSessionRequestDTO> mentorshipSessionRequests;
+    @JsonIgnore
+    List<TeamRoundDTO> teamRounds;
+    @JsonIgnore
+    List<HackathonResultDTO> hackathonResults;
+    @JsonIgnore
+    List<MentorshipRequestDTO> mentorshipRequests;
+    @JsonIgnore
+    List<FeedbackDTO> feedbacks;
+    @JsonIgnore
+    List<MentorTeamDTO> mentorTeams;
+    @JsonIgnore
+    List<MentorTeamLimitDTO> mentorTeamLimits;
+    @JsonIgnore
+    List<SubmissionDTO> submissions;
 }

@@ -1,15 +1,22 @@
 package com.hacof.hackathon.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.dto.TeamDTO;
+import com.hacof.hackathon.dto.UserTeamDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamMapper;
@@ -24,54 +31,92 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @Transactional
 @FieldDefaults(makeFinal = true)
+@Slf4j
 public class TeamServiceImpl implements TeamService {
     IndividualRegistrationRequestRepository individualRegistrationRequestRepository;
     UserRepository userRepository;
     TeamRepository teamRepository;
     TeamMapper teamMapper;
 
+
     @Override
-    public TeamDTO createTeamWithParticipants(String teamName, List<Long> requestIds) {
-        // Fetch individual registration requests
-        List<IndividualRegistrationRequest> requests = individualRegistrationRequestRepository.findAllById(requestIds);
+    public List<TeamDTO> createBulkTeams(List<Long> userIds) {
+        log.debug("Starting createBulkTeams with userIds: {}", userIds);
+        List<TeamDTO> createdTeams = new ArrayList<>();
+        List<User> users = userRepository.findAllById(userIds);
+        log.debug("Fetched users: {}", users);
 
-        // Extract user IDs from the individual registration requests
-        List<Long> userIds =
-                requests.stream().map(request -> request.getCreatedBy().getId()).collect(Collectors.toList());
-
-        // Fetch users by their IDs
-        List<User> participants = userRepository.findAllById(userIds);
-
-        // Ensure participants do not already belong to a team
-        List<User> eligibleParticipants = participants.stream()
-                .filter(user -> user.getUserTeams().isEmpty())
+        // Adjust the filtering condition as needed
+        List<User> eligibleUsers = users.stream()
+                .filter(user -> user.getStatus() == Status.ACTIVE) 
                 .collect(Collectors.toList());
+        log.debug("Eligible users: {}", eligibleUsers);
 
-        if (eligibleParticipants.size() < 4) {
-            throw new IllegalArgumentException("Not enough participants without a team");
+        Random random = new Random();
+        for (int i = 0; i < eligibleUsers.size(); i += 4) {
+            int teamSize =
+                    Math.min(4 + random.nextInt(3), eligibleUsers.size() - i); // Random team size between 4 and 6
+            List<User> teamMembers = new ArrayList<>(eligibleUsers.subList(i, i + teamSize));
+            log.debug("Creating team with members: {}", teamMembers);
+
+            // Create a new team
+            Team team = new Team();
+            team.setName("Team " + UUID.randomUUID().toString());
+            teamRepository.save(team);
+            log.debug("Created team: {}", team);
+
+            // Assign members to the team
+            teamMembers.forEach(member -> {
+                UserTeam userTeam = new UserTeam();
+                userTeam.setUser(member);
+                userTeam.setTeam(team);
+                member.getUserTeams().add(userTeam);
+                userRepository.save(member);
+                log.debug("Assigned user {} to team {}", member, team);
+            });
+
+            // Randomly select a team leader
+            User teamLeader = teamMembers.get(random.nextInt(teamMembers.size()));
+            team.setTeamLeader(teamLeader);
+            teamRepository.save(team);
+            log.debug("Set team leader: {}", teamLeader);
+
+            //            if (!teamMembers.isEmpty() && !teamMembers.get(0).getUserHackathons().isEmpty()) {
+            //                team.setTeamHackathons(List.of(new TeamHackathon(team,
+            // teamMembers.get(0).getUserHackathons().iterator().next().getHackathon())));
+            //            }
+
+//            TeamDTO teamDTO = teamMapper.toDto(team);
+//            teamDTO.setTeamLeaderId(teamLeader.getId().toString());
+//            if (!teamMembers.isEmpty()
+//                    && !teamMembers.get(0).getUserHackathons().isEmpty()) {
+//                teamDTO.setHackathonId(String.valueOf(teamMembers
+//                        .get(0)
+//                        .getUserHackathons()
+//                        .iterator()
+//                        .next()
+//                        .getHackathon()
+//                        .getId()));
+//            }
+//            teamDTO.setTeamMembers(teamMembers.stream()
+//                    .map(member -> new UserTeamDTO(null, member.getId(), team.getId(), null, null, null, null))
+//                    .collect(Collectors.toSet()));
+//
+//            createdTeams.add(teamDTO);
+            TeamDTO teamDTO = teamMapper.toDto(team);
+            teamDTO.setTeamLeaderId(String.valueOf(teamLeader.getId()));
+            if (!teamMembers.isEmpty() && !teamMembers.get(0).getUserHackathons().isEmpty()) {
+                teamDTO.setHackathonId(String.valueOf(teamMembers.get(0).getUserHackathons().iterator().next().getHackathon().getId()));            }
+            teamDTO.setTeamMembers(teamMembers.stream()
+                    .map(member -> new UserTeamDTO(null, member.getId(), team.getId(), null, null, null, null))
+                    .collect(Collectors.toSet()));
+
+            createdTeams.add(teamDTO);
+            log.debug("Added team to createdTeams: {}", teamDTO);
         }
 
-        // Create a new team
-        Team team = new Team();
-        team.setName(teamName);
-        teamRepository.save(team);
-
-        // Assign participants to the new team
-        eligibleParticipants.forEach(participant -> {
-            UserTeam userTeam = new UserTeam();
-            userTeam.setUser(participant);
-            userTeam.setTeam(team);
-            participant.getUserTeams().add(userTeam);
-            userRepository.save(participant);
-        });
-
-        // Randomly select one participant as the team leader
-        Random random = new Random();
-        User teamLeader = eligibleParticipants.get(random.nextInt(eligibleParticipants.size()));
-        team.setTeamLeader(teamLeader);
-        teamRepository.save(team);
-
-        return teamMapper.toDto(team);
+        log.debug("Finished createBulkTeams with createdTeams: {}", createdTeams);
+        return createdTeams;
     }
 
     @Override
