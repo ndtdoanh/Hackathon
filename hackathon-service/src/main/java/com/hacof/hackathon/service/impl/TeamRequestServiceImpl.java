@@ -8,33 +8,19 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.hacof.hackathon.constant.Status;
-import com.hacof.hackathon.constant.TeamHackathonStatus;
-import com.hacof.hackathon.constant.TeamRequestMemberStatus;
-import com.hacof.hackathon.constant.TeamRequestStatus;
+import com.hacof.hackathon.constant.*;
 import com.hacof.hackathon.dto.TeamRequestDTO;
 import com.hacof.hackathon.dto.TeamRequestSearchDTO;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.Team;
-import com.hacof.hackathon.entity.TeamHackathon;
-import com.hacof.hackathon.entity.TeamRequest;
-import com.hacof.hackathon.entity.TeamRequestMember;
-import com.hacof.hackathon.entity.User;
-import com.hacof.hackathon.entity.UserTeam;
+import com.hacof.hackathon.entity.*;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamRequestMapper;
-import com.hacof.hackathon.repository.HackathonRepository;
-import com.hacof.hackathon.repository.TeamRepository;
-import com.hacof.hackathon.repository.TeamRequestRepository;
-import com.hacof.hackathon.repository.UserRepository;
+import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.NotificationService;
 import com.hacof.hackathon.service.TeamRequestService;
 import com.hacof.hackathon.specification.TeamRequestSpecification;
@@ -55,7 +41,15 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     UserRepository userRepository;
     TeamRequestMapper teamRequestMapper;
     NotificationService notificationService;
+    BoardRepository boardRepository;
+    BoardUserRepository boardUserRepository;
+    ConversationRepository conversationRepository;
+    ConversationUserRepository conversationUserRepository;
+    ScheduleRepository scheduleRepository;
+    TeamRoundRepository teamRoundRepository;
+    RoundRepository roundRepository;
 
+    // use later - pending to use Paging
     @Override
     public List<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO) {
         Specification<TeamRequest> spec = Specification.where(null);
@@ -73,25 +67,36 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             spec = spec.and(TeamRequestSpecification.hasMemberId(searchDTO.getMemberId()));
         }
         if (searchDTO.getFromDate() != null || searchDTO.getToDate() != null) {
-            spec = spec.and(TeamRequestSpecification.createdDateBetween(searchDTO.getFromDate(), searchDTO.getToDate()));
+            spec = spec.and(
+                    TeamRequestSpecification.createdDateBetween(searchDTO.getFromDate(), searchDTO.getToDate()));
         }
 
         // Fetch all results without pagination
-        return teamRequestRepository.findAll(spec).stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
+        return teamRequestRepository.findAll(spec).stream()
+                .map(teamRequestMapper::toDto)
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public List<TeamRequestDTO> getAllTeamRequests() {
+        if (teamRequestRepository.findAll().isEmpty()) {
+            throw new ResourceNotFoundException("No team requests found");
+        }
+        List<TeamRequest> teamRequests = teamRequestRepository.findAll();
+        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
+    }
 
     @Override
     public TeamRequestDTO createTeamRequest(TeamRequestDTO request) {
-        log.info("Bắt đầu tạo team request cho hackathon: {}", request.getHackathonId());
-
         // Validate hackathon
         Hackathon hackathon = validateHackathon(request.getHackathonId());
-        log.debug("Đã validate hackathon thành công");
+        log.debug("Validated successfully hackathon: {}", hackathon.getTitle());
 
         // Validate team size
         validateTeamSize(request.getTeamRequestMembers().size(), hackathon);
-        log.debug("Đã validate team size thành công");
+        log.debug(
+                "Validated successfully team size: {}",
+                request.getTeamRequestMembers().size());
 
         // Validate members not in other teams
         //        validateMembersNotInOtherTeams(request.getTeamRequestMembers(), hackathon.getId());
@@ -111,7 +116,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         request.getTeamRequestMembers().forEach(member -> {
             User user = userRepository
                     .findById(Long.parseLong(member.getUserId()))
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user: " + member.getUserId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Not found with user: " + member.getUserId()));
 
             TeamRequestMember memberEntity = TeamRequestMember.builder()
                     .teamRequest(teamRequest)
@@ -122,10 +127,9 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         });
 
         TeamRequest saved = teamRequestRepository.save(teamRequest);
-        log.info("Đã tạo team request thành công với ID: {}", saved.getId());
 
         notificationService.notifyTeamRequestCreated(saved);
-        log.debug("Đã gửi thông báo cho các thành viên");
+        log.debug("Send Notification Successfully!");
 
         return teamRequestMapper.toDto(saved);
     }
@@ -176,25 +180,21 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         return teamRequestMapper.toDto(updated);
     }
-
+    // Organizer review team request
     @Override
     public TeamRequestDTO reviewTeamRequest(String requestId, TeamRequestStatus status, String note) {
         log.info("Review team request: {}", requestId);
 
         TeamRequest request = getTeamRequest(requestId);
 
-        //        // Validate request still pending
-        //        if (request.getStatus() != TeamRequestStatus.PENDING) {
-        //            throw new IllegalStateException("Chỉ có thể xét duyệt các yêu cầu đang chờ");
-        //        }
         // Validate request is under review
         if (request.getStatus() != TeamRequestStatus.UNDER_REVIEW) {
-            throw new IllegalStateException("Just can review request is waiting for approval");
+            throw new InvalidInputException("Just can review request is waiting for approval");
         }
 
         // Validate all members approved if approving request
         if (status == TeamRequestStatus.APPROVED && !allMembersApproved(request)) {
-            throw new IllegalStateException("Cannot approve request if not all members approved");
+            throw new InvalidInputException("Cannot approve request if not all members approved");
         }
 
         // Update request status
@@ -204,7 +204,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
+            throw new InvalidInputException("No authenticated user found");
         }
 
         String username = authentication.getName();
@@ -216,10 +216,71 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         // If approved, create team
         if (status == TeamRequestStatus.APPROVED) {
-            createTeam(request);
-            log.info(
-                    "Created team from request                                                                                                                                      {}",
-                    requestId);
+            Team team = createTeam(request);
+            log.info("Created team from request {}", requestId);
+
+            // Create Schedule
+            Schedule schedule = Schedule.builder()
+                    .team(team)
+                    .hackathon(request.getHackathon())
+                    .build();
+            scheduleRepository.save(schedule);
+            log.debug("Created schedule for team {}", team.getId());
+
+            // Create Board
+            Board board =
+                    Board.builder().team(team).owner(request.getCreatedBy()).build();
+            boardRepository.save(board);
+            log.debug("Created board for team {}", team.getId());
+
+            // Create BoardUsers
+            for (UserTeam userTeam : team.getTeamMembers()) {
+                BoardUser boardUser = BoardUser.builder()
+                        .board(board)
+                        .user(userTeam.getUser())
+                        .role(
+                                userTeam.getUser().getId()
+                                                == team.getTeamLeader().getId()
+                                        ? BoardUserRole.ADMIN
+                                        : BoardUserRole.MEMBER)
+                        .build();
+                boardUserRepository.save(boardUser);
+            }
+            log.debug("Created board users for team {}", team.getId());
+
+            // Create Conversation
+            Conversation conversation = Conversation.builder()
+                    .team(team)
+                    .type(ConversationType.PRIVATE)
+                    .name(team.getName())
+                    .build();
+            conversationRepository.save(conversation);
+            log.debug("Created conversation for team {}", team.getId());
+
+            // Create ConversationUsers
+            for (UserTeam userTeam : team.getTeamMembers()) {
+                ConversationUser conversationUser = ConversationUser.builder()
+                        .user(userTeam.getUser())
+                        .conversation(conversation)
+                        .isDeleted(false)
+                        .build();
+                conversationUserRepository.save(conversationUser);
+            }
+            log.debug("Created conversation users for team {}", team.getId());
+
+            // Create TeamRound
+            Round round = roundRepository
+                    .findFirstByHackathonIdOrderByRoundNumberAsc(
+                            request.getHackathon().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("No rounds found for hackathon"));
+            TeamRound teamRound = TeamRound.builder()
+                    .team(team)
+                    .round(round)
+                    .status(TeamRoundStatus.PENDING)
+                    .description("Team " + team.getName() + " registered for round " + round.getRoundNumber())
+                    .build();
+            teamRoundRepository.save(teamRound);
+            log.debug("Created team round for team {}", team.getId());
         }
 
         TeamRequest updated = teamRequestRepository.save(request);
@@ -228,7 +289,56 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         return teamRequestMapper.toDto(updated);
     }
 
-    private void createTeam(TeamRequest request) {
+    @Override
+    public List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId) {
+        if (hackathonId == null || userId == null) {
+            throw new IllegalArgumentException("Hackathon ID and User ID must not be null");
+        }
+        if (teamRequestRepository
+                .findAllByHackathonIdAndUserId(Long.parseLong(hackathonId), Long.parseLong(userId))
+                .isEmpty()) {
+            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID and User ID");
+        }
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonIdAndUserId(
+                Long.parseLong(hackathonId), Long.parseLong(userId));
+        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamRequestDTO> filterByUserId(String userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID must not be null");
+        }
+        if (teamRequestRepository.findAllByUserId(Long.parseLong(userId)).isEmpty()) {
+            throw new ResourceNotFoundException("No team requests found for the given User ID");
+        }
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByUserId(Long.parseLong(userId));
+        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamRequestDTO> filterByHackathonId(String hackathonId) {
+        if (hackathonId == null) {
+            throw new IllegalArgumentException("Hackathon ID must not be null");
+        }
+        if (teamRequestRepository
+                .findAllByHackathonId(Long.parseLong(hackathonId))
+                .isEmpty()) {
+            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID");
+        }
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
+        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteTeamRequest(Long teamRequestId) {
+        TeamRequest teamRequest = teamRequestRepository
+                .findById(teamRequestId)
+                .orElseThrow(() -> new ResourceNotFoundException("TeamRequest not found with ID " + teamRequestId));
+        teamRequestRepository.delete(teamRequest);
+    }
+
+    private Team createTeam(TeamRequest request) {
         Team team = Team.builder()
                 .name(request.getName())
                 .teamLeader(request.getCreatedBy()) // Set leader is the creator that send request
@@ -255,7 +365,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             team.getTeamMembers().add(userTeam);
         });
 
-        teamRepository.save(team);
+        return teamRepository.save(team);
     }
 
     private TeamRequest getTeamRequest(String requestId) {
@@ -277,15 +387,6 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
     }
 
-    //    private void validateMembersNotInOtherTeams(List<TeamRequestMemberDTO> members, Long hackathonId) {
-    //        for (TeamRequestMemberDTO member : members) {
-    //            if (teamRepository.existsByHackathonIdAndMemberId(hackathonId, member.getUserId())) {
-    //                throw new IllegalStateException(
-    //                        String.format("User %s đã thuộc team khác trong hackathon này", member.getUserId()));
-    //            }
-    //        }
-    //    }
-
     private Hackathon validateHackathon(String hackathonId) {
         Hackathon hackathon = hackathonRepository
                 .findById(Long.parseLong(hackathonId))
@@ -296,32 +397,5 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
 
         return hackathon;
-    }
-
-    @Override
-    public List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId) {
-        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonIdAndUserId(
-                Long.parseLong(hackathonId), Long.parseLong(userId));
-        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TeamRequestDTO> filterByUserId(String userId) {
-        List<TeamRequest> teamRequests = teamRequestRepository.findAllByUserId(Long.parseLong(userId));
-        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TeamRequestDTO> filterByHackathonId(String hackathonId) {
-        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public void deleteTeamRequest(Long teamRequestId) {
-        TeamRequest teamRequest = teamRequestRepository
-                .findById(teamRequestId)
-                .orElseThrow(() -> new ResourceNotFoundException("TeamRequest not found with ID " + teamRequestId));
-        teamRequestRepository.delete(teamRequest);
     }
 }

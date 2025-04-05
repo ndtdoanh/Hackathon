@@ -24,10 +24,9 @@ public class UploadController {
     @PostMapping("/image")
     public ResponseEntity<CommonResponse<String>> uploadImage(@RequestParam("file") MultipartFile file) {
         String imageUrl = s3Service.uploadFile(file);
-        return ResponseEntity.ok(new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
-                new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl));
+        log.debug("Image uploaded to S3: {}", imageUrl);
+        CommonResponse<String> response = new CommonResponse<>(
+                new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl);
+        return ResponseEntity.ok(response);
     }
 }

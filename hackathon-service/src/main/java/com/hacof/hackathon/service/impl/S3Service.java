@@ -3,6 +3,7 @@ package com.hacof.hackathon.service.impl;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,9 +16,10 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @Service
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class S3Service {
-    private final S3Client s3Client;
-    private final String bucketName;
+    S3Client s3Client;
+    String bucketName;
 
     public S3Service(
             @Value("${aws.s3.access-key}") String accessKey,

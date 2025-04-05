@@ -2,8 +2,6 @@ package com.hacof.hackathon.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 import com.hacof.hackathon.constant.TeamRequestMemberStatus;
 import com.hacof.hackathon.constant.TeamRequestStatus;
 import com.hacof.hackathon.dto.TeamRequestDTO;
@@ -25,4 +23,6 @@ public interface TeamRequestService {
     List<TeamRequestDTO> filterByHackathonId(String hackathonId);
 
     void deleteTeamRequest(Long teamRequestId);
+
+    List<TeamRequestDTO> getAllTeamRequests();
 }
