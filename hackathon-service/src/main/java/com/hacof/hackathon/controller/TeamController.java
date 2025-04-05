@@ -122,15 +122,17 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Fetched team requests successfully"), teamRequests));
     }
 
-    @DeleteMapping("/requests")
-    public ResponseEntity<CommonResponse<TeamRequestDTO>> deleteTeamRequest(@RequestBody Map<String, String> request) {
-        if (request == null || request.isEmpty()) {
+    @DeleteMapping("/requests/{id}")
+    public ResponseEntity<CommonResponse<TeamRequestDTO>> deleteTeamRequest(@PathVariable Long id) {
+        if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new CommonResponse<>(new CommonResponse.Result("0600", "Invalid request data"), null));
         }
-        teamRequestService.deleteTeamRequest(Long.parseLong(request.get("id")));
+
+        teamRequestService.deleteTeamRequest(id);
+
         return ResponseEntity.ok(
-                new CommonResponse<>(new CommonResponse.Result("0000", "Delete team requests successfully"), null));
+                new CommonResponse<>(new CommonResponse.Result("0000", "Delete team request successfully"), null));
     }
 
     // --- TEAM ENDPOINTS ---
