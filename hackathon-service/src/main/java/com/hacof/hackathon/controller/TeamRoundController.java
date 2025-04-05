@@ -1,9 +1,7 @@
 package com.hacof.hackathon.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -34,11 +32,10 @@ public class TeamRoundController {
         log.debug("Tạo team round mới: {}", request.getData());
         TeamRoundDTO created = teamRoundService.create(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Tạo thành công team round"),
-                created));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Tạo thành công team round"), created));
     }
 
     @PutMapping("/{id}")
@@ -47,11 +44,10 @@ public class TeamRoundController {
         log.debug("Cập nhật team round: {}", id);
         TeamRoundDTO updated = teamRoundService.update(id, request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Cập nhật thành công team round"),
-                updated));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Cập nhật thành công team round"), updated));
     }
 
     @DeleteMapping("/{id}")
@@ -59,11 +55,10 @@ public class TeamRoundController {
         log.debug("Xóa team round: {}", id);
         teamRoundService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Xóa thành công team round"),
-                null));
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Xóa thành công team round"), null));
     }
 
     @GetMapping
@@ -89,11 +84,10 @@ public class TeamRoundController {
         Page<TeamRoundDTO> result = teamRoundService.searchTeamRounds(searchDTO);
 
         return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Tìm kiếm thành công"),
-                result));
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Tìm kiếm thành công"), result));
     }
 
     @PostMapping("/filter-by-round")
@@ -102,11 +96,10 @@ public class TeamRoundController {
         String roundId = request.getData().get("roundId");
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
-                teamRounds));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
     }
 
     @PostMapping("/filter-by-judge-and-round")
@@ -116,10 +109,9 @@ public class TeamRoundController {
         String roundId = request.getData().get("roundId");
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(judgeId, roundId);
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
-                teamRounds));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
     }
 }

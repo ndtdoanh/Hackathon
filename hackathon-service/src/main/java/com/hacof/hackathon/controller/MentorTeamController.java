@@ -1,8 +1,6 @@
 package com.hacof.hackathon.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -30,11 +28,10 @@ public class MentorTeamController {
         log.debug("Creating mentor team: {}", request.getData());
         MentorTeamDTO created = mentorTeamService.create(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentor team created successfully"),
-                created));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentor team created successfully"), created));
     }
 
     @PutMapping
@@ -43,11 +40,10 @@ public class MentorTeamController {
         log.debug("Updating mentor team: {}", request.getData().getId());
         MentorTeamDTO updated = mentorTeamService.update(request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentor team updated successfully"),
-                updated));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentor team updated successfully"), updated));
     }
 
     @DeleteMapping
@@ -55,11 +51,10 @@ public class MentorTeamController {
         log.debug("Deleting mentor team: {}", request.getData());
         mentorTeamService.delete(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Mentor team deleted successfully"),
-                null));
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Mentor team deleted successfully"), null));
     }
 
     @PostMapping("/filter-by-hackathon-and-team")
@@ -68,11 +63,10 @@ public class MentorTeamController {
         List<MentorTeamDTO> results = mentorTeamService.getAllByHackathonIdAndTeamId(
                 request.getData().getHackathonId(), request.getData().getTeamId());
         return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentor teams successfully"),
-                results));
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentor teams successfully"), results));
     }
 
     @PostMapping("/filter-by-mentor")
@@ -80,10 +74,9 @@ public class MentorTeamController {
             @RequestBody CommonRequest<String> request) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByMentorId(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentor teams successfully"),
-                results));
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentor teams successfully"), results));
     }
 }

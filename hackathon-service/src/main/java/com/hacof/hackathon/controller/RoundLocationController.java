@@ -1,7 +1,5 @@
 package com.hacof.hackathon.controller;
 
-import java.time.LocalDateTime;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +21,10 @@ public class RoundLocationController {
             @RequestBody CommonRequest<RoundLocationDTO> request) {
         roundLocationService.deleteByLocationId(Long.parseLong(request.getData().getLocationId()));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Round Location deleted successfully"),
-                null);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Round Location deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
 
@@ -36,11 +33,10 @@ public class RoundLocationController {
             @RequestBody CommonRequest<RoundLocationDTO> request) {
         roundLocationService.deleteByRoundId(Long.parseLong(request.getData().getRoundId()));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Round Location deleted successfully"),
-                null);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Round Location deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
 }

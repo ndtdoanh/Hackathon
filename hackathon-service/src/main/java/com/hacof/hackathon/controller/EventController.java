@@ -1,8 +1,6 @@
 package com.hacof.hackathon.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -63,11 +61,10 @@ public class EventController {
     public ResponseEntity<CommonResponse<EventDTO>> createEvent(@RequestBody @Valid CommonRequest<EventDTO> request) {
         EventDTO eventDTO = eventService.create(request.getData());
         CommonResponse<EventDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Event created successfully"),
-                eventDTO);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Event created successfully"), eventDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -75,11 +72,10 @@ public class EventController {
     public ResponseEntity<CommonResponse<EventDTO>> updateEvent(@RequestBody @Valid CommonRequest<EventDTO> request) {
         EventDTO eventDTO = eventService.update(request.getData().getId(), request.getData());
         CommonResponse<EventDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Event updated successfully"),
-                eventDTO);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Event updated successfully"), eventDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -87,11 +83,10 @@ public class EventController {
     public ResponseEntity<CommonResponse<EventDTO>> deleteEvent(@RequestBody @Valid CommonRequest<EventDTO> request) {
         eventService.delete(request.getData().getId());
         CommonResponse<EventDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Event deleted successfully"),
-                null);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Event deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
 
@@ -99,11 +94,10 @@ public class EventController {
     public ResponseEntity<CommonResponse<List<EventDTO>>> getAllEvents() {
         List<EventDTO> events = eventService.getAll();
         CommonResponse<List<EventDTO>> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched all events successfully"),
-                events);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all events successfully"), events);
         return ResponseEntity.ok(response);
     }
 
@@ -111,11 +105,10 @@ public class EventController {
     public ResponseEntity<CommonResponse<EventDTO>> getEventById(@PathVariable Long id) {
         EventDTO event = eventService.getById(id);
         CommonResponse<EventDTO> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched event successfully"),
-                event);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched event successfully"), event);
         return ResponseEntity.ok(response);
     }
 
@@ -124,11 +117,10 @@ public class EventController {
             @RequestBody @Valid CommonRequest<EventRegistrationDTO> request) {
         EventRegistrationDTO eventRegistrationDTO = eventRegistrationService.create(request.getData());
         CommonResponse<EventRegistrationDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Event registration created successfully"),
-                eventRegistrationDTO);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Event registration created successfully"), eventRegistrationDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -138,11 +130,10 @@ public class EventController {
         EventRegistrationDTO eventRegistrationDTO =
                 eventRegistrationService.update(request.getData().getId(), request.getData());
         CommonResponse<EventRegistrationDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Event registration updated successfully"),
-                eventRegistrationDTO);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Event registration updated successfully"), eventRegistrationDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -151,11 +142,10 @@ public class EventController {
             @RequestBody @Valid CommonRequest<Long> request) {
         eventRegistrationService.delete(request.getData());
         CommonResponse<Void> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Event registration deleted successfully"),
-                null);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Event registration deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
 
@@ -163,11 +153,10 @@ public class EventController {
     public ResponseEntity<CommonResponse<List<EventRegistrationDTO>>> getAllEventRegistrations() {
         List<EventRegistrationDTO> eventRegistrations = eventRegistrationService.getAll();
         CommonResponse<List<EventRegistrationDTO>> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched all event registrations successfully"),
-                eventRegistrations);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all event registrations successfully"), eventRegistrations);
         return ResponseEntity.ok(response);
     }
 
@@ -175,11 +164,10 @@ public class EventController {
     public ResponseEntity<CommonResponse<EventRegistrationDTO>> getEventRegistrationById(@PathVariable Long id) {
         EventRegistrationDTO eventRegistration = eventRegistrationService.getById(id);
         CommonResponse<EventRegistrationDTO> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched event registration successfully"),
-                eventRegistration);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched event registration successfully"), eventRegistration);
         return ResponseEntity.ok(response);
     }
 }

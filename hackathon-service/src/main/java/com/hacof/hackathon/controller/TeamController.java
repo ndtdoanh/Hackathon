@@ -3,7 +3,6 @@ package com.hacof.hackathon.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,11 +33,10 @@ public class TeamController {
             @RequestBody CommonRequest<TeamRequestDTO> request) {
         TeamRequestDTO teamRequestDTO = teamRequestService.createTeamRequest(request.getData());
         CommonResponse<TeamRequestDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Team Request created successfully"),
-                teamRequestDTO);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Team Request created successfully"), teamRequestDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -52,11 +50,10 @@ public class TeamController {
                 request.getData().getStatus(),
                 request.getData().getNote());
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Đã cập nhật phản hồi thành công"),
-                updated));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Đã cập nhật phản hồi thành công"), updated));
     }
 
     // Step 3: Organizer/Admin review
@@ -68,11 +65,10 @@ public class TeamController {
                 request.getData().getStatus(),
                 request.getData().getNote());
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Đã xét duyệt yêu cầu thành công"),
-                reviewed));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Đã xét duyệt yêu cầu thành công"), reviewed));
     }
 
     // Step 4: Search team requests
@@ -105,11 +101,10 @@ public class TeamController {
         Page<TeamRequestDTO> result = teamRequestService.searchTeamRequests(searchDTO);
 
         return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Tìm kiếm thành công"),
-                result));
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Tìm kiếm thành công"), result));
     }
 
     @PostMapping("/requests/filter-by-hackathon-and-user")
@@ -119,11 +114,10 @@ public class TeamController {
         String userId = request.getData().get("userId");
         List<TeamRequestDTO> teamRequests = teamRequestService.getAllByHackathonIdAndUserId(hackathonId, userId);
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Fetched team requests successfully"),
-                teamRequests));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team requests successfully"), teamRequests));
     }
 
     @PostMapping("/requests/filter-by-user")
@@ -132,11 +126,10 @@ public class TeamController {
         String userId = request.getData().get("userId");
         List<TeamRequestDTO> teamRequests = teamRequestService.filterByUserId(userId);
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Fetched team requests successfully"),
-                teamRequests));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team requests successfully"), teamRequests));
     }
 
     @PostMapping("/requests/filter-by-hackathon")
@@ -145,22 +138,20 @@ public class TeamController {
         String hackathonId = request.getData().get("hackathonId");
         List<TeamRequestDTO> teamRequests = teamRequestService.filterByHackathonId(hackathonId);
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Fetched team requests successfully"),
-                teamRequests));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team requests successfully"), teamRequests));
     }
 
     @DeleteMapping("/requests/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteTeamRequest(@PathVariable Long id) {
         teamRequestService.deleteTeamRequest(id);
         CommonResponse<Void> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Team request deleted successfully"),
-                null);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Team request deleted successfully"), null);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
@@ -183,11 +174,10 @@ public class TeamController {
     public ResponseEntity<CommonResponse<TeamDTO>> createTeam(@RequestBody CommonRequest<TeamDTO> request) {
         TeamDTO teamDTO = teamService.createTeam(request.getData());
         CommonResponse<TeamDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Team created successfully"),
-                teamDTO);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Team created successfully"), teamDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -196,11 +186,10 @@ public class TeamController {
             @PathVariable long id, @RequestBody CommonRequest<TeamDTO> request) {
         TeamDTO teamDTO = teamService.updateTeam(id, request.getData());
         CommonResponse<TeamDTO> response = new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Team updated successfully"),
-                teamDTO);
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Team updated successfully"), teamDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -208,11 +197,10 @@ public class TeamController {
     public ResponseEntity<CommonResponse<Void>> deleteTeam(@PathVariable long id) {
         teamService.deleteTeam(id);
         CommonResponse<Void> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Team deleted successfully"),
-                null);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Team deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
 
@@ -220,11 +208,10 @@ public class TeamController {
     public ResponseEntity<CommonResponse<TeamDTO>> getTeamById(@PathVariable long id) {
         TeamDTO teamDTO = teamService.getTeamById(id);
         CommonResponse<TeamDTO> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched team successfully"),
-                teamDTO);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched team successfully"), teamDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -232,11 +219,10 @@ public class TeamController {
     public ResponseEntity<CommonResponse<List<TeamDTO>>> getAllTeams() {
         List<TeamDTO> teams = teamService.getAllTeams();
         CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Fetched all teams successfully"),
-                teams);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all teams successfully"), teams);
         return ResponseEntity.ok(response);
     }
 
@@ -245,25 +231,19 @@ public class TeamController {
             @RequestParam Long userId, @RequestParam Long hackathonId) {
         List<TeamDTO> teams = teamService.getTeamsByUserIdAndHackathonId(userId, hackathonId);
         CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Teams fetched successfully"),
-                teams);
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Teams fetched successfully"), teams);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/create-with-participants")
-    public ResponseEntity<CommonResponse<TeamDTO>> createTeamWithParticipants(
-            @RequestBody CommonRequest<CreateTeamRequestDTO> request) {
-        TeamDTO teamDTO = teamService.createTeamWithParticipants(
-                request.getData().getTeamName(), request.getData().getRequestIds());
+    @PostMapping("/create-bulk-teams")
+    public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(
+            @RequestBody CommonRequest<List<Long>> request) {
+        List<Long> userIds = request.getData();
+        List<TeamDTO> createdTeams = teamService.createBulkTeams(userIds);
         return ResponseEntity.ok(new CommonResponse<>(
-                request.getRequestId(),
-                LocalDateTime.now(),
-                request.getChannel(),
-                new CommonResponse.Result("0000", "Team created successfully"),
-                teamDTO));
+                new CommonResponse.Result("0000", "Bulk teams created successfully"), createdTeams));
     }
 }
-// JPA Specification
