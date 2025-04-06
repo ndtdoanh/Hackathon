@@ -31,6 +31,11 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  multipart:
+    enabled: true
+    max-file-size: 15MB
+    max-request-size: 15MB
+
 outbound:
   identity:
     client-id: ${clientId}
