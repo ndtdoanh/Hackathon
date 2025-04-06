@@ -57,6 +57,7 @@ public class ScheduleEventMapper {
         return new ScheduleResponseDTO(
                 String.valueOf(schedule.getId()),
                 schedule.getTeam() != null ? String.valueOf(schedule.getTeam().getId()) : null,
+                schedule.getHackathon() != null ? String.valueOf(schedule.getHackathon().getId()) : null,
                 schedule.getName(),
                 schedule.getDescription(),
                 schedule.getCreatedDate(),

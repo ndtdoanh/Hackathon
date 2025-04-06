@@ -16,6 +16,7 @@ public class ScheduleResponseDTO {
 
     String id;
     String teamId;
+    String hackathonId;
     String name;
     String description;
     LocalDateTime createdDate;
