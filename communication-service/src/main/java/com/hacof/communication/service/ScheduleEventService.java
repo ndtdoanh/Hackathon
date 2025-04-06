@@ -2,7 +2,6 @@ package com.hacof.communication.service;
 
 import java.util.List;
 
-import com.hacof.communication.constant.ScheduleEventStatus;
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 

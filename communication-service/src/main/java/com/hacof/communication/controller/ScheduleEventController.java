@@ -2,7 +2,6 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
-import com.hacof.communication.constant.ScheduleEventStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,10 +119,12 @@ public class ScheduleEventController {
     }
 
     @GetMapping("/by-schedule/{scheduleId}")
-    public ResponseEntity<CommonResponse<List<ScheduleEventResponseDTO>>> getScheduleEventsByScheduleId(@PathVariable Long scheduleId) {
+    public ResponseEntity<CommonResponse<List<ScheduleEventResponseDTO>>> getScheduleEventsByScheduleId(
+            @PathVariable Long scheduleId) {
         CommonResponse<List<ScheduleEventResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventResponseDTO> scheduleEvents = scheduleEventService.getScheduleEventsByScheduleId(scheduleId);
+            List<ScheduleEventResponseDTO> scheduleEvents =
+                    scheduleEventService.getScheduleEventsByScheduleId(scheduleId);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule events for the given scheduleId fetched successfully!");
             response.setData(scheduleEvents);
@@ -138,5 +139,4 @@ public class ScheduleEventController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

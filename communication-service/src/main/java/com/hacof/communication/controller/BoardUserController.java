@@ -7,27 +7,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.hacof.communication.dto.request.ScheduleRequestDTO;
-import com.hacof.communication.dto.response.ScheduleResponseDTO;
+import com.hacof.communication.dto.request.BoardUserRequestDTO;
+import com.hacof.communication.dto.response.BoardUserResponseDTO;
 import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.ScheduleService;
+import com.hacof.communication.service.BoardUserService;
 
 @RestController
-@RequestMapping("/api/v1/schedules")
-public class ScheduleController {
+@RequestMapping("/api/v1/board-users")
+public class BoardUserController {
 
     @Autowired
-    private ScheduleService scheduleService;
+    private BoardUserService boardUserService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<ScheduleResponseDTO>> createSchedule(
-            @RequestBody ScheduleRequestDTO scheduleRequestDTO) {
-        CommonResponse<ScheduleResponseDTO> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<BoardUserResponseDTO>> createBoardUser(
+            @RequestBody BoardUserRequestDTO boardUserRequestDTO) {
+        CommonResponse<BoardUserResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleResponseDTO createdSchedule = scheduleService.createSchedule(scheduleRequestDTO);
+            BoardUserResponseDTO createdBoardUser = boardUserService.createBoardUser(boardUserRequestDTO);
             response.setStatus(HttpStatus.CREATED.value());
-            response.setMessage("Schedule created successfully!");
-            response.setData(createdSchedule);
+            response.setMessage("BoardUser created successfully!");
+            response.setData(createdBoardUser);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -41,14 +41,14 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<ScheduleResponseDTO>> updateSchedule(
-            @PathVariable Long id, @RequestBody ScheduleRequestDTO scheduleRequestDTO) {
-        CommonResponse<ScheduleResponseDTO> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<BoardUserResponseDTO>> updateBoardUser(
+            @PathVariable Long id, @RequestBody BoardUserRequestDTO boardUserRequestDTO) {
+        CommonResponse<BoardUserResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleResponseDTO updatedSchedule = scheduleService.updateSchedule(id, scheduleRequestDTO);
+            BoardUserResponseDTO updatedBoardUser = boardUserService.updateBoardUser(id, boardUserRequestDTO);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Schedule updated successfully!");
-            response.setData(updatedSchedule);
+            response.setMessage("BoardUser updated successfully!");
+            response.setData(updatedBoardUser);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -62,12 +62,12 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<String>> deleteSchedule(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<String>> deleteBoardUser(@PathVariable Long id) {
         CommonResponse<String> response = new CommonResponse<>();
         try {
-            scheduleService.deleteSchedule(id);
+            boardUserService.deleteBoardUser(id);
             response.setStatus(HttpStatus.NO_CONTENT.value());
-            response.setMessage("Schedule deleted successfully!");
+            response.setMessage("BoardUser deleted successfully!");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -81,13 +81,13 @@ public class ScheduleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<ScheduleResponseDTO>> getSchedule(@PathVariable Long id) {
-        CommonResponse<ScheduleResponseDTO> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<BoardUserResponseDTO>> getBoardUser(@PathVariable Long id) {
+        CommonResponse<BoardUserResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleResponseDTO schedule = scheduleService.getSchedule(id);
+            BoardUserResponseDTO boardUser = boardUserService.getBoardUser(id);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Schedule fetched successfully!");
-            response.setData(schedule);
+            response.setMessage("BoardUser fetched successfully!");
+            response.setData(boardUser);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -101,13 +101,13 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getAllSchedules() {
-        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<List<BoardUserResponseDTO>>> getAllBoardUsers() {
+        CommonResponse<List<BoardUserResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleResponseDTO> schedules = scheduleService.getAllSchedules();
+            List<BoardUserResponseDTO> boardUsers = boardUserService.getAllBoardUsers();
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Schedules fetched successfully!");
-            response.setData(schedules);
+            response.setMessage("BoardUsers fetched successfully!");
+            response.setData(boardUsers);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -116,44 +116,35 @@ public class ScheduleController {
         }
     }
 
-    @GetMapping("/by-team/{teamId}")
-    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getSchedulesByTeamId(@PathVariable Long teamId) {
-        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+    @GetMapping("/by-board/{boardId}")
+    public ResponseEntity<CommonResponse<List<BoardUserResponseDTO>>> getBoardUsersByBoardId(
+            @PathVariable Long boardId) {
+        CommonResponse<List<BoardUserResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleResponseDTO> schedules = scheduleService.getSchedulesByTeamId(teamId);
+            List<BoardUserResponseDTO> boardUsers = boardUserService.getBoardUsersByBoardId(boardId);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Schedules for team fetched successfully!");
-            response.setData(schedules);
+            response.setMessage("BoardUsers for board fetched successfully!");
+            response.setData(boardUsers);
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
-    @GetMapping("/by-created-and-hackathon")
-    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getSchedulesByCreatedByUsernameAndHackathonId(
-            @RequestParam String createdByUsername, @RequestParam Long hackathonId) {
-        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<CommonResponse<List<BoardUserResponseDTO>>> getBoardUsersByUserId(@PathVariable Long userId) {
+        CommonResponse<List<BoardUserResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleResponseDTO> schedules =
-                    scheduleService.getSchedulesByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
+            List<BoardUserResponseDTO> boardUsers = boardUserService.getBoardUsersByUserId(userId);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Schedules filtered by createdByUsername and hackathonId fetched successfully!");
-            response.setData(schedules);
+            response.setMessage("BoardUsers for user fetched successfully!");
+            response.setData(boardUsers);
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Internal Server Error: " + e.getMessage());
+            response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

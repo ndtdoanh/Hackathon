@@ -40,10 +40,12 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
             throw new IllegalArgumentException("scheduleEventId must not be null");
         }
 
-        ScheduleEvent scheduleEvent = scheduleEventRepository.findById(Long.parseLong(requestDTO.getScheduleEventId()))
+        ScheduleEvent scheduleEvent = scheduleEventRepository
+                .findById(Long.parseLong(requestDTO.getScheduleEventId()))
                 .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
 
-        User user = userRepository.findById(Long.parseLong(requestDTO.getUserId()))
+        User user = userRepository
+                .findById(Long.parseLong(requestDTO.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         ScheduleEventAttendee attendee = scheduleEventAttendeeMapper.toEntity(requestDTO, scheduleEvent, user);
@@ -64,10 +66,12 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
             throw new IllegalArgumentException("scheduleEventId must not be null");
         }
 
-        ScheduleEvent scheduleEvent = scheduleEventRepository.findById(Long.parseLong(requestDTO.getScheduleEventId()))
+        ScheduleEvent scheduleEvent = scheduleEventRepository
+                .findById(Long.parseLong(requestDTO.getScheduleEventId()))
                 .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
 
-        User user = userRepository.findById(Long.parseLong(requestDTO.getUserId()))
+        User user = userRepository
+                .findById(Long.parseLong(requestDTO.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         ScheduleEventAttendee scheduleEventAttendee = scheduleEventAttendeeOptional.get();
@@ -124,9 +128,6 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
         if (attendees.isEmpty()) {
             throw new IllegalArgumentException("No attendees found for the given scheduleEventId: " + scheduleEventId);
         }
-        return attendees.stream()
-                .map(scheduleEventAttendeeMapper::toDto)
-                .collect(Collectors.toList());
+        return attendees.stream().map(scheduleEventAttendeeMapper::toDto).collect(Collectors.toList());
     }
-
 }

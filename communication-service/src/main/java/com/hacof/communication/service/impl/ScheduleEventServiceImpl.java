@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.constant.ScheduleEventStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +34,8 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
             throw new IllegalArgumentException("ScheduleId must not be null");
         }
 
-        Schedule schedule = scheduleRepository.findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
+        Schedule schedule = scheduleRepository
+                .findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found!"));
 
         if (scheduleEventRequestDTO.getName().isEmpty()) {
@@ -63,7 +63,8 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
             throw new IllegalArgumentException("ScheduleId must not be null");
         }
 
-        Schedule schedule = scheduleRepository.findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
+        Schedule schedule = scheduleRepository
+                .findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found!"));
 
         if (scheduleEventRequestDTO.getName().isEmpty()) {
@@ -118,8 +119,6 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         if (scheduleEvents.isEmpty()) {
             throw new IllegalArgumentException("No schedule events found for the given scheduleId: " + scheduleId);
         }
-        return scheduleEvents.stream()
-                .map(scheduleEventMapper::toDto)
-                .collect(Collectors.toList());
+        return scheduleEvents.stream().map(scheduleEventMapper::toDto).collect(Collectors.toList());
     }
 }
