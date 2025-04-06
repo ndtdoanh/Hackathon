@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MessageController {
     MessageService messageService;
+    SimpMessagingTemplate messagingTemplate;
 
     @PostMapping("/{conversationId}")
     //    @PreAuthorize("hasAuthority('CREATE_MESSAGE')")
@@ -38,6 +40,8 @@ public class MessageController {
                 .data(messageResponse)
                 .message("Message created successfully")
                 .build();
+
+        messagingTemplate.convertAndSend("/topic/conversations/" + conversationId, messageResponse);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
