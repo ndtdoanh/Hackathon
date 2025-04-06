@@ -11,22 +11,24 @@ import com.hacof.hackathon.service.impl.S3Service;
 import com.hacof.hackathon.util.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/upload")
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class UploadController {
 
-    private final S3Service s3Service;
+    S3Service s3Service;
 
-    @PostMapping("/image")
+    @PostMapping
     public ResponseEntity<CommonResponse<String>> uploadImage(@RequestParam("file") MultipartFile file) {
         String imageUrl = s3Service.uploadFile(file);
         log.debug("Image uploaded to S3: {}", imageUrl);
-        CommonResponse<String> response = new CommonResponse<>(
-                new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl);
+        CommonResponse<String> response =
+                new CommonResponse<>(new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl);
         return ResponseEntity.ok(response);
     }
 }

@@ -32,11 +32,8 @@ public class RoundController {
     @PostMapping
     public ResponseEntity<CommonResponse<RoundDTO>> createRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         RoundDTO roundDTO = roundService.create(request.getData());
-        CommonResponse<RoundDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
-                new CommonResponse.Result("0000", "Round created successfully"), roundDTO);
+        CommonResponse<RoundDTO> response =
+                new CommonResponse<>(new CommonResponse.Result("0000", "Round created successfully"), roundDTO);
         return ResponseEntity.ok(response);
     }
 

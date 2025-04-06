@@ -16,10 +16,9 @@ import lombok.experimental.FieldDefaults;
 public class RoundLocationDTO {
     String id;
 
-    @NotNull(message = "Round ID is required")
+    @JsonIgnore
     String roundId;
 
-    @NotNull(message = "Location ID is required")
     String locationId;
 
     @NotNull(message = "Type is required")

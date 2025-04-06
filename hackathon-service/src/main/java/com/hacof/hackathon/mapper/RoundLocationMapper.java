@@ -30,7 +30,9 @@ public interface RoundLocationMapper {
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
     RoundLocationDTO toDto(RoundLocation roundLocation);
 
+    @Mapping(target = "location", ignore = true)
     RoundLocation toEntity(RoundLocationDTO roundLocationDTO);
 
+    @Mapping(target = "location", ignore = true)
     void updateEntityFromDto(RoundLocationDTO roundLocationDTO, @MappingTarget RoundLocation roundLocation);
 }

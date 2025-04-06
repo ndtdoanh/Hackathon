@@ -14,4 +14,6 @@ public interface RoundRepository extends JpaRepository<Round, Long>, JpaSpecific
     List<Round> findAllByHackathonId(Long hackathonId);
 
     boolean existsByRoundNumberAndHackathonIdAndIdNot(Integer roundNumber, Long hackathonId, Long roundId);
+
+    boolean existsByHackathonId(Long hackathonId);
 }
