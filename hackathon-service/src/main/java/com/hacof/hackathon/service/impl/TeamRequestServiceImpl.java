@@ -98,10 +98,6 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 "Validated successfully team size: {}",
                 request.getTeamRequestMembers().size());
 
-        // Validate members not in other teams
-        //        validateMembersNotInOtherTeams(request.getTeamRequestMembers(), hackathon.getId());
-        //        log.debug("Đã validate members không thuộc team khác thành công");
-
         // Create team request
         TeamRequest teamRequest = TeamRequest.builder()
                 .hackathon(hackathon)
@@ -127,11 +123,22 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         });
 
         TeamRequest saved = teamRequestRepository.save(teamRequest);
+        saved.getTeamRequestMembers().forEach(member -> {
+            member.setTeamRequest(saved);
+            member.setUser(userRepository
+                    .findById(member.getUser().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Not found with user: " + member.getUser().getId())));
+        });
 
-        notificationService.notifyTeamRequestCreated(saved);
-        log.debug("Send Notification Successfully!");
-
-        return teamRequestMapper.toDto(saved);
+        TeamRequestDTO response = teamRequestMapper.toDto(saved);
+        response.getTeamRequestMembers().forEach(memberDTO -> {
+            memberDTO.setTeamRequestId(String.valueOf(saved.getId()));
+            log.debug("Member ID: {}", memberDTO.getUserId());
+            memberDTO.setUserId(String.valueOf(memberDTO.getUserId()));
+            log.debug("Member ID 1: {}", memberDTO.getUserId());
+        });
+        return response;
     }
 
     @Override

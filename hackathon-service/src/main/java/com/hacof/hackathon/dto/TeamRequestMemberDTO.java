@@ -2,7 +2,7 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
-import com.hacof.hackathon.constant.TeamRequestMemberStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,12 +15,20 @@ import lombok.experimental.FieldDefaults;
 public class TeamRequestMemberDTO {
     String id;
     String teamRequestId;
-    UserDTO user;
     String userId;
-    TeamRequestMemberStatus status;
-    LocalDateTime respondedAt;
+    String status; // TeamRequestMemberStatus
+    String respondedAt; // LocalDateTime
 
-    // audit fields
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    // Audit fields
+    @JsonIgnore
+    String createdByUserName;
+
+    @JsonIgnore
+    LocalDateTime createdAt;
+
+    @JsonIgnore
+    String lastModifiedByUserName; // save username
+
+    @JsonIgnore
+    LocalDateTime updatedAt = LocalDateTime.now();
 }
