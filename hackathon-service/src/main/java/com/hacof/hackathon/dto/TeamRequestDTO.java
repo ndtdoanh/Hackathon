@@ -35,7 +35,7 @@ public class TeamRequestDTO {
     String note; // use to store name?
 
     // String name;
-    String reviewedById; // user reviewed the request
+    String reviewedBy; // user reviewed the request
 
     List<TeamRequestMemberDTO> teamRequestMembers;
 

@@ -41,6 +41,15 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/requests/filter-by-member-and-hackathon")
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> getTeamRequestsByMemberIdAndHackathonId(
+            @RequestParam("memberId") Long memberId,
+            @RequestParam("hackathonId") Long hackathonId) {
+        List<TeamRequestDTO> teamRequests = teamRequestService.getTeamRequestsByMemberIdAndHackathonId(memberId, hackathonId);
+        CommonResponse<List<TeamRequestDTO>> response = new CommonResponse<>(new CommonResponse.Result("0000", "Success"), teamRequests);
+        return ResponseEntity.ok(response);
+    }
+
     // Step 2: Member responses to the team request
     @PostMapping("/requests/respond")
     public ResponseEntity<CommonResponse<TeamRequestDTO>> respondToTeamRequest(

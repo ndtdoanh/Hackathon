@@ -25,4 +25,7 @@ public interface TeamRequestService {
     void deleteTeamRequest(Long teamRequestId);
 
     List<TeamRequestDTO> getAllTeamRequests();
+
+    List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId);
+
 }

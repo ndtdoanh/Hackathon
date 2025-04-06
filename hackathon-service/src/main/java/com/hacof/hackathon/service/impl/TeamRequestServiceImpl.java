@@ -49,6 +49,14 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     TeamRoundRepository teamRoundRepository;
     RoundRepository roundRepository;
 
+    @Override
+    public List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId) {
+        return teamRequestRepository.findByMemberIdAndHackathonId(memberId, hackathonId)
+                .stream()
+                .map(teamRequestMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     // use later - pending to use Paging
     @Override
     public List<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO) {
