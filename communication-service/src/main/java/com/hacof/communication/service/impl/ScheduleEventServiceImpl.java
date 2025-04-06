@@ -38,6 +38,12 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
                 .findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found!"));
 
+        boolean eventExists = scheduleEventRepository.existsByScheduleIdAndName(
+                Long.parseLong(scheduleEventRequestDTO.getScheduleId()), scheduleEventRequestDTO.getName());
+        if (eventExists) {
+            throw new IllegalArgumentException("An event with the same name already exists for this schedule.");
+        }
+
         if (scheduleEventRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Event name cannot be empty");
         }
@@ -66,6 +72,12 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         Schedule schedule = scheduleRepository
                 .findById(Long.parseLong(scheduleEventRequestDTO.getScheduleId()))
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found!"));
+
+        boolean eventExists = scheduleEventRepository.existsByScheduleIdAndNameAndIdNot(
+                Long.parseLong(scheduleEventRequestDTO.getScheduleId()), scheduleEventRequestDTO.getName(), id);
+        if (eventExists) {
+            throw new IllegalArgumentException("An event with the same name already exists for this schedule.");
+        }
 
         if (scheduleEventRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Event name cannot be empty");

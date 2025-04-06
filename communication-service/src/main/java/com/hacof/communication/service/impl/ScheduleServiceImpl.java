@@ -42,6 +42,11 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Name cannot be empty");
         }
 
+        boolean scheduleExists = scheduleRepository.existsByTeamIdAndName(Long.parseLong(scheduleRequestDTO.getTeamId()), scheduleRequestDTO.getName());
+        if (scheduleExists) {
+            throw new IllegalArgumentException("A schedule with the same name already exists for this team.");
+        }
+
         Schedule schedule = scheduleMapper.toEntity(scheduleRequestDTO, team);
         schedule = scheduleRepository.save(schedule);
 
@@ -65,6 +70,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         if (scheduleRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        boolean scheduleExists = scheduleRepository.existsByTeamIdAndNameAndIdNot(Long.parseLong(scheduleRequestDTO.getTeamId()), scheduleRequestDTO.getName(), id);
+        if (scheduleExists) {
+            throw new IllegalArgumentException("A schedule with the same name already exists for this team.");
         }
 
         Schedule schedule = scheduleOptional.get();
