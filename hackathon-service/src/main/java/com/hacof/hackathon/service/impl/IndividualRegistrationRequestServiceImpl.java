@@ -119,6 +119,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     //        }
     @Override
     public IndividualRegistrationRequestDTO create(IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
+
         IndividualRegistrationRequest request = requestMapper.toEntity(individualRegistrationRequestDTO);
         request = requestRepository.save(request);
         return requestMapper.toDto(request);

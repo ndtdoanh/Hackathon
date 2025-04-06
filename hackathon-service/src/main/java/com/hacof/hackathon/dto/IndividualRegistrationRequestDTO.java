@@ -18,10 +18,10 @@ public class IndividualRegistrationRequestDTO {
     @NotNull(message = "Hackathon ID is required")
     String hackathonId;
 
-    @NotNull(message = "User ID is required")
+    @NotNull(message = "IndividualRegistrationRequest Status is required")
     String status;
 
-    @NotNull(message = "User ID is required")
+    @NotNull(message = "Reviewer ID is required")
     String reviewedById;
 
     String createdByUserName; // save username
