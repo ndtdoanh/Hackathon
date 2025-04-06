@@ -39,6 +39,13 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
             throw new IllegalArgumentException("scheduleEventId must not be null");
         }
 
+        boolean exists = scheduleEventReminderRepository.existsByScheduleEventIdAndUserId(
+                Long.parseLong(requestDTO.getScheduleEventId()), Long.parseLong(requestDTO.getUserId()));
+
+        if (exists) {
+            throw new IllegalArgumentException("Reminder already exists for this schedule event and user.");
+        }
+
         ScheduleEvent scheduleEvent = scheduleEventRepository
                 .findById(Long.parseLong(requestDTO.getScheduleEventId()))
                 .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
@@ -67,6 +74,13 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
 
         if (requestDTO.getScheduleEventId() == null) {
             throw new IllegalArgumentException("scheduleEventId must not be null");
+        }
+
+        boolean exists = scheduleEventReminderRepository.existsByScheduleEventIdAndUserId(
+                Long.parseLong(requestDTO.getScheduleEventId()), Long.parseLong(requestDTO.getUserId()));
+
+        if (exists) {
+            throw new IllegalArgumentException("Reminder already exists for this schedule event and user.");
         }
 
         ScheduleEvent scheduleEvent = scheduleEventRepository
