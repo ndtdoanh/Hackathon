@@ -142,9 +142,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         TeamRequestDTO response = teamRequestMapper.toDto(saved);
         response.getTeamRequestMembers().forEach(memberDTO -> {
             memberDTO.setTeamRequestId(String.valueOf(saved.getId()));
-            log.debug("Member ID: {}", memberDTO.getUserId());
             memberDTO.setUserId(String.valueOf(memberDTO.getUserId()));
-            log.debug("Member ID 1: {}", memberDTO.getUserId());
         });
         return response;
     }
@@ -309,11 +307,11 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         if (hackathonId == null || userId == null) {
             throw new IllegalArgumentException("Hackathon ID and User ID must not be null");
         }
-        if (teamRequestRepository
-                .findAllByHackathonIdAndUserId(Long.parseLong(hackathonId), Long.parseLong(userId))
-                .isEmpty()) {
-            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID and User ID");
-        }
+//        if (teamRequestRepository
+//                .findAllByHackathonIdAndUserId(Long.parseLong(hackathonId), Long.parseLong(userId))
+//                .isEmpty()) {
+//            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID and User ID");
+//        }
         List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonIdAndUserId(
                 Long.parseLong(hackathonId), Long.parseLong(userId));
         return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
@@ -324,9 +322,9 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         if (userId == null) {
             throw new IllegalArgumentException("User ID must not be null");
         }
-        if (teamRequestRepository.findAllByUserId(Long.parseLong(userId)).isEmpty()) {
-            throw new ResourceNotFoundException("No team requests found for the given User ID");
-        }
+//        if (teamRequestRepository.findAllByUserId(Long.parseLong(userId)).isEmpty()) {
+//            throw new ResourceNotFoundException("No team requests found for the given User ID");
+//        }
         List<TeamRequest> teamRequests = teamRequestRepository.findAllByUserId(Long.parseLong(userId));
         return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
     }
@@ -336,11 +334,11 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         if (hackathonId == null) {
             throw new IllegalArgumentException("Hackathon ID must not be null");
         }
-        if (teamRequestRepository
-                .findAllByHackathonId(Long.parseLong(hackathonId))
-                .isEmpty()) {
-            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID");
-        }
+//        if (teamRequestRepository
+//                .findAllByHackathonId(Long.parseLong(hackathonId))
+//                .isEmpty()) {
+//            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID");
+//        }
         List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
         return teamRequests.stream().map(teamRequestMapper::toDto).collect(Collectors.toList());
     }
@@ -386,7 +384,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     private TeamRequest getTeamRequest(String requestId) {
         return teamRequestRepository
                 .findById(Long.parseLong(requestId))
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy yêu cầu tạo team"));
+                .orElseThrow(() -> new ResourceNotFoundException("Not found with team request: " + requestId));
     }
 
     private boolean allMembersApproved(TeamRequest request) {
@@ -397,7 +395,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     private void validateTeamSize(int size, Hackathon hackathon) {
         if (size < hackathon.getMinTeamSize() || size > hackathon.getMaxTeamSize()) {
             throw new IllegalArgumentException(String.format(
-                    "Số lượng thành viên phải từ %d đến %d người",
+                    "Team Members must be from %d to %d people",
                     hackathon.getMinTeamSize(), hackathon.getMaxTeamSize()));
         }
     }
@@ -405,10 +403,10 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     private Hackathon validateHackathon(String hackathonId) {
         Hackathon hackathon = hackathonRepository
                 .findById(Long.parseLong(hackathonId))
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy hackathon"));
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found Hackathon"));
 
         if (hackathon.getStatus() != Status.ACTIVE) {
-            throw new IllegalStateException("Hackathon không trong thời gian đăng ký");
+            throw new InvalidInputException("Hackathon is not active");
         }
 
         return hackathon;

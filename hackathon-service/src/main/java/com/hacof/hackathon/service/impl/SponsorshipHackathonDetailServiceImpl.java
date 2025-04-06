@@ -1,6 +1,7 @@
 package com.hacof.hackathon.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
@@ -77,9 +78,9 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     @Override
     public List<SponsorshipHackathonDetailDTO> getAll() {
         log.info("Fetching all sponsorship hackathon details");
-        if (sponsorshipHackathonDetailRepository.findAll().isEmpty()) {
-            throw new ResourceNotFoundException("No sponsorship hackathon details found");
-        }
+//        if (sponsorshipHackathonDetailRepository.findAll().isEmpty()) {
+//            throw new ResourceNotFoundException("No sponsorship hackathon details found");
+//        }
         return sponsorshipHackathonDetailRepository.findAll().stream()
                 .map(sponsorshipHackathonDetailMapper::toDto)
                 .collect(Collectors.toList());
@@ -87,10 +88,9 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
 
     @Override
     public SponsorshipHackathonDetailDTO getById(Long id) {
-        log.info("Fetching sponsorship hackathon detail with id: {}", id);
-        SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository
-                .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship hackathon detail not found"));
+        Optional<SponsorshipHackathonDetail> sponsorshipHackathonDetailOptional =
+                sponsorshipHackathonDetailRepository.findById(id);
+        SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailOptional.orElse(null);
         return sponsorshipHackathonDetailMapper.toDto(sponsorshipHackathonDetail);
     }
 }

@@ -160,20 +160,20 @@ public class RoundServiceImpl implements RoundService {
     @Override
     public List<RoundDTO> getRounds(Specification<Round> spec) {
         List<Round> rounds = roundRepository.findAll(spec);
-        if (rounds.isEmpty()) {
-            throw new ResourceNotFoundException("Round not found");
-        }
+//        if (rounds.isEmpty()) {
+//            throw new ResourceNotFoundException("Round not found");
+//        }
         return rounds.stream().map(roundMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<RoundDTO> getAllByHackathonId(String hackathonId) {
-        if (hackathonId == null || hackathonId.isEmpty()) {
-            throw new InvalidInputException("Hackathon ID is required");
-        }
-        if (roundRepository.existsByHackathonId(Long.parseLong(hackathonId))) {
-            throw new ResourceNotFoundException("Hackathon not found");
-        }
+//        if (hackathonId == null || hackathonId.isEmpty()) {
+//            throw new InvalidInputException("Hackathon ID is required");
+//        }
+//        if (roundRepository.existsByHackathonId(Long.parseLong(hackathonId))) {
+//            throw new ResourceNotFoundException("Hackathon not found");
+//        }
         List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
         return rounds.stream().map(roundMapper::toDto).collect(Collectors.toList());
     }

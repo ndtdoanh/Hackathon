@@ -142,9 +142,6 @@ public class HackathonResultServiceImpl implements HackathonResultService {
 
     @Override
     public List<HackathonResultDTO> getAllByHackathonId(String hackathonId) {
-        if (!hackathonRepository.existsById(Long.parseLong(hackathonId))) {
-            throw new ResourceNotFoundException("Hackathon not found");
-        }
         List<HackathonResult> results = hackathonResultRepository.findByHackathonId(Long.parseLong(hackathonId));
         return results.stream().map(hackathonResultMapper::toDto).collect(Collectors.toList());
     }

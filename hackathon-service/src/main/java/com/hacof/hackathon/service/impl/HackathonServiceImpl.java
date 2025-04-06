@@ -102,10 +102,6 @@ public class HackathonServiceImpl implements HackathonService {
         log.debug("Searching hackathons with specification");
         List<Hackathon> hackathons = hackathonRepository.findAll(spec);
 
-        if (hackathons.isEmpty()) {
-            throw new ResourceNotFoundException("No hackathons found");
-        }
-
         log.debug("Found {} hackathons matching the criteria", hackathons.size());
         return hackathons.stream().map(hackathonMapper::toDto).collect(Collectors.toList());
     }

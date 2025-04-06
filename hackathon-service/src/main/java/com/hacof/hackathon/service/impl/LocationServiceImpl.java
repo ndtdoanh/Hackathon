@@ -87,9 +87,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<LocationDTO> getLocations(Specification<Location> spec) {
-        if (locationRepository.findAll(spec).isEmpty()) {
-            throw new ResourceNotFoundException("Location not found");
-        }
+//        if (locationRepository.findAll(spec).isEmpty()) {
+//            throw new ResourceNotFoundException("Location not found");
+//        }
 
         return locationRepository.findAll(spec).stream()
                 .map(locationMapper::toDto)
