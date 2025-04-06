@@ -3,6 +3,8 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.constant.IndividualRegistrationRequestStatus;
+import com.hacof.hackathon.exception.InvalidInputException;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -159,15 +161,49 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
 
     @Override
     public List<IndividualRegistrationRequestDTO> getAllByCreatedByUsername(String createdByUsername) {
+        if(createdByUsername == null || createdByUsername.isEmpty()) {
+            throw new InvalidInputException("Created by username cannot be null or empty");
+        }
+        if(requestRepository.findAllByCreatedByUsername(createdByUsername).isEmpty()) {
+            throw new ResourceNotFoundException("No individual registration requests found for the given username");
+        }
         List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsername(createdByUsername);
         return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<IndividualRegistrationRequestDTO> getAllByCreatedByUsernameAndHackathonId(
-            String createdByUsername, String hackathonId) {
-        List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsernameAndHackathonId(
-                createdByUsername, Long.parseLong(hackathonId));
+    public List<IndividualRegistrationRequestDTO> getAllByCreatedByUsernameAndHackathonId(String createdByUsername, String hackathonId) {
+        if(createdByUsername == null || createdByUsername.isEmpty()) {
+            throw new InvalidInputException("Created by username cannot be null or empty");
+        }
+        if(requestRepository.findAllByCreatedByUsernameAndHackathonId(createdByUsername, Long.parseLong(hackathonId)).isEmpty()) {
+            throw new ResourceNotFoundException("No individual registration requests found for the given username and hackathon ID");
+        }
+        List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsernameAndHackathonId(createdByUsername, Long.parseLong(hackathonId));
+        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<IndividualRegistrationRequestDTO> getAllByHackathonId(String hackathonId) {
+        if(hackathonId == null || hackathonId.isEmpty()) {
+            throw new InvalidInputException("Hackathon ID cannot be null or empty");
+        }
+        if(requestRepository.findAllByHackathonId(Long.parseLong(hackathonId)).isEmpty()) {
+            throw new ResourceNotFoundException("No individual registration requests found for the given hackathon ID");
+        }
+        List<IndividualRegistrationRequest> requests = requestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
+        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<IndividualRegistrationRequestDTO> getAllByHackathonIdAndStatusApproved(String hackathonId) {
+        if(hackathonId == null || hackathonId.isEmpty()) {
+            throw new InvalidInputException("Hackathon ID cannot be null or empty");
+        }
+        if(requestRepository.findAllByHackathonIdAndStatus(Long.parseLong(hackathonId), IndividualRegistrationRequestStatus.APPROVED).isEmpty()) {
+            throw new ResourceNotFoundException("No individual registration requests found for the given hackathon ID and status");
+        }
+        List<IndividualRegistrationRequest> requests = requestRepository.findAllByHackathonIdAndStatus(Long.parseLong(hackathonId), IndividualRegistrationRequestStatus.APPROVED);
         return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
     }
 }
