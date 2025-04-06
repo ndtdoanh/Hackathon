@@ -34,7 +34,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("teamId must not be null");
         }
 
-        Team team = teamRepository.findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
+        Team team = teamRepository
+                .findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found!"));
 
         if (scheduleRequestDTO.getName().isEmpty()) {
@@ -58,7 +59,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("teamId must not be null");
         }
 
-        Team team = teamRepository.findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
+        Team team = teamRepository
+                .findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found!"));
 
         if (scheduleRequestDTO.getName().isEmpty()) {
@@ -105,21 +107,17 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (schedules.isEmpty()) {
             throw new IllegalArgumentException("No schedules found for the given teamId: " + teamId);
         }
-        return schedules.stream()
-                .map(scheduleMapper::toDto)
-                .collect(Collectors.toList());
+        return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
     }
 
-
     @Override
-    public List<ScheduleResponseDTO> getSchedulesByCreatedByUsernameAndHackathonId(String createdByUsername, Long hackathonId) {
-        List<Schedule> schedules = scheduleRepository.findByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
+    public List<ScheduleResponseDTO> getSchedulesByCreatedByUsernameAndHackathonId(
+            String createdByUsername, Long hackathonId) {
+        List<Schedule> schedules =
+                scheduleRepository.findByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
         if (schedules.isEmpty()) {
             throw new IllegalArgumentException("No schedules found for the given createdByUsername and hackathonId.");
         }
-        return schedules.stream()
-                .map(scheduleMapper::toDto)
-                .collect(Collectors.toList());
+        return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
     }
-
 }

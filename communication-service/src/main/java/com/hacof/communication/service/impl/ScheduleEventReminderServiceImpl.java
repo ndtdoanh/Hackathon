@@ -39,10 +39,12 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
             throw new IllegalArgumentException("scheduleEventId must not be null");
         }
 
-        ScheduleEvent scheduleEvent = scheduleEventRepository.findById(Long.parseLong(requestDTO.getScheduleEventId()))
+        ScheduleEvent scheduleEvent = scheduleEventRepository
+                .findById(Long.parseLong(requestDTO.getScheduleEventId()))
                 .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
 
-        User user = userRepository.findById(Long.parseLong(requestDTO.getUserId()))
+        User user = userRepository
+                .findById(Long.parseLong(requestDTO.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         if (requestDTO.getRemindAt().isAfter(scheduleEvent.getStartTime())) {
@@ -67,10 +69,12 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
             throw new IllegalArgumentException("scheduleEventId must not be null");
         }
 
-        ScheduleEvent scheduleEvent = scheduleEventRepository.findById(Long.parseLong(requestDTO.getScheduleEventId()))
+        ScheduleEvent scheduleEvent = scheduleEventRepository
+                .findById(Long.parseLong(requestDTO.getScheduleEventId()))
                 .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
 
-        User user = userRepository.findById(Long.parseLong(requestDTO.getUserId()))
+        User user = userRepository
+                .findById(Long.parseLong(requestDTO.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         if (requestDTO.getRemindAt().isAfter(scheduleEvent.getStartTime())) {
@@ -116,11 +120,10 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     public List<ScheduleEventReminderResponseDTO> getScheduleEventRemindersByScheduleEventId(Long scheduleEventId) {
         List<ScheduleEventReminder> reminders = scheduleEventReminderRepository.findByScheduleEventId(scheduleEventId);
         if (reminders.isEmpty()) {
-            throw new IllegalArgumentException("No schedule event reminders found for the given scheduleEventId: " + scheduleEventId);
+            throw new IllegalArgumentException(
+                    "No schedule event reminders found for the given scheduleEventId: " + scheduleEventId);
         }
-        return reminders.stream()
-                .map(scheduleEventReminderMapper::toDto)
-                .collect(Collectors.toList());
+        return reminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -129,9 +132,6 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         if (reminders.isEmpty()) {
             throw new IllegalArgumentException("No schedule event reminders found for the given userId: " + userId);
         }
-        return reminders.stream()
-                .map(scheduleEventReminderMapper::toDto)
-                .collect(Collectors.toList());
+        return reminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
     }
-
 }

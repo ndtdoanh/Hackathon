@@ -141,7 +141,8 @@ public class ScheduleController {
             @RequestParam String createdByUsername, @RequestParam Long hackathonId) {
         CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleResponseDTO> schedules = scheduleService.getSchedulesByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
+            List<ScheduleResponseDTO> schedules =
+                    scheduleService.getSchedulesByCreatedByUsernameAndHackathonId(createdByUsername, hackathonId);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedules filtered by createdByUsername and hackathonId fetched successfully!");
             response.setData(schedules);
@@ -156,5 +157,4 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

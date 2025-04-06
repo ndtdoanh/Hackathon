@@ -23,9 +23,7 @@ import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.User;
 import com.hacof.communication.exception.AppException;
 import com.hacof.communication.exception.ErrorCode;
-import com.hacof.communication.mapper.ConversationMapper;
 import com.hacof.communication.repository.ConversationRepository;
-import com.hacof.communication.repository.ConversationUserRepository;
 import com.hacof.communication.repository.MessageRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ConversationService;
@@ -83,7 +81,8 @@ public class ConversationServiceImpl implements ConversationService {
 
         Set<ConversationUser> conversationUsers = new HashSet<>();
         ConversationUser creatorUser = new ConversationUser(userRepository.getReferenceById(createdById), conversation);
-        ConversationUser otherUserConversation = new ConversationUser(userRepository.getReferenceById(otherUserId), conversation);
+        ConversationUser otherUserConversation =
+                new ConversationUser(userRepository.getReferenceById(otherUserId), conversation);
         conversationUsers.add(creatorUser);
         conversationUsers.add(otherUserConversation);
 
@@ -235,7 +234,9 @@ public class ConversationServiceImpl implements ConversationService {
                     .filter(cu -> cu.getUser().getId() != currentUserId)
                     .findFirst();
 
-            String name = otherUser.map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName()).orElse("Unknown");
+            String name = otherUser
+                    .map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName())
+                    .orElse("Unknown");
             response.setName(name);
         } else {
             response.setName(conversation.getName());
@@ -342,7 +343,10 @@ public class ConversationServiceImpl implements ConversationService {
                                 .filter(cu -> cu.getUser().getId() != currentUserId)
                                 .findFirst();
 
-                        String name = otherUser.map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName()).orElse("Unknown");
+                        String name = otherUser
+                                .map(cu -> cu.getUser().getFirstName() + " "
+                                        + cu.getUser().getLastName())
+                                .orElse("Unknown");
                         response.setName(name);
                     } else {
                         response.setName(conversation.getName());

@@ -149,7 +149,8 @@ public class ScheduleEventAttendeeController {
             @PathVariable Long scheduleEventId) {
         CommonResponse<List<ScheduleEventAttendeeResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventAttendeeResponseDTO> attendees = scheduleEventAttendeeService.getScheduleEventAttendeesByEventId(scheduleEventId);
+            List<ScheduleEventAttendeeResponseDTO> attendees =
+                    scheduleEventAttendeeService.getScheduleEventAttendeesByEventId(scheduleEventId);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule event attendees fetched successfully!");
             response.setData(attendees);
@@ -164,5 +165,4 @@ public class ScheduleEventAttendeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

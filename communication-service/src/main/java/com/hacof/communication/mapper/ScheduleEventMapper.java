@@ -64,8 +64,7 @@ public class ScheduleEventMapper {
                 schedule.getCreatedBy() != null ? schedule.getCreatedBy().getUsername() : null,
                 includeEvents && schedule.getScheduleEvents() != null
                         ? schedule.getScheduleEvents().stream().map(this::toDto).collect(Collectors.toList())
-                        : List.of()
-                );
+                        : List.of());
     }
 
     // Map FileUrls
