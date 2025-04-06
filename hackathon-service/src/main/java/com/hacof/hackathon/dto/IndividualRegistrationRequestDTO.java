@@ -22,7 +22,7 @@ public class IndividualRegistrationRequestDTO {
     String status;
 
     @NotNull(message = "Reviewer ID is required")
-    String reviewedById;
+    String reviewedBy;
 
     String createdByUserName; // save username
     LocalDateTime createdAt;
