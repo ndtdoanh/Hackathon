@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleRequestDTO {
     String teamId;
+    String hackathonId;
     String name;
     String description;
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.entity.Hackathon;
+import com.hacof.communication.repository.HackathonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     private ScheduleRepository scheduleRepository;
 
     @Autowired
+    private HackathonRepository hackathonRepository;
+
+    @Autowired
     private TeamRepository teamRepository;
 
     @Autowired
@@ -38,6 +43,14 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found!"));
 
+        if (scheduleRequestDTO.getHackathonId() == null) {
+            throw new IllegalArgumentException("hackathonId must not be null");
+        }
+        Hackathon hackathon = hackathonRepository
+                .findById(Long.parseLong(scheduleRequestDTO.getHackathonId()))
+                .orElseThrow(() -> new IllegalArgumentException("Hackathon not found!"));
+
+
         if (scheduleRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
@@ -47,7 +60,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("A schedule with the same name already exists for this team.");
         }
 
-        Schedule schedule = scheduleMapper.toEntity(scheduleRequestDTO, team);
+        Schedule schedule = scheduleMapper.toEntity(scheduleRequestDTO, team, hackathon);
         schedule = scheduleRepository.save(schedule);
 
         return scheduleMapper.toDto(schedule);
@@ -68,6 +81,13 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .findById(Long.parseLong(scheduleRequestDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found!"));
 
+        if (scheduleRequestDTO.getHackathonId() == null) {
+            throw new IllegalArgumentException("hackathonId must not be null");
+        }
+        Hackathon hackathon = hackathonRepository
+                .findById(Long.parseLong(scheduleRequestDTO.getHackathonId()))
+                .orElseThrow(() -> new IllegalArgumentException("Hackathon not found!"));
+
         if (scheduleRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
@@ -79,6 +99,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Schedule schedule = scheduleOptional.get();
         schedule.setTeam(team);
+        schedule.setHackathon(hackathon);
         schedule.setName(scheduleRequestDTO.getName());
         schedule.setDescription(scheduleRequestDTO.getDescription());
         schedule = scheduleRepository.save(schedule);
