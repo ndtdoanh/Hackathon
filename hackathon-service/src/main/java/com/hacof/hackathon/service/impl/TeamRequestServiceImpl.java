@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.service.EmailService;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +49,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     ScheduleRepository scheduleRepository;
     TeamRoundRepository teamRoundRepository;
     RoundRepository roundRepository;
+    EmailServiceImpl emailService;
 
     @Override
     public List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId) {
@@ -144,6 +146,11 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             memberDTO.setTeamRequestId(String.valueOf(saved.getId()));
             memberDTO.setUserId(String.valueOf(memberDTO.getUserId()));
         });
+
+        // Send email to all members
+        for (User member : teamRequest.getTeamRequestMembers().stream().map(trm -> trm.getUser()).collect(Collectors.toList())) {
+            emailService.sendEmail(member.getEmail(), "Team Request Created", "A new team request has been created.");
+        }
         return response;
     }
 

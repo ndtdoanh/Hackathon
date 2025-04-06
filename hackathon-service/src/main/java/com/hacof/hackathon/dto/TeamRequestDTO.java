@@ -26,7 +26,6 @@ public class TeamRequestDTO {
     @NotNull(message = "Team Name is required")
     String name;
 
-    @JsonIgnore
     String status; // TeamRequestStatus
 
     String confirmationDeadline; // LocalDateTime
