@@ -13,6 +13,8 @@ public interface ScheduleEventAttendeeRepository extends JpaRepository<ScheduleE
     // Tìm tất cả những người tham gia một sự kiện theo scheduleEventId
     List<ScheduleEventAttendee> findByScheduleEventId(Long scheduleEventId);
 
+    boolean existsByScheduleEventIdAndUserId(Long scheduleEventId, Long userId);
+
     // Tìm một người tham gia sự kiện theo scheduleEventId và userId
     ScheduleEventAttendee findByScheduleEventIdAndUserId(Long scheduleEventId, Long userId);
 }
