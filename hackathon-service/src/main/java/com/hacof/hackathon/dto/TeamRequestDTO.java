@@ -3,6 +3,7 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hacof.hackathon.entity.User;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,7 +35,7 @@ public class TeamRequestDTO {
     String note; // use to store name?
 
     // String name;
-    String reviewedBy; // user reviewed the request
+    User reviewedBy; // user reviewed the request
 
     List<TeamRequestMemberDTO> teamRequestMembers;
 

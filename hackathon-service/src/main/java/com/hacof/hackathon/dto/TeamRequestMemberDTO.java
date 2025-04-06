@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.hacof.hackathon.entity.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 public class TeamRequestMemberDTO {
     String id;
     String teamRequestId;
+    User user;
     String userId;
     String status; // TeamRequestMemberStatus
     String respondedAt; // LocalDateTime
