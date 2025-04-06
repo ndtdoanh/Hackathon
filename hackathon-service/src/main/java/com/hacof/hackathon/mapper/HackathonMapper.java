@@ -1,6 +1,8 @@
 package com.hacof.hackathon.mapper;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.mapstruct.*;
 
@@ -50,4 +52,13 @@ public interface HackathonMapper {
         user.setUsername(username);
         return user;
     }
+
+    default List<String> map(List<FileUrl> value) {
+        return value.stream().map(FileUrl::getFileUrl).collect(Collectors.toList());
+    }
+
+    default List<FileUrl> mapToFileUrlList(List<String> value) {
+        return value.stream().map(FileUrl::new).collect(Collectors.toList());
+    }
+
 }

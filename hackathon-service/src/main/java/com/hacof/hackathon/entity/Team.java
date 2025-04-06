@@ -79,4 +79,13 @@ public class Team extends AuditCreatedBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deleted_by")
     User deletedBy;
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public void setDeletedById(Long deletedById) {
+        this.deletedBy = new User();
+        this.deletedBy.setId(deletedById);
+    }
 }

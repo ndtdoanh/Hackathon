@@ -12,10 +12,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationDTO {
     String id;

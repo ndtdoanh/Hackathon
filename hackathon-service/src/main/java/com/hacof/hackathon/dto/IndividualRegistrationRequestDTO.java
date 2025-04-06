@@ -15,14 +15,12 @@ import lombok.experimental.FieldDefaults;
 public class IndividualRegistrationRequestDTO {
     String id;
 
-    @NotNull(message = "Hackathon ID is required")
-    String hackathonId;
+    HackathonDTO hackathon;
 
     @NotNull(message = "IndividualRegistrationRequest Status is required")
     String status;
 
-    @NotNull(message = "Reviewer ID is required")
-    String reviewedBy;
+    UserDTO reviewedBy;
 
     String createdByUserName; // save username
     LocalDateTime createdAt;

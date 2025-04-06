@@ -43,10 +43,11 @@ public class TeamController {
 
     @GetMapping("/requests/filter-by-member-and-hackathon")
     public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> getTeamRequestsByMemberIdAndHackathonId(
-            @RequestParam("memberId") Long memberId,
-            @RequestParam("hackathonId") Long hackathonId) {
-        List<TeamRequestDTO> teamRequests = teamRequestService.getTeamRequestsByMemberIdAndHackathonId(memberId, hackathonId);
-        CommonResponse<List<TeamRequestDTO>> response = new CommonResponse<>(new CommonResponse.Result("0000", "Success"), teamRequests);
+            @RequestParam("memberId") Long memberId, @RequestParam("hackathonId") Long hackathonId) {
+        List<TeamRequestDTO> teamRequests =
+                teamRequestService.getTeamRequestsByMemberIdAndHackathonId(memberId, hackathonId);
+        CommonResponse<List<TeamRequestDTO>> response =
+                new CommonResponse<>(new CommonResponse.Result("0000", "Success"), teamRequests);
         return ResponseEntity.ok(response);
     }
 
@@ -157,10 +158,10 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Bulk teams created successfully"), createdTeams));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<TeamDTO>> updateTeam(
-            @PathVariable long id, @RequestBody CommonRequest<TeamDTO> request) {
-        TeamDTO teamDTO = teamService.updateTeam(id, request.getData());
+    @PutMapping
+    public ResponseEntity<CommonResponse<TeamDTO>> updateTeam(@RequestBody CommonRequest<TeamDTO> request) {
+        String id = request.getData().getId();
+        TeamDTO teamDTO = teamService.updateTeam(Long.parseLong(id), request.getData());
         CommonResponse<TeamDTO> response =
                 new CommonResponse<>(new CommonResponse.Result("0000", "Team updated successfully"), teamDTO);
         return ResponseEntity.ok(response);

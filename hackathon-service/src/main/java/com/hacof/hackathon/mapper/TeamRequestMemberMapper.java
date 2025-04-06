@@ -6,11 +6,11 @@ import org.mapstruct.Mapping;
 import com.hacof.hackathon.dto.TeamRequestMemberDTO;
 import com.hacof.hackathon.entity.TeamRequestMember;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface TeamRequestMemberMapper {
     @Mapping(target = "id", expression = "java(String.valueOf(teamRequestMember.getId()))")
     @Mapping(target = "teamRequestId", source = "teamRequest.id")
-    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "user", source = "user")
     @Mapping(target = "status", source = "status")
     @Mapping(target = "respondedAt", source = "respondedAt")
     @Mapping(
@@ -26,6 +26,6 @@ public interface TeamRequestMemberMapper {
     TeamRequestMemberDTO toDto(TeamRequestMember teamRequestMember);
 
     @Mapping(source = "teamRequestId", target = "teamRequest.id")
-    @Mapping(source = "userId", target = "user.id")
+    @Mapping(source = "user.id", target = "user.id")
     TeamRequestMember toEntity(TeamRequestMemberDTO teamRequestMemberDTO);
 }

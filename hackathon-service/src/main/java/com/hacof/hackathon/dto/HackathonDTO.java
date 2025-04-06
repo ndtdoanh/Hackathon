@@ -79,7 +79,6 @@ public class HackathonDTO {
     @Max(value = 5, message = "Maximum Team Members must be less than 5")
     int maximumTeamMembers; // maxTeamSize
 
-    @JsonIgnore
     List<String> documentation; // Document public URLs
 
     @JsonIgnore

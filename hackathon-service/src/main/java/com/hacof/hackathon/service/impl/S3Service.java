@@ -2,6 +2,9 @@ package com.hacof.hackathon.service.impl;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,8 +15,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.*;
 
 @Service
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -45,5 +47,20 @@ public class S3Service {
         } catch (S3Exception | IOException e) {
             throw new RuntimeException("Failed to upload file to S3", e);
         }
+    }
+
+    public List<String> uploadFiles(MultipartFile[] files) {
+        return Stream.of(files)
+                .map(this::uploadFile)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getAllFiles() {
+        ListObjectsV2Request request = ListObjectsV2Request.builder().bucket(bucketName).build();
+        ListObjectsV2Response result = s3Client.listObjectsV2(request);
+        return result.contents().stream()
+                .map(S3Object::key)
+                .map(key -> s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm())
+                .collect(Collectors.toList());
     }
 }

@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.dto.UserDTO;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.*;
 import com.hacof.hackathon.dto.TeamDTO;
-import com.hacof.hackathon.dto.UserTeamDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamMapper;
@@ -163,24 +163,12 @@ public class TeamServiceImpl implements TeamService {
             //            teamRoundRepository.save(teamRound);
             //            log.debug("Created team round for team {}", team.getId());
 
-            TeamDTO teamDTO = teamMapper.toDto(team);
-            teamDTO.setTeamLeaderId(String.valueOf(teamLeader.getId()));
-            if (!teamMembers.isEmpty()
-                    && !teamMembers.get(0).getUserHackathons().isEmpty()) {
-                teamDTO.setHackathonId(String.valueOf(teamMembers
-                        .get(0)
-                        .getUserHackathons()
-                        .iterator()
-                        .next()
-                        .getHackathon()
-                        .getId()));
-            }
-            teamDTO.setTeamMembers(teamMembers.stream()
-                    .map(member -> new UserTeamDTO(null, member.getId(), team.getId(), null, null, null, null))
-                    .collect(Collectors.toSet()));
-
-            createdTeams.add(teamDTO);
-            log.debug("Added team to createdTeams: {}", teamDTO);
+//            UserDTO teamLeaderDTO = new UserDTO();
+//            teamLeaderDTO.setId(String.valueOf(teamLeader.getId()));
+//            teamDTO.setTeamLeaderId(teamLeaderDTO);
+//
+//            createdTeams.add(teamDTO);
+//            log.debug("Added team to createdTeams: {}", teamDTO);
         }
 
         log.debug("Finished createBulkTeams with createdTeams: {}", createdTeams);
@@ -191,9 +179,14 @@ public class TeamServiceImpl implements TeamService {
     public TeamDTO updateTeam(long id, TeamDTO teamDTO) {
         Team existingTeam =
                 teamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+
         existingTeam.setName(teamDTO.getName());
         existingTeam.setBio(teamDTO.getBio());
-        return teamMapper.toDto(teamRepository.save(existingTeam));
+        existingTeam.setDeleted(teamDTO.isDeleted());
+        existingTeam.setDeletedById(teamDTO.getDeletedById() != null ? Long.parseLong(teamDTO.getDeletedById()) : null);
+
+        Team updatedTeam = teamRepository.save(existingTeam);
+        return teamMapper.toDto(updatedTeam);
     }
 
     @Override

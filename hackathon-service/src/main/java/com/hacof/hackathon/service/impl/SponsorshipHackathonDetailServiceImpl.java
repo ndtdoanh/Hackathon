@@ -78,9 +78,9 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     @Override
     public List<SponsorshipHackathonDetailDTO> getAll() {
         log.info("Fetching all sponsorship hackathon details");
-//        if (sponsorshipHackathonDetailRepository.findAll().isEmpty()) {
-//            throw new ResourceNotFoundException("No sponsorship hackathon details found");
-//        }
+        //        if (sponsorshipHackathonDetailRepository.findAll().isEmpty()) {
+        //            throw new ResourceNotFoundException("No sponsorship hackathon details found");
+        //        }
         return sponsorshipHackathonDetailRepository.findAll().stream()
                 .map(sponsorshipHackathonDetailMapper::toDto)
                 .collect(Collectors.toList());

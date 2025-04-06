@@ -20,6 +20,7 @@ public class RoundLocationDTO {
     String roundId;
 
     String locationId;
+    LocationDTO location;
 
     @NotNull(message = "Type is required")
     RoundLocationType type;

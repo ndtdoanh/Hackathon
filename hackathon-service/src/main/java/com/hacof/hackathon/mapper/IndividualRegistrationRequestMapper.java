@@ -1,10 +1,15 @@
 package com.hacof.hackathon.mapper;
 
+import com.hacof.hackathon.constant.CategoryStatus;
+import com.hacof.hackathon.constant.OrganizationStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
+import com.hacof.hackathon.dto.UserDTO;
+import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.IndividualRegistrationRequest;
 import com.hacof.hackathon.entity.User;
 
@@ -12,10 +17,8 @@ import com.hacof.hackathon.entity.User;
 public interface IndividualRegistrationRequestMapper {
 
     @Mapping(target = "id", expression = "java(String.valueOf(individualRegistrationRequest.getId()))")
-    @Mapping(
-            target = "hackathonId",
-            expression = "java(String.valueOf(individualRegistrationRequest.getHackathon().getId()))")
-    @Mapping(target = "reviewedBy", source = "reviewedBy", qualifiedByName = "userToString")
+    @Mapping(target = "hackathon", source = "hackathon", qualifiedByName = "hackathonToHackathonDTO")
+    @Mapping(target = "reviewedBy", source = "reviewedBy", qualifiedByName = "userToUserDTO")
     @Mapping(
             target = "createdByUserName",
             expression =
@@ -28,25 +31,44 @@ public interface IndividualRegistrationRequestMapper {
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
     IndividualRegistrationRequestDTO toDto(IndividualRegistrationRequest individualRegistrationRequest);
 
-    @Mapping(
-            target = "hackathon.id",
-            expression = "java(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))")
-    @Mapping(target = "reviewedBy", source = "reviewedBy", qualifiedByName = "stringToUser")
     IndividualRegistrationRequest toEntity(IndividualRegistrationRequestDTO individualRegistrationRequestDTO);
 
-    // void updateEntityFromDto(IndividualRegistrationRequestDTO dto, @MappingTarget IndividualRegistrationRequest
-    // entity);
-
-    @Named("userToString")
-    default String userToString(User user) {
-        return user != null ? String.valueOf(user.getId()) : null;
+    @Named("userToUserDTO")
+    default UserDTO userToUserDTO(User user) {
+        if (user == null) return null;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(String.valueOf(user.getId()));
+        userDTO.setUsername(user.getUsername());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setAvatarUrl(user.getAvatarUrl());
+        userDTO.setBio(user.getBio());
+        userDTO.setCreatedAt(user.getCreatedDate());
+        userDTO.setUpdatedAt(user.getLastModifiedDate());
+        return userDTO;
     }
 
-    @Named("stringToUser")
-    default User stringToUser(String id) {
-        if (id == null || id.isBlank()) return null;
-        User user = new User();
-        user.setId(Long.parseLong(id));
-        return user;
+    @Named("hackathonToHackathonDTO")
+    default HackathonDTO hackathonToHackathonDTO(Hackathon hackathon) {
+        if (hackathon == null) return null;
+        HackathonDTO hackathonDTO = new HackathonDTO();
+        hackathonDTO.setId(String.valueOf(hackathon.getId()));
+        hackathonDTO.setTitle(hackathon.getTitle());
+        hackathonDTO.setSubTitle(hackathon.getSubTitle());
+        hackathonDTO.setBannerImageUrl(hackathon.getBannerImageUrl());
+        hackathonDTO.setEnrollStartDate(hackathon.getEnrollStartDate());
+        hackathonDTO.setEnrollEndDate(hackathon.getEnrollEndDate());
+        hackathonDTO.setStartDate(hackathon.getStartDate());
+        hackathonDTO.setEndDate(hackathon.getEndDate());
+        hackathonDTO.setInformation(hackathon.getInformation());
+        hackathonDTO.setDescription(hackathon.getDescription());
+        hackathonDTO.setContact(hackathon.getContact());
+        hackathonDTO.setCategory(hackathon.getCategory().name());
+        hackathonDTO.setOrganization(hackathon.getOrganization().name());        hackathonDTO.setStatus(
+                hackathon.getStatus() != null ? hackathon.getStatus().name() : null);
+        hackathonDTO.setCreatedAt(hackathon.getCreatedDate());
+        hackathonDTO.setUpdatedAt(hackathon.getLastModifiedDate());
+        return hackathonDTO;
     }
 }

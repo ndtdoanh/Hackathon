@@ -4,21 +4,17 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserTeamDTO {
-    @JsonIgnore
-    private Long id;
+    String id;
 
-    private Long userId;
-    private Long teamId;
+    String userId;
+    String teamId;
 
     @JsonIgnore
     private LocalDateTime createdDate;

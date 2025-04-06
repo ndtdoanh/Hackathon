@@ -88,9 +88,9 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
 
     @Override
     public List<MentorshipSessionRequestDTO> getAll() {
-//        if (mentorshipSessionRequestRepository.findAll().isEmpty()) {
-//            throw new ResourceNotFoundException("No MentorshipSessionRequest found");
-//        }
+        //        if (mentorshipSessionRequestRepository.findAll().isEmpty()) {
+        //            throw new ResourceNotFoundException("No MentorshipSessionRequest found");
+        //        }
         return mentorshipSessionRequestRepository.findAll().stream()
                 .map(mentorshipSessionRequestMapper::toDto)
                 .collect(Collectors.toList());
@@ -98,19 +98,19 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
 
     @Override
     public MentorshipSessionRequestDTO getById(String id) {
-//        if (!mentorshipSessionRequestRepository.existsById(Long.parseLong(id))) {
-//            throw new ResourceNotFoundException("MentorshipSessionRequest not found");
-//        }
+        //        if (!mentorshipSessionRequestRepository.existsById(Long.parseLong(id))) {
+        //            throw new ResourceNotFoundException("MentorshipSessionRequest not found");
+        //        }
         return mentorshipSessionRequestMapper.toDto(getMentorshipSessionRequest(id));
     }
 
     @Override
     public List<MentorshipSessionRequestDTO> getAllByMentorTeamId(String mentorTeamId) {
-//        if (mentorshipSessionRequestRepository
-//                .findAllByMentorTeamId(Long.parseLong(mentorTeamId))
-//                .isEmpty()) {
-//            throw new ResourceNotFoundException("No MentorshipSessionRequest found");
-//        }
+        //        if (mentorshipSessionRequestRepository
+        //                .findAllByMentorTeamId(Long.parseLong(mentorTeamId))
+        //                .isEmpty()) {
+        //            throw new ResourceNotFoundException("No MentorshipSessionRequest found");
+        //        }
         return mentorshipSessionRequestRepository.findAllByMentorTeamId(Long.parseLong(mentorTeamId)).stream()
                 .map(mentorshipSessionRequestMapper::toDto)
                 .collect(Collectors.toList());

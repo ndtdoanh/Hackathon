@@ -5,8 +5,6 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -34,7 +32,7 @@ public class TeamRequestDTO {
     String note; // use to store name?
 
     // String name;
-    String reviewedBy; // user reviewed the request
+    UserDTO reviewedBy; // user reviewed the request
 
     List<TeamRequestMemberDTO> teamRequestMembers;
 

@@ -99,9 +99,9 @@ public class SponsorshipServiceImpl implements SponsorshipService {
 
     @Override
     public List<SponsorshipDTO> getAll(Specification<Sponsorship> specification) {
-//        if (sponsorshipRepository.findAll().isEmpty()) {
-//            throw new ResourceNotFoundException("No sponsorships found");
-//        }
+        //        if (sponsorshipRepository.findAll().isEmpty()) {
+        //            throw new ResourceNotFoundException("No sponsorships found");
+        //        }
         return sponsorshipRepository.findAll(specification).stream()
                 .map(sponsorshipMapper::toDto)
                 .collect(Collectors.toList());

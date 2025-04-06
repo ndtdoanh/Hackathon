@@ -1,20 +1,61 @@
 package com.hacof.hackathon.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO {
-    private Long id;
-    private String username;
-    private String email;
-    private String fullName;
-    private String phoneNumber;
-    private String avatar;
-    private String bio;
+    String id;
+    String email;
+    String username;
+    String firstName;
+    String lastName;
+    String avatarUrl;
+    String bio;
+
+    @JsonIgnore
+    String country;
+
+    @JsonIgnore
+    String city;
+
+    @JsonIgnore
+    String birthdate;
+
+    @JsonIgnore
+    String phone;
+
+    @JsonIgnore
+    String studentId;
+
+    @JsonIgnore
+    String university;
+
+    @JsonIgnore
+    String linkedinUrl;
+
+    @JsonIgnore
+    String githubUrl;
+
+    @JsonIgnore
+    List<String> skills;
+
+    @JsonIgnore
+    String experienceLevel;
+
+    @JsonIgnore
+    String status;
+
+    // Audit fields
+    String createdByUserName; // save username
+    LocalDateTime createdAt;
+    String lastModifiedByUserName; // save username
+    LocalDateTime updatedAt = LocalDateTime.now();
 }

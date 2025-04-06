@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hacof.hackathon.constant.CategoryStatus;
+import com.hacof.hackathon.constant.OrganizationStatus;
 import jakarta.persistence.*;
 
 import com.hacof.hackathon.constant.Status;
@@ -70,11 +72,12 @@ public class Hackathon extends AuditUserBase {
     @Column(name = "contact")
     String contact;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    String category;
+    CategoryStatus category;
 
     @Column(name = "organization")
-    String organization;
+    OrganizationStatus organization;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -130,9 +133,18 @@ public class Hackathon extends AuditUserBase {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<Feedback> feedbacks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<Conversation> conversations;
 
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<Board> boards;
+
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    List<FileUrl> documentation = new ArrayList<>();
 }

@@ -111,9 +111,9 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
     @Override
     public List<MentorshipRequestDTO> getAll() {
         log.info("Fetching all mentorship requests");
-//        if (userRepository.findAll().isEmpty()) {
-//            throw new ResourceNotFoundException("No mentorship requests found");
-//        }
+        //        if (userRepository.findAll().isEmpty()) {
+        //            throw new ResourceNotFoundException("No mentorship requests found");
+        //        }
         return mentorshipRequestRepository.findAll().stream()
                 .map(mentorshipRequestMapper::toDto)
                 .collect(Collectors.toList());
