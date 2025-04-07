@@ -4,6 +4,7 @@ package com.hacof.hackathon.controller;
 
 import java.util.List;
 
+import com.hacof.hackathon.dto.HackathonDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -56,8 +57,8 @@ public class IndividualRegistrationRequestController {
 
     @DeleteMapping
     public ResponseEntity<CommonResponse<Void>> deleteIndividualRegistration(
-            @RequestBody @Valid CommonRequest<Long> request) {
-        individualRegistrationRequestService.delete(request.getData());
+            @RequestBody IndividualRegistrationRequestDTO request) {
+        individualRegistrationRequestService.delete(Long.parseLong(request.getId()));
         CommonResponse<Void> response = new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),

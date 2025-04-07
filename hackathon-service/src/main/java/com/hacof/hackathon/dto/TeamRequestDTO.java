@@ -3,6 +3,7 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
@@ -16,10 +17,11 @@ import lombok.experimental.FieldDefaults;
 public class TeamRequestDTO {
     String id;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @NotNull(message = "Hackathon ID is required")
     String hackathonId;
-
-    // HackathonDTO hackathon;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    HackathonDTO hackathon;
 
     @NotNull(message = "Team Name is required")
     String name;
@@ -28,10 +30,11 @@ public class TeamRequestDTO {
 
     String confirmationDeadline; // LocalDateTime
 
-    @NotNull(message = "Note is required")
-    String note; // use to store name?
+    String note; // optional field
 
     // String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String reviewById;
     UserDTO reviewedBy; // user reviewed the request
 
     List<TeamRequestMemberDTO> teamRequestMembers;
