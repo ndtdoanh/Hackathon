@@ -30,11 +30,30 @@ public class BoardLabelServiceImpl implements BoardLabelService {
 
     @Override
     public BoardLabelResponseDTO createBoardLabel(BoardLabelRequestDTO boardLabelRequestDTO) {
+        // Validate Board existence
         Optional<Board> boardOptional = boardRepository.findById(Long.valueOf(boardLabelRequestDTO.getBoardId()));
         if (!boardOptional.isPresent()) {
-            throw new IllegalArgumentException("Board not found!");
+            throw new IllegalArgumentException("Board with ID " + boardLabelRequestDTO.getBoardId() + " not found!");
         }
 
+        // Validate BoardLabel name
+        if (boardLabelRequestDTO.getName() == null || boardLabelRequestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Board label name cannot be empty.");
+        }
+
+        // Check for duplicate board label in the same board
+        Optional<BoardLabel> existingBoardLabel = boardLabelRepository.findByNameAndBoardId(
+                boardLabelRequestDTO.getName(), Long.valueOf(boardLabelRequestDTO.getBoardId()));
+        if (existingBoardLabel.isPresent()) {
+            throw new IllegalArgumentException("A board label with the same name already exists in this board.");
+        }
+
+        // Validate color (optional check based on your requirements)
+        if (boardLabelRequestDTO.getColor() == null || boardLabelRequestDTO.getColor().isEmpty()) {
+            throw new IllegalArgumentException("Board label color cannot be empty.");
+        }
+
+        // Create the new BoardLabel
         BoardLabel boardLabel = boardLabelMapper.toEntity(boardLabelRequestDTO, boardOptional.get());
         boardLabel = boardLabelRepository.save(boardLabel);
 
@@ -43,22 +62,41 @@ public class BoardLabelServiceImpl implements BoardLabelService {
 
     @Override
     public BoardLabelResponseDTO updateBoardLabel(Long id, BoardLabelRequestDTO boardLabelRequestDTO) {
+        // Validate BoardLabel existence
         Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(id);
         if (!boardLabelOptional.isPresent()) {
-            throw new IllegalArgumentException("BoardLabel not found!");
+            throw new IllegalArgumentException("Board label with ID " + id + " not found!");
         }
 
+        // Validate Board existence for the update
         Optional<Board> boardOptional = boardRepository.findById(Long.valueOf(boardLabelRequestDTO.getBoardId()));
         if (!boardOptional.isPresent()) {
-            throw new IllegalArgumentException("Board not found!");
+            throw new IllegalArgumentException("Board with ID " + boardLabelRequestDTO.getBoardId() + " not found!");
         }
 
+        // Check for duplicate board label name in the same board
+        Optional<BoardLabel> existingBoardLabel = boardLabelRepository.findByNameAndBoardId(
+                boardLabelRequestDTO.getName(), Long.valueOf(boardLabelRequestDTO.getBoardId()));
+        if (existingBoardLabel.isPresent() && !Long.valueOf(existingBoardLabel.get().getId()).equals(Long.valueOf(id))) {
+            throw new IllegalArgumentException("A board label with the same name already exists in this board.");
+        }
+
+        // Validate name and color for the update
+        if (boardLabelRequestDTO.getName() == null || boardLabelRequestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Board label name cannot be empty.");
+        }
+
+        if (boardLabelRequestDTO.getColor() == null || boardLabelRequestDTO.getColor().isEmpty()) {
+            throw new IllegalArgumentException("Board label color cannot be empty.");
+        }
+
+        // Update the existing BoardLabel
         BoardLabel boardLabel = boardLabelOptional.get();
         boardLabel.setName(boardLabelRequestDTO.getName());
         boardLabel.setColor(boardLabelRequestDTO.getColor());
         boardLabel.setBoard(boardOptional.get());
-        boardLabel = boardLabelRepository.save(boardLabel);
 
+        boardLabel = boardLabelRepository.save(boardLabel);
         return boardLabelMapper.toDto(boardLabel);
     }
 
@@ -66,7 +104,7 @@ public class BoardLabelServiceImpl implements BoardLabelService {
     public void deleteBoardLabel(Long id) {
         Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(id);
         if (!boardLabelOptional.isPresent()) {
-            throw new IllegalArgumentException("BoardLabel not found!");
+            throw new IllegalArgumentException("Board label with ID " + id + " not found!");
         }
         boardLabelRepository.deleteById(id);
     }
@@ -75,7 +113,7 @@ public class BoardLabelServiceImpl implements BoardLabelService {
     public BoardLabelResponseDTO getBoardLabel(Long id) {
         Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(id);
         if (!boardLabelOptional.isPresent()) {
-            throw new IllegalArgumentException("BoardLabel not found!");
+            throw new IllegalArgumentException("Board label with ID " + id + " not found!");
         }
         return boardLabelMapper.toDto(boardLabelOptional.get());
     }

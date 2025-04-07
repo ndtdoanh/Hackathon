@@ -37,16 +37,37 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
+        if (taskRequestDTO.getBoardListId() == null || taskRequestDTO.getBoardListId().isEmpty()) {
+            throw new IllegalArgumentException("BoardList ID cannot be null or empty");
+        }
         Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
         Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
-
         if (!boardListOptional.isPresent()) {
-            throw new IllegalArgumentException("BoardList not found!");
+            throw new IllegalArgumentException("BoardList with ID " + taskRequestDTO.getBoardListId() + " not found!");
+        }
+
+        if (taskRequestDTO.getTitle() == null || taskRequestDTO.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Task title cannot be empty");
+        }
+
+        if (taskRequestDTO.getDescription() == null || taskRequestDTO.getDescription().isEmpty()) {
+            throw new IllegalArgumentException("Task description cannot be empty");
+        }
+
+        if (taskRequestDTO.getPosition() < 0) {
+            throw new IllegalArgumentException("Position must be a non-negative integer");
         }
 
         List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
-        Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get(), fileUrls);
+        if (fileUrls.size() != taskRequestDTO.getFileUrls().size()) {
+            throw new IllegalArgumentException("Some file URLs are invalid or already associated with other tasks.");
+        }
 
+        if (taskRequestDTO.getDueDate() == null) {
+            throw new IllegalArgumentException("Due date must be a future date");
+        }
+
+        Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get(), fileUrls);
         task = taskRepository.save(task);
 
         for (FileUrl file : fileUrls) {
@@ -61,7 +82,40 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO) {
         Optional<Task> taskOptional = taskRepository.findById(id);
         if (!taskOptional.isPresent()) {
-            throw new IllegalArgumentException("Task not found!");
+            throw new IllegalArgumentException("Task with ID " + id + " not found!");
+        }
+
+        if (taskRequestDTO.getBoardListId() == null || taskRequestDTO.getBoardListId().isEmpty()) {
+            throw new IllegalArgumentException("BoardList ID cannot be null or empty");
+        }
+        Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
+        Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
+        if (!boardListOptional.isPresent()) {
+            throw new IllegalArgumentException("BoardList with ID " + taskRequestDTO.getBoardListId() + " not found!");
+        }
+
+        if (taskRequestDTO.getTitle() == null || taskRequestDTO.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Task title cannot be empty");
+        }
+
+        if (taskRequestDTO.getDescription() == null || taskRequestDTO.getDescription().isEmpty()) {
+            throw new IllegalArgumentException("Task description cannot be empty");
+        }
+
+        if (taskRequestDTO.getPosition() < 0) {
+            throw new IllegalArgumentException("Position must be a non-negative integer");
+        }
+
+        if (taskRequestDTO.getFileUrls() != null && !taskRequestDTO.getFileUrls().isEmpty()) {
+            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
+            if (fileUrls.size() != taskRequestDTO.getFileUrls().size()) {
+                throw new IllegalArgumentException("Some file URLs are invalid or already associated with other tasks.");
+            }
+
+            for (FileUrl file : fileUrls) {
+                file.setTask(taskOptional.get());
+            }
+            fileUrlRepository.saveAll(fileUrls);
         }
 
         Task task = taskOptional.get();
@@ -69,19 +123,7 @@ public class TaskServiceImpl implements TaskService {
         task.setDescription(taskRequestDTO.getDescription());
         task.setDueDate(taskRequestDTO.getDueDate());
 
-        // Cập nhật file nếu có
-        if (taskRequestDTO.getFileUrls() != null && !taskRequestDTO.getFileUrls().isEmpty()) {
-            List<FileUrl> fileUrls = fileUrlRepository
-                    .findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls()); // Tìm các file mà chưa được gắn vào bất kỳ task nào
-
-            for (FileUrl file : fileUrls) {
-                file.setTask(task); // Gán task cho file
-            }
-
-            fileUrlRepository.saveAll(fileUrls); // Lưu lại các file đã cập nhật
-        }
-
-        task = taskRepository.save(task); // Lưu lại task
+        task = taskRepository.save(task);
 
         return taskMapper.toDto(task);
     }
@@ -90,7 +132,7 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTask(Long id) {
         Optional<Task> taskOptional = taskRepository.findById(id);
         if (!taskOptional.isPresent()) {
-            throw new IllegalArgumentException("Task not found!");
+            throw new IllegalArgumentException("Task with ID " + id + " not found!");
         }
 
         taskRepository.deleteById(id);
@@ -100,7 +142,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponseDTO getTask(Long id) {
         Optional<Task> taskOptional = taskRepository.findById(id);
         if (!taskOptional.isPresent()) {
-            throw new IllegalArgumentException("Task not found!");
+            throw new IllegalArgumentException("Task with ID " + id + " not found!");
         }
 
         return taskMapper.toDto(taskOptional.get());
@@ -117,35 +159,29 @@ public class TaskServiceImpl implements TaskService {
         List<TaskResponseDTO> updatedTasks = new ArrayList<>();
 
         for (BulkTaskUpdateRequestDTO updateRequest : bulkUpdateRequest) {
-            // Parse taskId and boardListId from the request DTO
+            Long taskId = Long.parseLong(updateRequest.getId());
+            Long boardListId = Long.parseLong(updateRequest.getBoardListId());
 
-
-            // Check if the Task exists
-            Optional<Task> taskOptional = taskRepository.findById(Long.valueOf(updateRequest.getId()));
+            Optional<Task> taskOptional = taskRepository.findById(taskId);
             if (!taskOptional.isPresent()) {
                 throw new IllegalArgumentException("Task with ID " + updateRequest.getId() + " not found!");
             }
 
-            // Check if the BoardList exists
-            Optional<BoardList> boardListOptional = boardListRepository.findById(Long.valueOf(updateRequest.getBoardListId()));
+            Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
             if (!boardListOptional.isPresent()) {
                 throw new IllegalArgumentException("BoardList with ID " + updateRequest.getBoardListId() + " not found!");
             }
 
-            // Retrieve the Task and update the BoardList and Position
             Task task = taskOptional.get();
-            task.setBoardList(boardListOptional.get()); // Update the board list for the task
-            task.setPosition(updateRequest.getPosition()); // Update the position
+            task.setBoardList(boardListOptional.get());
+            task.setPosition(updateRequest.getPosition());
 
-            // Save the updated Task
             task = taskRepository.save(task);
 
-            // Convert the updated task into a response DTO and add it to the response list
             TaskResponseDTO updatedTaskDTO = taskMapper.toDto(task);
             updatedTasks.add(updatedTaskDTO);
         }
 
         return updatedTasks;
     }
-
 }

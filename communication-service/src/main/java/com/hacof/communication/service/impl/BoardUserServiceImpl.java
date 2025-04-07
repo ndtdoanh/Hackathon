@@ -1,6 +1,7 @@
 package com.hacof.communication.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,45 +34,73 @@ public class BoardUserServiceImpl implements BoardUserService {
     @Autowired
     private BoardUserMapper boardUserMapper;
 
+    @Override
     public BoardUserResponseDTO createBoardUser(BoardUserRequestDTO requestDTO) {
-        Board board = boardRepository.findById(requestDTO.getBoardId())
-                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+        // Validate Board existence
+        Optional<Board> boardOptional = boardRepository.findById(Long.valueOf(requestDTO.getBoardId()));
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board not found with ID: " + requestDTO.getBoardId());
+        }
 
-        User user = userRepository.findById(requestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // Validate User existence
+        Optional<User> userOptional = userRepository.findById(Long.valueOf(requestDTO.getUserId()));
+        if (!userOptional.isPresent()) {
+            throw new IllegalArgumentException("User not found with ID: " + requestDTO.getUserId());
+        }
 
-        boolean alreadyAssigned = boardUserRepository.existsByBoardAndUser(board, user);
+        // Check if the user is already assigned to the board
+        boolean alreadyAssigned = boardUserRepository.existsByBoardAndUser(boardOptional.get(), userOptional.get());
         if (alreadyAssigned) {
             throw new IllegalArgumentException("User is already assigned to this board.");
         }
 
+        // Validate role
+        try {
+            BoardUserRole role = BoardUserRole.valueOf(requestDTO.getRole());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid role provided: " + requestDTO.getRole());
+        }
+
+        // Create and save the new BoardUser
         BoardUser boardUser = new BoardUser();
-        boardUser.setBoard(board);
-        boardUser.setUser(user);
-        boardUser.setRole(BoardUserRole.valueOf(requestDTO.getRole()));  // Ensure valid role
+        boardUser.setBoard(boardOptional.get());
+        boardUser.setUser(userOptional.get());
+        boardUser.setRole(BoardUserRole.valueOf(requestDTO.getRole()));
         boardUser.setDeleted(false);
 
         boardUser = boardUserRepository.save(boardUser);
         return boardUserMapper.toDto(boardUser);
     }
 
-
     @Override
     public BoardUserResponseDTO updateBoardUser(Long id, BoardUserRequestDTO requestDTO) {
-        BoardUser boardUser =
-                boardUserRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("BoardUser not found"));
+        // Check if the BoardUser exists
+        BoardUser boardUser = boardUserRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
 
-        Board board = boardRepository
-                .findById(requestDTO.getBoardId())
-                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+        // Validate Board existence
+        Optional<Board> boardOptional = boardRepository.findById(Long.valueOf(requestDTO.getBoardId()));
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board not found with ID: " + requestDTO.getBoardId());
+        }
 
-        User user = userRepository
-                .findById(requestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // Validate User existence
+        Optional<User> userOptional = userRepository.findById(Long.valueOf(requestDTO.getUserId()));
+        if (!userOptional.isPresent()) {
+            throw new IllegalArgumentException("User not found with ID: " + requestDTO.getUserId());
+        }
 
-        boardUser.setBoard(board);
-        boardUser.setUser(user);
-        boardUser.setRole(BoardUserRole.valueOf(requestDTO.getRole()));  // Update the role
+        // Validate role
+        try {
+            BoardUserRole role = BoardUserRole.valueOf(requestDTO.getRole());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid role provided: " + requestDTO.getRole());
+        }
+
+        // Update the BoardUser entity
+        boardUser.setBoard(boardOptional.get());
+        boardUser.setUser(userOptional.get());
+        boardUser.setRole(BoardUserRole.valueOf(requestDTO.getRole()));
 
         boardUser = boardUserRepository.save(boardUser);
         return boardUserMapper.toDto(boardUser);
@@ -79,18 +108,20 @@ public class BoardUserServiceImpl implements BoardUserService {
 
     @Override
     public void deleteBoardUser(Long id) {
-        BoardUser boardUser =
-                boardUserRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("BoardUser not found"));
+        // Check if the BoardUser exists
+        BoardUser boardUser = boardUserRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
 
+        // Mark as deleted (soft delete)
         boardUser.setDeleted(true);
-
         boardUserRepository.save(boardUser);
     }
 
     @Override
     public BoardUserResponseDTO getBoardUser(Long id) {
-        BoardUser boardUser =
-                boardUserRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("BoardUser not found"));
+        BoardUser boardUser = boardUserRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
+
         return boardUserMapper.toDto(boardUser);
     }
 
