@@ -2,6 +2,7 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
+import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,6 +108,23 @@ public class TaskController {
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Tasks fetched successfully!");
             response.setData(tasks);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/bulk-update")
+    public ResponseEntity<CommonResponse<List<TaskResponseDTO>>> updateBulkTasks(
+            @RequestBody List<BulkTaskUpdateRequestDTO> bulkUpdateRequest) {
+        CommonResponse<List<TaskResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TaskResponseDTO> updatedTasks = taskService.updateBulkTasks(bulkUpdateRequest);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Tasks updated successfully!");
+            response.setData(updatedTasks);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

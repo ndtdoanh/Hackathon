@@ -1,9 +1,11 @@
 package com.hacof.communication.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.repository.FileUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,18 +64,10 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task not found!");
         }
 
-        Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
-        Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
-        if (!boardListOptional.isPresent()) {
-            throw new IllegalArgumentException("BoardList not found!");
-        }
-
         Task task = taskOptional.get();
         task.setTitle(taskRequestDTO.getTitle());
         task.setDescription(taskRequestDTO.getDescription());
-        task.setPosition(taskRequestDTO.getPosition());
         task.setDueDate(taskRequestDTO.getDueDate());
-        task.setBoardList(boardListOptional.get());
 
         // Cập nhật file nếu có
         if (taskRequestDTO.getFileUrls() != null && !taskRequestDTO.getFileUrls().isEmpty()) {
@@ -117,4 +111,41 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<TaskResponseDTO> updateBulkTasks(List<BulkTaskUpdateRequestDTO> bulkUpdateRequest) {
+        List<TaskResponseDTO> updatedTasks = new ArrayList<>();
+
+        for (BulkTaskUpdateRequestDTO updateRequest : bulkUpdateRequest) {
+            // Parse taskId and boardListId from the request DTO
+
+
+            // Check if the Task exists
+            Optional<Task> taskOptional = taskRepository.findById(Long.valueOf(updateRequest.getId()));
+            if (!taskOptional.isPresent()) {
+                throw new IllegalArgumentException("Task with ID " + updateRequest.getId() + " not found!");
+            }
+
+            // Check if the BoardList exists
+            Optional<BoardList> boardListOptional = boardListRepository.findById(Long.valueOf(updateRequest.getBoardListId()));
+            if (!boardListOptional.isPresent()) {
+                throw new IllegalArgumentException("BoardList with ID " + updateRequest.getBoardListId() + " not found!");
+            }
+
+            // Retrieve the Task and update the BoardList and Position
+            Task task = taskOptional.get();
+            task.setBoardList(boardListOptional.get()); // Update the board list for the task
+            task.setPosition(updateRequest.getPosition()); // Update the position
+
+            // Save the updated Task
+            task = taskRepository.save(task);
+
+            // Convert the updated task into a response DTO and add it to the response list
+            TaskResponseDTO updatedTaskDTO = taskMapper.toDto(task);
+            updatedTasks.add(updatedTaskDTO);
+        }
+
+        return updatedTasks;
+    }
+
 }
