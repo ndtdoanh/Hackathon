@@ -2,6 +2,7 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
@@ -15,22 +16,31 @@ import lombok.experimental.FieldDefaults;
 public class MentorshipRequestDTO {
     String id;
 
-    @NotNull(message = "Hackathon ID is required")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String hackathonId;
 
-    @NotNull(message = "Mentor ID is required")
+    HackathonDTO hackathon;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String mentorId;
 
-    @NotNull(message = "Team ID is required")
+    UserDTO mentor;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String teamId;
 
+    TeamDTO team;
+
+
     @NotNull(message = "Status is required")
-    String status;
+    String status; // enum MentorshipStatus
 
     LocalDateTime evaluatedAt = LocalDateTime.now();
 
-    @NotNull(message = "Evaluated By ID is required")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String evaluatedById;
+
+    UserDTO evaluatedBy;
 
     String createdByUserName; // save username
     LocalDateTime createdAt;

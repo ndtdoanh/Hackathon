@@ -14,7 +14,8 @@ import lombok.experimental.FieldDefaults;
 public class TeamDTO {
     String id;
     String name;
-    UserDTO teamLeaderId;
+    String teamLeaderId;
+    UserDTO teamLeader;
     Set<UserTeamDTO> teamMembers;
 
     @JsonIgnore
@@ -24,6 +25,7 @@ public class TeamDTO {
 
     @JsonIgnore
     String deletedById;
+    UserDTO deletedBy;
 
     List<TeamHackathonDTO> teamHackathons;
 

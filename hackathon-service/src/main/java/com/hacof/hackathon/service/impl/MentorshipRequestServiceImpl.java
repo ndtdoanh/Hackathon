@@ -3,6 +3,7 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.mapper.manual.MentorshipRequestMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -51,52 +52,81 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
                 .findById(Long.parseLong(mentorshipRequestDTO.getTeamId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
 
-        User evaluatedBy = userRepository
-                .findById(Long.parseLong(mentorshipRequestDTO.getEvaluatedById()))
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        MentorshipRequest mentorshipRequest = mentorshipRequestMapper.toEntity(mentorshipRequestDTO);
+
+        User evaluatedBy = null;
+        if (mentorshipRequestDTO.getEvaluatedById() != null) {
+            evaluatedBy = userRepository
+                    .findById(parseLongSafely(mentorshipRequestDTO.getEvaluatedById()))
+                    .orElseThrow(() -> new ResourceNotFoundException("EvaluatedBy User not found"));
+        }
+
+        MentorshipRequest mentorshipRequest = MentorshipRequestMapperManual.toEntity(mentorshipRequestDTO);
         mentorshipRequest.setHackathon(hackathon);
         mentorshipRequest.setMentor(mentor);
         mentorshipRequest.setTeam(team);
         mentorshipRequest.setEvaluatedBy(evaluatedBy);
 
         mentorshipRequest = mentorshipRequestRepository.save(mentorshipRequest);
-        return mentorshipRequestMapper.toDto(mentorshipRequest);
+
+        System.out.println("HackathonId: " + mentorshipRequestDTO.getHackathonId());
+        System.out.println("MentorId: " + mentorshipRequestDTO.getMentorId());
+        System.out.println("TeamId: " + mentorshipRequestDTO.getTeamId());
+        System.out.println("EvaluatedById: " + mentorshipRequestDTO.getEvaluatedById());
+        return MentorshipRequestMapperManual.toDto(mentorshipRequest);
     }
 
     @Override
-    public MentorshipRequestDTO update(Long id, MentorshipRequestDTO mentorshipRequestDTO) {
+    @Transactional
+    public MentorshipRequestDTO update(Long id, MentorshipRequestDTO dto) {
         log.info("Updating mentorship request with id: {}", id);
 
         MentorshipRequest mentorshipRequest = mentorshipRequestRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentorship request not found"));
 
-        Hackathon hackathon = hackathonRepository
-                .findById(Long.parseLong(mentorshipRequestDTO.getHackathonId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+        // Ánh xạ các trường đơn giản từ DTO vào entity
+        MentorshipRequest partialUpdate = MentorshipRequestMapperManual.toEntity(dto);
 
-        User mentor = userRepository
-                .findById(Long.parseLong(mentorshipRequestDTO.getMentorId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
+        if (partialUpdate.getStatus() != null) {
+            mentorshipRequest.setStatus(partialUpdate.getStatus());
+        }
 
-        Team team = teamRepository
-                .findById(Long.parseLong(mentorshipRequestDTO.getTeamId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+        if (partialUpdate.getEvaluatedAt() != null) {
+            mentorshipRequest.setEvaluatedAt(partialUpdate.getEvaluatedAt());
+        }
 
-        User evaluatedBy = userRepository
-                .findById(Long.parseLong(mentorshipRequestDTO.getEvaluatedById()))
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        // Thiết lập các liên kết (relation entities)
+        if (dto.getHackathonId() != null) {
+            Hackathon hackathon = hackathonRepository
+                    .findById(Long.parseLong(dto.getHackathonId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+            mentorshipRequest.setHackathon(hackathon);
+        }
 
-        mentorshipRequestMapper.updateEntityFromDto(mentorshipRequestDTO, mentorshipRequest);
-        mentorshipRequest.setHackathon(hackathon);
-        mentorshipRequest.setMentor(mentor);
-        mentorshipRequest.setTeam(team);
-        mentorshipRequest.setEvaluatedBy(evaluatedBy);
+        if (dto.getMentorId() != null) {
+            User mentor = userRepository
+                    .findById(Long.parseLong(dto.getMentorId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
+            mentorshipRequest.setMentor(mentor);
+        }
 
-        mentorshipRequest = mentorshipRequestRepository.save(mentorshipRequest);
-        return mentorshipRequestMapper.toDto(mentorshipRequest);
+        if (dto.getTeamId() != null) {
+            Team team = teamRepository
+                    .findById(Long.parseLong(dto.getTeamId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+            mentorshipRequest.setTeam(team);
+        }
+
+        if (dto.getEvaluatedById() != null) {
+            User evaluatedBy = userRepository
+                    .findById(Long.parseLong(dto.getEvaluatedById()))
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            mentorshipRequest.setEvaluatedBy(evaluatedBy);
+        }
+
+        MentorshipRequest saved = mentorshipRequestRepository.save(mentorshipRequest);
+        return MentorshipRequestMapperManual.toDto(saved);
     }
 
     @Override
@@ -139,5 +169,13 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
     public List<MentorshipRequestDTO> getAllByMentorId(String mentorId) {
         List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByMentorId(Long.parseLong(mentorId));
         return requests.stream().map(mentorshipRequestMapper::toDto).collect(Collectors.toList());
+    }
+
+    private Long parseLongSafely(String value) {
+        try {
+            return value != null ? Long.parseLong(value) : null;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid ID format: " + value);
+        }
     }
 }

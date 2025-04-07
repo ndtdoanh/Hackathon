@@ -64,7 +64,7 @@ public class TeamController {
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
                 //                request.getChannel(),
-                new CommonResponse.Result("0000", "Đã cập nhật phản hồi thành công"), updated));
+                new CommonResponse.Result("0000", "Team updated successfully"), updated));
     }
 
     // Step 3: Organizer/Admin review
@@ -79,7 +79,7 @@ public class TeamController {
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
                 //                request.getChannel(),
-                new CommonResponse.Result("0000", "Đã xét duyệt yêu cầu thành công"), reviewed));
+                new CommonResponse.Result("0000", "Team request was reviewed successfully"), reviewed));
     }
 
     // Step 4: Search team requests

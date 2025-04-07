@@ -43,7 +43,10 @@ public class TeamRequestMapperManual {
                     memberDTO.setStatus(member.getStatus().toString());
                     memberDTO.setRespondedAt(
                             member.getRespondedAt() != null ? member.getRespondedAt().toString() : null);
-                    memberDTO.setTeamRequestId(String.valueOf(member.getTeamRequest().getId()));
+                    //memberDTO.setTeamRequestId(String.valueOf(member.getTeamRequest().getId()));
+                    memberDTO.setTeamRequestId(
+                            member.getTeamRequest() != null ? String.valueOf(member.getTeamRequest().getId()) : null
+                    );
                     memberDTO.setCreatedByUserName(
                             member.getCreatedBy() != null ? member.getCreatedBy().getUsername() : null);
                     memberDTO.setLastModifiedByUserName(
