@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.mapper.manual.RoundLocationMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -17,6 +16,7 @@ import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
+import com.hacof.hackathon.mapper.manual.RoundLocationMapperManual;
 import com.hacof.hackathon.mapper.manual.RoundMapperManual;
 import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.RoundService;
@@ -108,12 +108,14 @@ public class RoundServiceImpl implements RoundService {
         return rounds.stream()
                 .map(round -> {
                     RoundDTO roundDTO = RoundMapperManual.toDto(round);
-                    if (round.getRoundLocations() != null && !round.getRoundLocations().isEmpty()) {
+                    if (round.getRoundLocations() != null
+                            && !round.getRoundLocations().isEmpty()) {
                         // Ensure round locations are mapped
                         roundDTO.setRoundLocations(round.getRoundLocations().stream()
                                 .map(roundLocation -> {
                                     return RoundLocationMapperManual.toDto(roundLocation);
-                                }).collect(Collectors.toList()));
+                                })
+                                .collect(Collectors.toList()));
                     }
                     return roundDTO;
                 })
@@ -127,9 +129,7 @@ public class RoundServiceImpl implements RoundService {
         }
 
         List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return rounds.stream()
-                .map(RoundMapperManual::toDto)
-                .collect(Collectors.toList());
+        return rounds.stream().map(RoundMapperManual::toDto).collect(Collectors.toList());
     }
 
     private Hackathon validateHackathon(String hackathonId) {

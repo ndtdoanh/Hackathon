@@ -15,15 +15,17 @@ import com.hacof.hackathon.repository.EventRegistrationRepository;
 import com.hacof.hackathon.service.EventRegistrationService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class EventRegistrationServiceImpl implements EventRegistrationService {
-    private final EventRegistrationRepository eventRegistrationRepository;
-    private final EventRegistrationMapper eventRegistrationMapper;
+    EventRegistrationRepository eventRegistrationRepository;
+    EventRegistrationMapper eventRegistrationMapper;
 
     @Override
     public EventRegistrationDTO create(EventRegistrationDTO eventRegistrationDTO) {

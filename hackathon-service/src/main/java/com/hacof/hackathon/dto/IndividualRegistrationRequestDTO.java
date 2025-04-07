@@ -2,6 +2,7 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
@@ -15,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 public class IndividualRegistrationRequestDTO {
     String id;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String hackathonId;
     HackathonDTO hackathon;
 
     @NotNull(message = "IndividualRegistrationRequest Status is required")

@@ -1,5 +1,7 @@
 package com.hacof.hackathon.service.impl;
 
+import static com.hacof.hackathon.mapper.manual.TeamRequestMapperManual.toDto;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -98,14 +100,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     public TeamRequestDTO createTeamRequest(TeamRequestDTO request) {
         // Validate hackathon
         Hackathon hackathon = validateHackathon(request.getHackathonId());
-        log.debug("Validated successfully hackathon: {}", hackathon.getTitle());
-
         // Validate team size
         validateTeamSize(request.getTeamRequestMembers().size(), hackathon);
-        log.debug(
-                "Validated successfully team size: {}",
-                request.getTeamRequestMembers().size());
-
         // Create team request
         TeamRequest teamRequest = TeamRequest.builder()
                 .hackathon(hackathon)
@@ -117,6 +113,40 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .build();
 
         // Add members
+        //        request.getTeamRequestMembers().forEach(member -> {
+        //            log.debug("Processing team request member: {}", member);
+        //            if (member.getUser() == null || member.getUser().getId() == null) {
+        //                log.error("UserDTO or UserDTO ID is null for member: {}", member);
+        //                throw new InvalidInputException("UserDTO or UserDTO ID cannot be null");
+        //            }
+        //
+        //            User user = userRepository
+        //                    .findById(Long.parseLong(member.getUser().getId()))
+        //                    .orElseThrow(() -> new ResourceNotFoundException(
+        //                            "Not found with user: " + member.getUser().getId()));
+        //
+        //            TeamRequestMember memberEntity = TeamRequestMember.builder()
+        //                    .teamRequest(teamRequest)
+        //                    .user(user)
+        //                    .status(TeamRequestMemberStatus.PENDING)
+        //                    .build();
+        //            teamRequest.getTeamRequestMembers().add(memberEntity);
+        //        });
+        //
+        //        TeamRequest saved = teamRequestRepository.save(teamRequest);
+        //
+        //        // Send email to all members
+        //        for (User member : teamRequest.getTeamRequestMembers().stream()
+        //                .map(TeamRequestMember::getUser)
+        //                .collect(Collectors.toList())) {
+        //            emailService.sendEmail(member.getEmail(), "Team Request Created", "A new team request has been
+        // created.");
+        //        }
+        //
+        //        TeamRequestDTO response = teamRequestMapper.toDto(saved);
+        //        log.debug("Team request created successfully: {}", response);
+        //        return response;
+
         request.getTeamRequestMembers().forEach(member -> {
             log.debug("Processing team request member: {}", member);
             if (member.getUser() == null || member.getUser().getId() == null) {
@@ -130,9 +160,13 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                             "Not found with user: " + member.getUser().getId()));
 
             TeamRequestMember memberEntity = TeamRequestMember.builder()
-                    .teamRequest(teamRequest)
+                    .teamRequest(teamRequest) // Ensure association with teamRequest
                     .user(user)
                     .status(TeamRequestMemberStatus.PENDING)
+                    //                    .cr(member.getCreatedByUserName()) // Assuming these fields are in DTO
+                    //                    .createdAt(member.getCreatedAt())
+                    //                    .lastModifiedByUserName(member.getLastModifiedByUserName())
+                    //                    .updatedAt(member.getUpdatedAt())
                     .build();
             teamRequest.getTeamRequestMembers().add(memberEntity);
         });
@@ -146,7 +180,13 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             emailService.sendEmail(member.getEmail(), "Team Request Created", "A new team request has been created.");
         }
 
-        TeamRequestDTO response = teamRequestMapper.toDto(saved);
+        // Convert to DTO manually
+        TeamRequestDTO response = toDto(saved);
+
+        // Ensure the teamRequestId is populated in the TeamRequestMemberDTOs
+        response.getTeamRequestMembers()
+                .forEach(memberDTO -> memberDTO.setTeamRequestId(String.valueOf(saved.getId())));
+
         log.debug("Team request created successfully: {}", response);
         return response;
     }
@@ -160,7 +200,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         // Validate request still pending
         if (request.getStatus() != TeamRequestStatus.PENDING) {
-            throw new IllegalStateException("Just can update response for pending request");
+            throw new InvalidInputException("Just can update response for pending request");
         }
 
         // Update member response
@@ -192,11 +232,22 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             }
         }
 
+        // Save the updated team request
         TeamRequest updated = teamRequestRepository.save(request);
+
+        // Notify member about the response update
         notificationService.notifyMemberResponse(member);
 
-        return teamRequestMapper.toDto(updated);
+        // Return the updated team request as DTO
+        TeamRequestDTO response = toDto(updated);
+
+        // Ensure the teamRequestId is populated in the TeamRequestMemberDTOs
+        response.getTeamRequestMembers()
+                .forEach(memberDTO -> memberDTO.setTeamRequestId(String.valueOf(updated.getId())));
+
+        return response;
     }
+
     // Organizer review team request
     @Override
     public TeamRequestDTO reviewTeamRequest(String requestId, TeamRequestStatus status, String note) {
@@ -305,6 +356,121 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         return teamRequestMapper.toDto(updated);
     }
+
+    //    @Override
+    //    public TeamRequestDTO reviewTeamRequest(String requestId, TeamRequestStatus status, String note) {
+    //        log.info("Review team request: {}", requestId);
+    //
+    //        TeamRequest request = getTeamRequest(requestId);
+    //
+    //        // Validate request is under review
+    //        if (request.getStatus() != TeamRequestStatus.UNDER_REVIEW) {
+    //            throw new InvalidInputException("Just can review request is waiting for approval");
+    //        }
+    //
+    //        // Validate all members approved if approving request
+    //        if (status == TeamRequestStatus.APPROVED && !allMembersApproved(request)) {
+    //            throw new InvalidInputException("Cannot approve request if not all members approved");
+    //        }
+    //
+    //        // Update request status
+    //        request.setStatus(status);
+    //        request.setNote(note);
+    //        request.setReviewedAt(LocalDateTime.now());
+    //
+    //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //        if (authentication == null || !authentication.isAuthenticated()) {
+    //            throw new InvalidInputException("No authenticated user found");
+    //        }
+    //
+    //        String username = authentication.getName();
+    //        User currentUser = userRepository
+    //                .findByUsername(username)
+    //                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+    //
+    //        request.setReviewedBy(currentUser);
+    //
+    //        // If approved, create team
+    //        if (status == TeamRequestStatus.APPROVED) {
+    //            Team team = createTeam(request);
+    //            log.info("Created team from request {}", requestId);
+    //
+    //            // Create Schedule
+    //            Schedule schedule = Schedule.builder()
+    //                    .team(team)
+    //                    .hackathon(request.getHackathon())
+    //                    .build();
+    //            scheduleRepository.save(schedule);
+    //            log.debug("Created schedule for team {}", team.getId());
+    //
+    //            // Create Board
+    //            Board board =
+    //                    Board.builder().team(team).owner(request.getCreatedBy()).build();
+    //            boardRepository.save(board);
+    //            log.debug("Created board for team {}", team.getId());
+    //
+    //            // Create BoardUsers
+    //            for (UserTeam userTeam : team.getTeamMembers()) {
+    //                BoardUser boardUser = BoardUser.builder()
+    //                        .board(board)
+    //                        .user(userTeam.getUser())
+    //                        .role(
+    //                                userTeam.getUser().getId()
+    //                                        == team.getTeamLeader().getId()
+    //                                        ? BoardUserRole.ADMIN
+    //                                        : BoardUserRole.MEMBER)
+    //                        .build();
+    //                boardUserRepository.save(boardUser);
+    //            }
+    //            log.debug("Created board users for team {}", team.getId());
+    //
+    //            // Create Conversation
+    //            Conversation conversation = Conversation.builder()
+    //                    .team(team)
+    //                    .type(ConversationType.PRIVATE)
+    //                    .name(team.getName())
+    //                    .build();
+    //            conversationRepository.save(conversation);
+    //            log.debug("Created conversation for team {}", team.getId());
+    //
+    //            // Create ConversationUsers
+    //            for (UserTeam userTeam : team.getTeamMembers()) {
+    //                ConversationUser conversationUser = ConversationUser.builder()
+    //                        .user(userTeam.getUser())
+    //                        .conversation(conversation)
+    //                        .isDeleted(false)
+    //                        .build();
+    //                conversationUserRepository.save(conversationUser);
+    //            }
+    //            log.debug("Created conversation users for team {}", team.getId());
+    //
+    //            // Create TeamRound
+    //            Round round = roundRepository
+    //                    .findFirstByHackathonIdOrderByRoundNumberAsc(
+    //                            request.getHackathon().getId())
+    //                    .orElseThrow(() -> new ResourceNotFoundException("No rounds found for hackathon"));
+    //            TeamRound teamRound = TeamRound.builder()
+    //                    .team(team)
+    //                    .round(round)
+    //                    .status(TeamRoundStatus.PENDING)
+    //                    .description("Team " + team.getName() + " registered for round " + round.getRoundNumber())
+    //                    .build();
+    //            teamRoundRepository.save(teamRound);
+    //            log.debug("Created team round for team {}", team.getId());
+    //        }
+    //
+    //        TeamRequest updated = teamRequestRepository.save(request);
+    //        notificationService.notifyTeamRequestReviewed(updated);
+    //
+    //        TeamRequestDTO response = toDto(updated);
+    //
+    //        // Ensure the teamRequestId is populated in the TeamRequestMemberDTOs
+    //        response.getTeamRequestMembers().forEach(memberDTO ->
+    //                memberDTO.setTeamRequestId(String.valueOf(updated.getId()))
+    //        );
+    //
+    //        return response;
+    //    }
 
     @Override
     public List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId) {

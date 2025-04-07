@@ -26,7 +26,7 @@ public interface TeamRequestMapper {
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
     TeamRequestDTO toDto(TeamRequest teamRequest);
 
-    @Mapping(target = "hackathon.id", source = "hackathonId")
+    // @Mapping(target = "hackathon.id", source = "hackathonId")
     @Mapping(target = "reviewedBy", source = "reviewedBy")
     TeamRequest toEntity(TeamRequestDTO teamRequestDTO);
 

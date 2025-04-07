@@ -47,7 +47,10 @@ public class RoundMapperManual {
     public static RoundDTO toDto(Round entity) {
         RoundDTO dto = new RoundDTO();
         dto.setId(String.valueOf(entity.getId()));
-        dto.setHackathonId(entity.getHackathon() != null ? String.valueOf(entity.getHackathon().getId()) : null);
+        dto.setHackathonId(
+                entity.getHackathon() != null
+                        ? String.valueOf(entity.getHackathon().getId())
+                        : null);
         dto.setStartTime(entity.getStartTime());
         dto.setEndTime(entity.getEndTime());
         dto.setRoundNumber(entity.getRoundNumber());
@@ -56,8 +59,10 @@ public class RoundMapperManual {
 
         dto.setCreatedAt(entity.getCreatedDate());
         dto.setUpdatedAt(entity.getLastModifiedDate());
-        dto.setCreatedByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
-        dto.setLastModifiedByUserName(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setLastModifiedByUserName(
+                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
 
         if (entity.getRoundLocations() != null) {
             List<RoundLocationDTO> locationDTOs = entity.getRoundLocations().stream()

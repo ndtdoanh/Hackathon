@@ -21,7 +21,10 @@ public class RoundLocationMapperManual {
     // convert entity to dto
     public static RoundLocationDTO toDto(RoundLocation entity) {
         RoundLocationDTO dto = new RoundLocationDTO();
-        dto.setLocationId(entity.getLocation() != null ? String.valueOf(entity.getLocation().getId()) : null);
+        dto.setLocationId(
+                entity.getLocation() != null
+                        ? String.valueOf(entity.getLocation().getId())
+                        : null);
 
         if (entity.getLocation() != null) {
             LocationDTO locationDTO = new LocationDTO();
@@ -33,9 +36,13 @@ public class RoundLocationMapperManual {
             locationDTO.setCreatedAt(entity.getLocation().getCreatedDate());
             locationDTO.setUpdatedAt(entity.getLocation().getLastModifiedDate());
             locationDTO.setCreatedByUserName(
-                    entity.getLocation().getCreatedBy() != null ? entity.getLocation().getCreatedBy().getUsername() : null);
+                    entity.getLocation().getCreatedBy() != null
+                            ? entity.getLocation().getCreatedBy().getUsername()
+                            : null);
             locationDTO.setLastModifiedByUserName(
-                    entity.getLocation().getLastModifiedBy() != null ? entity.getLocation().getLastModifiedBy().getUsername() : null);
+                    entity.getLocation().getLastModifiedBy() != null
+                            ? entity.getLocation().getLastModifiedBy().getUsername()
+                            : null);
             dto.setLocation(locationDTO);
         }
 
@@ -44,9 +51,12 @@ public class RoundLocationMapperManual {
         dto.setCreatedAt(entity.getCreatedDate());
         dto.setUpdatedAt(entity.getLastModifiedDate());
         dto.setId(String.valueOf(entity.getId()));
-        dto.setRoundId(entity.getRound() != null ? String.valueOf(entity.getRound().getId()) : null);
-        dto.setCreatedByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
-        dto.setLastModifiedByUserName(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setRoundId(
+                entity.getRound() != null ? String.valueOf(entity.getRound().getId()) : null);
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setLastModifiedByUserName(
+                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
 
         return dto;
     }

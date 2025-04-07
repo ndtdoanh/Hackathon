@@ -19,7 +19,7 @@ public class TeamRequestDTO {
     @NotNull(message = "Hackathon ID is required")
     String hackathonId;
 
-    HackathonDTO hackathon;
+    // HackathonDTO hackathon;
 
     @NotNull(message = "Team Name is required")
     String name;

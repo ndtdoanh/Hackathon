@@ -60,10 +60,10 @@ public class HackathonDTO {
     @NotBlank(message = "Contact is required")
     String contact;
 
-    @NotBlank(message = "Category is required")
+    // @NotBlank(message = "Category is required")
     String category; // Used for category filtering
 
-    @NotBlank(message = "Organization is required")
+    // @NotBlank(message = "Organization is required")
     String organization;
 
     String enrollmentStatus; // OPEN - UP_COMING - CLOSED

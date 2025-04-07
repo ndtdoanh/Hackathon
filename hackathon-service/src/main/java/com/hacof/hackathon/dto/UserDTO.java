@@ -54,8 +54,15 @@ public class UserDTO {
     String status;
 
     // Audit fields
+    @JsonIgnore
     String createdByUserName; // save username
+
+    @JsonIgnore
     LocalDateTime createdAt;
+
+    @JsonIgnore
     String lastModifiedByUserName; // save username
+
+    @JsonIgnore
     LocalDateTime updatedAt = LocalDateTime.now();
 }

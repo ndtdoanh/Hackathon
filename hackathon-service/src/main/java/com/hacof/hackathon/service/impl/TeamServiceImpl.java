@@ -46,9 +46,6 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<TeamDTO> createBulkTeams(String teamLeaderId, List<Long> userIds) {
         List<TeamDTO> createdTeams = new ArrayList<>();
-        //        List<User> users = userRepository.findAllById(userIds);
-        //        log.debug("Fetched users: {}", users);
-        // Fetch approved individual registration requests
         List<IndividualRegistrationRequest> approvedRequests =
                 individualRegistrationRequestRepository.findAllByStatus(IndividualRegistrationRequestStatus.PENDING);
         List<User> users = approvedRequests.stream()
