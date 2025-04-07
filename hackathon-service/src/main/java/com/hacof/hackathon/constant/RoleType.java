@@ -2,7 +2,7 @@ package com.hacof.hackathon.constant;
 
 public enum RoleType {
     ADMIN,
-    ORGANIZATION,
+    ORGANIZER,
     JUDGE,
     MENTOR,
     GUEST,

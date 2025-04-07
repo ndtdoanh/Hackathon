@@ -3,7 +3,6 @@ package com.hacof.identity.controller;
 import java.io.IOException;
 import java.util.List;
 
-import com.hacof.identity.dto.request.OrganizationUpdateForJudgeMentor;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -28,6 +27,7 @@ import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
+import com.hacof.identity.dto.request.OrganizerUpdateForJudgeMentor;
 import com.hacof.identity.dto.request.PasswordCreateRequest;
 import com.hacof.identity.dto.request.ResetPasswordRequest;
 import com.hacof.identity.dto.request.UserCreateRequest;
@@ -105,7 +105,7 @@ public class UserController {
     public ApiResponse<List<UserResponse>> getUsersByRoles() {
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getUsersByRoles())
-                .message("Get users by roles: ORGANIZATION, JUDGE, MENTOR")
+                .message("Get users by roles: ORGANIZER, JUDGE, MENTOR")
                 .build();
     }
 
@@ -144,8 +144,7 @@ public class UserController {
     @PutMapping("/organization/{userId}")
     @PreAuthorize("hasAuthority('UPDATE_JUDGE_MENTOR_BY_ORGANIZATION')")
     public ApiResponse<UserResponse> updateJudgeMentorByOrganization(
-            @PathVariable Long userId,
-            @Valid @RequestBody OrganizationUpdateForJudgeMentor request) {
+            @PathVariable Long userId, @Valid @RequestBody OrganizerUpdateForJudgeMentor request) {
 
         return ApiResponse.<UserResponse>builder()
                 .data(userService.updateJudgeMentorByOrganization(userId, request))

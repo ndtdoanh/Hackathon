@@ -21,8 +21,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HackathonResponse {
     String id;
-    String bannerImageUrl;
     String title;
+    String bannerImageUrl;
     LocalDateTime startDate;
     LocalDateTime endDate;
     Status status;
