@@ -13,7 +13,7 @@ public interface BlogPostService {
 
     BlogPostResponse getBlogPost(Long id);
 
-    BlogPostResponse updateBlogPost(Long id, BlogPostRequest request);
+    List<BlogPostResponse> getPublishedBlogPosts();
 
     BlogPostResponse submitBlogPost(Long id);
 

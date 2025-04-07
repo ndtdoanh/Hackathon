@@ -17,7 +17,8 @@ public class BoardResponseDTO {
     String name;
     String description;
     String ownerName;
-    String teamName;
+    String teamId;
+    String hackathonId;
     String createdBy;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;

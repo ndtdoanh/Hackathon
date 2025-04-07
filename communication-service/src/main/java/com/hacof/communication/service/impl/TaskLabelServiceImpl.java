@@ -35,6 +35,10 @@ public class TaskLabelServiceImpl implements TaskLabelService {
 
     @Override
     public TaskLabelResponseDTO createTaskLabel(TaskLabelRequestDTO taskLabelRequestDTO) {
+        if (taskLabelRequestDTO.getTaskId() == null || taskLabelRequestDTO.getBoardLabelId() == null) {
+            throw new IllegalArgumentException("Task ID and Board Label ID are required.");
+        }
+
         Long taskId = Long.parseLong(taskLabelRequestDTO.getTaskId());
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
@@ -47,10 +51,14 @@ public class TaskLabelServiceImpl implements TaskLabelService {
             throw new IllegalArgumentException("BoardLabel not found!");
         }
 
+        Optional<TaskLabel> existingTaskLabel = taskLabelRepository.findByTaskAndBoardLabel(taskOptional.get(), boardLabelOptional.get());
+        if (existingTaskLabel.isPresent()) {
+            throw new IllegalArgumentException("This task already has the specified board label.");
+        }
+
         TaskLabel taskLabel = new TaskLabel();
         taskLabel.setTask(taskOptional.get());
         taskLabel.setBoardLabel(boardLabelOptional.get());
-
         taskLabel = taskLabelRepository.save(taskLabel);
 
         return taskLabelMapper.toDto(taskLabel);
@@ -58,6 +66,10 @@ public class TaskLabelServiceImpl implements TaskLabelService {
 
     @Override
     public TaskLabelResponseDTO updateTaskLabel(Long id, TaskLabelRequestDTO taskLabelRequestDTO) {
+        if (taskLabelRequestDTO.getTaskId() == null || taskLabelRequestDTO.getBoardLabelId() == null) {
+            throw new IllegalArgumentException("Task ID and Board Label ID are required.");
+        }
+
         Optional<TaskLabel> taskLabelOptional = taskLabelRepository.findById(id);
         if (!taskLabelOptional.isPresent()) {
             throw new IllegalArgumentException("TaskLabel not found!");
@@ -76,11 +88,14 @@ public class TaskLabelServiceImpl implements TaskLabelService {
         }
 
         TaskLabel taskLabel = taskLabelOptional.get();
+        if (taskLabel.getTask().equals(taskOptional.get()) && taskLabel.getBoardLabel().equals(boardLabelOptional.get())) {
+            throw new IllegalArgumentException("This task already has the specified board label.");
+        }
+
         taskLabel.setTask(taskOptional.get());
         taskLabel.setBoardLabel(boardLabelOptional.get());
 
         taskLabel = taskLabelRepository.save(taskLabel);
-
         return taskLabelMapper.toDto(taskLabel);
     }
 

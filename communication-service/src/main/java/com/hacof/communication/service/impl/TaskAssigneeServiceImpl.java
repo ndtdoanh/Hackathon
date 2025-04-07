@@ -35,19 +35,28 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
 
     @Override
     public TaskAssigneeResponseDTO createTaskAssignee(TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
+        if (taskAssigneeRequestDTO.getTaskId() == null || taskAssigneeRequestDTO.getUserId() == null) {
+            throw new IllegalArgumentException("Task ID and User ID must not be null");
+        }
+
         Long taskId = Long.parseLong(taskAssigneeRequestDTO.getTaskId());
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
-            throw new IllegalArgumentException("Task not found!");
+            throw new IllegalArgumentException("Task with ID " + taskId + " not found");
         }
+
         Long userId = Long.parseLong(taskAssigneeRequestDTO.getUserId());
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
-            throw new IllegalArgumentException("User not found!");
+            throw new IllegalArgumentException("User with ID " + userId + " not found");
         }
 
-        TaskAssignee taskAssignee =
-                taskAssigneeMapper.toEntity(taskAssigneeRequestDTO, taskOptional.get(), userOptional.get());
+        boolean alreadyAssigned = taskAssigneeRepository.existsByTaskAndUser(taskOptional.get(), userOptional.get());
+        if (alreadyAssigned) {
+            throw new IllegalArgumentException("User is already assigned to this task");
+        }
+
+        TaskAssignee taskAssignee = taskAssigneeMapper.toEntity(taskAssigneeRequestDTO, taskOptional.get(), userOptional.get());
         taskAssignee = taskAssigneeRepository.save(taskAssignee);
 
         return taskAssigneeMapper.toDto(taskAssignee);
@@ -55,22 +64,32 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
 
     @Override
     public TaskAssigneeResponseDTO updateTaskAssignee(Long id, TaskAssigneeRequestDTO taskAssigneeRequestDTO) {
+        if (taskAssigneeRequestDTO.getTaskId() == null || taskAssigneeRequestDTO.getUserId() == null) {
+            throw new IllegalArgumentException("Task ID and User ID must not be null");
+        }
+
         Optional<TaskAssignee> taskAssigneeOptional = taskAssigneeRepository.findById(id);
+        if (!taskAssigneeOptional.isPresent()) {
+            throw new IllegalArgumentException("TaskAssignee with ID " + id + " not found");
+        }
 
         Long taskId = Long.parseLong(taskAssigneeRequestDTO.getTaskId());
-        Long userId = Long.parseLong(taskAssigneeRequestDTO.getUserId());
-
-        if (!taskAssigneeOptional.isPresent()) {
-            throw new IllegalArgumentException("TaskAssignee not found!");
-        }
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
-            throw new IllegalArgumentException("Task not found!");
+            throw new IllegalArgumentException("Task with ID " + taskId + " not found");
         }
+
+        Long userId = Long.parseLong(taskAssigneeRequestDTO.getUserId());
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
-            throw new IllegalArgumentException("User not found!");
+            throw new IllegalArgumentException("User with ID " + userId + " not found");
         }
+
+        Optional<TaskAssignee> existingAssignee = taskAssigneeRepository.findByTaskAndUser(taskOptional.get(), userOptional.get());
+        if (existingAssignee.isPresent() && !Long.valueOf(existingAssignee.get().getId()).equals(id)) {
+            throw new IllegalArgumentException("User is already assigned to this task.");
+        }
+
 
         TaskAssignee taskAssignee = taskAssigneeOptional.get();
         taskAssignee.setTask(taskOptional.get());
@@ -84,7 +103,7 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
     public void deleteTaskAssignee(Long id) {
         Optional<TaskAssignee> taskAssigneeOptional = taskAssigneeRepository.findById(id);
         if (!taskAssigneeOptional.isPresent()) {
-            throw new IllegalArgumentException("TaskAssignee not found!");
+            throw new IllegalArgumentException("TaskAssignee with ID " + id + " not found");
         }
         taskAssigneeRepository.deleteById(id);
     }
@@ -93,7 +112,7 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
     public TaskAssigneeResponseDTO getTaskAssignee(Long id) {
         Optional<TaskAssignee> taskAssigneeOptional = taskAssigneeRepository.findById(id);
         if (!taskAssigneeOptional.isPresent()) {
-            throw new IllegalArgumentException("TaskAssignee not found!");
+            throw new IllegalArgumentException("TaskAssignee with ID " + id + " not found");
         }
         return taskAssigneeMapper.toDto(taskAssigneeOptional.get());
     }
@@ -106,9 +125,13 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
 
     @Override
     public List<TaskAssigneeResponseDTO> getTaskAssigneesByTaskId(Long taskId) {
+        if (taskId == null) {
+            throw new IllegalArgumentException("Task ID cannot be null");
+        }
+
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (!taskOptional.isPresent()) {
-            throw new IllegalArgumentException("Task with the given ID not found!");
+            throw new IllegalArgumentException("Task with ID " + taskId + " not found");
         }
 
         List<TaskAssignee> taskAssignees = taskAssigneeRepository.findByTaskId(taskId);

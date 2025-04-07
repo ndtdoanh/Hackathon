@@ -39,7 +39,8 @@ public class BoardLabelMapper {
                 .name(board.getName())
                 .description(board.getDescription()) // Lấy mô tả Board
                 .ownerName(board.getOwner() != null ? board.getOwner().getUsername() : null) // Lấy tên chủ sở hữu
-                .teamName(board.getTeam() != null ? board.getTeam().getName() : null) // Lấy tên team (nếu có)
+                .teamId(String.valueOf(board.getTeam().getId()))
+                .hackathonId(String.valueOf(board.getHackathon().getId()))// Lấy tên team (nếu có)
                 .createdBy(board.getCreatedBy() != null ? board.getCreatedBy().getUsername() : null) // Người tạo
                 .createdDate(board.getCreatedDate())
                 .lastModifiedDate(board.getLastModifiedDate())

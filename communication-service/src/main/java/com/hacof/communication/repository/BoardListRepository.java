@@ -5,5 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.communication.entity.BoardList;
 
+import java.util.Optional;
+
 @Repository
-public interface BoardListRepository extends JpaRepository<BoardList, Long> {}
+public interface BoardListRepository extends JpaRepository<BoardList, Long> {
+    Optional<BoardList> findByNameAndBoardId(String name, Long boardId);
+}
