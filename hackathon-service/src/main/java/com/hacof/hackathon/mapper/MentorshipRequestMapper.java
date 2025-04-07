@@ -7,7 +7,7 @@ import org.mapstruct.MappingTarget;
 import com.hacof.hackathon.dto.MentorshipRequestDTO;
 import com.hacof.hackathon.entity.MentorshipRequest;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = HackathonMapper.class)
 public interface MentorshipRequestMapper {
     @Mapping(target = "id", expression = "java(String.valueOf(mentorshipRequest.getId()))")
     @Mapping(target = "hackathonId", expression = "java(String.valueOf(mentorshipRequest.getHackathon().getId()))")
@@ -24,6 +24,11 @@ public interface MentorshipRequestMapper {
                     "java(mentorshipRequest.getLastModifiedBy() != null ? mentorshipRequest.getLastModifiedBy().getUsername() : null)")
     @Mapping(target = "createdAt", source = "createdDate")
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
+    @Mapping(
+            target = "hackathon.documentation",
+            source = "hackathon.documentation",
+            qualifiedByName = "fileUrlListToStringList"
+    )
     MentorshipRequestDTO toDto(MentorshipRequest mentorshipRequest);
 
     @Mapping(target = "hackathon.id", source = "hackathonId")

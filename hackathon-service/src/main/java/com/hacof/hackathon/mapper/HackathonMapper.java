@@ -25,6 +25,11 @@ public interface HackathonMapper {
     @Mapping(target = "maximumTeamMembers", source = "maxTeamSize")
     @Mapping(target = "enrollmentCount", source = "maxTeams")
     @Mapping(target = "enrollmentStatus", expression = "java(determineEnrollmentStatus(hackathon))")
+    @Mapping(
+            target = "documentation",
+            source = "documentation",
+            qualifiedByName = "fileUrlListToStringList"
+    )
     HackathonDTO toDto(Hackathon hackathon);
 
     @Mapping(target = "minTeamSize", source = "minimumTeamMembers")
@@ -53,6 +58,7 @@ public interface HackathonMapper {
         return user;
     }
 
+    @Named("fileUrlListToStringList")
     default List<String> map(List<FileUrl> value) {
         return value.stream().map(FileUrl::getFileUrl).collect(Collectors.toList());
     }
