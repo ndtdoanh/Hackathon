@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,8 +18,9 @@ public class TaskResponseDTO {
     String title;
     String description;
     int position;
-    String boardListName;
+    String boardListId;
     LocalDateTime dueDate;
+    List<String> fileUrls;
     String createdBy;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;

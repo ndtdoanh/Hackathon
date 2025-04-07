@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.entity.FileUrl;
+import com.hacof.communication.repository.FileUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,9 @@ public class TaskServiceImpl implements TaskService {
     private BoardListRepository boardListRepository;
 
     @Autowired
+    private FileUrlRepository fileUrlRepository;
+
+    @Autowired
     private TaskMapper taskMapper;
 
     @Override
@@ -37,8 +42,16 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("BoardList not found!");
         }
 
-        Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get());
+        List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
+        Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get(), fileUrls);
+
         task = taskRepository.save(task);
+
+        for (FileUrl file : fileUrls) {
+            file.setTask(task);
+        }
+        fileUrlRepository.saveAll(fileUrls);
+
         return taskMapper.toDto(task);
     }
 
@@ -62,7 +75,20 @@ public class TaskServiceImpl implements TaskService {
         task.setDueDate(taskRequestDTO.getDueDate());
         task.setBoardList(boardListOptional.get());
 
-        task = taskRepository.save(task);
+        // Cập nhật file nếu có
+        if (taskRequestDTO.getFileUrls() != null && !taskRequestDTO.getFileUrls().isEmpty()) {
+            List<FileUrl> fileUrls = fileUrlRepository
+                    .findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls()); // Tìm các file mà chưa được gắn vào bất kỳ task nào
+
+            for (FileUrl file : fileUrls) {
+                file.setTask(task); // Gán task cho file
+            }
+
+            fileUrlRepository.saveAll(fileUrls); // Lưu lại các file đã cập nhật
+        }
+
+        task = taskRepository.save(task); // Lưu lại task
+
         return taskMapper.toDto(task);
     }
 

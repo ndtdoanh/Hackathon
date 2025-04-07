@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.request;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,4 +19,5 @@ public class TaskRequestDTO {
     int position;
     String boardListId;
     LocalDateTime dueDate;
+    List<String> fileUrls;
 }
