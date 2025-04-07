@@ -15,4 +15,5 @@ public class BoardRequestDTO {
     String description;
     String ownerId;
     String teamId;
+    String hackathonId;
 }
