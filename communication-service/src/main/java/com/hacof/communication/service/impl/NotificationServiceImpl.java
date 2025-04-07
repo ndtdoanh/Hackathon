@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.hacof.communication.constant.NotificationMethod;
+import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import com.hacof.communication.service.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
@@ -181,34 +182,14 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationResponse updateNotification(Long id, UpdateNotificationRequest request) {
-        Notification notification = notificationRepository
-                .findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
+    public List<NotificationResponse> getNotificationsByUserId(Long userId) {
+        List<NotificationDelivery> deliveries = notificationDeliveryRepository.findByRecipientId(userId);
 
-        if (request.getContent() != null) {
-            notification.setContent(request.getContent());
-        }
-        if (request.getMetadata() != null) {
-            notification.setMetadata(request.getMetadata());
-        }
-
-        notification = notificationRepository.save(notification);
-
-        List<NotificationDelivery> deliveries = notificationDeliveryRepository.findByNotification(notification);
-        if (!deliveries.isEmpty()) {
-            deliveries.forEach(delivery -> {
-                if (request.getMethod() != null) {
-                    delivery.setMethod(request.getMethod());
-                }
-                if (request.getStatus() != null) {
-                    delivery.setStatus(request.getStatus());
-                }
-            });
-            notificationDeliveryRepository.saveAll(deliveries);
-        }
-
-        return notificationMapper.toNotificationResponse(notification);
+        return deliveries.stream()
+                .map(NotificationDelivery::getNotification)
+                .distinct()
+                .map(notificationMapper::toNotificationResponse)
+                .toList();
     }
 
     @Override
@@ -217,5 +198,18 @@ public class NotificationServiceImpl implements NotificationService {
             throw new AppException(ErrorCode.NOTIFICATION_NOT_FOUND);
         }
         notificationRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateReadStatusBulk(BulkUpdateReadStatusRequest request) {
+        List<Long> ids = request.getDeliveryIds().stream()
+                .map(Long::valueOf)
+                .toList();
+
+        List<NotificationDelivery> deliveries = notificationDeliveryRepository.findAllById(ids);
+
+        deliveries.forEach(delivery -> delivery.setRead(request.isRead()));
+
+        notificationDeliveryRepository.saveAll(deliveries);
     }
 }

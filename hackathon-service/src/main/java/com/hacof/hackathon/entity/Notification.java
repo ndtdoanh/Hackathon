@@ -60,9 +60,6 @@ public class Notification extends AuditBase {
     @Column(name = "metadata")
     String metadata;
 
-    @Column(name = "is_read")
-    boolean isRead = false;
-
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, orphanRemoval = true)
     List<NotificationDelivery> notificationDeliveries;
 }

@@ -23,7 +23,6 @@ public class NotificationResponse {
     NotificationType type;
     String content;
     String metadata;
-    boolean isRead;
     List<NotificationDeliveryResponse> notificationDeliveries;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
