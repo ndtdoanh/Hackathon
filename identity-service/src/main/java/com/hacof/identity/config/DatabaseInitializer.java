@@ -71,13 +71,21 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                             "CREATE_USER_HACKATHON",
                             "UPDATE_USER_HACKATHON",
-                            "DELETE_USER_HACKATHON"),
+                            "DELETE_USER_HACKATHON",
+
+                            "CREATE_NOTIFICATION",
+                            "DELETE_NOTIFICATION"
+                    ),
             "ORGANIZATION",
                     Set.of(
                             "CREATE_USER_HACKATHON",
                             "UPDATE_USER_HACKATHON",
                             "DELETE_USER_HACKATHON",
-                            "UPDATE_JUDGE_MENTOR_BY_ORGANIZATION"),
+                            "UPDATE_JUDGE_MENTOR_BY_ORGANIZATION",
+
+                            "CREATE_NOTIFICATION",
+                            "DELETE_NOTIFICATION"
+                    ),
             "JUDGE",
                     Set.of(),
             "MENTOR",
@@ -154,7 +162,10 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                 new Permission("CREATE_USER_HACKATHON", "/api/v1/user-hackathons", "POST", "USER_HACKATHONS"),
                 new Permission("UPDATE_USER_HACKATHON", "/api/v1/user-hackathons/{Id}", "PUT", "USER_HACKATHONS"),
-                new Permission("DELETE_USER_HACKATHON", "/api/v1/user-hackathons/{Id}", "DELETE", "USER_HACKATHONS")
+                new Permission("DELETE_USER_HACKATHON", "/api/v1/user-hackathons/{Id}", "DELETE", "USER_HACKATHONS"),
+
+                new Permission("CREATE_NOTIFICATION", "/api/v1/notifications", "POST", "NOTIFICATIONS"),
+                new Permission("DELETE_NOTIFICATION", "/api/v1/notifications/{Id}", "DELETE", "NOTIFICATIONS")
 );
 
         permissionRepository.saveAll(permissions);

@@ -2,10 +2,12 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
+import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.ApiResponse;
@@ -26,7 +28,7 @@ public class NotificationController {
     NotificationService notificationService;
 
     @PostMapping
-    //    @PreAuthorize("hasAuthority('CREATE_NOTIFICATION')")
+    @PreAuthorize("hasAuthority('CREATE_NOTIFICATION')")
     public ResponseEntity<ApiResponse<NotificationResponse>> createNotification(
             @RequestBody @Valid NotificationRequest request) {
         NotificationResponse notificationResponse = notificationService.createNotification(request);
@@ -65,22 +67,29 @@ public class NotificationController {
                 .build();
     }
 
-    @PutMapping("/{id}")
-    // @PreAuthorize("hasAuthority('UPDATE_NOTIFICATION')")
-    public ApiResponse<NotificationResponse> updateNotification(
-            @PathVariable("id") Long id, @RequestBody @Valid UpdateNotificationRequest request) {
-        return ApiResponse.<NotificationResponse>builder()
-                .data(notificationService.updateNotification(id, request))
-                .message("Notification updated successfully")
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<NotificationResponse>> getNotificationsByUserId(@PathVariable Long userId) {
+        return ApiResponse.<List<NotificationResponse>>builder()
+                .data(notificationService.getNotificationsByUserId(userId))
+                .message("Notifications for user retrieved successfully")
                 .build();
     }
 
     @DeleteMapping("/{id}")
-    //    @PreAuthorize("hasAuthority('DELETE_NOTIFICATION')")
+    @PreAuthorize("hasAuthority('DELETE_NOTIFICATION')")
     public ApiResponse<Void> deleteNotification(@PathVariable("id") Long id) {
         notificationService.deleteNotification(id);
         return ApiResponse.<Void>builder()
                 .message("Notification has been deleted")
+                .build();
+    }
+
+    @PutMapping("/notification-deliveries/read-status")
+    public ApiResponse<String> updateReadStatusBulk(@RequestBody BulkUpdateReadStatusRequest request) {
+        notificationService.updateReadStatusBulk(request);
+        return ApiResponse.<String>builder()
+                .message("Read status updated successfully")
+                .data("OK")
                 .build();
     }
 }

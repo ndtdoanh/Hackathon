@@ -61,4 +61,7 @@ public class NotificationDelivery extends AuditBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     NotificationStatus status;
+
+    @Column(name = "is_read")
+    boolean isRead = false;
 }

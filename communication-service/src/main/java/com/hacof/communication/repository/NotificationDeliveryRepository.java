@@ -10,5 +10,5 @@ import com.hacof.communication.entity.NotificationDelivery;
 
 @Repository
 public interface NotificationDeliveryRepository extends JpaRepository<NotificationDelivery, Long> {
-    List<NotificationDelivery> findByNotification(Notification notification);
+    List<NotificationDelivery> findByRecipientId(Long userId);
 }

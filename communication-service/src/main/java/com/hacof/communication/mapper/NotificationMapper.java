@@ -38,15 +38,12 @@ public interface NotificationMapper {
     @Mapping(target = "status", source = "status")
     NotificationDeliveryResponse toNotificationDeliveryResponse(NotificationDelivery delivery);
 
-    void updateNotificationFromRequest(NotificationRequest request, @MappingTarget Notification notification);
-
     default Notification toNotification(NotificationRequest request, User sender) {
         return Notification.builder()
                 .sender(sender)
                 .type(request.getType())
                 .content(request.getContent())
                 .metadata(request.getMetadata())
-                .isRead(false)
                 .build();
     }
 
@@ -59,6 +56,7 @@ public interface NotificationMapper {
                         .role(request.getRole())
                         .method(request.getMethod())
                         .status(NotificationStatus.PENDING)
+                        .isRead(false)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -70,7 +68,8 @@ public interface NotificationMapper {
                         delivery.getRecipient().getUsername(),
                         delivery.getRecipient().getEmail(),
                         delivery.getRecipient().getFirstName(),
-                        delivery.getRecipient().getLastName()))
+                        delivery.getRecipient().getLastName(),
+                        delivery.getRecipient().getAvatarUrl()))
                 : Collections.emptySet();
     }
 
