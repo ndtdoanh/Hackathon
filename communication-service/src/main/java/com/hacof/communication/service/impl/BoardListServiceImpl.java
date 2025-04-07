@@ -1,9 +1,11 @@
 package com.hacof.communication.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +57,6 @@ public class BoardListServiceImpl implements BoardListService {
 
         BoardList boardList = boardListOptional.get();
         boardList.setName(boardListRequestDTO.getName());
-        boardList.setPosition(boardListRequestDTO.getPosition());
         boardList.setBoard(boardOptional.get());
         boardList = boardListRepository.save(boardList);
 
@@ -86,5 +87,29 @@ public class BoardListServiceImpl implements BoardListService {
     public List<BoardListResponseDTO> getAllBoardLists() {
         List<BoardList> boardLists = boardListRepository.findAll();
         return boardLists.stream().map(boardListMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BoardListResponseDTO> updateBulkBoardLists(List<BulkBoardListUpdateRequestDTO> bulkUpdateRequest) {
+        List<BoardListResponseDTO> updatedBoardLists = new ArrayList<>();
+
+        for (BulkBoardListUpdateRequestDTO updateRequest : bulkUpdateRequest) {
+            Optional<BoardList> boardListOptional = boardListRepository.findById(Long.valueOf(updateRequest.getId()));
+            if (!boardListOptional.isPresent()) {
+                throw new IllegalArgumentException("BoardList with ID " + updateRequest.getId() + " not found!");
+            }
+
+            BoardList boardList = boardListOptional.get();
+            boardList.setPosition(Integer.parseInt(updateRequest.getPosition()));
+
+            // Save updated BoardList
+            boardListRepository.save(boardList);
+
+            // Convert the updated BoardList to DTO and add it to the list
+            BoardListResponseDTO updatedBoardListDTO = boardListMapper.toDto(boardList);
+            updatedBoardLists.add(updatedBoardListDTO);
+        }
+
+        return updatedBoardLists;
     }
 }

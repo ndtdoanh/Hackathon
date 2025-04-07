@@ -2,6 +2,7 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
+import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,6 +110,28 @@ public class BoardListController {
             response.setMessage("Board Lists fetched successfully!");
             response.setData(boardLists);
             return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/bulk-update")
+    public ResponseEntity<CommonResponse<List<BoardListResponseDTO>>> updateBulkBoardLists(
+            @RequestBody List<BulkBoardListUpdateRequestDTO> bulkUpdateRequest) {
+        CommonResponse<List<BoardListResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardListResponseDTO> updatedBoardLists = boardListService.updateBulkBoardLists(bulkUpdateRequest);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board Lists updated successfully!");
+            response.setData(updatedBoardLists);
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
