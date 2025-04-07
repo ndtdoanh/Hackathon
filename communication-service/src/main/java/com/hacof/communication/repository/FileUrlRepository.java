@@ -5,5 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.communication.entity.FileUrl;
 
+import java.util.List;
+
 @Repository
-public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {}
+public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {
+    List<FileUrl> findAllByFileUrlInAndMessageIsNull(List<String> fileUrls);
+}

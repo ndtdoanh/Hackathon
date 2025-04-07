@@ -52,19 +52,13 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         message.setCreatedBy(currentUser);
-
         message = messageRepository.save(message);
 
-        List<FileUrl> fileUrls = new ArrayList<>();
-        for (String fileUrl : request.getFileUrls()) {
-            FileUrl fileUrlEntity = new FileUrl();
-            fileUrlEntity.setFileUrl(fileUrl);
-            fileUrlEntity.setMessage(message);
-            fileUrlEntity.setFileName(extractFileName(fileUrl));
-            fileUrlEntity.setFileType(extractFileType(fileUrl));
-            fileUrlEntity.setFileSize(0);
+        List<FileUrl> fileUrls = fileUrlRepository
+                .findAllByFileUrlInAndMessageIsNull(request.getFileUrls());
 
-            fileUrls.add(fileUrlEntity);
+        for (FileUrl file : fileUrls) {
+            file.setMessage(message);
         }
 
         fileUrlRepository.saveAll(fileUrls);
