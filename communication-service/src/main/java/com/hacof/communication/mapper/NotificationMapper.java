@@ -55,7 +55,7 @@ public interface NotificationMapper {
                         .recipient(user)
                         .role(request.getRole())
                         .method(request.getMethod())
-                        .status(NotificationStatus.PENDING)
+                        .status(NotificationStatus.SENT)
                         .isRead(false)
                         .build())
                 .collect(Collectors.toList());
