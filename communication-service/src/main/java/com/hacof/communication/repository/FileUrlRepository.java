@@ -13,4 +13,6 @@ public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {
 
     List<FileUrl> findAllByFileUrlInAndTaskIsNull(List<String> fileUrls);
 
+    List<FileUrl> findAllByFileUrlInAndScheduleEventIsNull(List<String> fileUrls);
+
 }
