@@ -88,6 +88,5 @@ public class Round extends AuditUserBase {
     @OneToMany(
             mappedBy = "round",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonIgnore
     List<RoundLocation> roundLocations = new ArrayList<>();
 }

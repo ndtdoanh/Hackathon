@@ -16,17 +16,17 @@ import lombok.RequiredArgsConstructor;
 public class RoundLocationController {
     private final RoundLocationService roundLocationService;
 
-    @DeleteMapping("/location")
-    public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteByLocationId(
-            @RequestBody CommonRequest<RoundLocationDTO> request) {
-        roundLocationService.deleteByLocationId(Long.parseLong(request.getData().getLocationId()));
-        CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
-                new CommonResponse.Result("0000", "Round Location deleted successfully"), null);
-        return ResponseEntity.ok(response);
-    }
+    //    @DeleteMapping("/location")
+    //    public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteByLocationId(
+    //            @RequestBody CommonRequest<RoundLocationDTO> request) {
+    //        roundLocationService.deleteByLocationId(Long.parseLong(request.getData().getLocationId()));
+    //        CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
+    //                //                request.getRequestId(),
+    //                //                LocalDateTime.now(),
+    //                //                request.getChannel(),
+    //                new CommonResponse.Result("0000", "Round Location deleted successfully"), null);
+    //        return ResponseEntity.ok(response);
+    //    }
 
     @DeleteMapping("/round")
     public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteByRoundId(

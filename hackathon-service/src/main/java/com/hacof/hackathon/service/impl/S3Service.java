@@ -50,17 +50,18 @@ public class S3Service {
     }
 
     public List<String> uploadFiles(MultipartFile[] files) {
-        return Stream.of(files)
-                .map(this::uploadFile)
-                .collect(Collectors.toList());
+        return Stream.of(files).map(this::uploadFile).collect(Collectors.toList());
     }
 
     public List<String> getAllFiles() {
-        ListObjectsV2Request request = ListObjectsV2Request.builder().bucket(bucketName).build();
+        ListObjectsV2Request request =
+                ListObjectsV2Request.builder().bucket(bucketName).build();
         ListObjectsV2Response result = s3Client.listObjectsV2(request);
         return result.contents().stream()
                 .map(S3Object::key)
-                .map(key -> s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm())
+                .map(key -> s3Client.utilities()
+                        .getUrl(builder -> builder.bucket(bucketName).key(key))
+                        .toExternalForm())
                 .collect(Collectors.toList());
     }
 }

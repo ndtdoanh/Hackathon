@@ -6,7 +6,6 @@ import java.util.List;
 import jakarta.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hacof.hackathon.constant.RoundStatus;
 import com.hacof.hackathon.entity.*;
 
 import lombok.AccessLevel;
@@ -39,7 +38,7 @@ public class RoundDTO {
     String roundTitle;
 
     @NotNull(message = "Round Status is required")
-    RoundStatus status;
+    String status; // Enum RoundStatus
 
     @JsonIgnore
     List<SubmissionDTO> submissions;

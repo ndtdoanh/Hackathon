@@ -19,21 +19,19 @@ public class RoundLocationDTO {
     @JsonIgnore
     String roundId;
 
+    @NotNull
     String locationId;
+
     LocationDTO location;
 
     @NotNull(message = "Type is required")
     RoundLocationType type;
 
-    @JsonIgnore
     String createdByUserName; // save username
 
-    @JsonIgnore
     LocalDateTime createdAt;
 
-    @JsonIgnore
     String lastModifiedByUserName; // save username
 
-    @JsonIgnore
-    LocalDateTime updatedAt;
+    LocalDateTime updatedAt = LocalDateTime.now();
 }

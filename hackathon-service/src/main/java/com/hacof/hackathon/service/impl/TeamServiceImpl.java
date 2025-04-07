@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.dto.UserDTO;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -163,12 +162,12 @@ public class TeamServiceImpl implements TeamService {
             //            teamRoundRepository.save(teamRound);
             //            log.debug("Created team round for team {}", team.getId());
 
-//            UserDTO teamLeaderDTO = new UserDTO();
-//            teamLeaderDTO.setId(String.valueOf(teamLeader.getId()));
-//            teamDTO.setTeamLeaderId(teamLeaderDTO);
-//
-//            createdTeams.add(teamDTO);
-//            log.debug("Added team to createdTeams: {}", teamDTO);
+            //            UserDTO teamLeaderDTO = new UserDTO();
+            //            teamLeaderDTO.setId(String.valueOf(teamLeader.getId()));
+            //            teamDTO.setTeamLeaderId(teamLeaderDTO);
+            //
+            //            createdTeams.add(teamDTO);
+            //            log.debug("Added team to createdTeams: {}", teamDTO);
         }
 
         log.debug("Finished createBulkTeams with createdTeams: {}", createdTeams);

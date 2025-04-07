@@ -1,9 +1,13 @@
 package com.hacof.hackathon.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.hacof.hackathon.dto.TeamRequestDTO;
+import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.entity.TeamRequest;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
@@ -25,4 +29,12 @@ public interface TeamRequestMapper {
     @Mapping(target = "hackathon.id", source = "hackathonId")
     @Mapping(target = "reviewedBy", source = "reviewedBy")
     TeamRequest toEntity(TeamRequestDTO teamRequestDTO);
+
+    default List<String> map(List<FileUrl> value) {
+        return value.stream().map(FileUrl::getFileUrl).collect(Collectors.toList());
+    }
+
+    default List<FileUrl> mapToFileUrlList(List<String> value) {
+        return value.stream().map(FileUrl::new).collect(Collectors.toList());
+    }
 }

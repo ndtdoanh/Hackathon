@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hacof.hackathon.dto.RoundLocationDTO;
-import com.hacof.hackathon.entity.Location;
 import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.entity.RoundLocation;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
@@ -36,16 +35,17 @@ public class RoundLocationServiceImpl implements RoundLocationService {
                 .findById(Long.parseLong(roundLocationDTO.getRoundId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
 
-        Location location = locationRepository
-                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+        //        Location location = locationRepository
+        //                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
 
-        RoundLocation roundLocation = roundLocationMapper.toEntity(roundLocationDTO);
-        roundLocation.setRound(round);
-        roundLocation.setLocation(location);
-
-        roundLocation = roundLocationRepository.save(roundLocation);
-        return roundLocationMapper.toDto(roundLocation);
+        //        //RoundLocation roundLocation = roundLocationMapper.toEntity(roundLocationDTO);
+        ////        roundLocation.setRound(round);
+        ////        // roundLocation.setLocation(location);
+        ////
+        ////        roundLocation = roundLocationRepository.save(roundLocation);
+        ////        return roundLocationMapper.toDto(roundLocation);
+        return null;
     }
 
     @Override
@@ -59,13 +59,13 @@ public class RoundLocationServiceImpl implements RoundLocationService {
                 .findById(Long.parseLong(roundLocationDTO.getRoundId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
 
-        Location location = locationRepository
-                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+        //        Location location = locationRepository
+        //                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
 
-        roundLocationMapper.updateEntityFromDto(roundLocationDTO, roundLocation);
+        // roundLocationMapper.updateEntityFromDto(roundLocationDTO, roundLocation);
         roundLocation.setRound(round);
-        roundLocation.setLocation(location);
+        // roundLocation.setLocation(location);
 
         roundLocation = roundLocationRepository.save(roundLocation);
         return roundLocationMapper.toDto(roundLocation);

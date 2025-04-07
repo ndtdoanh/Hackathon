@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.mapper.manual.RoundLocationMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -11,13 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.hacof.hackathon.constant.RoundStatus;
 import com.hacof.hackathon.dto.RoundDTO;
-import com.hacof.hackathon.dto.RoundLocationDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.LocationMapper;
-import com.hacof.hackathon.mapper.RoundMapper;
+import com.hacof.hackathon.mapper.manual.RoundMapperManual;
 import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.RoundService;
 
@@ -33,64 +33,25 @@ import lombok.extern.slf4j.Slf4j;
 public class RoundServiceImpl implements RoundService {
     RoundRepository roundRepository;
     HackathonRepository hackathonRepository;
-    LocationRepository locationRepository;
     UserRepository userRepository;
-    RoundMapper roundMapper;
-    LocationMapper locationMapper;
-    // RoundLocationMapper roundLocationMapper;
+    LocationServiceImpl locationService;
 
     @Override
     public RoundDTO create(RoundDTO roundDTO) {
-        log.debug("Creating round with data: {}", roundDTO);
-        // Validate hackathon exists
+        validateEnums(roundDTO);
         Hackathon hackathon = validateHackathon(roundDTO.getHackathonId());
-
-        // Validate round number is unique for hackathon
         validateUniqueRoundNumber(null, roundDTO.getRoundNumber(), hackathon.getId());
-
-        // Validate round dates within hackathon dates
         validateRoundDates(roundDTO.getStartTime(), roundDTO.getEndTime(), hackathon);
 
-        Round round = roundMapper.toEntity(roundDTO);
-        round.setHackathon(hackathon);
+        Round round = RoundMapperManual.toEntity(roundDTO, locationService);
+        Round saved = roundRepository.save(round);
 
-        List<RoundLocation> roundLocations = roundDTO.getRoundLocations().stream()
-                .map(dto -> {
-                    RoundLocation entity = mapToEntity(dto);
-                    log.debug("RoundLocation entity: {}", entity);
-
-                    if (dto.getLocationId() != null && !dto.getLocationId().isBlank()) {
-                        // check location id
-                        Location location = locationRepository
-                                .findById(Long.parseLong(dto.getLocationId()))
-                                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
-
-                        // entity.setLocation(new Location());
-                        entity.setLocation(location);
-                        entity.getLocation().setId(Long.parseLong(dto.getLocationId()));
-                        log.debug("Location ID set: {}", dto.getLocationId());
-                    } else {
-                        throw new InvalidInputException("Location ID must not be null or blank");
-                    }
-
-                    entity.setRound(round);
-                    return entity;
-                })
-                .collect(Collectors.toList());
-
-        round.setRoundLocations(roundLocations);
-        Round savedRound = roundRepository.save(round);
-
-        // fetch locationId
-        RoundDTO savedRoundDTO = roundMapper.toDto(savedRound);
-        savedRoundDTO.setRoundLocations(
-                savedRound.getRoundLocations().stream().map(this::mapToDto).collect(Collectors.toList()));
-
-        return savedRoundDTO;
+        return RoundMapperManual.toDto(saved);
     }
 
     @Override
     public RoundDTO update(String id, RoundDTO roundDTO) {
+        validateEnums(roundDTO);
         Round existingRound = roundRepository
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
@@ -100,6 +61,7 @@ public class RoundServiceImpl implements RoundService {
             throw new ResourceNotFoundException("Hackathon not found for this round");
         }
 
+        // checkround
         if (roundDTO.getRoundNumber() != existingRound.getRoundNumber()) {
             validateUniqueRoundNumber(
                     existingRound.getId(),
@@ -107,6 +69,7 @@ public class RoundServiceImpl implements RoundService {
                     existingRound.getHackathon().getId());
         }
 
+        // check datetime
         validateRoundDates(roundDTO.getStartTime(), roundDTO.getEndTime(), existingRound.getHackathon());
 
         Authentication authentication = getAuthenticatedUser();
@@ -121,29 +84,14 @@ public class RoundServiceImpl implements RoundService {
         existingRound.setRoundNumber(roundDTO.getRoundNumber());
         existingRound.setStartTime(roundDTO.getStartTime());
         existingRound.setEndTime(roundDTO.getEndTime());
-        existingRound.setStatus(roundDTO.getStatus());
+        existingRound.setStatus(RoundStatus.valueOf(roundDTO.getStatus()));
         existingRound.setLastModifiedBy(currentUser);
         existingRound.setLastModifiedDate(roundDTO.getUpdatedAt());
         existingRound.setCreatedBy(createdBy);
 
-        List<RoundLocation> roundLocations = roundDTO.getRoundLocations().stream()
-                .map(dto -> {
-                    RoundLocation entity = mapToEntity(dto);
+        Round updatedRound = roundRepository.save(existingRound);
 
-                    if (dto.getLocationId() != null && !dto.getLocationId().isBlank()) {
-                        entity.setLocation(new Location());
-                        entity.getLocation().setId(Long.parseLong(dto.getLocationId()));
-                    } else {
-                        throw new InvalidInputException("Location ID must not be null or blank");
-                    }
-
-                    entity.setRound(existingRound);
-                    return entity;
-                })
-                .collect(Collectors.toList());
-
-        existingRound.setRoundLocations(roundLocations);
-        return roundMapper.toDto(roundRepository.save(existingRound));
+        return RoundMapperManual.toDto(updatedRound);
     }
 
     @Override
@@ -159,14 +107,14 @@ public class RoundServiceImpl implements RoundService {
         List<Round> rounds = roundRepository.findAll(spec);
         return rounds.stream()
                 .map(round -> {
-                    RoundDTO roundDTO = roundMapper.toDto(round);
-                    roundDTO.getRoundLocations().forEach(roundLocationDTO -> {
-                        if (roundLocationDTO.getLocationId() != null) {
-                            roundLocationDTO.setLocation(locationMapper.toDto(locationRepository
-                                    .findById(Long.parseLong(roundLocationDTO.getLocationId()))
-                                    .orElse(null)));
-                        }
-                    });
+                    RoundDTO roundDTO = RoundMapperManual.toDto(round);
+                    if (round.getRoundLocations() != null && !round.getRoundLocations().isEmpty()) {
+                        // Ensure round locations are mapped
+                        roundDTO.setRoundLocations(round.getRoundLocations().stream()
+                                .map(roundLocation -> {
+                                    return RoundLocationMapperManual.toDto(roundLocation);
+                                }).collect(Collectors.toList()));
+                    }
                     return roundDTO;
                 })
                 .collect(Collectors.toList());
@@ -174,14 +122,14 @@ public class RoundServiceImpl implements RoundService {
 
     @Override
     public List<RoundDTO> getAllByHackathonId(String hackathonId) {
-        //        if (hackathonId == null || hackathonId.isEmpty()) {
-        //            throw new InvalidInputException("Hackathon ID is required");
-        //        }
-        //        if (roundRepository.existsByHackathonId(Long.parseLong(hackathonId))) {
-        //            throw new ResourceNotFoundException("Hackathon not found");
-        //        }
+        if (hackathonId == null || hackathonId.isEmpty()) {
+            throw new InvalidInputException("Hackathon ID is required");
+        }
+
         List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return rounds.stream().map(roundMapper::toDto).collect(Collectors.toList());
+        return rounds.stream()
+                .map(RoundMapperManual::toDto)
+                .collect(Collectors.toList());
     }
 
     private Hackathon validateHackathon(String hackathonId) {
@@ -208,47 +156,21 @@ public class RoundServiceImpl implements RoundService {
         }
     }
 
-    private RoundLocation mapToEntity(RoundLocationDTO dto) {
-        RoundLocation entity = new RoundLocation();
-        if (dto.getId() != null) {
-            entity.setId(Long.parseLong(dto.getId()));
-        }
-        if (dto.getLocationId() != null && !dto.getLocationId().isBlank()) {
-            entity.setLocation(new Location());
-            entity.getLocation().setId(Long.parseLong(dto.getLocationId()));
-        } else {
-            throw new InvalidInputException("Location ID must not be null or blank");
-        }
-        entity.setType(dto.getType());
-        return entity;
-    }
-
-    private RoundLocationDTO mapToDto(RoundLocation roundLocation) {
-        RoundLocationDTO dto = new RoundLocationDTO();
-        dto.setId(String.valueOf(roundLocation.getId()));
-        dto.setRoundId(
-                roundLocation.getRound() != null
-                        ? String.valueOf(roundLocation.getRound().getId())
-                        : null);
-        dto.setLocation(locationMapper.toDto(roundLocation.getLocation()));
-        dto.setCreatedByUserName(
-                roundLocation.getCreatedBy() != null
-                        ? roundLocation.getCreatedBy().getUsername()
-                        : null);
-        dto.setLastModifiedByUserName(
-                roundLocation.getLastModifiedBy() != null
-                        ? roundLocation.getLastModifiedBy().getUsername()
-                        : null);
-        dto.setCreatedAt(roundLocation.getCreatedDate());
-        dto.setUpdatedAt(roundLocation.getLastModifiedDate());
-        return dto;
-    }
-
     private Authentication getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("No authenticated user found");
         }
         return authentication;
+    }
+
+    private void validateEnums(RoundDTO roundDTO) {
+        if (roundDTO.getStatus() != null) {
+            try {
+                RoundStatus.valueOf(roundDTO.getStatus());
+            } catch (IllegalArgumentException e) {
+                throw new InvalidInputException("Invalid round status: " + roundDTO.getStatus());
+            }
+        }
     }
 }

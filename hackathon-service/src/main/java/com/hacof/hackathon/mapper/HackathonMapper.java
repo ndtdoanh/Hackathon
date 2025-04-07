@@ -60,5 +60,4 @@ public interface HackathonMapper {
     default List<FileUrl> mapToFileUrlList(List<String> value) {
         return value.stream().map(FileUrl::new).collect(Collectors.toList());
     }
-
 }

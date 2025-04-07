@@ -1,4 +1,4 @@
-package com.hacof.hackathon.constant;
+package com.hacof.submission.constant;
 
 public enum CategoryStatus {
     CODING("Coding Hackathons"),

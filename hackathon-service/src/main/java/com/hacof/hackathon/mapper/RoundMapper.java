@@ -1,20 +1,26 @@
 package com.hacof.hackathon.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.mapstruct.*;
 
 import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.Round;
+import com.hacof.hackathon.entity.RoundLocation;
+import com.hacof.hackathon.service.LocationService;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {RoundLocationMapper.class})
 public interface RoundMapper {
 
     @Mapping(target = "id", expression = "java(String.valueOf(round.getId()))")
     @Mapping(
             target = "hackathonId",
             expression = "java(round.getHackathon() != null ? String.valueOf(round.getHackathon().getId()) : null)")
+    @Mapping(target = "roundLocations", source = "roundLocations")
     @Mapping(
             target = "createdByUserName",
             expression = "java(round.getCreatedBy() != null ? round.getCreatedBy().getUsername() : null)")
@@ -26,7 +32,9 @@ public interface RoundMapper {
     RoundDTO toDto(Round round);
 
     @Mapping(target = "hackathon", source = "hackathonId", qualifiedByName = "mapHackathonIdToEntity")
-    Round toEntity(RoundDTO dto);
+    @Mapping(target = "roundLocations", ignore = true)
+    Round toEntity(
+            RoundDTO dto, @Context LocationService locationService, @Context RoundLocationMapper roundLocationMapper);
 
     @Named("mapHackathonIdToEntity")
     default Hackathon mapHackathonIdToEntity(String hackathonId) {
@@ -34,5 +42,20 @@ public interface RoundMapper {
         Hackathon hackathon = new Hackathon();
         hackathon.setId(Long.parseLong(hackathonId));
         return hackathon;
+    }
+
+    @AfterMapping
+    default void mapRoundLocations(
+            RoundDTO dto,
+            @MappingTarget Round round,
+            @Context LocationService locationService,
+            @Context RoundLocationMapper roundLocationMapper) {
+        if (dto.getRoundLocations() != null) {
+            List<RoundLocation> locations = dto.getRoundLocations().stream()
+                    .map(locDto -> roundLocationMapper.toEntity(locDto, locationService))
+                    .peek(loc -> loc.setRound(round)) // set round cho từng RoundLocation
+                    .collect(Collectors.toList());
+            round.setRoundLocations(locations);
+        }
     }
 }

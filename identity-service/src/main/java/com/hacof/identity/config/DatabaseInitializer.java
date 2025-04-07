@@ -233,7 +233,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .minTeamSize(3)
                         .maxTeamSize(5)
                         .contact("contact@ai-hackathon.com")
-                        .category("Technology")
+                        //.category("Technology")
                         .status(Status.ACTIVE)
                         .build(),
                 Hackathon.builder()
@@ -248,7 +248,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .minTeamSize(2)
                         .maxTeamSize(6)
                         .contact("contact@blockchain-hack.com")
-                        .category("Finance & Technology")
+                        //.category("Finance & Technology")
                         .status(Status.ACTIVE)
                         .build(),
                 Hackathon.builder()
@@ -263,7 +263,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .minTeamSize(3)
                         .maxTeamSize(6)
                         .contact("contact@healthtech-hack.com")
-                        .category("Healthcare")
+                        //.category("Healthcare")
                         .status(Status.ACTIVE)
                         .build(),
                 Hackathon.builder()
@@ -278,7 +278,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .minTeamSize(2)
                         .maxTeamSize(5)
                         .contact("contact@cybersecurity-hack.com")
-                        .category("Security")
+                        //.category("Security")
                         .status(Status.ACTIVE)
                         .build(),
                 Hackathon.builder()
@@ -293,7 +293,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .minTeamSize(3)
                         .maxTeamSize(7)
                         .contact("contact@greentech-hack.com")
-                        .category("Environment")
+                        //.category("Environment")
                         .status(Status.ACTIVE)
                         .build());
 

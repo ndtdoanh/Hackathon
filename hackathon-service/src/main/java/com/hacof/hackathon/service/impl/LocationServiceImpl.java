@@ -95,4 +95,9 @@ public class LocationServiceImpl implements LocationService {
                 .map(locationMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Location getLocationEntityById(Long id) {
+        return locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+    }
 }
