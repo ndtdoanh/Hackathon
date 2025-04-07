@@ -20,6 +20,7 @@ public class TeamRequestMapperManual {
         dto.setStatus(teamRequest.getStatus().toString());
         dto.setConfirmationDeadline(teamRequest.getConfirmationDeadline().toString());
         dto.setNote(teamRequest.getNote());
+
         dto.setCreatedByUserName(
                 teamRequest.getCreatedBy() != null ? teamRequest.getCreatedBy().getUsername() : null);
         dto.setLastModifiedByUserName(
@@ -29,21 +30,28 @@ public class TeamRequestMapperManual {
         dto.setCreatedAt(teamRequest.getCreatedDate());
         dto.setUpdatedAt(teamRequest.getLastModifiedDate());
 
+        dto.setReviewedBy(
+                teamRequest.getReviewedBy() != null ? UserMapperManual.toDto(teamRequest.getReviewedBy()) : null);
+
         // Convert TeamRequestMembers
         List<TeamRequestMemberDTO> memberDTOs = teamRequest.getTeamRequestMembers().stream()
                 .map(member -> {
                     TeamRequestMemberDTO memberDTO = new TeamRequestMemberDTO();
                     memberDTO.setId(String.valueOf(member.getId()));
+                    memberDTO.setUserId(String.valueOf(member.getUser().getId()));
                     memberDTO.setUser(UserMapperManual.toDto(member.getUser()));
                     memberDTO.setStatus(member.getStatus().toString());
-                    //                    memberDTO.setRespondedAt(member.getRespondedAt());
-                    //                    memberDTO.setCreatedByUserName(member.getCreatedBy() != null ?
-                    // member.getCreatedBy().getUsername() : null);
-                    //                    memberDTO.setCreatedAt(member.getCreatedDate());
-                    //                    memberDTO.setLastModifiedByUserName(member.getLastModifiedBy() != null ?
-                    // member.getLastModifiedBy().getUsername() : null);
-                    //                    memberDTO.setUpdatedAt(member.getLastModifiedDate());
-
+                    memberDTO.setRespondedAt(
+                            member.getRespondedAt() != null ? member.getRespondedAt().toString() : null);
+                    memberDTO.setTeamRequestId(String.valueOf(member.getTeamRequest().getId()));
+                    memberDTO.setCreatedByUserName(
+                            member.getCreatedBy() != null ? member.getCreatedBy().getUsername() : null);
+                    memberDTO.setLastModifiedByUserName(
+                            member.getLastModifiedBy() != null
+                                    ? member.getLastModifiedBy().getUsername()
+                                    : null);
+                    memberDTO.setCreatedAt(member.getCreatedDate());
+                    memberDTO.setUpdatedAt(member.getLastModifiedDate());
                     return memberDTO;
                 })
                 .collect(Collectors.toList());

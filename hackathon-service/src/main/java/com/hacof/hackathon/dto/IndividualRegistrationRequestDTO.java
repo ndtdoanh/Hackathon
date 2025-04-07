@@ -23,6 +23,8 @@ public class IndividualRegistrationRequestDTO {
     @NotNull(message = "IndividualRegistrationRequest Status is required")
     String status;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String reviewById;
     UserDTO reviewedBy;
 
     String createdByUserName; // save username

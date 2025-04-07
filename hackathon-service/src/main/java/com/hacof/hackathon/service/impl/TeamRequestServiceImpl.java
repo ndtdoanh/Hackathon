@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.mapper.manual.TeamRequestMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -39,10 +40,11 @@ import lombok.extern.slf4j.Slf4j;
 public class TeamRequestServiceImpl implements TeamRequestService {
     TeamRequestRepository teamRequestRepository;
     TeamRepository teamRepository;
+    TeamRequestMemberRepository teamRequestMemberRepository;
     HackathonRepository hackathonRepository;
     UserRepository userRepository;
-    TeamRequestMapper teamRequestMapper;
-    NotificationService notificationService;
+    UserTeamRepository userTeamRepository;
+    TeamHackathonRepository teamHackathonRepository;
     BoardRepository boardRepository;
     BoardUserRepository boardUserRepository;
     ConversationRepository conversationRepository;
@@ -51,6 +53,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     TeamRoundRepository teamRoundRepository;
     RoundRepository roundRepository;
     EmailServiceImpl emailService;
+    NotificationService notificationService;
+    TeamRequestMapper teamRequestMapper;
 
     @Override
     public List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId) {
@@ -98,11 +102,9 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     @Override
     public TeamRequestDTO createTeamRequest(TeamRequestDTO request) {
-        // Validate hackathon
         Hackathon hackathon = validateHackathon(request.getHackathonId());
-        // Validate team size
         validateTeamSize(request.getTeamRequestMembers().size(), hackathon);
-        // Create team request
+
         TeamRequest teamRequest = TeamRequest.builder()
                 .hackathon(hackathon)
                 .name(request.getName())
@@ -112,61 +114,20 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .teamRequestMembers(new ArrayList<>())
                 .build();
 
-        // Add members
-        //        request.getTeamRequestMembers().forEach(member -> {
-        //            log.debug("Processing team request member: {}", member);
-        //            if (member.getUser() == null || member.getUser().getId() == null) {
-        //                log.error("UserDTO or UserDTO ID is null for member: {}", member);
-        //                throw new InvalidInputException("UserDTO or UserDTO ID cannot be null");
-        //            }
-        //
-        //            User user = userRepository
-        //                    .findById(Long.parseLong(member.getUser().getId()))
-        //                    .orElseThrow(() -> new ResourceNotFoundException(
-        //                            "Not found with user: " + member.getUser().getId()));
-        //
-        //            TeamRequestMember memberEntity = TeamRequestMember.builder()
-        //                    .teamRequest(teamRequest)
-        //                    .user(user)
-        //                    .status(TeamRequestMemberStatus.PENDING)
-        //                    .build();
-        //            teamRequest.getTeamRequestMembers().add(memberEntity);
-        //        });
-        //
-        //        TeamRequest saved = teamRequestRepository.save(teamRequest);
-        //
-        //        // Send email to all members
-        //        for (User member : teamRequest.getTeamRequestMembers().stream()
-        //                .map(TeamRequestMember::getUser)
-        //                .collect(Collectors.toList())) {
-        //            emailService.sendEmail(member.getEmail(), "Team Request Created", "A new team request has been
-        // created.");
-        //        }
-        //
-        //        TeamRequestDTO response = teamRequestMapper.toDto(saved);
-        //        log.debug("Team request created successfully: {}", response);
-        //        return response;
-
         request.getTeamRequestMembers().forEach(member -> {
-            log.debug("Processing team request member: {}", member);
-            if (member.getUser() == null || member.getUser().getId() == null) {
-                log.error("UserDTO or UserDTO ID is null for member: {}", member);
-                throw new InvalidInputException("UserDTO or UserDTO ID cannot be null");
+            if (member.getUserId() == null || member.getUserId().trim().isEmpty()) {
+                log.error("UserId is null for member: {}", member);
+                throw new InvalidInputException("UserId cannot be null");
             }
 
             User user = userRepository
-                    .findById(Long.parseLong(member.getUser().getId()))
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Not found with user: " + member.getUser().getId()));
+                    .findById(Long.parseLong(member.getUserId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + member.getUserId()));
 
             TeamRequestMember memberEntity = TeamRequestMember.builder()
-                    .teamRequest(teamRequest) // Ensure association with teamRequest
+                    .teamRequest(teamRequest)
                     .user(user)
                     .status(TeamRequestMemberStatus.PENDING)
-                    //                    .cr(member.getCreatedByUserName()) // Assuming these fields are in DTO
-                    //                    .createdAt(member.getCreatedAt())
-                    //                    .lastModifiedByUserName(member.getLastModifiedByUserName())
-                    //                    .updatedAt(member.getUpdatedAt())
                     .build();
             teamRequest.getTeamRequestMembers().add(memberEntity);
         });
@@ -174,36 +135,32 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         TeamRequest saved = teamRequestRepository.save(teamRequest);
 
         // Send email to all members
-        for (User member : teamRequest.getTeamRequestMembers().stream()
+        teamRequest.getTeamRequestMembers().stream()
                 .map(TeamRequestMember::getUser)
-                .collect(Collectors.toList())) {
-            emailService.sendEmail(member.getEmail(), "Team Request Created", "A new team request has been created.");
-        }
+                .forEach(user -> {
+                    emailService.sendEmail(user.getEmail(), "Team Request Created", "A new team request has been created.");
+                });
 
-        // Convert to DTO manually
         TeamRequestDTO response = toDto(saved);
 
-        // Ensure the teamRequestId is populated in the TeamRequestMemberDTOs
         response.getTeamRequestMembers()
                 .forEach(memberDTO -> memberDTO.setTeamRequestId(String.valueOf(saved.getId())));
-
-        log.debug("Team request created successfully: {}", response);
         return response;
     }
 
     @Override
     public TeamRequestDTO updateMemberResponse(
             String requestId, String userId, TeamRequestMemberStatus status, String note) {
-        log.info("Update team request {} for request {}", userId, requestId);
-
         TeamRequest request = getTeamRequest(requestId);
 
-        // Validate request still pending
         if (request.getStatus() != TeamRequestStatus.PENDING) {
             throw new InvalidInputException("Just can update response for pending request");
         }
 
-        // Update member response
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new InvalidInputException("UserId cannot be null");
+        }
+
         TeamRequestMember member = request.getTeamRequestMembers().stream()
                 .filter(m -> m.getUser().getId() == (Long.parseLong(userId)))
                 .findFirst()
@@ -212,6 +169,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         member.setStatus(status);
         member.setNote(note);
         member.setRespondedAt(LocalDateTime.now());
+        log.debug("Member {} responded at {}", member.getUser().getId(), member.getRespondedAt());
 
         // Check if all members have responded
         boolean allResponded = request.getTeamRequestMembers().stream()
@@ -248,13 +206,11 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         return response;
     }
 
-    // Organizer review team request
     @Override
     public TeamRequestDTO reviewTeamRequest(String requestId, TeamRequestStatus status, String note) {
         log.info("Review team request: {}", requestId);
 
         TeamRequest request = getTeamRequest(requestId);
-
         // Validate request is under review
         if (request.getStatus() != TeamRequestStatus.UNDER_REVIEW) {
             throw new InvalidInputException("Just can review request is waiting for approval");
@@ -280,6 +236,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
+        log.debug("Current user: {}", currentUser.getUsername());
+
         request.setReviewedBy(currentUser);
 
         // If approved, create team
@@ -287,59 +245,108 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             Team team = createTeam(request);
             log.info("Created team from request {}", requestId);
 
-            // Create Schedule
-            Schedule schedule = Schedule.builder()
-                    .team(team)
-                    .hackathon(request.getHackathon())
-                    .build();
-            scheduleRepository.save(schedule);
-            log.debug("Created schedule for team {}", team.getId());
-
-            // Create Board
-            Board board =
-                    Board.builder().team(team).owner(request.getCreatedBy()).build();
-            boardRepository.save(board);
-            log.debug("Created board for team {}", team.getId());
-
-            // Create BoardUsers
-            for (UserTeam userTeam : team.getTeamMembers()) {
-                BoardUser boardUser = BoardUser.builder()
-                        .board(board)
-                        .user(userTeam.getUser())
-                        .role(
-                                userTeam.getUser().getId()
-                                                == team.getTeamLeader().getId()
-                                        ? BoardUserRole.ADMIN
-                                        : BoardUserRole.MEMBER)
-                        .build();
-                boardUserRepository.save(boardUser);
+            // Create UserTeam entries only if they don't exist
+            for (TeamRequestMember member : request.getTeamRequestMembers()) {
+                if (userTeamRepository.existsByUserAndTeam(member.getUser(), team)) {
+                    log.debug("UserTeam entry already exists for user {}", member.getUser().getUsername());
+                } else {
+                    UserTeam userTeam = UserTeam.builder()
+                            .user(member.getUser())
+                            .team(team)
+                            .status(Status.ACTIVE)
+                            .build();
+                    userTeamRepository.save(userTeam);
+                    log.debug("Created user team for user {}", member.getUser().getUsername());
+                }
             }
-            log.debug("Created board users for team {}", team.getId());
 
-            // Create Conversation
-            Conversation conversation = Conversation.builder()
-                    .team(team)
-                    .type(ConversationType.PRIVATE)
-                    .name(team.getName())
-                    .build();
-            conversationRepository.save(conversation);
-            log.debug("Created conversation for team {}", team.getId());
-
-            // Create ConversationUsers
-            for (UserTeam userTeam : team.getTeamMembers()) {
-                ConversationUser conversationUser = ConversationUser.builder()
-                        .user(userTeam.getUser())
-                        .conversation(conversation)
-                        .isDeleted(false)
+            // Create Schedule entry only if it doesn't exist
+            if (scheduleRepository.existsByTeamAndHackathon(team, request.getHackathon())) {
+                log.debug("Schedule entry already exists for team {}", team.getId());
+            } else {
+                Schedule schedule = Schedule.builder()
+                        .team(team)
+                        .hackathon(request.getHackathon())
+                        .name(team.getName() + " Schedule")
+                        .description("Schedule for " + team.getName())
                         .build();
-                conversationUserRepository.save(conversationUser);
+                scheduleRepository.save(schedule);
+                log.debug("Created schedule for team {}", team.getId());
             }
-            log.debug("Created conversation users for team {}", team.getId());
 
-            // Create TeamRound
+            // Create Board entry only if it doesn't exist
+            if (boardRepository.existsByTeam(team)) {
+                log.debug("Board entry already exists for team {}", team.getId());
+            } else {
+                Board board = Board.builder()
+                        .team(team)
+                        .owner(request.getCreatedBy())
+                        .name(team.getName() + " Board")
+                        .description("Board for team " + team.getName())
+                        .hackathon(request.getHackathon())
+                        .build();
+                boardRepository.save(board);
+                log.debug("Created board for team {}", team.getId());
+            }
+
+            Board board = boardRepository.findByTeamId(team.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Board not found for team: " + team.getId()));
+            for (UserTeam userTeam : team.getTeamMembers()) {
+                User user = userTeam.getUser();
+
+                boolean exists = boardUserRepository.existsByBoardAndUser(board, user);
+                if (!exists) {
+                    BoardUser boardUser = BoardUser.builder()
+                            .board(board)
+                            .user(user)
+                            .role(user.getId() == team.getTeamLeader().getId()
+                                    ? BoardUserRole.ADMIN : BoardUserRole.MEMBER)
+                            .isDeleted(false)
+                            .build();
+                    boardUserRepository.save(boardUser);
+                    log.debug("Created board user for user {}", user.getUsername());
+                } else {
+                    log.debug("Board user already exists for user {}", user.getUsername());
+                }
+            }
+
+            // Create Conversation entry only if it doesn't exist
+            if (conversationRepository.existsByTeam(team)) {
+                log.debug("Conversation entry already exists for team {}", team.getId());
+            } else {
+                Conversation conversation = Conversation.builder()
+                        .team(team)
+                        .type(ConversationType.PRIVATE)
+                        .name(team.getName())
+                        .build();
+                conversationRepository.save(conversation);
+                log.debug("Created conversation for team {}", team.getId());
+            }
+
+            // Create ConversationUsers only if they don't exist
+            Conversation conversation = conversationRepository.findByTeamId(team.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Conversation not found for team: " + team.getId()));
+
+            for (UserTeam userTeam : team.getTeamMembers()) {
+                User user = userTeam.getUser();
+
+                boolean exists = conversationUserRepository.existsByConversationAndUser(conversation, user);
+                if (!exists) {
+                    ConversationUser conversationUser = ConversationUser.builder()
+                            .user(user)
+                            .conversation(conversation)
+                            .isDeleted(false)
+                            .build();
+                    conversationUserRepository.save(conversationUser);
+                    log.debug("Created conversation user for user {}", user.getUsername());
+                } else {
+                    log.debug("Conversation user already exists for user {}", user.getUsername());
+                }
+            }
+
+            // Create TeamRound entry only if it doesn't exist
             Round round = roundRepository
-                    .findFirstByHackathonIdOrderByRoundNumberAsc(
-                            request.getHackathon().getId())
+                    .findFirstByHackathonIdOrderByRoundNumberAsc(request.getHackathon().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("No rounds found for hackathon"));
             TeamRound teamRound = TeamRound.builder()
                     .team(team)
@@ -349,128 +356,34 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                     .build();
             teamRoundRepository.save(teamRound);
             log.debug("Created team round for team {}", team.getId());
+
+
+          // Create TeamHackathon entry only if it doesn't exist
+            if (teamHackathonRepository.existsByTeamAndHackathon(team, request.getHackathon())) {
+                log.debug("TeamHackathon entry already exists for team {}", team.getId());
+            } else {
+                TeamHackathon teamHackathon = TeamHackathon.builder()
+                        .team(team)
+                        .hackathon(request.getHackathon())
+                        .status(TeamHackathonStatus.ACTIVE)
+                        .build();
+                teamHackathonRepository.save(teamHackathon);
+                log.debug("Created team hackathon for team {}", team.getId());
+            }
+
+            // Link teamRequest to each team member and save
+            for (TeamRequestMember member : request.getTeamRequestMembers()) {
+                member.setTeamRequest(request); // Link teamRequest to member
+                teamRequestMemberRepository.save(member); // Save member with updated teamRequest
+            }
         }
 
         TeamRequest updated = teamRequestRepository.save(request);
+
         notificationService.notifyTeamRequestReviewed(updated);
 
-        return teamRequestMapper.toDto(updated);
+        return TeamRequestMapperManual.toDto(updated);
     }
-
-    //    @Override
-    //    public TeamRequestDTO reviewTeamRequest(String requestId, TeamRequestStatus status, String note) {
-    //        log.info("Review team request: {}", requestId);
-    //
-    //        TeamRequest request = getTeamRequest(requestId);
-    //
-    //        // Validate request is under review
-    //        if (request.getStatus() != TeamRequestStatus.UNDER_REVIEW) {
-    //            throw new InvalidInputException("Just can review request is waiting for approval");
-    //        }
-    //
-    //        // Validate all members approved if approving request
-    //        if (status == TeamRequestStatus.APPROVED && !allMembersApproved(request)) {
-    //            throw new InvalidInputException("Cannot approve request if not all members approved");
-    //        }
-    //
-    //        // Update request status
-    //        request.setStatus(status);
-    //        request.setNote(note);
-    //        request.setReviewedAt(LocalDateTime.now());
-    //
-    //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //        if (authentication == null || !authentication.isAuthenticated()) {
-    //            throw new InvalidInputException("No authenticated user found");
-    //        }
-    //
-    //        String username = authentication.getName();
-    //        User currentUser = userRepository
-    //                .findByUsername(username)
-    //                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
-    //
-    //        request.setReviewedBy(currentUser);
-    //
-    //        // If approved, create team
-    //        if (status == TeamRequestStatus.APPROVED) {
-    //            Team team = createTeam(request);
-    //            log.info("Created team from request {}", requestId);
-    //
-    //            // Create Schedule
-    //            Schedule schedule = Schedule.builder()
-    //                    .team(team)
-    //                    .hackathon(request.getHackathon())
-    //                    .build();
-    //            scheduleRepository.save(schedule);
-    //            log.debug("Created schedule for team {}", team.getId());
-    //
-    //            // Create Board
-    //            Board board =
-    //                    Board.builder().team(team).owner(request.getCreatedBy()).build();
-    //            boardRepository.save(board);
-    //            log.debug("Created board for team {}", team.getId());
-    //
-    //            // Create BoardUsers
-    //            for (UserTeam userTeam : team.getTeamMembers()) {
-    //                BoardUser boardUser = BoardUser.builder()
-    //                        .board(board)
-    //                        .user(userTeam.getUser())
-    //                        .role(
-    //                                userTeam.getUser().getId()
-    //                                        == team.getTeamLeader().getId()
-    //                                        ? BoardUserRole.ADMIN
-    //                                        : BoardUserRole.MEMBER)
-    //                        .build();
-    //                boardUserRepository.save(boardUser);
-    //            }
-    //            log.debug("Created board users for team {}", team.getId());
-    //
-    //            // Create Conversation
-    //            Conversation conversation = Conversation.builder()
-    //                    .team(team)
-    //                    .type(ConversationType.PRIVATE)
-    //                    .name(team.getName())
-    //                    .build();
-    //            conversationRepository.save(conversation);
-    //            log.debug("Created conversation for team {}", team.getId());
-    //
-    //            // Create ConversationUsers
-    //            for (UserTeam userTeam : team.getTeamMembers()) {
-    //                ConversationUser conversationUser = ConversationUser.builder()
-    //                        .user(userTeam.getUser())
-    //                        .conversation(conversation)
-    //                        .isDeleted(false)
-    //                        .build();
-    //                conversationUserRepository.save(conversationUser);
-    //            }
-    //            log.debug("Created conversation users for team {}", team.getId());
-    //
-    //            // Create TeamRound
-    //            Round round = roundRepository
-    //                    .findFirstByHackathonIdOrderByRoundNumberAsc(
-    //                            request.getHackathon().getId())
-    //                    .orElseThrow(() -> new ResourceNotFoundException("No rounds found for hackathon"));
-    //            TeamRound teamRound = TeamRound.builder()
-    //                    .team(team)
-    //                    .round(round)
-    //                    .status(TeamRoundStatus.PENDING)
-    //                    .description("Team " + team.getName() + " registered for round " + round.getRoundNumber())
-    //                    .build();
-    //            teamRoundRepository.save(teamRound);
-    //            log.debug("Created team round for team {}", team.getId());
-    //        }
-    //
-    //        TeamRequest updated = teamRequestRepository.save(request);
-    //        notificationService.notifyTeamRequestReviewed(updated);
-    //
-    //        TeamRequestDTO response = toDto(updated);
-    //
-    //        // Ensure the teamRequestId is populated in the TeamRequestMemberDTOs
-    //        response.getTeamRequestMembers().forEach(memberDTO ->
-    //                memberDTO.setTeamRequestId(String.valueOf(updated.getId()))
-    //        );
-    //
-    //        return response;
-    //    }
 
     @Override
     public List<TeamRequestDTO> getAllByHackathonIdAndUserId(String hackathonId, String userId) {

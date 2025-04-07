@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.IndividualRegistrationRequestStatus;
@@ -47,10 +49,13 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
                 .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
-        User reviewedBy = userRepository
-                .findById(Long.parseLong(
-                        individualRegistrationRequestDTO.getReviewedBy().getId()))
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User reviewedBy = null;
+        if (individualRegistrationRequestDTO.getReviewById() != null &&
+                !individualRegistrationRequestDTO.getReviewById().isEmpty()) {
+            reviewedBy = userRepository
+                    .findById(Long.parseLong(individualRegistrationRequestDTO.getReviewById()))
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        }
 
         IndividualRegistrationRequest request = IndividualRegistrationRequest.builder()
                 .hackathon(hackathon)
@@ -64,35 +69,50 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
 
     @Override
     public IndividualRegistrationRequestDTO update(Long id, IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
-        // 1. Kiểm tra tồn tại của request cần cập nhật
         IndividualRegistrationRequest existingRequest = requestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Individual registration request not found"));
 
-        // 2. Kiểm tra hackathonId có null không
         if (individualRegistrationRequestDTO.getHackathonId() == null) {
             throw new InvalidInputException("Hackathon ID cannot be null");
         }
 
-        // 3. Tìm Hackathon entity từ hackathonId
         Hackathon hackathon = hackathonRepository
                 .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
-        // 4. Tìm reviewedBy user
-        User reviewedBy = userRepository
-                .findById(Long.parseLong(individualRegistrationRequestDTO.getReviewedBy().getId()))
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User reviewedBy = null;
+        String reviewById = individualRegistrationRequestDTO.getReviewById();
+        if (reviewById != null && !reviewById.trim().isEmpty()) {
+            reviewedBy = userRepository.findById(Long.parseLong(reviewById))
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + reviewById));
+        }
 
-        // 5. Cập nhật dữ liệu
+        if (existingRequest.getStatus() == IndividualRegistrationRequestStatus.APPROVED &&
+                !IndividualRegistrationRequestStatus.APPROVED.name().equalsIgnoreCase(individualRegistrationRequestDTO.getStatus())) {
+            throw new InvalidInputException("Cannot update status after it's approved");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        String username = authentication.getName();
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
         existingRequest.setHackathon(hackathon);
         existingRequest.setReviewedBy(reviewedBy);
         existingRequest.setStatus(IndividualRegistrationRequestStatus.valueOf(individualRegistrationRequestDTO.getStatus()));
+        existingRequest.setLastModifiedBy(currentUser);
+        existingRequest.setLastModifiedDate(LocalDateTime.now());
 
-//        existingRequest.setL(currentUsername);
-//        existingRequest.setUpdatedAt(LocalDateTime.now());
-        // 6. Lưu và trả về DTO
         IndividualRegistrationRequest updatedRequest = requestRepository.save(existingRequest);
-        return requestMapper.toDto(updatedRequest);
+
+        IndividualRegistrationRequestDTO responseDTO = requestMapper.toDto(updatedRequest);
+        responseDTO.setReviewById(reviewById);
+        return responseDTO;
     }
     @Override
     public void delete(Long id) {
@@ -112,7 +132,6 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         return requestRepository.findById(id)
                 .map(requestMapper::toDto)
                 .orElse(null);
-
     }
 
     @Override
