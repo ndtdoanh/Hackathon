@@ -1,6 +1,6 @@
-package com.hacof.identity.dto.response;
+package com.hacof.identity.dto.request;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserHackathonResponseDTO {
-    String id;
-    UserSimpleResponse user;
-    HackathonSimpleResponse hackathon;
-    String role;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+public class UserHackathonBulkRequestDTO {
+    List<UserHackathonRequestDTO> requests;
 }
