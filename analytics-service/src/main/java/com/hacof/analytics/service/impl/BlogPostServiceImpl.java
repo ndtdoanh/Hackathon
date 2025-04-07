@@ -51,10 +51,10 @@ public class BlogPostServiceImpl implements BlogPostService {
     }
 
     @Override
-    public BlogPostResponse updateBlogPost(Long id, BlogPostRequest request) {
-        BlogPost blogPost = findBlogPostById(id);
-        blogPostMapper.updateEntity(blogPost, request);
-        return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
+    public List<BlogPostResponse> getPublishedBlogPosts() {
+        return blogPostRepository.findByStatus(BlogPostStatus.PUBLISHED).stream()
+                .map(blogPostMapper::toResponse)
+                .toList();
     }
 
     @Override

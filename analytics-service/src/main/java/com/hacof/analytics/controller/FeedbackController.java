@@ -26,7 +26,7 @@ public class FeedbackController {
     FeedbackService feedbackService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
+//    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
     public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
             @RequestBody @Valid FeedbackCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -37,7 +37,7 @@ public class FeedbackController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('GET_FEEDBACKS')")
+//    @PreAuthorize("hasAuthority('GET_FEEDBACKS')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacks() {
         return ApiResponse.<List<FeedbackResponse>>builder()
                 .data(feedbackService.getFeedbacks())
@@ -46,7 +46,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('GET_FEEDBACK')")
+//    @PreAuthorize("hasAuthority('GET_FEEDBACK')")
     public ApiResponse<FeedbackResponse> getFeedback(@PathVariable Long id) {
         return ApiResponse.<FeedbackResponse>builder()
                 .data(feedbackService.getFeedback(id))
@@ -55,14 +55,14 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('DELETE_FEEDBACK')")
+//    @PreAuthorize("hasAuthority('DELETE_FEEDBACK')")
     public ApiResponse<Void> deleteFeedback(@PathVariable Long id) {
         feedbackService.deleteFeedback(id);
         return ApiResponse.<Void>builder().message("Feedback deleted").build();
     }
 
     @GetMapping("/by-team")
-    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_TEAM')")
+//    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_TEAM')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByTeam(@RequestParam Long teamId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
                 .data(feedbackService.getFeedbacksByTeam(teamId))
@@ -71,7 +71,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/by-hackathon")
-    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_HACKATHON')")
+//    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_HACKATHON')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByHackathon(@RequestParam Long hackathonId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
                 .data(feedbackService.getFeedbacksByHackathon(hackathonId))
@@ -80,7 +80,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/by-mentor")
-    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")
+//    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByMentor(@RequestParam Long mentorId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
                 .data(feedbackService.getFeedbacksByMentor(mentorId))
