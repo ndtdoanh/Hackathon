@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.constant.NotificationMethod;
+import com.hacof.communication.service.EmailService;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.constant.NotificationStatus;
@@ -47,6 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
     RoleRepository roleRepository;
     UserRoleRepository userRoleRepository;
     NotificationDeliveryRepository notificationDeliveryRepository;
+    EmailService emailService;
 
     @Override
     public NotificationResponse createNotification(NotificationRequest request) {
@@ -99,21 +103,58 @@ public class NotificationServiceImpl implements NotificationService {
             }
 
             List<NotificationDelivery> deliveries = recipients.stream()
+                    .filter(user -> {
+                        if (deliveryRequest.getMethod() == NotificationMethod.EMAIL) {
+                            return user.getEmail() != null && !user.getEmail().isEmpty();
+                        }
+                        return true;
+                    })
                     .map(user -> NotificationDelivery.builder()
                             .notification(notification)
                             .recipient(user)
-                            .role(RoleType.fromString(
-                                    userRoleMap.get(user.getId()).getName()))
+                            .role(RoleType.fromString(userRoleMap.get(user.getId()).getName()))
                             .method(deliveryRequest.getMethod())
                             .status(NotificationStatus.PENDING)
                             .build())
                     .collect(Collectors.toList());
 
-            notificationDeliveryRepository.saveAll(deliveries);
-            notification.setNotificationDeliveries(deliveries);
+            if (!deliveries.isEmpty()) {
+                notificationDeliveryRepository.saveAll(deliveries);
+                notification.setNotificationDeliveries(deliveries);
+
+                if (deliveryRequest.getMethod() == NotificationMethod.EMAIL) {
+                    sendEmailToUsers(deliveries);
+                }
+            }
         }
 
         return notificationMapper.toNotificationResponse(notification);
+    }
+
+    public void sendEmailToUsers(List<NotificationDelivery> deliveries) {
+        for (NotificationDelivery delivery : deliveries) {
+            User recipient = delivery.getRecipient();
+            Notification notification = delivery.getNotification();
+
+            if (recipient.getEmail() != null && !recipient.getEmail().isEmpty()) {
+                try {
+                    String subject = "New announcement from the system";
+                    String content = buildNotificationEmailContent(notification.getContent(), notification.getMetadata());
+                    emailService.sendEmail(recipient.getEmail(), subject, content);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private String buildNotificationEmailContent(String content, String metadata) {
+        return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;'>"
+                + "<h2 style='color: #333;'>System notice</h2>"
+                + "<p><strong>Content:</strong> " + (content != null ? content : "Do not have") + "</p>"
+                + "<p><strong>Metadata:</strong> " + (metadata != null ? metadata : "Do not have") + "</p>"
+                + "<p style='margin-top: 20px;'>Best regards,<br/>Support team</p>"
+                + "</div>";
     }
 
     @Override
