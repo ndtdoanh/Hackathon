@@ -29,7 +29,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class AuditUserBase {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_name")
+    @JoinColumn(name = "created_by_user_id")
     User createdBy;
 
     @CreatedDate
