@@ -85,6 +85,7 @@ public class NotificationController {
     }
 
     @PutMapping("/notification-deliveries/read-status")
+    @PreAuthorize("hasAuthority('UPDATE_READ_STATUS')")
     public ApiResponse<String> updateReadStatusBulk(@RequestBody BulkUpdateReadStatusRequest request) {
         notificationService.updateReadStatusBulk(request);
         return ApiResponse.<String>builder()

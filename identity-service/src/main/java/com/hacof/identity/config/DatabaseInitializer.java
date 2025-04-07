@@ -75,16 +75,27 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "DELETE_USER_HACKATHON",
 
                             "CREATE_NOTIFICATION",
-                            "DELETE_NOTIFICATION"),
+                            "DELETE_NOTIFICATION",
+                            "UPDATE_READ_STATUS",
+
+                            "APPROVE_BLOG_POST",
+                            "REJECT_BLOG_POST",
+                            "DELETE_BLOG_POST"
+                    ),
             "ORGANIZER",
                     Set.of(
                             "CREATE_USER_HACKATHON",
                             "DELETE_USER_HACKATHON",
 
-                            "UPDATE_JUDGE_MENTOR_BY_ORGANIZATION",
+                            "UPDATE_JUDGE_MENTOR_BY_ORGANIZER",
 
                             "CREATE_NOTIFICATION",
-                            "DELETE_NOTIFICATION"),
+                            "DELETE_NOTIFICATION",
+                            "UPDATE_READ_STATUS",
+
+                            "CREATE_BLOG_POST",
+                            "SUBMIT_BLOG_POST"
+                    ),
             "JUDGE", Set.of(),
             "MENTOR", Set.of(),
             "GUEST", Set.of(),
@@ -142,7 +153,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("UPDATE_ROLE", "/api/v1/roles/{Id}", "PUT", "ROLES"),
                 new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"),
 
-                new Permission("UPDATE_JUDGE_MENTOR_BY_ORGANIZATION", "/api/v1/users/organization", "PUT", "USERS"),
+                new Permission("UPDATE_JUDGE_MENTOR_BY_ORGANIZER", "/api/v1/users/organizer", "PUT", "USERS"),
                 new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"),
 
                 new Permission("CREATE_USER_DEVICE", "/api/v1/user-devices", "POST", "USER_DEVICES"),
@@ -157,7 +168,15 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("DELETE_USER_HACKATHON", "/api/v1/user-hackathons/{Id}", "DELETE", "USER_HACKATHONS"),
 
                 new Permission("CREATE_NOTIFICATION", "/api/v1/notifications", "POST", "NOTIFICATIONS"),
-                new Permission("DELETE_NOTIFICATION", "/api/v1/notifications/{Id}", "DELETE", "NOTIFICATIONS"));
+                new Permission("DELETE_NOTIFICATION", "/api/v1/notifications/{Id}", "DELETE", "NOTIFICATIONS"),
+                new Permission("UPDATE_READ_STATUS", "/api/v1/notifications/notification-deliveries/read-status", "PUT", "NOTIFICATIONS"),
+
+                new Permission("CREATE_BLOG_POST", "/api/v1/blog-posts", "POST", "BLOG_POSTS"),
+                new Permission("SUBMIT_BLOG_POST", "/api/v1/blog-posts/{id}/submit", "PUT", "BLOG_POSTS"),
+                new Permission("APPROVE_BLOG_POST", "/api/v1/blog-posts/{id}/approve", "PUT", "BLOG_POSTS"),
+                new Permission("REJECT_BLOG_POST", "/api/v1/blog-posts/{id}/reject", "PUT", "BLOG_POSTS"),
+                new Permission("DELETE_BLOG_POST", "/api/v1/blog-posts/{id}", "DELETE", "BLOG_POSTS")
+        );
 
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");

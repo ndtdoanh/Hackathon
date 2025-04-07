@@ -78,7 +78,6 @@ public class UserController {
 
     @GetMapping
     public ApiResponse<List<UserResponse>> getUsers() {
-
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getUsers())
                 .message("Get all users")
@@ -141,14 +140,14 @@ public class UserController {
                 .build();
     }
 
-    @PutMapping("/organization/{userId}")
-    @PreAuthorize("hasAuthority('UPDATE_JUDGE_MENTOR_BY_ORGANIZATION')")
-    public ApiResponse<UserResponse> updateJudgeMentorByOrganization(
+    @PutMapping("/organizer/{userId}")
+    @PreAuthorize("hasAuthority('UPDATE_JUDGE_MENTOR_BY_ORGANIZER')")
+    public ApiResponse<UserResponse> updateJudgeMentorByOrganizer(
             @PathVariable Long userId, @Valid @RequestBody OrganizerUpdateForJudgeMentor request) {
 
         return ApiResponse.<UserResponse>builder()
                 .data(userService.updateJudgeMentorByOrganization(userId, request))
-                .message("Updated Judge or Mentor by Organization successfully")
+                .message("Updated Judge or Mentor by Organizer successfully")
                 .build();
     }
 
