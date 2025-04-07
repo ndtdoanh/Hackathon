@@ -61,7 +61,7 @@ public class DeviceController {
     }
 
     @PutMapping("/{Id}")
-        @PreAuthorize("hasAuthority('UPDATE_DEVICE')")
+    @PreAuthorize("hasAuthority('UPDATE_DEVICE')")
     public ResponseEntity<ApiResponse<DeviceResponse>> updateDevice(
             @PathVariable("Id") Long id,
             @ModelAttribute DeviceRequest request,
@@ -77,7 +77,7 @@ public class DeviceController {
     }
 
     @DeleteMapping("/{Id}")
-        @PreAuthorize("hasAuthority('DELETE_DEVICE')")
+    @PreAuthorize("hasAuthority('DELETE_DEVICE')")
     public ApiResponse<Void> deleteDevice(@PathVariable("Id") Long id) {
         deviceService.deleteDevice(id);
         return ApiResponse.<Void>builder().message("Device has been deleted").build();

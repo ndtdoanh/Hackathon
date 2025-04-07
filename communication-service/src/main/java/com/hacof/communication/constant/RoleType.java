@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum RoleType {
     ADMIN,
-    ORGANIZATION,
+    ORGANIZER,
     JUDGE,
     MENTOR,
     GUEST,

@@ -27,7 +27,7 @@ public class UserDeviceTrackController {
     UserDeviceTrackService userDeviceTrackService;
 
     @PostMapping
-        @PreAuthorize("hasAuthority('CREATE_USER_DEVICE_TRACK')")
+    @PreAuthorize("hasAuthority('CREATE_USER_DEVICE_TRACK')")
     public ResponseEntity<ApiResponse<UserDeviceTrackResponse>> createUserDeviceTrack(
             @ModelAttribute @Valid UserDeviceTrackRequest request,
             @RequestParam(value = "files", required = false) List<MultipartFile> files)
@@ -60,7 +60,7 @@ public class UserDeviceTrackController {
     }
 
     @PutMapping("/{Id}")
-        @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE_TRACK')")
+    @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE_TRACK')")
     public ResponseEntity<ApiResponse<UserDeviceTrackResponse>> updateUserDeviceTrack(
             @PathVariable("Id") Long id,
             @ModelAttribute @Valid UserDeviceTrackRequest request,
@@ -77,7 +77,7 @@ public class UserDeviceTrackController {
     }
 
     @DeleteMapping("/{Id}")
-        @PreAuthorize("hasAuthority('DELETE_USER_DEVICE_TRACK')")
+    @PreAuthorize("hasAuthority('DELETE_USER_DEVICE_TRACK')")
     public ApiResponse<Void> deleteUserDeviceTrack(@PathVariable("Id") Long id) {
         userDeviceTrackService.deleteUserDeviceTrack(id);
         return ApiResponse.<Void>builder()

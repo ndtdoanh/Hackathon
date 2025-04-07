@@ -1,10 +1,5 @@
 package com.hacof.identity.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.hacof.identity.constant.Status;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +14,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HackathonResponse {
+public class UserSimpleResponse {
     String id;
-    String title;
-    String bannerImageUrl;
-    LocalDateTime startDate;
-    LocalDateTime endDate;
-    Status status;
-    List<HackathonResultResponse> hackathonResults;
+    String username;
+    String email;
+    String firstName;
+    String lastName;
+    String avatarUrl;
 }
