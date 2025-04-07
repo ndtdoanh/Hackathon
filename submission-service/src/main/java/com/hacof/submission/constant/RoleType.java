@@ -2,7 +2,7 @@ package com.hacof.submission.constant;
 
 public enum RoleType {
     ADMIN,
-    ORGANIZATION,
+    ORGANIZER,
     JUDGE,
     MENTOR,
     GUEST,

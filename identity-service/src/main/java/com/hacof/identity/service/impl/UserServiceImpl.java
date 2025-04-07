@@ -5,10 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.hacof.identity.dto.request.OrganizationUpdateForJudgeMentor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
+import com.hacof.identity.dto.request.OrganizerUpdateForJudgeMentor;
 import com.hacof.identity.dto.request.PasswordCreateRequest;
 import com.hacof.identity.dto.request.ResetPasswordRequest;
 import com.hacof.identity.dto.request.UserCreateRequest;
@@ -85,10 +84,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
         if ("ADMIN".equals(creatorRole.getName())) {
-            if (!"ORGANIZATION".equals(assignedRole.getName())) {
+            if (!"ORGANIZER".equals(assignedRole.getName())) {
                 throw new AppException(ErrorCode.UNAUTHORIZED);
             }
-        } else if ("ORGANIZATION".equals(creatorRole.getName())) {
+        } else if ("ORGANIZER".equals(creatorRole.getName())) {
             if (!"JUDGE".equals(assignedRole.getName()) && !"MENTOR".equals(assignedRole.getName())) {
                 throw new AppException(ErrorCode.INVALID_ASSIGNED_ROLE);
             }
@@ -154,7 +153,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getUsersByRoles() {
-        List<String> allowedRoles = Arrays.asList("ORGANIZATION", "JUDGE", "MENTOR");
+        List<String> allowedRoles = Arrays.asList("ORGANIZER", "JUDGE", "MENTOR");
         return userRepository.findAllByRoles(allowedRoles).stream()
                 .map(userMapper::toUserResponse)
                 .toList();
@@ -193,9 +192,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateJudgeMentorByOrganization(Long userId, OrganizationUpdateForJudgeMentor request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    public UserResponse updateJudgeMentorByOrganization(Long userId, OrganizerUpdateForJudgeMentor request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -205,7 +203,8 @@ public class UserServiceImpl implements UserService {
             throw new AppException(ErrorCode.ROLE_NOT_ALLOWED);
         }
 
-        Role role = roleRepository.findByName(request.getRole())
+        Role role = roleRepository
+                .findByName(request.getRole())
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
         userRoleRepository.deleteByUserId(user.getId());

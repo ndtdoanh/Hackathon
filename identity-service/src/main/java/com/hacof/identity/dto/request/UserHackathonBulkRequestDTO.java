@@ -1,5 +1,7 @@
 package com.hacof.identity.dto.request;
 
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,12 +10,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrganizationUpdateForJudgeMentor {
-    String firstName;
-    String lastName;
-    String role;
+public class UserHackathonBulkRequestDTO {
+    List<UserHackathonRequestDTO> requests;
 }

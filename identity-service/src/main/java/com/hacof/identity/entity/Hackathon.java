@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hacof.identity.constant.CategoryStatus;
-import com.hacof.identity.constant.OrganizationStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +16,8 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import com.hacof.identity.constant.CategoryStatus;
+import com.hacof.identity.constant.OrganizationStatus;
 import com.hacof.identity.constant.Status;
 
 import lombok.AccessLevel;
