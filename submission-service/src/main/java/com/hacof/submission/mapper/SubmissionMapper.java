@@ -117,7 +117,7 @@ public class SubmissionMapper {
                 .minTeamSize(hackathon.getMinTeamSize())
                 .maxTeamSize(hackathon.getMaxTeamSize())
                 .contact(hackathon.getContact())
-                .category(hackathon.getCategory())
+                .category(String.valueOf(hackathon.getCategory()))
                 .status(hackathon.getStatus() != null ? hackathon.getStatus().name() : "UNKNOWN")
                 .createAt(hackathon.getCreatedDate())
                 .updateAt(hackathon.getLastModifiedDate())
