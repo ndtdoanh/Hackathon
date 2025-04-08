@@ -12,7 +12,7 @@ import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
 import com.hacof.hackathon.entity.SponsorshipHackathon;
 import com.hacof.hackathon.entity.SponsorshipHackathonDetail;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.SponsorshipHackathonDetailMapper;
+import com.hacof.hackathon.mapper.manual.SponsorshipHackathonDetailMapperManual;
 import com.hacof.hackathon.repository.SponsorshipHackathonDetailRepository;
 import com.hacof.hackathon.repository.SponsorshipHackathonRepository;
 import com.hacof.hackathon.service.SponsorshipHackathonDetailService;
@@ -29,7 +29,44 @@ import lombok.extern.slf4j.Slf4j;
 public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackathonDetailService {
     SponsorshipHackathonDetailRepository sponsorshipHackathonDetailRepository;
     SponsorshipHackathonRepository sponsorshipHackathonRepository;
-    SponsorshipHackathonDetailMapper sponsorshipHackathonDetailMapper;
+    // SponsorshipHackathonDetailMapper sponsorshipHackathonDetailMapper;
+
+    //    @Override
+    //    public SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO) {
+    //        log.info("Creating new sponsorship hackathon detail");
+    //
+    //        SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonRepository
+    //                .findById(Long.parseLong(sponsorshipHackathonDetailDTO.getSponsorshipHackathonId()))
+    //                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
+    //
+    //        SponsorshipHackathonDetail sponsorshipHackathonDetail =
+    //                sponsorshipHackathonDetailMapper.toEntity(sponsorshipHackathonDetailDTO);
+    //        sponsorshipHackathonDetail.setSponsorshipHackathon(sponsorshipHackathon);
+    //
+    //        sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository.save(sponsorshipHackathonDetail);
+    //        return sponsorshipHackathonDetailMapper.toDto(sponsorshipHackathonDetail);
+    //    }
+    //
+    //    @Override
+    //    public SponsorshipHackathonDetailDTO update(Long id, SponsorshipHackathonDetailDTO
+    // sponsorshipHackathonDetailDTO) {
+    //        log.info("Updating sponsorship hackathon detail with id: {}", id);
+    //
+    //        SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository
+    //                .findById(id)
+    //                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship hackathon detail not found"));
+    //
+    //        SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonRepository
+    //                .findById(Long.parseLong(sponsorshipHackathonDetailDTO.getSponsorshipHackathonId()))
+    //                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
+    //
+    //        sponsorshipHackathonDetailMapper.updateEntityFromDto(sponsorshipHackathonDetailDTO,
+    // sponsorshipHackathonDetail);
+    //        sponsorshipHackathonDetail.setSponsorshipHackathon(sponsorshipHackathon);
+    //
+    //        sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository.save(sponsorshipHackathonDetail);
+    //        return sponsorshipHackathonDetailMapper.toDto(sponsorshipHackathonDetail);
+    //    }
 
     @Override
     public SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO) {
@@ -40,11 +77,11 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
 
         SponsorshipHackathonDetail sponsorshipHackathonDetail =
-                sponsorshipHackathonDetailMapper.toEntity(sponsorshipHackathonDetailDTO);
+                SponsorshipHackathonDetailMapperManual.toEntity(sponsorshipHackathonDetailDTO);
         sponsorshipHackathonDetail.setSponsorshipHackathon(sponsorshipHackathon);
 
         sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository.save(sponsorshipHackathonDetail);
-        return sponsorshipHackathonDetailMapper.toDto(sponsorshipHackathonDetail);
+        return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
     }
 
     @Override
@@ -59,11 +96,12 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
                 .findById(Long.parseLong(sponsorshipHackathonDetailDTO.getSponsorshipHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
 
-        sponsorshipHackathonDetailMapper.updateEntityFromDto(sponsorshipHackathonDetailDTO, sponsorshipHackathonDetail);
+        SponsorshipHackathonDetailMapperManual.updateEntityFromDto(
+                sponsorshipHackathonDetailDTO, sponsorshipHackathonDetail);
         sponsorshipHackathonDetail.setSponsorshipHackathon(sponsorshipHackathon);
 
         sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository.save(sponsorshipHackathonDetail);
-        return sponsorshipHackathonDetailMapper.toDto(sponsorshipHackathonDetail);
+        return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
     }
 
     @Override
@@ -82,7 +120,7 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
         //            throw new ResourceNotFoundException("No sponsorship hackathon details found");
         //        }
         return sponsorshipHackathonDetailRepository.findAll().stream()
-                .map(sponsorshipHackathonDetailMapper::toDto)
+                .map(SponsorshipHackathonDetailMapperManual::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -91,6 +129,6 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
         Optional<SponsorshipHackathonDetail> sponsorshipHackathonDetailOptional =
                 sponsorshipHackathonDetailRepository.findById(id);
         SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailOptional.orElse(null);
-        return sponsorshipHackathonDetailMapper.toDto(sponsorshipHackathonDetail);
+        return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
     }
 }

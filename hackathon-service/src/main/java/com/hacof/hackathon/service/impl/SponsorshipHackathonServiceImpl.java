@@ -12,7 +12,7 @@ import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.Sponsorship;
 import com.hacof.hackathon.entity.SponsorshipHackathon;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.SponsorshipHackathonMapper;
+import com.hacof.hackathon.mapper.manual.SponsorshipHackathonMapperManual;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.SponsorshipHackathonRepository;
 import com.hacof.hackathon.repository.SponsorshipRepository;
@@ -31,7 +31,7 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
     SponsorshipHackathonRepository sponsorshipHackathonRepository;
     SponsorshipRepository sponsorshipRepository;
     HackathonRepository hackathonRepository;
-    SponsorshipHackathonMapper sponsorshipHackathonMapper;
+    // SponsorshipHackathonMapper sponsorshipHackathonMapper;
 
     @Override
     public SponsorshipHackathonDTO create(SponsorshipHackathonDTO sponsorshipHackathonDTO) {
@@ -45,12 +45,12 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(sponsorshipHackathonDTO.getSponsorshipId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
-        SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonMapper.toEntity(sponsorshipHackathonDTO);
+        SponsorshipHackathon sponsorshipHackathon = SponsorshipHackathonMapperManual.toEntity(sponsorshipHackathonDTO);
         sponsorshipHackathon.setHackathon(hackathon);
         sponsorshipHackathon.setSponsorship(sponsorship);
 
         sponsorshipHackathon = sponsorshipHackathonRepository.save(sponsorshipHackathon);
-        return sponsorshipHackathonMapper.toDto(sponsorshipHackathon);
+        return SponsorshipHackathonMapperManual.toDto(sponsorshipHackathon);
     }
 
     @Override
@@ -69,12 +69,14 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(sponsorshipHackathonDTO.getSponsorshipId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
-        sponsorshipHackathonMapper.updateEntityFromDto(sponsorshipHackathonDTO, sponsorshipHackathon);
+        sponsorshipHackathon.setTotalMoney(sponsorshipHackathonDTO.getTotalMoney());
+
         sponsorshipHackathon.setHackathon(hackathon);
         sponsorshipHackathon.setSponsorship(sponsorship);
 
         sponsorshipHackathon = sponsorshipHackathonRepository.save(sponsorshipHackathon);
-        return sponsorshipHackathonMapper.toDto(sponsorshipHackathon);
+
+        return SponsorshipHackathonMapperManual.toDto(sponsorshipHackathon);
     }
 
     @Override
@@ -92,7 +94,15 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
         //            throw new ResourceNotFoundException("No sponsorship hackathon found");
         //        }
         return sponsorshipHackathonRepository.findAll().stream()
-                .map(sponsorshipHackathonMapper::toDto)
+                .map(SponsorshipHackathonMapperManual::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SponsorshipHackathonDTO getById(String id) {
+        return sponsorshipHackathonRepository
+                .findById(Long.parseLong(id))
+                .map(SponsorshipHackathonMapperManual::toDto)
+                .orElse(null);
     }
 }

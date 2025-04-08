@@ -1,12 +1,13 @@
 package com.hacof.hackathon.repository;
 
-import com.hacof.hackathon.entity.FileUrl;
-import com.hacof.hackathon.entity.Hackathon;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.hacof.hackathon.entity.FileUrl;
+import com.hacof.hackathon.entity.Hackathon;
 
 @Repository
 public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {

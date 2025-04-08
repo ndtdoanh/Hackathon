@@ -3,9 +3,7 @@ package com.hacof.hackathon.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import com.hacof.hackathon.mapper.LocationMapper;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -18,7 +16,7 @@ import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.manual.RoundLocationMapperManual;
+import com.hacof.hackathon.mapper.LocationMapper;
 import com.hacof.hackathon.mapper.manual.RoundMapperManual;
 import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.RoundService;
@@ -107,33 +105,33 @@ public class RoundServiceImpl implements RoundService {
 
     @Override
     public List<RoundDTO> getRounds(Specification<Round> spec) {
-//        List<Round> rounds = roundRepository.findAll(spec);
-//        return rounds.stream()
-//                .map(round -> {
-//                    RoundDTO roundDTO = RoundMapperManual.toDto(round);
-//                    if (round.getRoundLocations() != null
-//                            && !round.getRoundLocations().isEmpty()) {
-//                        // Ensure round locations are mapped
-//                        roundDTO.setRoundLocations(round.getRoundLocations().stream()
-//                                .map(roundLocation -> {
-//                                    return RoundLocationMapperManual.toDto(roundLocation);
-//                                })
-//                                .collect(Collectors.toList()));
-//                    }
-//                    return roundDTO;
-//                })
-//                .collect(Collectors.toList());
+        //        List<Round> rounds = roundRepository.findAll(spec);
+        //        return rounds.stream()
+        //                .map(round -> {
+        //                    RoundDTO roundDTO = RoundMapperManual.toDto(round);
+        //                    if (round.getRoundLocations() != null
+        //                            && !round.getRoundLocations().isEmpty()) {
+        //                        // Ensure round locations are mapped
+        //                        roundDTO.setRoundLocations(round.getRoundLocations().stream()
+        //                                .map(roundLocation -> {
+        //                                    return RoundLocationMapperManual.toDto(roundLocation);
+        //                                })
+        //                                .collect(Collectors.toList()));
+        //                    }
+        //                    return roundDTO;
+        //                })
+        //                .collect(Collectors.toList());
         return null;
     }
 
     @Override
     public List<RoundDTO> getAllByHackathonId(String hackathonId) {
-//        if (hackathonId == null || hackathonId.isEmpty()) {
-//            throw new InvalidInputException("Hackathon ID is required");
-//        }
-//
-//        List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-//        return rounds.stream().map(RoundMapperManual::toDto).collect(Collectors.toList());
+        //        if (hackathonId == null || hackathonId.isEmpty()) {
+        //            throw new InvalidInputException("Hackathon ID is required");
+        //        }
+        //
+        //        List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
+        //        return rounds.stream().map(RoundMapperManual::toDto).collect(Collectors.toList());
         return null;
     }
 

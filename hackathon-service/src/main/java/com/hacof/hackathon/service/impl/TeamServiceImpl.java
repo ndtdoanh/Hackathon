@@ -6,6 +6,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.exception.InvalidInputException;
+import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -195,20 +197,24 @@ public class TeamServiceImpl implements TeamService {
     public TeamDTO getTeamById(long id) {
         return teamRepository
                 .findById(id)
-                .map(teamMapper::toDto)
+                .map(TeamMapperManual::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
     }
 
     @Override
     public List<TeamDTO> getAllTeams() {
-        return teamRepository.findAll().stream().map(teamMapper::toDto).collect(Collectors.toList());
+        return teamRepository.findAll().stream().map(TeamMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<TeamDTO> getTeamsByUserIdAndHackathonId(Long userId, Long hackathonId) {
-        Specification<Team> spec = TeamSpecification.hasLeaderIdAndHackathonId(userId, hackathonId);
+        if (userId == null || hackathonId == null) {
+            throw new InvalidInputException("UserId and HackathonId cannot be null");
+        }
+
+        Specification<Team> spec = TeamSpecification.hasUserIdAndHackathonId(userId, hackathonId);
         List<Team> teams = teamRepository.findAll(spec);
-        return teams.stream().map(teamMapper::toDto).collect(Collectors.toList());
+        return teams.stream().map(TeamMapperManual::toDto).collect(Collectors.toList());
     }
 
     //    @Override

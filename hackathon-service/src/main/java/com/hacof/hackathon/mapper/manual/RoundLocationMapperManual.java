@@ -12,7 +12,9 @@ public class RoundLocationMapperManual {
         RoundLocationDTO dto = new RoundLocationDTO();
         dto.setId(String.valueOf(entity.getId()));
         dto.setLocationId(
-                entity.getLocation() != null ? String.valueOf(entity.getLocation().getId()) : null);
+                entity.getLocation() != null
+                        ? String.valueOf(entity.getLocation().getId())
+                        : null);
         dto.setType(entity.getType());
 
         return dto;

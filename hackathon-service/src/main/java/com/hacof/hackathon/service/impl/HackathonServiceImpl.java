@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.entity.FileUrl;
-import com.hacof.hackathon.repository.FileUrlRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -18,11 +16,13 @@ import com.hacof.hackathon.constant.CategoryStatus;
 import com.hacof.hackathon.constant.OrganizationStatus;
 import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.HackathonMapper;
+import com.hacof.hackathon.repository.FileUrlRepository;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.HackathonService;
@@ -52,8 +52,8 @@ public class HackathonServiceImpl implements HackathonService {
 
         hackathon = hackathonRepository.save(hackathon);
 
-        List<FileUrl> fileUrls = fileUrlRepository
-                .findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
+        List<FileUrl> fileUrls =
+                fileUrlRepository.findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
 
         for (FileUrl file : fileUrls) {
             file.setHackathon(hackathon);
@@ -112,7 +112,7 @@ public class HackathonServiceImpl implements HackathonService {
         existingHackathon.setOrganization(OrganizationStatus.valueOf(hackathonDTO.getOrganization()));
         existingHackathon.setMaxTeams(hackathonDTO.getEnrollmentCount());
         existingHackathon.setStatus(Status.valueOf(hackathonDTO.getStatus()));
-        //existingHackathon.setDocumentation(hackathonMapper.mapToFileUrlList(hackathonDTO.getDocumentation()));
+        // existingHackathon.setDocumentation(hackathonMapper.mapToFileUrlList(hackathonDTO.getDocumentation()));
         /** about update documentation:
          * Step 1: Set null current documentations
          * Step 2: Set new documentations
@@ -125,8 +125,8 @@ public class HackathonServiceImpl implements HackathonService {
         fileUrlRepository.saveAll(currentDocs);
 
         // Step 2: Set new documentations
-        List<FileUrl> fileUrls = fileUrlRepository
-                .findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
+        List<FileUrl> fileUrls =
+                fileUrlRepository.findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
 
         for (FileUrl file : fileUrls) {
             file.setHackathon(existingHackathon); // reassign for hackathon
@@ -200,7 +200,7 @@ public class HackathonServiceImpl implements HackathonService {
     }
 
     private void validateUniqueTitleForUpdate(String id, String title) {
-        if(existsByTitleAndIdNot(title, Long.parseLong(id))) {
+        if (existsByTitleAndIdNot(title, Long.parseLong(id))) {
             throw new InvalidInputException("Hackathon with title '" + title + "' already exists.");
         }
     }

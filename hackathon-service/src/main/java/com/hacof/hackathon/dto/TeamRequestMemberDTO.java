@@ -2,9 +2,8 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,8 +15,10 @@ import lombok.experimental.FieldDefaults;
 public class TeamRequestMemberDTO {
     String id;
     String teamRequestId;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String userId;
+
     UserDTO user;
     String status; // TeamRequestMemberStatus
     String respondedAt; // LocalDateTime

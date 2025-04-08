@@ -4,18 +4,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.entity.MentorTeam;
-import com.hacof.hackathon.mapper.manual.MentorshipSessionRequestMapperManual;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
+import com.hacof.hackathon.entity.MentorTeam;
 import com.hacof.hackathon.entity.MentorshipSessionRequest;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.MentorshipSessionRequestMapper;
+import com.hacof.hackathon.mapper.manual.MentorshipSessionRequestMapperManual;
 import com.hacof.hackathon.repository.MentorTeamRepository;
 import com.hacof.hackathon.repository.MentorshipSessionRequestRepository;
 import com.hacof.hackathon.repository.UserRepository;
@@ -32,7 +31,6 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     MentorshipSessionRequestRepository mentorshipSessionRequestRepository;
     MentorTeamRepository mentorTeamRepository;
     UserRepository userRepository;
-    MentorshipSessionRequestMapper mentorshipSessionRequestMapper;
 
     @Override
     public MentorshipSessionRequestDTO create(MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
@@ -54,7 +52,8 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         MentorshipSessionRequestMapperManual.updateEntityFromDto(mentorshipSessionRequestDTO, existingRequest);
 
         if (mentorshipSessionRequestDTO.getMentorTeamId() != null) {
-            MentorTeam mentorTeam = mentorTeamRepository.findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
+            MentorTeam mentorTeam = mentorTeamRepository
+                    .findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
                     .orElseThrow(() -> new ResourceNotFoundException("MentorTeam not found"));
             existingRequest.setMentorTeam(mentorTeam);
         }
@@ -65,7 +64,8 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         }
 
         String username = authentication.getName();
-        User currentUser = userRepository.findByUsername(username)
+        User currentUser = userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
         existingRequest.setLastModifiedBy(currentUser);
@@ -76,7 +76,8 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     }
 
     @Override
-    public MentorshipSessionRequestDTO approveOrReject(String id, MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
+    public MentorshipSessionRequestDTO approveOrReject(
+            String id, MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
         MentorshipSessionRequest existingRequest = getMentorshipSessionRequest(id);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -85,7 +86,8 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         }
 
         String username = authentication.getName();
-        User currentUser = userRepository.findByUsername(username)
+        User currentUser = userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
         existingRequest.setEvaluatedBy(currentUser);
 

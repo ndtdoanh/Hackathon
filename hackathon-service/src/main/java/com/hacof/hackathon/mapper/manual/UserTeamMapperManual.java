@@ -22,10 +22,10 @@ public class UserTeamMapperManual {
             dto.setTeamId(String.valueOf(entity.getTeam().getId()));
         }
 
-//        dto.setCreatedDate(entity.getCreatedDate());
-//        dto.setCreatedBy(entity.getCreatedBy());
-//        dto.setUpdatedDate(entity.getUpdatedDate());
-//        dto.setUpdatedBy(entity.getUpdatedBy());
+        //        dto.setCreatedDate(entity.getCreatedDate());
+        //        dto.setCreatedBy(entity.getCreatedBy());
+        //        dto.setUpdatedDate(entity.getUpdatedDate());
+        //        dto.setUpdatedBy(entity.getUpdatedBy());
 
         return dto;
     }
@@ -51,10 +51,10 @@ public class UserTeamMapperManual {
             entity.setTeam(team);
         }
 
-//        entity.setCreatedDate(dto.getCreatedDate());
-//        entity.setCreatedBy(dto.getCreatedBy());
-//        entity.setUpdatedDate(dto.getUpdatedDate());
-//        entity.setUpdatedBy(dto.getUpdatedBy());
+        //        entity.setCreatedDate(dto.getCreatedDate());
+        //        entity.setCreatedBy(dto.getCreatedBy());
+        //        entity.setUpdatedDate(dto.getUpdatedDate());
+        //        entity.setUpdatedBy(dto.getUpdatedBy());
 
         return entity;
     }

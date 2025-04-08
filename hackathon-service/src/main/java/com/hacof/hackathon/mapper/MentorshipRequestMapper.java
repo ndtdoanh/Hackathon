@@ -27,8 +27,7 @@ public interface MentorshipRequestMapper {
     @Mapping(
             target = "hackathon.documentation",
             source = "hackathon.documentation",
-            qualifiedByName = "fileUrlListToStringList"
-    )
+            qualifiedByName = "fileUrlListToStringList")
     MentorshipRequestDTO toDto(MentorshipRequest mentorshipRequest);
 
     @Mapping(target = "hackathon.id", source = "hackathonId")

@@ -2,8 +2,9 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,7 +31,6 @@ public class MentorshipRequestDTO {
     String teamId;
 
     TeamDTO team;
-
 
     @NotNull(message = "Status is required")
     String status; // enum MentorshipStatus

@@ -3,9 +3,8 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import jakarta.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hacof.hackathon.entity.SponsorshipHackathonDetail;
 
 import lombok.AccessLevel;
@@ -19,25 +18,24 @@ import lombok.experimental.FieldDefaults;
 public class SponsorshipHackathonDTO {
     String id;
 
-    @NotNull(message = "Hackathon ID is required")
+    // @NotNull(message = "Hackathon ID is required")
     String hackathonId;
 
-    @NotNull(message = "Sponsorship ID is required")
+    HackathonDTO hackathon;
+
+    // @NotNull(message = "Sponsorship ID is required")
     String sponsorshipId;
 
-    @NotNull(message = "Total money is required")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    SponsorshipDTO sponsorship;
+
+    // @NotNull(message = "Total money is required")
     double totalMoney;
 
-    @JsonIgnore
     String createdByUserName; // save username
-
-    @JsonIgnore
     LocalDateTime createdAt;
-
-    @JsonIgnore
     String lastModifiedByUserName; // save username
 
-    @JsonIgnore
     LocalDateTime updatedAt;
 
     @JsonIgnore

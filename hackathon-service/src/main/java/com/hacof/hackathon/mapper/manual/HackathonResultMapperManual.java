@@ -58,8 +58,10 @@ public class HackathonResultMapperManual {
         dto.setPlacement(entity.getPlacement());
         dto.setAward(entity.getAward());
 
-        dto.setCreatedByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
-        dto.setLastModifiedByUserName(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setLastModifiedByUserName(
+                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
         dto.setCreatedAt(entity.getCreatedDate());
         dto.setUpdatedAt(entity.getLastModifiedDate());
 

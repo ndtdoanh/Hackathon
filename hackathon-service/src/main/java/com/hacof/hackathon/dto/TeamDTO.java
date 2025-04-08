@@ -25,6 +25,7 @@ public class TeamDTO {
 
     @JsonIgnore
     String deletedById;
+
     UserDTO deletedBy;
 
     List<TeamHackathonDTO> teamHackathons;

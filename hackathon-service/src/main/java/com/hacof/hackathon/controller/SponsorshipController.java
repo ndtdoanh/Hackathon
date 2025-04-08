@@ -57,11 +57,10 @@ public class SponsorshipController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
-    public ResponseEntity<CommonResponse<SponsorshipDTO>> deleteSponsorship(
-            @RequestBody CommonRequest<SponsorshipDTO> request) {
-        String id = request.getData().getId();
-        sponsorshipService.delete(Long.parseLong(id));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<SponsorshipDTO>> deleteSponsorship(@PathVariable Long id) {
+
+        sponsorshipService.delete(id);
         CommonResponse<SponsorshipDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -120,11 +119,9 @@ public class SponsorshipController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/hackathons")
-    public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> deleteSponsorshipHackathon(
-            @RequestBody CommonRequest<SponsorshipHackathonDTO> request) {
-        String id = request.getData().getId();
-        sponsorshipHackathonService.delete(Long.parseLong(request.getData().getId()));
+    @DeleteMapping("/hackathons/{id}")
+    public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> deleteSponsorshipHackathon(@PathVariable String id) {
+        sponsorshipHackathonService.delete(Long.parseLong(id));
         CommonResponse<SponsorshipHackathonDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -173,10 +170,9 @@ public class SponsorshipController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/details")
+    @DeleteMapping("/details/{id}")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailDTO>> deleteSponsorshipHackathonDetail(
-            @RequestBody CommonRequest<SponsorshipHackathonDetailDTO> request) {
-        String id = request.getData().getId();
+            @PathVariable String id) {
         sponsorshipHackathonDetailService.delete(Long.parseLong(id));
         CommonResponse<SponsorshipHackathonDetailDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),

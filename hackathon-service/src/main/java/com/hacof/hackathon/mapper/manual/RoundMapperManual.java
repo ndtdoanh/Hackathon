@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.constant.RoundLocationType;
 import com.hacof.hackathon.constant.RoundStatus;
 import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.dto.RoundLocationDTO;
 import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.Location;
 import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.entity.RoundLocation;
-import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.LocationMapper;
 import com.hacof.hackathon.service.LocationService;
 

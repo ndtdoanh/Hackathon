@@ -4,7 +4,6 @@ package com.hacof.hackathon.controller;
 
 import java.util.List;
 
-import com.hacof.hackathon.dto.HackathonDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;

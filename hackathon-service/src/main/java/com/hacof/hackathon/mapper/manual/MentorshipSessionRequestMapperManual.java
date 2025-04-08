@@ -1,6 +1,5 @@
 package com.hacof.hackathon.mapper.manual;
 
-import com.hacof.hackathon.constant.MentorshipStatus;
 import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
 import com.hacof.hackathon.entity.MentorTeam;
@@ -68,8 +67,10 @@ public class MentorshipSessionRequestMapperManual {
         }
 
         // Audit
-        dto.setCreatedByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
-        dto.setLastModifiedByUserName(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setLastModifiedByUserName(
+                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
         dto.setCreatedAt(entity.getCreatedDate());
         dto.setUpdatedAt(entity.getLastModifiedDate());
 

@@ -8,11 +8,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import lombok.experimental.FieldDefaults;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -50,7 +51,8 @@ public class S3Service {
         metadata.setContentLength(fileSize);
         metadata.setContentType(contentType);
 
-        com.amazonaws.services.s3.model.PutObjectRequest putObjectRequest = new com.amazonaws.services.s3.model.PutObjectRequest(bucketName, fileName, inputStream, metadata);
+        com.amazonaws.services.s3.model.PutObjectRequest putObjectRequest =
+                new com.amazonaws.services.s3.model.PutObjectRequest(bucketName, fileName, inputStream, metadata);
 
         amazonS3.putObject(putObjectRequest);
 

@@ -33,7 +33,7 @@ public class IndividualRegistrationRequest extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     @ManyToOne
     @JoinColumn(name = "hackathon_id")

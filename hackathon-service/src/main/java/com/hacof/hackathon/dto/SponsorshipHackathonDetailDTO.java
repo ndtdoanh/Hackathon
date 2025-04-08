@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,11 +21,13 @@ import lombok.experimental.FieldDefaults;
 public class SponsorshipHackathonDetailDTO {
     String id;
 
-    @NotNull(message = "SponsorshipHackathonId is required")
+    // @NotNull(message = "SponsorshipHackathonId is required")
     String sponsorshipHackathonId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    SponsorshipHackathonDTO sponsorshipHackathon;
 
     @NotNull(message = "MoneySpent is required")
-    double moneySpent;
+    Double moneySpent;
 
     @NotNull(message = "Content is required")
     String content;

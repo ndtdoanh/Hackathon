@@ -6,15 +6,18 @@ import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.IndividualRegistrationRequest;
 import com.hacof.hackathon.entity.User;
 
+import java.time.LocalDateTime;
+
 public class IndividualRegistrationRequestMapperManual {
 
     public static IndividualRegistrationRequest toEntity(
-            IndividualRegistrationRequestDTO dto, Hackathon hackathon, User reviewedBy) {
-        if (dto == null) {
-            return null;
-        }
+            IndividualRegistrationRequestDTO dto,
+            Hackathon hackathon,
+            User reviewedBy) {
+        if (dto == null) return null;
 
         return IndividualRegistrationRequest.builder()
+                .id(dto.getId() != null ? Long.parseLong(dto.getId()) : null)
                 .hackathon(hackathon)
                 .status(IndividualRegistrationRequestStatus.valueOf(dto.getStatus()))
                 .reviewedBy(reviewedBy)
@@ -22,20 +25,46 @@ public class IndividualRegistrationRequestMapperManual {
     }
 
     public static IndividualRegistrationRequestDTO toDto(IndividualRegistrationRequest entity) {
-        if (entity == null) {
-            return null;
-        }
+        if (entity == null) return null;
 
         IndividualRegistrationRequestDTO dto = new IndividualRegistrationRequestDTO();
-        dto.setId(String.valueOf(entity.getId()));
-        dto.setHackathonId(String.valueOf(entity.getHackathon().getId()));
+        dto.setId(entity.getId() != null && entity.getId() != 0 ? String.valueOf(entity.getId()) : null);
+        dto.setHackathonId(
+                entity.getHackathon() != null ? String.valueOf(entity.getHackathon().getId()) : null);
+        dto.setHackathon(
+                entity.getHackathon() != null
+                        ? HackathonMapperManual.toDto(entity.getHackathon())
+                        : null);
         dto.setStatus(entity.getStatus().name());
-        dto.setReviewedBy(UserMapperManual.toDto(entity.getReviewedBy()));
-        //        dto.setCreatedByUserName(entity.getCreatedBy());
-        //        dto.setCreatedAt(entity.getCreatedAt());
-        //        dto.setLastModifiedByUserName(entity.getLastModifiedByUserName());
-        //        dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setReviewById(
+                entity.getReviewedBy() != null ? String.valueOf(entity.getReviewedBy().getId()) : null);
+        dto.setReviewedBy(
+                entity.getReviewedBy() != null
+                        ? UserMapperManual.toDto(entity.getReviewedBy())
+                        : null);
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setCreatedAt(entity.getCreatedDate());
+        dto.setLastModifiedByUserName(
+                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setUpdatedAt(entity.getLastModifiedDate());
 
         return dto;
+    }
+
+    public static void updateEntityFromDto(
+            IndividualRegistrationRequestDTO dto,
+            IndividualRegistrationRequest entity,
+            Hackathon hackathon,
+            User reviewedBy,
+            User currentUser) {
+
+        if (dto == null || entity == null) return;
+
+        entity.setHackathon(hackathon);
+        entity.setReviewedBy(reviewedBy);
+        entity.setStatus(IndividualRegistrationRequestStatus.valueOf(dto.getStatus()));
+        entity.setLastModifiedBy(currentUser);
+        entity.setLastModifiedDate(LocalDateTime.now());
     }
 }
