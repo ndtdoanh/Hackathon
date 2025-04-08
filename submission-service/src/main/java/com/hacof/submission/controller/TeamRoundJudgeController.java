@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
@@ -59,6 +60,7 @@ public class TeamRoundJudgeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_TEAM_ROUND_JUDGE')")
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> create(
             @RequestBody TeamRoundJudgeRequestDTO teamRoundJudgeRequestDTO) {
         CommonResponse<TeamRoundJudgeResponseDTO> response = new CommonResponse<>();
@@ -80,6 +82,7 @@ public class TeamRoundJudgeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_TEAM_ROUND_JUDGE')")
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> update(
             @PathVariable Long id, @RequestBody TeamRoundJudgeRequestDTO updatedTeamRoundJudge) {
         CommonResponse<TeamRoundJudgeResponseDTO> response = new CommonResponse<>();
@@ -102,6 +105,7 @@ public class TeamRoundJudgeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_TEAM_ROUND_JUDGE')")
     public ResponseEntity<CommonResponse<Void>> delete(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
@@ -142,6 +146,7 @@ public class TeamRoundJudgeController {
     }
 
     @DeleteMapping("/by-team-round-judge")
+    @PreAuthorize("hasAuthority('DELETE_BY_TEAM_ROUND_AND_JUDGE_TEAM_ROUND_JUDGE')")
     public ResponseEntity<CommonResponse<Void>> deleteByTeamRoundAndJudge(
             @RequestParam Long teamRoundId, @RequestParam Long judgeId) {
         CommonResponse<Void> response = new CommonResponse<>();

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
@@ -60,6 +61,7 @@ public class RoundMarkCriterionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_ROUND_MARK_CRITERIA')")
     public ResponseEntity<CommonResponse<RoundMarkCriterionResponseDTO>> create(
             @RequestBody RoundMarkCriterionRequestDTO criterion) {
         CommonResponse<RoundMarkCriterionResponseDTO> response = new CommonResponse<>();
@@ -81,6 +83,7 @@ public class RoundMarkCriterionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_ROUND_MARK_CRITERIA')")
     public ResponseEntity<CommonResponse<RoundMarkCriterionResponseDTO>> update(
             @PathVariable Long id, @RequestBody RoundMarkCriterionRequestDTO updatedCriterion) {
         CommonResponse<RoundMarkCriterionResponseDTO> response = new CommonResponse<>();
@@ -103,6 +106,7 @@ public class RoundMarkCriterionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_ROUND_MARK_CRITERIA')")
     public ResponseEntity<CommonResponse<Void>> delete(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ public class SubmissionController {
     private SubmissionService submissionService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_SUBMISSION')")
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> createSubmission(
             @RequestParam(value = "files", required = false) List<MultipartFile> files,
             @RequestParam(value = "roundId", required = false) String roundIdStr,
@@ -93,6 +95,7 @@ public class SubmissionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_SUBMISSION')")
     public ResponseEntity<CommonResponse<SubmissionResponseDTO>> updateSubmission(
             @PathVariable Long id,
             @RequestParam(value = "files", required = false) List<MultipartFile> files,
@@ -126,6 +129,7 @@ public class SubmissionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_SUBMISSION')")
     public ResponseEntity<CommonResponse<Void>> deleteSubmission(@PathVariable Long id) {
         CommonResponse<Void> response = new CommonResponse<>();
         try {

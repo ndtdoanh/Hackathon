@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
@@ -21,6 +22,7 @@ public class JudgeRoundController {
     private JudgeRoundService judgeRoundService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_JUDGE_ROUND')")
     public ResponseEntity<CommonResponse<JudgeRoundResponseDTO>> createJudgeRound(
             @RequestBody JudgeRoundRequestDTO dto) {
         CommonResponse<JudgeRoundResponseDTO> response = new CommonResponse<>();
@@ -42,6 +44,7 @@ public class JudgeRoundController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_JUDGE_ROUND')")
     public ResponseEntity<CommonResponse<JudgeRoundResponseDTO>> updateJudgeRound(
             @PathVariable Long id, @RequestBody JudgeRoundRequestDTO dto) {
         CommonResponse<JudgeRoundResponseDTO> response = new CommonResponse<>();
@@ -68,6 +71,7 @@ public class JudgeRoundController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_JUDGE_ROUND')")
     public ResponseEntity<CommonResponse<Boolean>> deleteJudgeRound(@PathVariable Long id) {
         CommonResponse<Boolean> response = new CommonResponse<>();
         try {
@@ -133,6 +137,7 @@ public class JudgeRoundController {
     }
 
     @PutMapping("/judge/{judgeId}")
+    @PreAuthorize("hasAuthority('UPDATE_BY_JUDGE_JUDGE_ROUND')")
     public ResponseEntity<CommonResponse<JudgeRoundResponseDTO>> updateJudgeRoundByJudgeId(
             @PathVariable Long judgeId, @RequestBody JudgeRoundRequestDTO dto) {
         CommonResponse<JudgeRoundResponseDTO> response = new CommonResponse<>();
@@ -179,6 +184,7 @@ public class JudgeRoundController {
     }
 
     @DeleteMapping("/by-judge-round")
+    @PreAuthorize("hasAuthority('DELETE_BY_JUDGE_AND_ROUND_JUDGE_ROUND')")
     public ResponseEntity<CommonResponse<Void>> deleteJudgeRoundByJudgeIdAndRoundId(
             @RequestParam Long judgeId, @RequestParam Long roundId) {
         CommonResponse<Void> response = new CommonResponse<>();
