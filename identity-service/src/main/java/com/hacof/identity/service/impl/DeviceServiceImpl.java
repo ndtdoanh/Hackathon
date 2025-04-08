@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.mapper.FileUrlMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +39,7 @@ public class DeviceServiceImpl implements DeviceService {
     RoundLocationRepository roundLocationRepository;
     S3Service s3Service;
     FileUrlRepository fileUrlRepository;
+    FileUrlMapper fileUrlMapper;
 
     @Override
     public DeviceResponse createDevice(DeviceRequest request, List<MultipartFile> files) throws IOException {
@@ -98,16 +101,30 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<DeviceResponse> getDevicesByRoundId(String roundId) {
-        return deviceRepository.findByRoundId(roundId).stream()
+        return deviceRepository.findByRoundId(Long.valueOf(roundId)).stream()
                 .map(deviceMapper::toDeviceResponse)
                 .toList();
     }
 
     @Override
     public List<DeviceResponse> getDevicesByRoundLocationId(String roundLocationId) {
-        return deviceRepository.findByRoundLocationId(roundLocationId).stream()
+        return deviceRepository.findByRoundLocationId(Long.valueOf(roundLocationId)).stream()
                 .map(deviceMapper::toDeviceResponse)
                 .toList();
+    }
+
+    @Override
+    public List<FileUrlResponse> getFileUrlsByDeviceId(Long deviceId) {
+        Device device = deviceRepository.findById(deviceId)
+                .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_EXISTED));
+        return fileUrlMapper.toResponseList(device.getFileUrls());
+    }
+
+    @Override
+    public FileUrlResponse getFileUrlById(Long id) {
+        return fileUrlRepository.findById(id)
+                .map(fileUrlMapper::toResponse)
+                .orElseThrow(() -> new AppException(ErrorCode.FILE_URL_NOT_EXISTED));
     }
 
     @Override

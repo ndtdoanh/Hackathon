@@ -5,5 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.identity.entity.FileUrl;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
-public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {}
+public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {
+    Optional<FileUrl> findById(Long id);
+}

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
-    List<Device> findByRoundId(String roundId);
-    List<Device> findByRoundLocationId(String roundLocationId);
+    List<Device> findByRoundId(Long roundId);
+    List<Device> findByRoundLocationId(Long roundLocationId);
 
 }

@@ -117,4 +117,12 @@ public class TeamRoundController {
         return ResponseEntity.ok(new CommonResponse<>(
                 new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
     }
+
+    @PutMapping("/bulk")
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> updateBulkTeamRounds(
+            @Valid @RequestBody List<TeamRoundDTO> teamRoundDTOList) {
+        List<TeamRoundDTO> updatedTeamRounds = teamRoundService.updateBulk(teamRoundDTOList);
+        return ResponseEntity.ok(new CommonResponse<>(
+                new CommonResponse.Result("0000", "Bulk update successful"), updatedTeamRounds));
+    }
 }
