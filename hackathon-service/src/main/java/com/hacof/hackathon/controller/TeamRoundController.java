@@ -92,7 +92,7 @@ public class TeamRoundController {
 
     @PostMapping("/filter-by-round")
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundId(
-            @RequestBody  Map<String, String> request) {
+            @RequestBody Map<String, String> request) {
         String roundId = request.get("roundId");
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
         return ResponseEntity.ok(new CommonResponse<>(
@@ -109,8 +109,9 @@ public class TeamRoundController {
         String roundId = request.get("roundId");
 
         if (judgeId == null || roundId == null) {
-            return ResponseEntity.badRequest().body(new CommonResponse<>(
-                    new CommonResponse.Result("0400", "Invalid request: judgeId or roundId is missing"), null));
+            return ResponseEntity.badRequest()
+                    .body(new CommonResponse<>(
+                            new CommonResponse.Result("0400", "Invalid request: judgeId or roundId is missing"), null));
         }
 
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(judgeId, roundId);
@@ -122,7 +123,18 @@ public class TeamRoundController {
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> updateBulkTeamRounds(
             @Valid @RequestBody List<TeamRoundDTO> teamRoundDTOList) {
         List<TeamRoundDTO> updatedTeamRounds = teamRoundService.updateBulk(teamRoundDTOList);
+        return ResponseEntity.ok(
+                new CommonResponse<>(new CommonResponse.Result("0000", "Bulk update successful"), updatedTeamRounds));
+    }
+
+    @GetMapping("/filter-by-round-and-team")
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundIdAndTeamId(
+            @RequestParam String roundId, @RequestParam String judgeId) {
+        List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(roundId, judgeId);
         return ResponseEntity.ok(new CommonResponse<>(
-                new CommonResponse.Result("0000", "Bulk update successful"), updatedTeamRounds));
+                //                request.getRequestId(),
+                //                LocalDateTime.now(),
+                //                request.getChannel(),
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
     }
 }

@@ -79,5 +79,4 @@ public class TeamMapperManual {
 
         return dto;
     }
-
 }

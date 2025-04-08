@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +18,7 @@ import com.hacof.hackathon.dto.TeamRoundSearchDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
+import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import com.hacof.hackathon.mapper.manual.TeamRoundMapperManual;
 import com.hacof.hackathon.repository.RoundRepository;
 import com.hacof.hackathon.repository.TeamRepository;
@@ -220,12 +220,9 @@ public class TeamRoundServiceImpl implements TeamRoundService {
         Long jId = Long.parseLong(judgeId);
         Long rId = Long.parseLong(roundId);
 
-        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundId(rId);
+        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundIdAndJudgeId(rId, jId);
 
         return teamRounds.stream()
-                .filter(tr -> tr.getTeamRoundJudges() != null &&
-                        tr.getTeamRoundJudges().stream()
-                                .anyMatch(j -> j.getJudge().getId() == (jId)))
                 .map(tr -> {
                     TeamRoundDTO dto = TeamRoundMapperManual.toDto(tr);
                     dto.setTeam(TeamMapperManual.toDtoWithLeaderAndMembers(tr.getTeam()));
@@ -239,17 +236,16 @@ public class TeamRoundServiceImpl implements TeamRoundService {
     public List<TeamRoundDTO> updateBulk(List<TeamRoundDTO> teamRoundDTOs) {
         List<TeamRound> teamRounds = new ArrayList<>();
         for (TeamRoundDTO teamRoundDTO : teamRoundDTOs) {
-            TeamRound existingTeamRound = teamRoundRepository.findById(Long.parseLong(teamRoundDTO.getId()))
-                    .orElseThrow(() -> new ResourceNotFoundException("Not found team round with ID: " + teamRoundDTO.getId()));
+            TeamRound existingTeamRound = teamRoundRepository
+                    .findById(Long.parseLong(teamRoundDTO.getId()))
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Not found team round with ID: " + teamRoundDTO.getId()));
 
             existingTeamRound.setStatus(teamRoundDTO.getStatus());
             existingTeamRound.setDescription(teamRoundDTO.getDescription());
-
 
             teamRounds.add(teamRoundRepository.save(existingTeamRound));
         }
         return teamRounds.stream().map(TeamRoundMapperManual::toDto).collect(Collectors.toList());
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.hacof.hackathon.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +37,7 @@ public class TeamRoundJudge extends AuditCreatedBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_round_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     TeamRound teamRound;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -3,6 +3,7 @@ package com.hacof.hackathon.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -63,5 +64,6 @@ public class TeamRound extends AuditUserBase {
     @OneToMany(
             mappedBy = "teamRound",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonManagedReference
     List<TeamRoundJudge> teamRoundJudges = new ArrayList<>();
 }
