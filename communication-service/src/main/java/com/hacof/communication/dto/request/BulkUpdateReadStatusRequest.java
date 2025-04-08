@@ -1,5 +1,6 @@
 package com.hacof.communication.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BulkUpdateReadStatusRequest {
     List<String> deliveryIds;
+
+    @JsonProperty("isRead")
     boolean isRead;
 }
