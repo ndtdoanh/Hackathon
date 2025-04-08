@@ -1,7 +1,15 @@
 package com.hacof.hackathon.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.hacof.hackathon.dto.ApiResponse;
+import com.hacof.hackathon.dto.FileUrlResponse;
+import com.hacof.hackathon.entity.FileUrl;
+import com.hacof.hackathon.mapper.FileUrlMapper;
+import com.hacof.hackathon.repository.FileUrlRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class UploadController {
 
     S3Service s3Service;
+    FileUrlMapper fileUrlMapper;
+    FileUrlRepository fileUrlRepository;
 
     @PostMapping
     public ResponseEntity<CommonResponse<String>> uploadImage(@RequestParam("file") MultipartFile file) {
@@ -48,5 +58,38 @@ public class UploadController {
         CommonResponse<List<String>> response =
                 new CommonResponse<>(new CommonResponse.Result("0000", "Files retrieved successfully"), fileUrls);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/upload")
+    public ApiResponse<List<FileUrlResponse>> uploadFiles(@RequestParam("files") List<MultipartFile> files)
+            throws IOException {
+        List<FileUrlResponse> fileUrlResponses = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String originalFileName = file.getOriginalFilename();
+            long fileSize = file.getSize();
+            String contentType = file.getContentType();
+
+            InputStream inputStream = file.getInputStream();
+
+            String fileUrl = s3Service.uplFile(inputStream, originalFileName, fileSize, contentType);
+
+            FileUrl fileUrlEntity = new FileUrl();
+            fileUrlEntity.setFileName(originalFileName);
+            fileUrlEntity.setFileUrl(fileUrl);
+            fileUrlEntity.setFileType(contentType);
+            fileUrlEntity.setFileSize((int) fileSize);
+
+            fileUrlRepository.save(fileUrlEntity);
+
+            FileUrlResponse fileUrlResponse = fileUrlMapper.toResponse(fileUrlEntity);
+
+            fileUrlResponses.add(fileUrlResponse);
+        }
+
+        return ApiResponse.<List<FileUrlResponse>>builder()
+                .message("Files uploaded successfully")
+                .data(fileUrlResponses)
+                .build();
     }
 }

@@ -1,11 +1,15 @@
 package com.hacof.hackathon.service.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,17 +26,35 @@ import software.amazon.awssdk.services.s3.model.*;
 public class S3Service {
     S3Client s3Client;
     String bucketName;
+    AmazonS3 amazonS3;
 
     public S3Service(
             @Value("${aws.s3.access-key}") String accessKey,
             @Value("${aws.s3.secret-key}") String secretKey,
             @Value("${aws.s3.region}") String region,
-            @Value("${aws.s3.bucket-name}") String bucketName) {
+            @Value("${aws.s3.bucket-name}") String bucketName,
+            AmazonS3 amazonS3) {
         this.s3Client = S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
                 .build();
         this.bucketName = bucketName;
+        this.amazonS3 = amazonS3;
+    }
+
+    public String uplFile(InputStream inputStream, String originalFileName, long fileSize, String contentType)
+            throws IOException {
+        String fileName = "hacofpt/" + UUID.randomUUID().toString() + "_" + originalFileName;
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(fileSize);
+        metadata.setContentType(contentType);
+
+        com.amazonaws.services.s3.model.PutObjectRequest putObjectRequest = new com.amazonaws.services.s3.model.PutObjectRequest(bucketName, fileName, inputStream, metadata);
+
+        amazonS3.putObject(putObjectRequest);
+
+        return amazonS3.getUrl(bucketName, fileName).toString();
     }
 
     public String uploadFile(MultipartFile file) {

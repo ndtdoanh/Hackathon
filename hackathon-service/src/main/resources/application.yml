@@ -23,7 +23,7 @@ spring:
     url: "jdbc:mysql://localhost:3306/hacof"
     #    driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: trungkien
+    password: 12345
 
   jpa:
     hibernate:

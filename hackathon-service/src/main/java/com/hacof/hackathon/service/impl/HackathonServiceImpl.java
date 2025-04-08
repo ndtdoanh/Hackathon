@@ -2,8 +2,11 @@ package com.hacof.hackathon.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.entity.FileUrl;
+import com.hacof.hackathon.repository.FileUrlRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -37,13 +40,39 @@ public class HackathonServiceImpl implements HackathonService {
     HackathonRepository hackathonRepository;
     HackathonMapper hackathonMapper;
     UserRepository userRepository;
+    FileUrlRepository fileUrlRepository;
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
         validateEnumValues(hackathonDTO);
+
         Hackathon hackathon = hackathonMapper.toEntity(hackathonDTO);
-        hackathon.setDocumentation(hackathonMapper.mapToFileUrlList(hackathonDTO.getDocumentation()));
-        return hackathonMapper.toDto(hackathonRepository.save(hackathon));
+        hackathon.setDocumentation(null);
+
+        hackathon = hackathonRepository.save(hackathon);
+
+        List<FileUrl> fileUrls = fileUrlRepository
+                .findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
+
+        for (FileUrl file : fileUrls) {
+            file.setHackathon(hackathon);
+        }
+        fileUrlRepository.saveAll(fileUrls);
+        hackathon.setDocumentation(fileUrls);
+
+        if (hackathonDTO.getBannerImageUrl() != null) {
+            Optional<FileUrl> bannerFileUrlOptional =
+                    fileUrlRepository.findByFileUrlAndHackathonIsNull(hackathonDTO.getBannerImageUrl());
+
+            final Hackathon finalHackathon = hackathon;
+            bannerFileUrlOptional.ifPresent(bannerFileUrl -> {
+                bannerFileUrl.setHackathon(finalHackathon);
+                fileUrlRepository.save(bannerFileUrl);
+            });
+        }
+
+        hackathon = hackathonRepository.save(hackathon);
+        return hackathonMapper.toDto(hackathon);
     }
 
     @Override
