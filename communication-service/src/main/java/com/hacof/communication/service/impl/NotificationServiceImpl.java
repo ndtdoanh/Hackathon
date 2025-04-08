@@ -6,12 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import com.hacof.communication.service.EmailService;
 import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.constant.NotificationStatus;
@@ -42,6 +44,7 @@ import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationServiceImpl implements NotificationService {
     NotificationRepository notificationRepository;
@@ -115,7 +118,7 @@ public class NotificationServiceImpl implements NotificationService {
                             .recipient(user)
                             .role(RoleType.fromString(userRoleMap.get(user.getId()).getName()))
                             .method(deliveryRequest.getMethod())
-                            .status(NotificationStatus.PENDING)
+                            .status(NotificationStatus.SENT)
                             .build())
                     .collect(Collectors.toList());
 
@@ -124,12 +127,40 @@ public class NotificationServiceImpl implements NotificationService {
                 notification.setNotificationDeliveries(deliveries);
 
                 if (deliveryRequest.getMethod() == NotificationMethod.EMAIL) {
-                    sendEmailToUsers(deliveries);
+                    sendEmailToUsersAsync(deliveries);
                 }
             }
         }
 
         return notificationMapper.toNotificationResponse(notification);
+    }
+
+    public void sendEmailToUsersAsync(List<NotificationDelivery> deliveries) {
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (NotificationDelivery delivery : deliveries) {
+            User recipient = delivery.getRecipient();
+            Notification notification = delivery.getNotification();
+
+            if (recipient.getEmail() != null && !recipient.getEmail().isEmpty()) {
+                String subject = "New announcement from the system";
+                String content = buildNotificationEmailContent(notification.getContent(), notification.getMetadata());
+
+                CompletableFuture<Void> future = emailService.sendEmailAsync(recipient.getEmail(), subject, content)
+                        .thenRun(() -> {
+                            delivery.setStatus(NotificationStatus.SENT);
+                            notificationDeliveryRepository.save(delivery);
+                        })
+                        .exceptionally(ex -> {
+                            delivery.setStatus(NotificationStatus.FAILED);
+                            notificationDeliveryRepository.save(delivery);
+                            log.error("Failed to send email to {}", recipient.getEmail(), ex);
+                            return null;
+                        });
+
+                futures.add(future);
+            }
+        }
     }
 
     public void sendEmailToUsers(List<NotificationDelivery> deliveries) {
@@ -142,7 +173,12 @@ public class NotificationServiceImpl implements NotificationService {
                     String subject = "New announcement from the system";
                     String content = buildNotificationEmailContent(notification.getContent(), notification.getMetadata());
                     emailService.sendEmail(recipient.getEmail(), subject, content);
+
+                    delivery.setStatus(NotificationStatus.SENT);
+                    notificationDeliveryRepository.save(delivery);
                 } catch (MessagingException e) {
+                    delivery.setStatus(NotificationStatus.FAILED);
+                    notificationDeliveryRepository.save(delivery);
                     e.printStackTrace();
                 }
             }
