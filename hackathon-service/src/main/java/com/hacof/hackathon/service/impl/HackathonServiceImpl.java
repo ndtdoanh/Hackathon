@@ -45,6 +45,7 @@ public class HackathonServiceImpl implements HackathonService {
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
         validateEnumValues(hackathonDTO);
+        validateUniqueTitleForCreate(hackathonDTO.getTitle());
 
         Hackathon hackathon = hackathonMapper.toEntity(hackathonDTO);
         hackathon.setDocumentation(null);
@@ -83,6 +84,7 @@ public class HackathonServiceImpl implements HackathonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + id));
 
         validateEnumValues(hackathonDTO);
+        validateUniqueTitleForUpdate(id, hackathonDTO.getTitle());
         // get current user's information from SecurityContext
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -94,7 +96,6 @@ public class HackathonServiceImpl implements HackathonService {
                 .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
-        // hackathonMapper.updateEntityFromDto(hackathonDTO, existingHackathon);
         existingHackathon.setTitle(hackathonDTO.getTitle());
         existingHackathon.setSubTitle(hackathonDTO.getSubTitle());
         existingHackathon.setBannerImageUrl(hackathonDTO.getBannerImageUrl());
@@ -111,7 +112,27 @@ public class HackathonServiceImpl implements HackathonService {
         existingHackathon.setOrganization(OrganizationStatus.valueOf(hackathonDTO.getOrganization()));
         existingHackathon.setMaxTeams(hackathonDTO.getEnrollmentCount());
         existingHackathon.setStatus(Status.valueOf(hackathonDTO.getStatus()));
-        existingHackathon.setDocumentation(hackathonMapper.mapToFileUrlList(hackathonDTO.getDocumentation()));
+        //existingHackathon.setDocumentation(hackathonMapper.mapToFileUrlList(hackathonDTO.getDocumentation()));
+        /** about update documentation:
+         * Step 1: Set null current documentations
+         * Step 2: Set new documentations
+         */
+        // Step 1: Set null current documentations
+        List<FileUrl> currentDocs = fileUrlRepository.findAllByHackathon(existingHackathon);
+        for (FileUrl doc : currentDocs) {
+            doc.setHackathon(null);
+        }
+        fileUrlRepository.saveAll(currentDocs);
+
+        // Step 2: Set new documentations
+        List<FileUrl> fileUrls = fileUrlRepository
+                .findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
+
+        for (FileUrl file : fileUrls) {
+            file.setHackathon(existingHackathon); // reassign for hackathon
+        }
+        fileUrlRepository.saveAll(fileUrls);
+        existingHackathon.setDocumentation(fileUrls);
 
         // still not change createdBy
         User createdBy = existingHackathon.getCreatedBy();
@@ -169,6 +190,18 @@ public class HackathonServiceImpl implements HackathonService {
             OrganizationStatus.valueOf(hackathonDTO.getOrganization());
         } catch (IllegalArgumentException e) {
             throw new InvalidInputException("Invalid organization value: " + hackathonDTO.getOrganization());
+        }
+    }
+
+    private void validateUniqueTitleForCreate(String title) {
+        if (existsByTitle(title)) {
+            throw new InvalidInputException("Hackathon with title '" + title + "' already exists.");
+        }
+    }
+
+    private void validateUniqueTitleForUpdate(String id, String title) {
+        if(existsByTitleAndIdNot(title, Long.parseLong(id))) {
+            throw new InvalidInputException("Hackathon with title '" + title + "' already exists.");
         }
     }
 }

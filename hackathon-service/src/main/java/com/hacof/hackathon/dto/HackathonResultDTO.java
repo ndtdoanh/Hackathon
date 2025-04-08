@@ -15,9 +15,11 @@ public class HackathonResultDTO {
 
     @NotNull(message = "Hackathon Id is required")
     String hackathonId;
+    HackathonDTO hackathon;
 
     @NotNull(message = "Team Id is required")
     String teamId;
+    TeamDTO team;
 
     @NotNull(message = "Total Score is required")
     int totalScore;

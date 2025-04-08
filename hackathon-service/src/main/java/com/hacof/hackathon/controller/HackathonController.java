@@ -71,10 +71,6 @@ public class HackathonController {
     @PostMapping
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
             @Valid @RequestBody CommonRequest<HackathonDTO> request) {
-        log.debug("Received request to create hackathon: {}", request);
-        // validate unique title
-        validateUniqueTitleForCreate(request.getData().getTitle());
-
         HackathonDTO createdHackathon = hackathonService.create(request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
@@ -89,10 +85,6 @@ public class HackathonController {
     @PutMapping
     public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(
             @Valid @RequestBody CommonRequest<HackathonDTO> request) {
-        // validate unique title
-        validateUniqueTitleForUpdate(
-                request.getData().getId(), request.getData().getTitle());
-
         HackathonDTO updatedHackathon =
                 hackathonService.update(request.getData().getId(), request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
@@ -105,11 +97,13 @@ public class HackathonController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
-    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@RequestBody HackathonDTO request) {
-        Long id = Long.parseLong((request.getId()));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<Void>> deleteHackathon(@PathVariable String id) {
         log.debug("Received request to delete hackathon with id: {}", id);
-        hackathonService.deleteHackathon(id);
+        if (id == null || id.isEmpty()) {
+            throw new InvalidInputException("Hackathon ID cannot be null or empty");
+        }
+        hackathonService.deleteHackathon(Long.parseLong(id));
         CommonResponse<Void> response = new CommonResponse<>(
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon deleted successfully"), null);
         return ResponseEntity.ok(response);
@@ -140,10 +134,10 @@ public class HackathonController {
                 new CommonResponse.Result("0000", "Hackathon result updated successfully"), updated));
     }
 
-    @DeleteMapping("/results")
+    @DeleteMapping("/results/{id}")
     public ResponseEntity<CommonResponse<HackathonResultDTO>> deleteHackathonResult(
-            @RequestBody CommonRequest<HackathonResultDTO> request) {
-        hackathonResultService.delete(request.getData().getId());
+            @PathVariable String id) {
+        hackathonResultService.delete(Long.parseLong(id));
 
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),
@@ -154,31 +148,23 @@ public class HackathonController {
 
     @PostMapping("/results/bulk-create")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> createBulkHackathonResults(
-            @Valid @RequestBody CommonRequest<List<HackathonResultDTO>> request) {
-        log.debug("Bulk creating hackathon results");
-        List<HackathonResultDTO> created = hackathonResultService.createBulk(request.getData());
+            @Valid @RequestBody List<HackathonResultDTO> request) {
+        List<HackathonResultDTO> created = hackathonResultService.createBulk(request);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
                 new CommonResponse.Result("0000", "Bulk hackathon results created successfully"), created));
     }
 
     @PutMapping("/results/bulk-update")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> updateBulkHackathonResults(
-            @Valid @RequestBody CommonRequest<List<HackathonResultDTO>> request) {
-        log.debug("Bulk updating hackathon results");
-        List<HackathonResultDTO> updated = hackathonResultService.updateBulk(request.getData());
+            @Valid @RequestBody List<HackathonResultDTO> request) {
+        List<HackathonResultDTO> created = hackathonResultService.updateBulk(request);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
-                new CommonResponse.Result("0000", "Bulk hackathon results updated successfully"), updated));
+                new CommonResponse.Result("0000", "Bulk hackathon results created successfully"), created));
     }
 
-    @GetMapping("/results/{hackathonId}")
+    @GetMapping("/results/filter-by-hackathonId")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> getAllByHackathonId(
-            @PathVariable String hackathonId) {
+            @RequestParam("hackathonId") String hackathonId) {
         List<HackathonResultDTO> results = hackathonResultService.getAllByHackathonId(hackathonId);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),
@@ -187,15 +173,23 @@ public class HackathonController {
                 new CommonResponse.Result("0000", "Fetched hackathon results successfully"), results));
     }
 
-    private void validateUniqueTitleForCreate(String title) {
-        if (hackathonService.existsByTitle(title)) {
-            throw new InvalidInputException("Hackathon title already exists");
-        }
+    @GetMapping("/results")
+    public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> getAllHackathonResults() {
+        List<HackathonResultDTO> results = hackathonResultService.getAll();
+        return ResponseEntity.ok(new CommonResponse<>(
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all hackathon results successfully"), results));
     }
 
-    private void validateUniqueTitleForUpdate(String id, String title) {
-        if (hackathonService.existsByTitleAndIdNot(title, Long.parseLong(id))) {
-            throw new InvalidInputException("Hackathon title already exists");
-        }
+    @GetMapping("/results/{id}")
+    public ResponseEntity<CommonResponse<HackathonResultDTO>> getHackathonResultById(@PathVariable Long id) {
+        HackathonResultDTO result = hackathonResultService.getById(id);
+        return ResponseEntity.ok(new CommonResponse<>(
+                //                UUID.randomUUID().toString(),
+                //                LocalDateTime.now(),
+                //                "HACOF",
+                new CommonResponse.Result("0000", "Fetched hackathon result successfully"), result));
     }
 }

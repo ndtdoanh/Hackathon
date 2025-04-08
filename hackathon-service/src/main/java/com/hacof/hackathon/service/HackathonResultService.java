@@ -9,11 +9,15 @@ public interface HackathonResultService {
 
     HackathonResultDTO update(String id, HackathonResultDTO hackathonResultDTO);
 
-    void delete(String id);
+    void delete(Long id);
 
     List<HackathonResultDTO> createBulk(List<HackathonResultDTO> hackathonResultDTOs);
 
     List<HackathonResultDTO> updateBulk(List<HackathonResultDTO> hackathonResultDTOs);
 
     List<HackathonResultDTO> getAllByHackathonId(String hackathonId);
+
+    List<HackathonResultDTO> getAll();
+
+    HackathonResultDTO getById(Long id);
 }
