@@ -1,6 +1,7 @@
 package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -33,11 +34,11 @@ public class LocationDTO {
     Double longitude;
 
     @JsonIgnore
-    List<RoundLocationDTO> roundLocations;
+    List<RoundLocationDTO> roundLocations = new ArrayList<>();
 
     // Audit fields
     String createdByUserName; // save username
     LocalDateTime createdAt;
     String lastModifiedByUserName; // save username
-    LocalDateTime updatedAt;
+    LocalDateTime updatedAt = LocalDateTime.now();
 }
