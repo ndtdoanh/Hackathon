@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hacof.identity.constant.CategoryStatus;
-import com.hacof.identity.constant.OrganizationStatus;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.hacof.identity.constant.CategoryStatus;
+import com.hacof.identity.constant.OrganizationStatus;
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.entity.Hackathon;
 import com.hacof.identity.entity.Permission;
@@ -47,55 +47,41 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "GET_LOGS",
                             "GET_LOG",
                             "SEARCH_LOGS",
-
                             "CREATE_DEVICE",
                             "UPDATE_DEVICE",
                             "DELETE_DEVICE",
-
                             "CREATE_PERMISSION",
                             "UPDATE_PERMISSION",
                             "DELETE_PERMISSION",
                             "DELETE_PERMISSION_FROM_ROLE",
-
                             "CREATE_ROLE",
                             "UPDATE_ROLE",
                             "DELETE_ROLE",
-
                             "DELETE_USER",
-
                             "CREATE_USER_DEVICE",
                             "UPDATE_USER_DEVICE",
                             "DELETE_USER_DEVICE",
-
                             "CREATE_USER_DEVICE_TRACK",
                             "UPDATE_USER_DEVICE_TRACK",
                             "DELETE_USER_DEVICE_TRACK",
-
                             "CREATE_USER_HACKATHON",
                             "DELETE_USER_HACKATHON",
-
                             "CREATE_NOTIFICATION",
                             "DELETE_NOTIFICATION",
                             "UPDATE_READ_STATUS",
-
                             "APPROVE_BLOG_POST",
                             "REJECT_BLOG_POST",
-                            "DELETE_BLOG_POST"
-                    ),
+                            "DELETE_BLOG_POST"),
             "ORGANIZER",
                     Set.of(
                             "CREATE_USER_HACKATHON",
                             "DELETE_USER_HACKATHON",
-
                             "UPDATE_JUDGE_MENTOR_BY_ORGANIZER",
-
                             "CREATE_NOTIFICATION",
                             "DELETE_NOTIFICATION",
                             "UPDATE_READ_STATUS",
-
                             "CREATE_BLOG_POST",
-                            "SUBMIT_BLOG_POST"
-                    ),
+                            "SUBMIT_BLOG_POST"),
             "JUDGE", Set.of(),
             "MENTOR", Set.of(),
             "GUEST", Set.of(),
@@ -139,44 +125,44 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_LOGS", "/api/v1/logs", "GET", "ACTIVITY_LOGS"),
                 new Permission("GET_LOG", "/api/v1/logs/{Id}", "GET", "ACTIVITY_LOGS"),
                 new Permission("SEARCH_LOGS", "/api/v1/logs/search", "GET", "ACTIVITY_LOGS"),
-
                 new Permission("CREATE_DEVICE", "/api/v1/devices", "POST", "DEVICES"),
                 new Permission("UPDATE_DEVICE", "/api/v1/devices/{Id}", "PUT", "DEVICES"),
                 new Permission("DELETE_DEVICE", "/api/v1/devices/{Id}", "DELETE", "DEVICES"),
-
                 new Permission("CREATE_PERMISSION", "/api/v1/permissions", "POST", "PERMISSIONS"),
                 new Permission("UPDATE_PERMISSION", "/api/v1/permissions/{Id}", "PUT", "PERMISSIONS"),
                 new Permission("DELETE_PERMISSION", "/api/v1/permissions/{Id}", "DELETE", "PERMISSIONS"),
-                new Permission("DELETE_PERMISSION_FROM_ROLE", "/api/v1/permissions/{roleId}/permissions/{permissionId}", "DELETE", "PERMISSIONS"),
-
+                new Permission(
+                        "DELETE_PERMISSION_FROM_ROLE",
+                        "/api/v1/permissions/{roleId}/permissions/{permissionId}",
+                        "DELETE",
+                        "PERMISSIONS"),
                 new Permission("CREATE_ROLE", "/api/v1/roles", "POST", "ROLES"),
                 new Permission("UPDATE_ROLE", "/api/v1/roles/{Id}", "PUT", "ROLES"),
                 new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"),
-
                 new Permission("UPDATE_JUDGE_MENTOR_BY_ORGANIZER", "/api/v1/users/organizer", "PUT", "USERS"),
                 new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"),
-
                 new Permission("CREATE_USER_DEVICE", "/api/v1/user-devices", "POST", "USER_DEVICES"),
                 new Permission("UPDATE_USER_DEVICE", "/api/v1/user-devices/{Id}", "PUT", "USER_DEVICES"),
                 new Permission("DELETE_USER_DEVICE", "/api/v1/user-devices/{Id}", "DELETE", "USER_DEVICES"),
-
                 new Permission("CREATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks", "POST", "USER_DEVICE_TRACKS"),
-                new Permission("UPDATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "PUT", "USER_DEVICE_TRACKS"),
-                new Permission("DELETE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "DELETE", "USER_DEVICE_TRACKS"),
-
+                new Permission(
+                        "UPDATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "PUT", "USER_DEVICE_TRACKS"),
+                new Permission(
+                        "DELETE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "DELETE", "USER_DEVICE_TRACKS"),
                 new Permission("CREATE_USER_HACKATHON", "/api/v1/user-hackathons", "POST", "USER_HACKATHONS"),
                 new Permission("DELETE_USER_HACKATHON", "/api/v1/user-hackathons/{Id}", "DELETE", "USER_HACKATHONS"),
-
                 new Permission("CREATE_NOTIFICATION", "/api/v1/notifications", "POST", "NOTIFICATIONS"),
                 new Permission("DELETE_NOTIFICATION", "/api/v1/notifications/{Id}", "DELETE", "NOTIFICATIONS"),
-                new Permission("UPDATE_READ_STATUS", "/api/v1/notifications/notification-deliveries/read-status", "PUT", "NOTIFICATIONS"),
-
+                new Permission(
+                        "UPDATE_READ_STATUS",
+                        "/api/v1/notifications/notification-deliveries/read-status",
+                        "PUT",
+                        "NOTIFICATIONS"),
                 new Permission("CREATE_BLOG_POST", "/api/v1/blog-posts", "POST", "BLOG_POSTS"),
                 new Permission("SUBMIT_BLOG_POST", "/api/v1/blog-posts/{id}/submit", "PUT", "BLOG_POSTS"),
                 new Permission("APPROVE_BLOG_POST", "/api/v1/blog-posts/{id}/approve", "PUT", "BLOG_POSTS"),
                 new Permission("REJECT_BLOG_POST", "/api/v1/blog-posts/{id}/reject", "PUT", "BLOG_POSTS"),
-                new Permission("DELETE_BLOG_POST", "/api/v1/blog-posts/{id}", "DELETE", "BLOG_POSTS")
-        );
+                new Permission("DELETE_BLOG_POST", "/api/v1/blog-posts/{id}", "DELETE", "BLOG_POSTS"));
 
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
@@ -514,7 +500,6 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .organization(OrganizationStatus.FPTU)
                         .status(Status.ACTIVE)
                         .build(),
-
                 Hackathon.builder()
                         .title("Blockchain Revolution")
                         .subTitle("Building the Next-Gen Blockchain Apps")
@@ -533,7 +518,6 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .organization(OrganizationStatus.FPTU)
                         .status(Status.ACTIVE)
                         .build(),
-
                 Hackathon.builder()
                         .title("HealthTech Hackathon")
                         .subTitle("Innovating Healthcare Solutions")
@@ -552,7 +536,6 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .organization(OrganizationStatus.FPTU)
                         .status(Status.ACTIVE)
                         .build(),
-
                 Hackathon.builder()
                         .title("Cybersecurity Challenge")
                         .subTitle("Defending the Digital World")
@@ -571,7 +554,6 @@ public class DatabaseInitializer implements CommandLineRunner {
                         .organization(OrganizationStatus.FPTU)
                         .status(Status.ACTIVE)
                         .build(),
-
                 Hackathon.builder()
                         .title("GreenTech Innovation")
                         .subTitle("Sustainable Solutions for a Greener Future")
