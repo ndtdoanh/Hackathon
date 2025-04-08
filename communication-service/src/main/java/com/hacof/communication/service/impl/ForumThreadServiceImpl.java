@@ -2,6 +2,7 @@ package com.hacof.communication.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,24 @@ public class ForumThreadServiceImpl implements ForumThreadService {
 
     @Override
     public ForumThreadResponseDTO createForumThread(ForumThreadRequestDTO forumThreadRequestDTO) {
-        Optional<ForumCategory> forumCategoryOptional =
-                forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
+        // Validate title and forumCategoryId
+        if (forumThreadRequestDTO.getTitle() == null || forumThreadRequestDTO.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null or empty.");
+        }
+        if (forumThreadRequestDTO.getForumCategoryId() == null || forumThreadRequestDTO.getForumCategoryId().isEmpty()) {
+            throw new IllegalArgumentException("Forum category ID cannot be null or empty.");
+        }
+
+        // Check if the ForumCategory exists
+        Optional<ForumCategory> forumCategoryOptional = forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }
         ForumCategory forumCategory = forumCategoryOptional.get();
+
+        if (forumThreadRepository.existsByTitleAndForumCategoryId(forumThreadRequestDTO.getTitle(), forumCategory.getId())) {
+            throw new IllegalArgumentException("A thread with the same title already exists in this category.");
+        }
 
         ForumThread forumThread = ForumThreadMapper.toEntity(forumThreadRequestDTO, forumCategory);
         forumThread = forumThreadRepository.save(forumThread);
@@ -45,23 +58,35 @@ public class ForumThreadServiceImpl implements ForumThreadService {
 
     @Override
     public ForumThreadResponseDTO updateForumThread(Long id, ForumThreadRequestDTO forumThreadRequestDTO) {
+        if (forumThreadRequestDTO.getTitle() == null || forumThreadRequestDTO.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null or empty.");
+        }
+        if (forumThreadRequestDTO.getForumCategoryId() == null || forumThreadRequestDTO.getForumCategoryId().isEmpty()) {
+            throw new IllegalArgumentException("Forum category ID cannot be null or empty.");
+        }
+
         Optional<ForumThread> forumThreadOptional = forumThreadRepository.findById(id);
         if (!forumThreadOptional.isPresent()) {
             throw new IllegalArgumentException("ForumThread not found!");
         }
-
         ForumThread forumThread = forumThreadOptional.get();
-        Optional<ForumCategory> forumCategoryOptional =
-                forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
+
+        // Check if the ForumCategory exists
+        Optional<ForumCategory> forumCategoryOptional = forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }
         ForumCategory forumCategory = forumCategoryOptional.get();
 
+        if (forumThreadRepository.existsByTitleAndForumCategoryId(forumThreadRequestDTO.getTitle(), forumCategory.getId())) {
+            throw new IllegalArgumentException("A thread with the same title already exists in this category.");
+        }
+
         forumThread.setTitle(forumThreadRequestDTO.getTitle());
         forumThread.setForumCategory(forumCategory);
         forumThread.setLocked(forumThreadRequestDTO.isLocked());
         forumThread.setPinned(forumThreadRequestDTO.isPinned());
+
         forumThread = forumThreadRepository.save(forumThread);
 
         return ForumThreadMapper.toResponseDTO(forumThread);
@@ -73,11 +98,9 @@ public class ForumThreadServiceImpl implements ForumThreadService {
         if (!forumThreadOptional.isPresent()) {
             throw new IllegalArgumentException("ForumThread not found!");
         }
-
         ForumThread forumThread = forumThreadOptional.get();
 
-        if (forumThread.getThreadPosts() != null
-                && !forumThread.getThreadPosts().isEmpty()) {
+        if (forumThread.getThreadPosts() != null && !forumThread.getThreadPosts().isEmpty()) {
             throw new IllegalArgumentException("Cannot delete ForumThread because it contains thread posts!");
         }
         forumThreadRepository.deleteById(id);
@@ -95,6 +118,15 @@ public class ForumThreadServiceImpl implements ForumThreadService {
     @Override
     public List<ForumThreadResponseDTO> getAllForumThreads() {
         List<ForumThread> forumThreads = forumThreadRepository.findAll();
-        return ForumThreadMapper.toResponseDTOList(forumThreads);
+        return forumThreads.stream().map(ForumThreadMapper::toResponseDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ForumThreadResponseDTO> getForumThreadsByCategoryId(Long categoryId) {
+        List<ForumThread> forumThreads = forumThreadRepository.findByForumCategoryId(categoryId);
+        if (forumThreads.isEmpty()) {
+            throw new IllegalArgumentException("No forum threads found for category ID: " + categoryId);
+        }
+        return forumThreads.stream().map(ForumThreadMapper::toResponseDTO).collect(Collectors.toList());
     }
 }

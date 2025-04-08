@@ -1,5 +1,6 @@
 package com.hacof.communication.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,12 +31,12 @@ public class ForumCategoryMapper {
         responseDTO.setCreatedDate(entity.getCreatedDate());
         responseDTO.setLastModifiedDate(entity.getLastModifiedDate());
 
-        // Map forumThreads to ForumThreadResponseDTO
-        List<ForumThreadResponseDTO> forumThreadsDTO = entity.getForumThreads().stream()
-                .map(
-                        ForumCategoryMapper
-                                ::toForumThreadResponseDTO) // Convert each ForumThread to ForumThreadResponseDTO
-                .collect(Collectors.toList());
+        // Kiểm tra null cho forumThreads
+        List<ForumThreadResponseDTO> forumThreadsDTO = (entity.getForumThreads() != null)
+                ? entity.getForumThreads().stream()
+                .map(ForumCategoryMapper::toForumThreadResponseDTO)
+                .collect(Collectors.toList())
+                : new ArrayList<>();  // Trường hợp forumThreads là null, trả về danh sách rỗng
 
         responseDTO.setForumThreads(forumThreadsDTO);
 
@@ -49,29 +50,18 @@ public class ForumCategoryMapper {
         forumThreadResponseDTO.setTitle(forumThread.getTitle());
         forumThreadResponseDTO.setCreatedBy(forumThread.getCreatedBy().getUsername());
         forumThreadResponseDTO.setCreatedDate(forumThread.getCreatedDate().toString());
-        forumThreadResponseDTO.setLastModifiedDate(
-                forumThread.getLastModifiedDate().toString());
+        forumThreadResponseDTO.setLastModifiedDate(forumThread.getLastModifiedDate().toString());
 
         // Map ForumCategory of ForumThread (In case ForumThread is related to ForumCategory)
         ForumCategoryResponseDTO forumCategoryResponseDTO = new ForumCategoryResponseDTO();
-        forumCategoryResponseDTO.setId(
-                String.valueOf(forumThread.getForumCategory().getId()));
+        forumCategoryResponseDTO.setId(String.valueOf(forumThread.getForumCategory().getId()));
         forumCategoryResponseDTO.setName(forumThread.getForumCategory().getName());
         forumCategoryResponseDTO.setDescription(forumThread.getForumCategory().getDescription());
         forumCategoryResponseDTO.setSection(forumThread.getForumCategory().getSection());
         forumCategoryResponseDTO.setCreatedDate(forumThread.getForumCategory().getCreatedDate());
-        forumCategoryResponseDTO.setLastModifiedDate(
-                forumThread.getForumCategory().getLastModifiedDate());
+        forumCategoryResponseDTO.setLastModifiedDate(forumThread.getForumCategory().getLastModifiedDate());
 
         forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
-
-        //        // Map ThreadPosts for the ForumThread
-        //        List<ThreadPostResponseDTO> threadPostsDTO = forumThread.getThreadPosts().stream()
-        //                .map(ForumThreadMapper::toThreadPostResponseDTO)  // Now this will work because the method is
-        // public
-        //                .collect(Collectors.toList());
-
-        //        forumThreadResponseDTO.setThreadPosts(threadPostsDTO);
 
         return forumThreadResponseDTO;
     }

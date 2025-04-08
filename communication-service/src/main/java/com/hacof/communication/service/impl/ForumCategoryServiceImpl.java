@@ -22,6 +22,20 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
 
     @Override
     public ForumCategoryResponseDTO createForumCategory(ForumCategoryRequestDTO requestDTO) {
+        if (requestDTO.getName() == null || requestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+        if (requestDTO.getDescription() == null || requestDTO.getDescription().isEmpty()) {
+            throw new IllegalArgumentException("Description cannot be null or empty.");
+        }
+        if (requestDTO.getSection() == null || requestDTO.getSection().isEmpty()) {
+            throw new IllegalArgumentException("Section cannot be null or empty.");
+        }
+
+        if (forumCategoryRepository.existsByName(requestDTO.getName())) {
+            throw new IllegalArgumentException("A forum category with the name " + requestDTO.getName() + " already exists.");
+        }
+
         ForumCategory forumCategory = ForumCategoryMapper.toEntity(requestDTO);
         forumCategory = forumCategoryRepository.save(forumCategory);
         return ForumCategoryMapper.toResponseDTO(forumCategory);
@@ -32,6 +46,20 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
         Optional<ForumCategory> optionalForumCategory = forumCategoryRepository.findById(id);
         if (!optionalForumCategory.isPresent()) {
             throw new IllegalArgumentException("Forum category not found with id " + id);
+        }
+
+        if (requestDTO.getName() == null || requestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+        if (requestDTO.getDescription() == null || requestDTO.getDescription().isEmpty()) {
+            throw new IllegalArgumentException("Description cannot be null or empty.");
+        }
+        if (requestDTO.getSection() == null || requestDTO.getSection().isEmpty()) {
+            throw new IllegalArgumentException("Section cannot be null or empty.");
+        }
+
+        if (forumCategoryRepository.existsByName(requestDTO.getName())) {
+            throw new IllegalArgumentException("A forum category with the name " + requestDTO.getName() + " already exists.");
         }
 
         ForumCategory forumCategory = optionalForumCategory.get();
@@ -52,8 +80,7 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
 
         ForumCategory forumCategory = optionalForumCategory.get();
 
-        if (forumCategory.getForumThreads() != null
-                && !forumCategory.getForumThreads().isEmpty()) {
+        if (forumCategory.getForumThreads() != null && !forumCategory.getForumThreads().isEmpty()) {
             throw new IllegalArgumentException("Cannot delete ForumCategory because it contains forum threads!");
         }
         forumCategoryRepository.deleteById(id);

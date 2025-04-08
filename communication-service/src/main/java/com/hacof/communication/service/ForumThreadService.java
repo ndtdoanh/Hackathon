@@ -16,4 +16,7 @@ public interface ForumThreadService {
     ForumThreadResponseDTO getForumThread(Long id);
 
     List<ForumThreadResponseDTO> getAllForumThreads();
+
+    List<ForumThreadResponseDTO> getForumThreadsByCategoryId(Long categoryId);
+
 }

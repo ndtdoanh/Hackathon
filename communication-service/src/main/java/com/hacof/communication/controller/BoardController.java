@@ -115,4 +115,24 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/by-team-and-hackathon")
+    public ResponseEntity<CommonResponse<List<BoardResponseDTO>>> getBoardsByTeamAndHackathon(
+            @RequestParam Long teamId,
+            @RequestParam Long hackathonId) {
+
+        CommonResponse<List<BoardResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardResponseDTO> boards = boardService.getBoardsByTeamAndHackathon(teamId, hackathonId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Boards fetched successfully by team and hackathon.");
+            response.setData(boards);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error fetching boards: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

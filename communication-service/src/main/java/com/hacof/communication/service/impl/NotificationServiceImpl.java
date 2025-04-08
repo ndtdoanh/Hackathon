@@ -13,6 +13,7 @@ import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import com.hacof.communication.service.EmailService;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -236,6 +237,7 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public void updateReadStatusBulk(BulkUpdateReadStatusRequest request) {
         List<Long> ids = request.getDeliveryIds().stream()

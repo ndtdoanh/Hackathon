@@ -137,7 +137,7 @@ public class JudgeRoundController {
     }
 
     @PutMapping("/judge/{judgeId}")
-    @PreAuthorize("hasAuthority('UPDATE_BY_JUDGE_JUDGE_ROUND')")
+    @PreAuthorize("hasAuthority('UPDATE_JUDGE_ROUND_BY_JUDGE_ID')")
     public ResponseEntity<CommonResponse<JudgeRoundResponseDTO>> updateJudgeRoundByJudgeId(
             @PathVariable Long judgeId, @RequestBody JudgeRoundRequestDTO dto) {
         CommonResponse<JudgeRoundResponseDTO> response = new CommonResponse<>();
@@ -184,7 +184,7 @@ public class JudgeRoundController {
     }
 
     @DeleteMapping("/by-judge-round")
-    @PreAuthorize("hasAuthority('DELETE_BY_JUDGE_AND_ROUND_JUDGE_ROUND')")
+    @PreAuthorize("hasAuthority('DELETE_JUDGE_ROUND_BY_JUDGE_ID_AND_ROUND_ID')")
     public ResponseEntity<CommonResponse<Void>> deleteJudgeRoundByJudgeIdAndRoundId(
             @RequestParam Long judgeId, @RequestParam Long roundId) {
         CommonResponse<Void> response = new CommonResponse<>();

@@ -146,7 +146,7 @@ public class TeamRoundJudgeController {
     }
 
     @DeleteMapping("/by-team-round-judge")
-    @PreAuthorize("hasAuthority('DELETE_BY_TEAM_ROUND_AND_JUDGE_TEAM_ROUND_JUDGE')")
+    @PreAuthorize("hasAuthority('DELETE_BY_TEAM_ROUND_AND_JUDGE')")
     public ResponseEntity<CommonResponse<Void>> deleteByTeamRoundAndJudge(
             @RequestParam Long teamRoundId, @RequestParam Long judgeId) {
         CommonResponse<Void> response = new CommonResponse<>();
