@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -203,18 +204,34 @@ public class TeamRoundServiceImpl implements TeamRoundService {
 
     @Override
     public List<TeamRoundDTO> getAllByRoundId(String roundId) {
-        //        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundId(Long.parseLong(roundId));
-        //        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
-        return null;
+        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundId(Long.parseLong(roundId));
+
+        return teamRounds.stream()
+                .map(tr -> {
+                    TeamRoundDTO dto = TeamRoundMapperManual.toDto(tr);
+                    dto.setTeam(TeamMapperManual.toDtoWithLeaderAndMembers(tr.getTeam()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<TeamRoundDTO> getAllByJudgeIdAndRoundId(String judgeId, String roundId) {
-        //        List<TeamRound> teamRounds =
-        //                teamRoundRepository.findAllByJudgeIdAndRoundId(Long.parseLong(judgeId),
-        // Long.parseLong(roundId));
-        //        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
-        return null;
+        Long jId = Long.parseLong(judgeId);
+        Long rId = Long.parseLong(roundId);
+
+        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundId(rId);
+
+        return teamRounds.stream()
+                .filter(tr -> tr.getTeamRoundJudges() != null &&
+                        tr.getTeamRoundJudges().stream()
+                                .anyMatch(j -> j.getJudge().getId() == (jId)))
+                .map(tr -> {
+                    TeamRoundDTO dto = TeamRoundMapperManual.toDto(tr);
+                    dto.setTeam(TeamMapperManual.toDtoWithLeaderAndMembers(tr.getTeam()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

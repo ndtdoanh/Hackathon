@@ -20,10 +20,12 @@ public class TeamRoundJudgeMapperManual {
         dto.setJudgeId(
                 entity.getJudge() != null ? String.valueOf(entity.getJudge().getId()) : null);
         dto.setJudge(UserMapperManual.toDto(entity.getJudge()));
-        //    dto.setCreatedByUserName(entity.getCreatedByUserName());
-        //    dto.setCreatedAt(entity.getCreatedAt());
-        //    dto.setLastModifiedByUserName(entity.getLastModifiedByUserName());
-        //    dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+//        dto.setLastModifiedByUserName(
+//                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setCreatedAt(entity.getCreatedDate());
+        //dto.setUpdatedAt(entity.getLastModifiedDate());
 
         return dto;
     }

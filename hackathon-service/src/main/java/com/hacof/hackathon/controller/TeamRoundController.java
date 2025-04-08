@@ -35,30 +35,30 @@ public class TeamRoundController {
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
                 //                request.getChannel(),
-                new CommonResponse.Result("0000", "Tạo thành công team round"), created));
+                new CommonResponse.Result("0000", "Team Round was created"), created));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(
             @PathVariable String id, @Valid @RequestBody CommonRequest<TeamRoundDTO> request) {
-        log.debug("Cập nhật team round: {}", id);
+
         TeamRoundDTO updated = teamRoundService.update(id, request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
                 //                request.getChannel(),
-                new CommonResponse.Result("0000", "Cập nhật thành công team round"), updated));
+                new CommonResponse.Result("0000", "Update TeamRound Successfully"), updated));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteTeamRound(@PathVariable String id) {
-        log.debug("Xóa team round: {}", id);
+
         teamRoundService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),
                 //                LocalDateTime.now(),
                 //                "HACOF",
-                new CommonResponse.Result("0000", "Xóa thành công team round"), null));
+                new CommonResponse.Result("0000", "Delete TeamRound successfully"), null));
     }
 
     @GetMapping
@@ -92,8 +92,8 @@ public class TeamRoundController {
 
     @PostMapping("/filter-by-round")
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundId(
-            @RequestBody CommonRequest<Map<String, String>> request) {
-        String roundId = request.getData().get("roundId");
+            @RequestBody  Map<String, String> request) {
+        String roundId = request.get("roundId");
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                request.getRequestId(),

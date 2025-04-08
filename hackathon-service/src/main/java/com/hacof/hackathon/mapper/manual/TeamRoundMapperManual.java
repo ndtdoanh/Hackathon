@@ -21,11 +21,12 @@ public class TeamRoundMapperManual {
         dto.setRound(RoundMapperManual.toDto(entity.getRound()));
         dto.setStatus(entity.getStatus());
         dto.setDescription(entity.getDescription());
-        //        dto.setCreatedByUserName(entity.getCreatedByUserName());
-        //        dto.setCreatedAt(entity.getCreatedAt());
-        //        dto.setLastModifiedByUserName(entity.getLastModifiedByUserName());
-        //        dto.setUpdatedAt(entity.getUpdatedAt());
-
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setLastModifiedByUserName(
+                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setCreatedAt(entity.getCreatedDate());
+        dto.setUpdatedAt(entity.getLastModifiedDate());
         if (entity.getTeamRoundJudges() != null) {
             dto.setTeamRoundJudges(entity.getTeamRoundJudges().stream()
                     .map(TeamRoundJudgeMapperManual::toDto)
