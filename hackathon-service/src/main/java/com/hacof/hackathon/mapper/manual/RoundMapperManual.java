@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.constant.RoundLocationType;
 import com.hacof.hackathon.constant.RoundStatus;
 import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.dto.RoundLocationDTO;
 import com.hacof.hackathon.entity.Hackathon;
+import com.hacof.hackathon.entity.Location;
 import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.entity.RoundLocation;
+import com.hacof.hackathon.exception.ResourceNotFoundException;
+import com.hacof.hackathon.mapper.LocationMapper;
 import com.hacof.hackathon.service.LocationService;
 
 public class RoundMapperManual {
 
-    public static Round toEntity(RoundDTO dto, LocationService locationService) {
+    public static Round toEntity(RoundDTO dto, LocationMapper locationMapper, LocationService locationService) {
         Round entity = new Round();
         entity.setStartTime(dto.getStartTime());
         entity.setEndTime(dto.getEndTime());
@@ -28,14 +32,15 @@ public class RoundMapperManual {
             entity.setHackathon(hackathon);
         }
 
-        if (dto.getRoundLocations() != null) {
+        if (dto.getRoundLocations() != null && !dto.getRoundLocations().isEmpty()) {
             List<RoundLocation> locations = dto.getRoundLocations().stream()
                     .map(locDto -> {
                         RoundLocation loc = RoundLocationMapperManual.toEntity(locDto, locationService);
-                        loc.setRound(entity); // gắn vòng ngược lại
+                        loc.setRound(entity);
                         return loc;
                     })
                     .collect(Collectors.toList());
+
             entity.setRoundLocations(locations);
         } else {
             entity.setRoundLocations(new ArrayList<>());
@@ -44,7 +49,7 @@ public class RoundMapperManual {
         return entity;
     }
 
-    public static RoundDTO toDto(Round entity) {
+    public static RoundDTO toDto(Round entity, LocationMapper locationMapper) {
         RoundDTO dto = new RoundDTO();
         dto.setId(String.valueOf(entity.getId()));
         dto.setHackathonId(
@@ -66,7 +71,7 @@ public class RoundMapperManual {
 
         if (entity.getRoundLocations() != null) {
             List<RoundLocationDTO> locationDTOs = entity.getRoundLocations().stream()
-                    .map(RoundLocationMapperManual::toDto)
+                    .map(loc -> RoundLocationMapperManual.toDto(loc, locationMapper))
                     .collect(Collectors.toList());
             dto.setRoundLocations(locationDTOs);
         } else {

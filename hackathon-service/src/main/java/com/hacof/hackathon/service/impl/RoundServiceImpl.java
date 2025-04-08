@@ -2,8 +2,10 @@ package com.hacof.hackathon.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.mapper.LocationMapper;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -35,6 +37,7 @@ public class RoundServiceImpl implements RoundService {
     HackathonRepository hackathonRepository;
     UserRepository userRepository;
     LocationServiceImpl locationService;
+    LocationMapper locationMapper;
 
     @Override
     public RoundDTO create(RoundDTO roundDTO) {
@@ -43,10 +46,10 @@ public class RoundServiceImpl implements RoundService {
         validateUniqueRoundNumber(null, roundDTO.getRoundNumber(), hackathon.getId());
         validateRoundDates(roundDTO.getStartTime(), roundDTO.getEndTime(), hackathon);
 
-        Round round = RoundMapperManual.toEntity(roundDTO, locationService);
+        Round round = RoundMapperManual.toEntity(roundDTO, locationMapper, locationService);
         Round saved = roundRepository.save(round);
 
-        return RoundMapperManual.toDto(saved);
+        return RoundMapperManual.toDto(saved, locationMapper);
     }
 
     @Override
@@ -61,7 +64,7 @@ public class RoundServiceImpl implements RoundService {
             throw new ResourceNotFoundException("Hackathon not found for this round");
         }
 
-        // checkround
+        // checkound
         if (roundDTO.getRoundNumber() != existingRound.getRoundNumber()) {
             validateUniqueRoundNumber(
                     existingRound.getId(),
@@ -86,12 +89,12 @@ public class RoundServiceImpl implements RoundService {
         existingRound.setEndTime(roundDTO.getEndTime());
         existingRound.setStatus(RoundStatus.valueOf(roundDTO.getStatus()));
         existingRound.setLastModifiedBy(currentUser);
-        existingRound.setLastModifiedDate(roundDTO.getUpdatedAt());
+        existingRound.setLastModifiedDate(LocalDateTime.now());
         existingRound.setCreatedBy(createdBy);
 
         Round updatedRound = roundRepository.save(existingRound);
 
-        return RoundMapperManual.toDto(updatedRound);
+        return RoundMapperManual.toDto(updatedRound, locationMapper);
     }
 
     @Override
@@ -104,32 +107,42 @@ public class RoundServiceImpl implements RoundService {
 
     @Override
     public List<RoundDTO> getRounds(Specification<Round> spec) {
-        List<Round> rounds = roundRepository.findAll(spec);
-        return rounds.stream()
-                .map(round -> {
-                    RoundDTO roundDTO = RoundMapperManual.toDto(round);
-                    if (round.getRoundLocations() != null
-                            && !round.getRoundLocations().isEmpty()) {
-                        // Ensure round locations are mapped
-                        roundDTO.setRoundLocations(round.getRoundLocations().stream()
-                                .map(roundLocation -> {
-                                    return RoundLocationMapperManual.toDto(roundLocation);
-                                })
-                                .collect(Collectors.toList()));
-                    }
-                    return roundDTO;
-                })
-                .collect(Collectors.toList());
+//        List<Round> rounds = roundRepository.findAll(spec);
+//        return rounds.stream()
+//                .map(round -> {
+//                    RoundDTO roundDTO = RoundMapperManual.toDto(round);
+//                    if (round.getRoundLocations() != null
+//                            && !round.getRoundLocations().isEmpty()) {
+//                        // Ensure round locations are mapped
+//                        roundDTO.setRoundLocations(round.getRoundLocations().stream()
+//                                .map(roundLocation -> {
+//                                    return RoundLocationMapperManual.toDto(roundLocation);
+//                                })
+//                                .collect(Collectors.toList()));
+//                    }
+//                    return roundDTO;
+//                })
+//                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
     public List<RoundDTO> getAllByHackathonId(String hackathonId) {
-        if (hackathonId == null || hackathonId.isEmpty()) {
-            throw new InvalidInputException("Hackathon ID is required");
-        }
+//        if (hackathonId == null || hackathonId.isEmpty()) {
+//            throw new InvalidInputException("Hackathon ID is required");
+//        }
+//
+//        List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
+//        return rounds.stream().map(RoundMapperManual::toDto).collect(Collectors.toList());
+        return null;
+    }
 
-        List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return rounds.stream().map(RoundMapperManual::toDto).collect(Collectors.toList());
+    @Override
+    public RoundDTO getById(String id) {
+        Optional<Round> roundOptional = roundRepository.findById(Long.parseLong(id));
+        return roundOptional
+                .map(round -> RoundMapperManual.toDto(round, locationMapper))
+                .orElse(null);
     }
 
     private Hackathon validateHackathon(String hackathonId) {

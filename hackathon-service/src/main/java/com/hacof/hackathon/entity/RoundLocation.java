@@ -1,5 +1,6 @@
 package com.hacof.hackathon.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,6 +39,7 @@ public class RoundLocation extends AuditUserBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "round_id")
+    @JsonBackReference
     Round round;
 
     @ManyToOne(fetch = FetchType.LAZY)

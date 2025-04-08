@@ -25,10 +25,11 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
 public class RoundController {
-    // this class used to manage the rounds of a hackathon and round locations
+    // This class used to manage the rounds of a hackathon and round locations
     RoundService roundService;
     RoundLocationService roundLocationService;
 
+    // ----------- ROUND ENDPOINTS -----------
     @PostMapping
     public ResponseEntity<CommonResponse<RoundDTO>> createRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         RoundDTO roundDTO = roundService.create(request.getData());
@@ -48,9 +49,9 @@ public class RoundController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
-    public ResponseEntity<CommonResponse<RoundDTO>> deleteRound(@RequestBody CommonRequest<RoundDTO> request) {
-        roundService.delete(Long.parseLong(request.getData().getId()));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<RoundDTO>> deleteRound(@PathVariable String id) {
+        roundService.delete(Long.parseLong(id));
         CommonResponse<RoundDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -107,10 +108,9 @@ public class RoundController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/locations")
+    @DeleteMapping("/locations/{id}")
     public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteRoundLocation(
-            @RequestBody CommonRequest<RoundLocationDTO> request) {
-        String id = request.getData().getId();
+            @PathVariable String id) {
         roundLocationService.delete(Long.parseLong(id));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
