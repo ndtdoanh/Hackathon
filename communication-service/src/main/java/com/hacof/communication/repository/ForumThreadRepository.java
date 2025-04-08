@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.hacof.communication.entity.ForumThread;
 
 @Repository
-public interface ForumThreadRepository extends JpaRepository<ForumThread, Long> {}
+public interface ForumThreadRepository extends JpaRepository<ForumThread, Long> {
+    boolean existsByTitleAndForumCategoryId(String title, Long forumCategoryId);
+}

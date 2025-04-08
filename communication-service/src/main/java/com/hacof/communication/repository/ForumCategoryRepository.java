@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.hacof.communication.entity.ForumCategory;
 
 @Repository
-public interface ForumCategoryRepository extends JpaRepository<ForumCategory, Long> {}
+public interface ForumCategoryRepository extends JpaRepository<ForumCategory, Long> {
+    boolean existsByName(String name);
+}
