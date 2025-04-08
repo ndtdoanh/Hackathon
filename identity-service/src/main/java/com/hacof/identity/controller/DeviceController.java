@@ -60,6 +60,22 @@ public class DeviceController {
                 .build();
     }
 
+    @GetMapping("/round/{roundId}")
+    public ApiResponse<List<DeviceResponse>> getDevicesByRoundId(@PathVariable String roundId) {
+        return ApiResponse.<List<DeviceResponse>>builder()
+                .data(deviceService.getDevicesByRoundId(roundId))
+                .message("Get devices by roundId")
+                .build();
+    }
+
+    @GetMapping("/round-location/{roundLocationId}")
+    public ApiResponse<List<DeviceResponse>> getDevicesByRoundLocationId(@PathVariable String roundLocationId) {
+        return ApiResponse.<List<DeviceResponse>>builder()
+                .data(deviceService.getDevicesByRoundLocationId(roundLocationId))
+                .message("Get devices by roundLocationId")
+                .build();
+    }
+
     @PutMapping("/{Id}")
     @PreAuthorize("hasAuthority('UPDATE_DEVICE')")
     public ResponseEntity<ApiResponse<DeviceResponse>> updateDevice(

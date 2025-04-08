@@ -97,6 +97,20 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public List<DeviceResponse> getDevicesByRoundId(String roundId) {
+        return deviceRepository.findByRoundId(roundId).stream()
+                .map(deviceMapper::toDeviceResponse)
+                .toList();
+    }
+
+    @Override
+    public List<DeviceResponse> getDevicesByRoundLocationId(String roundLocationId) {
+        return deviceRepository.findByRoundLocationId(roundLocationId).stream()
+                .map(deviceMapper::toDeviceResponse)
+                .toList();
+    }
+
+    @Override
     public DeviceResponse updateDevice(Long id, DeviceRequest request, List<MultipartFile> files) throws IOException {
         Device existingDevice =
                 deviceRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));

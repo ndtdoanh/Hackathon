@@ -5,7 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.identity.entity.Device;
 
+import java.util.List;
+
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
-    boolean existsByName(String name);
+    List<Device> findByRoundId(String roundId);
+    List<Device> findByRoundLocationId(String roundLocationId);
+
 }

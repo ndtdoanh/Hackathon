@@ -16,6 +16,10 @@ public interface DeviceService {
 
     DeviceResponse getDevice(Long id);
 
+    List<DeviceResponse> getDevicesByRoundId(String roundId);
+
+    List<DeviceResponse> getDevicesByRoundLocationId(String roundLocationId);
+
     DeviceResponse updateDevice(Long id, DeviceRequest request, List<MultipartFile> files) throws IOException;
 
     void deleteDevice(Long id);
