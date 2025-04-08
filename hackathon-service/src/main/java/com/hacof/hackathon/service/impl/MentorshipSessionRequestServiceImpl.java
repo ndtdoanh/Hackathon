@@ -1,8 +1,11 @@
 package com.hacof.hackathon.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.entity.MentorTeam;
+import com.hacof.hackathon.mapper.manual.MentorshipSessionRequestMapperManual;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,48 +37,62 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     @Override
     public MentorshipSessionRequestDTO create(MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
         validateForeignKeys(mentorshipSessionRequestDTO);
+        // Convert DTO to Entity (manual mapper handles setting mentorTeam & evaluatedBy by ID)
         MentorshipSessionRequest mentorshipSessionRequest =
-                mentorshipSessionRequestMapper.toEntity(mentorshipSessionRequestDTO);
+                MentorshipSessionRequestMapperManual.toEntity(mentorshipSessionRequestDTO);
 
-        mentorshipSessionRequest.setMentorTeam(mentorTeamRepository
-                .findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
-                .orElseThrow(() -> new ResourceNotFoundException("MentorTeam not found")));
-        if (mentorshipSessionRequestDTO.getEvaluatedById() != null) {
-            mentorshipSessionRequest.setEvaluatedBy(userRepository
-                    .findById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found")));
-        }
-
-        return mentorshipSessionRequestMapper.toDto(mentorshipSessionRequestRepository.save(mentorshipSessionRequest));
+        mentorshipSessionRequest = mentorshipSessionRequestRepository.save(mentorshipSessionRequest);
+        return MentorshipSessionRequestMapperManual.toDto(mentorshipSessionRequest);
     }
 
     @Override
     public MentorshipSessionRequestDTO update(String id, MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
         validateForeignKeys(mentorshipSessionRequestDTO);
+
         MentorshipSessionRequest existingRequest = getMentorshipSessionRequest(id);
 
-        // Manually set the foreign keys
-        existingRequest.setMentorTeam(mentorTeamRepository
-                .findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
-                .orElseThrow(() -> new ResourceNotFoundException("MentorTeam not found")));
-        if (mentorshipSessionRequestDTO.getEvaluatedById() != null) {
-            existingRequest.setEvaluatedBy(userRepository
-                    .findById(Long.parseLong(mentorshipSessionRequestDTO.getEvaluatedById()))
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found")));
+        MentorshipSessionRequestMapperManual.updateEntityFromDto(mentorshipSessionRequestDTO, existingRequest);
+
+        if (mentorshipSessionRequestDTO.getMentorTeamId() != null) {
+            MentorTeam mentorTeam = mentorTeamRepository.findById(Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("MentorTeam not found"));
+            existingRequest.setMentorTeam(mentorTeam);
         }
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("No authenticated user found");
         }
 
         String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
+        User currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
         existingRequest.setLastModifiedBy(currentUser);
-        existingRequest.setLastModifiedDate(mentorshipSessionRequestDTO.getUpdatedAt());
-        mentorshipSessionRequestMapper.updateEntityFromDto(mentorshipSessionRequestDTO, existingRequest);
-        return mentorshipSessionRequestMapper.toDto(mentorshipSessionRequestRepository.save(existingRequest));
+        existingRequest.setLastModifiedDate(LocalDateTime.now());
+
+        MentorshipSessionRequest updated = mentorshipSessionRequestRepository.save(existingRequest);
+        return MentorshipSessionRequestMapperManual.toDto(updated);
+    }
+
+    @Override
+    public MentorshipSessionRequestDTO approveOrReject(String id, MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
+        MentorshipSessionRequest existingRequest = getMentorshipSessionRequest(id);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        existingRequest.setEvaluatedBy(currentUser);
+
+        MentorshipSessionRequestMapperManual.updateEntityFromDto(mentorshipSessionRequestDTO, existingRequest);
+
+        MentorshipSessionRequest updated = mentorshipSessionRequestRepository.save(existingRequest);
+        return MentorshipSessionRequestMapperManual.toDto(updated);
     }
 
     @Override
@@ -92,7 +109,7 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         //            throw new ResourceNotFoundException("No MentorshipSessionRequest found");
         //        }
         return mentorshipSessionRequestRepository.findAll().stream()
-                .map(mentorshipSessionRequestMapper::toDto)
+                .map(MentorshipSessionRequestMapperManual::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -101,7 +118,7 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         //        if (!mentorshipSessionRequestRepository.existsById(Long.parseLong(id))) {
         //            throw new ResourceNotFoundException("MentorshipSessionRequest not found");
         //        }
-        return mentorshipSessionRequestMapper.toDto(getMentorshipSessionRequest(id));
+        return MentorshipSessionRequestMapperManual.toDto(getMentorshipSessionRequest(id));
     }
 
     @Override
@@ -112,7 +129,7 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
         //            throw new ResourceNotFoundException("No MentorshipSessionRequest found");
         //        }
         return mentorshipSessionRequestRepository.findAllByMentorTeamId(Long.parseLong(mentorTeamId)).stream()
-                .map(mentorshipSessionRequestMapper::toDto)
+                .map(MentorshipSessionRequestMapperManual::toDto)
                 .collect(Collectors.toList());
     }
 

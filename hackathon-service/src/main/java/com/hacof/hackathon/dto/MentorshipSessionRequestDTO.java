@@ -15,8 +15,9 @@ import lombok.experimental.FieldDefaults;
 public class MentorshipSessionRequestDTO {
     String id;
 
-    @NotNull(message = "Mentor Team ID is required")
+    //@NotNull(message = "Mentor Team ID is required")
     String mentorTeamId;
+    MentorTeamDTO mentorTeam;
 
     @NotNull(message = "Start Time is required")
     LocalDateTime startTime;
@@ -35,6 +36,7 @@ public class MentorshipSessionRequestDTO {
 
     @NotNull(message = "Evaluated By ID is required")
     String evaluatedById;
+    UserDTO evaluatedBy;
 
     LocalDateTime evaluatedAt;
 

@@ -1,24 +1,23 @@
 package com.hacof.hackathon.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.constant.MentorshipStatus;
+import com.hacof.hackathon.entity.*;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.mapper.manual.MentorshipRequestMapperManual;
+import com.hacof.hackathon.repository.*;
 import jakarta.transaction.Transactional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.MentorshipRequestDTO;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.MentorshipRequest;
-import com.hacof.hackathon.entity.Team;
-import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.MentorshipRequestMapper;
-import com.hacof.hackathon.repository.HackathonRepository;
-import com.hacof.hackathon.repository.MentorshipRequestRepository;
-import com.hacof.hackathon.repository.TeamRepository;
-import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.MentorshipRequestService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +34,7 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
     HackathonRepository hackathonRepository;
     UserRepository userRepository;
     TeamRepository teamRepository;
+    MentorTeamRepository mentorTeamRepository;
     MentorshipRequestMapper mentorshipRequestMapper;
 
     @Override
@@ -69,34 +69,40 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
 
         mentorshipRequest = mentorshipRequestRepository.save(mentorshipRequest);
 
-        System.out.println("HackathonId: " + mentorshipRequestDTO.getHackathonId());
-        System.out.println("MentorId: " + mentorshipRequestDTO.getMentorId());
-        System.out.println("TeamId: " + mentorshipRequestDTO.getTeamId());
-        System.out.println("EvaluatedById: " + mentorshipRequestDTO.getEvaluatedById());
         return MentorshipRequestMapperManual.toDto(mentorshipRequest);
     }
 
     @Override
     @Transactional
-    public MentorshipRequestDTO update(Long id, MentorshipRequestDTO dto) {
+    public MentorshipRequestDTO approveOrReject(Long id, MentorshipRequestDTO dto) {
         log.info("Updating mentorship request with id: {}", id);
 
         MentorshipRequest mentorshipRequest = mentorshipRequestRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentorship request not found"));
 
-        // Ánh xạ các trường đơn giản từ DTO vào entity
         MentorshipRequest partialUpdate = MentorshipRequestMapperManual.toEntity(dto);
 
-        if (partialUpdate.getStatus() != null) {
-            mentorshipRequest.setStatus(partialUpdate.getStatus());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new InvalidInputException("No authenticated user found");
         }
 
-        if (partialUpdate.getEvaluatedAt() != null) {
-            mentorshipRequest.setEvaluatedAt(partialUpdate.getEvaluatedAt());
+        String username = authentication.getName();
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+        log.debug("Current user: {}", currentUser.getUsername());
+        if (dto.getStatus() != null) {
+            MentorshipStatus newStatus = MentorshipStatus.valueOf(dto.getStatus().toUpperCase());
+            mentorshipRequest.setStatus(newStatus);
+
+            if (newStatus == MentorshipStatus.APPROVED) {
+                createMentorTeamIfNotExists(mentorshipRequest);
+            }
         }
 
-        // Thiết lập các liên kết (relation entities)
         if (dto.getHackathonId() != null) {
             Hackathon hackathon = hackathonRepository
                     .findById(Long.parseLong(dto.getHackathonId()))
@@ -118,12 +124,14 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
             mentorshipRequest.setTeam(team);
         }
 
-        if (dto.getEvaluatedById() != null) {
-            User evaluatedBy = userRepository
-                    .findById(Long.parseLong(dto.getEvaluatedById()))
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            mentorshipRequest.setEvaluatedBy(evaluatedBy);
-        }
+//        if (dto.getEvaluatedById() != null) {
+//            User evaluatedBy = userRepository
+//                    .findById(Long.parseLong(dto.getEvaluatedById()))
+//                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+//            mentorshipRequest.setEvaluatedBy(evaluatedBy);
+//        }
+        mentorshipRequest.setEvaluatedAt(LocalDateTime.now());
+        mentorshipRequest.setEvaluatedBy(currentUser);
 
         MentorshipRequest saved = mentorshipRequestRepository.save(mentorshipRequest);
         return MentorshipRequestMapperManual.toDto(saved);
@@ -141,11 +149,8 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
     @Override
     public List<MentorshipRequestDTO> getAll() {
         log.info("Fetching all mentorship requests");
-        //        if (userRepository.findAll().isEmpty()) {
-        //            throw new ResourceNotFoundException("No mentorship requests found");
-        //        }
         return mentorshipRequestRepository.findAll().stream()
-                .map(mentorshipRequestMapper::toDto)
+                .map(MentorshipRequestMapperManual::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -155,20 +160,20 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
         MentorshipRequest mentorshipRequest = mentorshipRequestRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentorship request not found"));
-        return mentorshipRequestMapper.toDto(mentorshipRequest);
+        return MentorshipRequestMapperManual.toDto(mentorshipRequest);
     }
 
     @Override
     public List<MentorshipRequestDTO> getAllByTeamIdAndHackathonId(String teamId, String hackathonId) {
         List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByTeamIdAndHackathonId(
                 Long.parseLong(teamId), Long.parseLong(hackathonId));
-        return requests.stream().map(mentorshipRequestMapper::toDto).collect(Collectors.toList());
+        return requests.stream().map(MentorshipRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<MentorshipRequestDTO> getAllByMentorId(String mentorId) {
         List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByMentorId(Long.parseLong(mentorId));
-        return requests.stream().map(mentorshipRequestMapper::toDto).collect(Collectors.toList());
+        return requests.stream().map(MentorshipRequestMapperManual  ::toDto).collect(Collectors.toList());
     }
 
     private Long parseLongSafely(String value) {
@@ -176,6 +181,26 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
             return value != null ? Long.parseLong(value) : null;
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid ID format: " + value);
+        }
+    }
+
+    private void createMentorTeamIfNotExists(MentorshipRequest mentorshipRequest) {
+        boolean exists = mentorTeamRepository.existsByHackathonAndMentorAndTeam(
+                mentorshipRequest.getHackathon(),
+                mentorshipRequest.getMentor(),
+                mentorshipRequest.getTeam());
+
+        if (!exists) {
+            MentorTeam mentorTeam = new MentorTeam();
+            mentorTeam.setHackathon(mentorshipRequest.getHackathon());
+            mentorTeam.setMentor(mentorshipRequest.getMentor());
+            mentorTeam.setTeam(mentorshipRequest.getTeam());
+
+            mentorTeamRepository.save(mentorTeam);
+            log.info("Created MentorTeam for mentor: {}, team: {}",
+                    mentorTeam.getMentor().getUsername(), mentorTeam.getTeam().getName());
+        } else {
+            log.info("MentorTeam already exists for this combination. Skipped creation.");
         }
     }
 }

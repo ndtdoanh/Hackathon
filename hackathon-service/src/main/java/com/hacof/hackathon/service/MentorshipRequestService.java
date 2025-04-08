@@ -7,7 +7,7 @@ import com.hacof.hackathon.dto.MentorshipRequestDTO;
 public interface MentorshipRequestService {
     MentorshipRequestDTO create(MentorshipRequestDTO mentorshipRequestDTO);
 
-    MentorshipRequestDTO update(Long id, MentorshipRequestDTO mentorshipRequestDTO);
+    MentorshipRequestDTO approveOrReject(Long id, MentorshipRequestDTO mentorshipRequestDTO);
 
     void delete(Long id);
 

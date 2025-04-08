@@ -9,6 +9,8 @@ public interface MentorshipSessionRequestService {
 
     MentorshipSessionRequestDTO update(String id, MentorshipSessionRequestDTO mentorshipSessionRequestDTO);
 
+    MentorshipSessionRequestDTO approveOrReject(String id, MentorshipSessionRequestDTO mentorshipSessionRequestDTO);
+
     void delete(String id);
 
     List<MentorshipSessionRequestDTO> getAll();
