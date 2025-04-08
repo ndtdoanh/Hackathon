@@ -3,6 +3,7 @@ package com.hacof.hackathon.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -230,7 +231,7 @@ public class TeamRoundServiceImpl implements TeamRoundService {
 
             teamRounds.add(teamRoundRepository.save(existingTeamRound));
         }
-        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
+        return teamRounds.stream().map(TeamRoundMapperManual::toDto).collect(Collectors.toList());
     }
 
 }
