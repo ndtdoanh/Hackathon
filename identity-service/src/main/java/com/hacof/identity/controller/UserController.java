@@ -232,16 +232,28 @@ public class UserController {
     }
 
     @PostMapping("/upload-avatar")
-    public ResponseEntity<AvatarResponse> uploadAvatar(
+    public ResponseEntity<ApiResponse<AvatarResponse>> uploadAvatar(
             @RequestParam("file") MultipartFile file, Authentication authentication) {
         try {
             AvatarResponse avatarResponse = userService.uploadAvatar(file, authentication);
-            return ResponseEntity.ok(avatarResponse);
+            return ResponseEntity.ok(
+                    ApiResponse.<AvatarResponse>builder()
+                            .message("Avatar uploaded successfully")
+                            .data(avatarResponse)
+                            .build()
+            );
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new AvatarResponse(null, e.getMessage(), null));
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.<AvatarResponse>builder()
+                            .message(e.getMessage())
+                            .build()
+            );
         } catch (IOException e) {
-            return ResponseEntity.internalServerError()
-                    .body(new AvatarResponse(null, "Upload failed: " + e.getMessage(), null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    ApiResponse.<AvatarResponse>builder()
+                            .message("Upload failed: " + e.getMessage())
+                            .build()
+            );
         }
     }
 }
