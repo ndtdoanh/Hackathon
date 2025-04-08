@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/mentor-teams")
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(makeFinal = true)
 public class MentorTeamController {
-    private final MentorTeamService mentorTeamService;
+    MentorTeamService mentorTeamService;
 
     @PostMapping
     public ResponseEntity<CommonResponse<MentorTeamDTO>> createMentorTeam(
@@ -46,10 +48,9 @@ public class MentorTeamController {
                 new CommonResponse.Result("0000", "Mentor team updated successfully"), updated));
     }
 
-    @DeleteMapping
-    public ResponseEntity<CommonResponse<Void>> deleteMentorTeam(@Valid @RequestBody CommonRequest<String> request) {
-        log.debug("Deleting mentor team: {}", request.getData());
-        mentorTeamService.delete(request.getData());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<Void>> deleteMentorTeam(@PathVariable String id) {
+        mentorTeamService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),
                 //                LocalDateTime.now(),
@@ -59,9 +60,10 @@ public class MentorTeamController {
 
     @PostMapping("/filter-by-hackathon-and-team")
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByHackathonIdAndTeamId(
-            @RequestBody CommonRequest<MentorTeamDTO> request) {
+            @RequestParam String hackathonId,
+            @RequestParam String teamId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByHackathonIdAndTeamId(
-                request.getData().getHackathonId(), request.getData().getTeamId());
+                hackathonId, teamId);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),
                 //                LocalDateTime.now(),
@@ -71,8 +73,8 @@ public class MentorTeamController {
 
     @PostMapping("/filter-by-mentor")
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByMentorId(
-            @RequestBody CommonRequest<String> request) {
-        List<MentorTeamDTO> results = mentorTeamService.getAllByMentorId(request.getData());
+            @RequestParam String mentorId) {
+        List<MentorTeamDTO> results = mentorTeamService.getAllByMentorId(mentorId);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),
                 //                LocalDateTime.now(),
