@@ -234,4 +234,5 @@ public class TeamRoundServiceImpl implements TeamRoundService {
         return teamRounds.stream().map(TeamRoundMapperManual::toDto).collect(Collectors.toList());
     }
 
+
 }
