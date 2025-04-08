@@ -109,8 +109,7 @@ public class RoundController {
     }
 
     @DeleteMapping("/locations/{id}")
-    public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteRoundLocation(
-            @PathVariable String id) {
+    public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteRoundLocation(@PathVariable String id) {
         roundLocationService.delete(Long.parseLong(id));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.mapper.manual.IndividualRegistrationRequestMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
@@ -37,39 +38,123 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     IndividualRegistrationRequestRepository requestRepository;
     HackathonRepository hackathonRepository;
     UserRepository userRepository;
-    IndividualRegistrationRequestMapper requestMapper;
+    //IndividualRegistrationRequestMapper requestMapper;
     HackathonMapper hackathonMapper;
+
+//    @Override
+//    public IndividualRegistrationRequestDTO create(IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
+//        if (individualRegistrationRequestDTO.getHackathonId() == null) {
+//            throw new InvalidInputException("Hackathon ID cannot be null");
+//        }
+//        Hackathon hackathon = hackathonRepository
+//                .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
+//                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+//
+//        User reviewedBy = null;
+//        if (individualRegistrationRequestDTO.getReviewById() != null
+//                && !individualRegistrationRequestDTO.getReviewById().isEmpty()) {
+//            reviewedBy = userRepository
+//                    .findById(Long.parseLong(individualRegistrationRequestDTO.getReviewById()))
+//                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+//        }
+//
+//        IndividualRegistrationRequest request = IndividualRegistrationRequest.builder()
+//                .hackathon(hackathon)
+//                .status(IndividualRegistrationRequestStatus.valueOf(individualRegistrationRequestDTO.getStatus()))
+//                .reviewedBy(reviewedBy)
+//                .build();
+//
+//        request = requestRepository.save(request);
+//        return requestMapper.toDto(request);
+//    }
+//
+//    @Override
+//    public IndividualRegistrationRequestDTO update(
+//            Long id, IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
+//        IndividualRegistrationRequest existingRequest = requestRepository
+//                .findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Individual registration request not found"));
+//
+//        if (individualRegistrationRequestDTO.getHackathonId() == null) {
+//            throw new InvalidInputException("Hackathon ID cannot be null");
+//        }
+//
+//        Hackathon hackathon = hackathonRepository
+//                .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
+//                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+//
+//        User reviewedBy = null;
+//        String reviewById = individualRegistrationRequestDTO.getReviewById();
+//        if (reviewById != null && !reviewById.trim().isEmpty()) {
+//            reviewedBy = userRepository
+//                    .findById(Long.parseLong(reviewById))
+//                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + reviewById));
+//        }
+//
+//        if (existingRequest.getStatus() == IndividualRegistrationRequestStatus.APPROVED
+//                && !IndividualRegistrationRequestStatus.APPROVED
+//                        .name()
+//                        .equalsIgnoreCase(individualRegistrationRequestDTO.getStatus())) {
+//            throw new InvalidInputException("Cannot update status after it's approved");
+//        }
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            throw new IllegalStateException("No authenticated user found");
+//        }
+//
+//        String username = authentication.getName();
+//        User currentUser = userRepository
+//                .findByUsername(username)
+//                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+//
+//        existingRequest.setHackathon(hackathon);
+//        existingRequest.setReviewedBy(reviewedBy);
+//        existingRequest.setStatus(
+//                IndividualRegistrationRequestStatus.valueOf(individualRegistrationRequestDTO.getStatus()));
+//        existingRequest.setLastModifiedBy(currentUser);
+//        existingRequest.setLastModifiedDate(LocalDateTime.now());
+//
+//        IndividualRegistrationRequest updatedRequest = requestRepository.save(existingRequest);
+//
+//        IndividualRegistrationRequestDTO responseDTO = requestMapper.toDto(updatedRequest);
+//        responseDTO.setReviewById(reviewById);
+//        return responseDTO;
+//    }
 
     @Override
     public IndividualRegistrationRequestDTO create(IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
         if (individualRegistrationRequestDTO.getHackathonId() == null) {
             throw new InvalidInputException("Hackathon ID cannot be null");
         }
+
         Hackathon hackathon = hackathonRepository
                 .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
         User reviewedBy = null;
-        if (individualRegistrationRequestDTO.getReviewById() != null &&
-                !individualRegistrationRequestDTO.getReviewById().isEmpty()) {
+        if (individualRegistrationRequestDTO.getReviewById() != null
+                && !individualRegistrationRequestDTO.getReviewById().isEmpty()) {
             reviewedBy = userRepository
                     .findById(Long.parseLong(individualRegistrationRequestDTO.getReviewById()))
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         }
 
-        IndividualRegistrationRequest request = IndividualRegistrationRequest.builder()
-                .hackathon(hackathon)
-                .status(IndividualRegistrationRequestStatus.valueOf(individualRegistrationRequestDTO.getStatus()))
-                .reviewedBy(reviewedBy)
-                .build();
+        IndividualRegistrationRequest request = IndividualRegistrationRequestMapperManual
+                .toEntity(individualRegistrationRequestDTO, hackathon, reviewedBy);
 
         request = requestRepository.save(request);
-        return requestMapper.toDto(request);
+        IndividualRegistrationRequestDTO responseDTO = IndividualRegistrationRequestMapperManual.toDto(request);
+        responseDTO.setReviewById(individualRegistrationRequestDTO.getReviewById());
+        return responseDTO;
     }
 
     @Override
-    public IndividualRegistrationRequestDTO update(Long id, IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
-        IndividualRegistrationRequest existingRequest = requestRepository.findById(id)
+    public IndividualRegistrationRequestDTO update(
+            Long id, IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
+
+        IndividualRegistrationRequest existingRequest = requestRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Individual registration request not found"));
 
         if (individualRegistrationRequestDTO.getHackathonId() == null) {
@@ -83,7 +168,8 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         User reviewedBy = null;
         String reviewById = individualRegistrationRequestDTO.getReviewById();
         if (reviewById != null && !reviewById.trim().isEmpty()) {
-            reviewedBy = userRepository.findById(Long.parseLong(reviewById))
+            reviewedBy = userRepository
+                    .findById(Long.parseLong(reviewById))
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + reviewById));
         }
 
@@ -102,18 +188,15 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
                 .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
-        existingRequest.setHackathon(hackathon);
-        existingRequest.setReviewedBy(reviewedBy);
-        existingRequest.setStatus(IndividualRegistrationRequestStatus.valueOf(individualRegistrationRequestDTO.getStatus()));
-        existingRequest.setLastModifiedBy(currentUser);
-        existingRequest.setLastModifiedDate(LocalDateTime.now());
+        IndividualRegistrationRequestMapperManual
+                .updateEntityFromDto(individualRegistrationRequestDTO, existingRequest, hackathon, reviewedBy, currentUser);
 
         IndividualRegistrationRequest updatedRequest = requestRepository.save(existingRequest);
-
-        IndividualRegistrationRequestDTO responseDTO = requestMapper.toDto(updatedRequest);
+        IndividualRegistrationRequestDTO responseDTO = IndividualRegistrationRequestMapperManual.toDto(updatedRequest);
         responseDTO.setReviewById(reviewById);
         return responseDTO;
     }
+
     @Override
     public void delete(Long id) {
         if (!requestRepository.existsById(id)) {
@@ -124,14 +207,12 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
 
     @Override
     public List<IndividualRegistrationRequestDTO> getAll() {
-        return requestRepository.findAll().stream().map(requestMapper::toDto).collect(Collectors.toList());
+        return requestRepository.findAll().stream().map(IndividualRegistrationRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
     public IndividualRegistrationRequestDTO getById(Long id) {
-        return requestRepository.findById(id)
-                .map(requestMapper::toDto)
-                .orElse(null);
+        return requestRepository.findById(id).map(IndividualRegistrationRequestMapperManual::toDto).orElse(null);
     }
 
     @Override
@@ -144,7 +225,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         // username");
         //        }
         List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsername(createdByUsername);
-        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+        return requests.stream().map(IndividualRegistrationRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -161,7 +242,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         //        }
         List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsernameAndHackathonId(
                 createdByUsername, Long.parseLong(hackathonId));
-        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+        return requests.stream().map(IndividualRegistrationRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -175,7 +256,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         //        }
         List<IndividualRegistrationRequest> requests =
                 requestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+        return requests.stream().map(IndividualRegistrationRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -192,6 +273,6 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         //        }
         List<IndividualRegistrationRequest> requests = requestRepository.findAllByHackathonIdAndStatus(
                 Long.parseLong(hackathonId), IndividualRegistrationRequestStatus.APPROVED);
-        return requests.stream().map(requestMapper::toDto).collect(Collectors.toList());
+        return requests.stream().map(IndividualRegistrationRequestMapperManual::toDto).collect(Collectors.toList());
     }
 }

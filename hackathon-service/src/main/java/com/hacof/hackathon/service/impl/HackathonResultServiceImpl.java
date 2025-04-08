@@ -3,7 +3,6 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.mapper.manual.HackathonResultMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
@@ -14,6 +13,7 @@ import com.hacof.hackathon.dto.HackathonResultDTO;
 import com.hacof.hackathon.entity.HackathonResult;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
+import com.hacof.hackathon.mapper.manual.HackathonResultMapperManual;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.HackathonResultRepository;
 import com.hacof.hackathon.repository.TeamRepository;
@@ -153,7 +153,8 @@ public class HackathonResultServiceImpl implements HackathonResultService {
 
     @Override
     public List<HackathonResultDTO> getAllByHackathonId(String hackathonId) {
-        List<HackathonResult> results = hackathonResultRepository.findDetailedByHackathonId(Long.parseLong(hackathonId));
+        List<HackathonResult> results =
+                hackathonResultRepository.findDetailedByHackathonId(Long.parseLong(hackathonId));
         return results.stream().map(HackathonResultMapperManual::toDto).collect(Collectors.toList());
     }
 

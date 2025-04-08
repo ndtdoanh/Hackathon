@@ -3,18 +3,14 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.mapper.manual.MentorTeamMapperManual;
 import jakarta.transaction.Transactional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.MentorTeamDTO;
 import com.hacof.hackathon.entity.MentorTeam;
-import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.MentorTeamMapper;
+import com.hacof.hackathon.mapper.manual.MentorTeamMapperManual;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.MentorTeamRepository;
 import com.hacof.hackathon.repository.TeamRepository;
@@ -35,60 +31,62 @@ public class MentorTeamServiceImpl implements MentorTeamService {
     TeamRepository teamRepository;
     UserRepository userRepository;
     HackathonRepository hackathonRepository;
-    MentorTeamMapper mentorTeamMapper;
+    // MentorTeamMapper mentorTeamMapper;
 
     // not use
     @Override
     public MentorTeamDTO create(MentorTeamDTO mentorTeamDTO) {
-        validateForeignKeys(mentorTeamDTO);
-        MentorTeam mentorTeam = mentorTeamMapper.toEntity(mentorTeamDTO);
-
-        // Manually set the foreign keys
-        mentorTeam.setHackathon(hackathonRepository
-                .findById(Long.parseLong(mentorTeamDTO.getHackathonId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
-        mentorTeam.setTeam(teamRepository
-                .findById(Long.parseLong(mentorTeamDTO.getTeamId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
-        mentorTeam.setMentor(userRepository
-                .findById(Long.parseLong(mentorTeamDTO.getMentorId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found")));
-
-        return mentorTeamMapper.toDto(mentorTeamRepository.save(mentorTeam));
+        //        validateForeignKeys(mentorTeamDTO);
+        //        MentorTeam mentorTeam = mentorTeamMapper.toEntity(mentorTeamDTO);
+        //
+        //        // Manually set the foreign keys
+        //        mentorTeam.setHackathon(hackathonRepository
+        //                .findById(Long.parseLong(mentorTeamDTO.getHackathonId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
+        //        mentorTeam.setTeam(teamRepository
+        //                .findById(Long.parseLong(mentorTeamDTO.getTeamId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
+        //        mentorTeam.setMentor(userRepository
+        //                .findById(Long.parseLong(mentorTeamDTO.getMentorId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found")));
+        //
+        //        return mentorTeamMapper.toDto(mentorTeamRepository.save(mentorTeam));
+        return null;
     }
 
     // not use
     @Override
     public MentorTeamDTO update(String id, MentorTeamDTO mentorTeamDTO) {
-        validateForeignKeys(mentorTeamDTO);
-        MentorTeam existingMentorTeam = getMentorTeam(id);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
-
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
-
-        // Manually set the foreign keys
-        existingMentorTeam.setHackathon(hackathonRepository
-                .findById(Long.parseLong(mentorTeamDTO.getHackathonId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
-        existingMentorTeam.setTeam(teamRepository
-                .findById(Long.parseLong(mentorTeamDTO.getTeamId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
-        existingMentorTeam.setMentor(userRepository
-                .findById(Long.parseLong(mentorTeamDTO.getMentorId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found")));
-
-        existingMentorTeam.setLastModifiedBy(currentUser);
-        existingMentorTeam.setLastModifiedDate(mentorTeamDTO.getUpdatedAt());
-        mentorTeamMapper.updateEntityFromDto(mentorTeamDTO, existingMentorTeam);
-
-        return mentorTeamMapper.toDto(mentorTeamRepository.save(existingMentorTeam));
+        //        validateForeignKeys(mentorTeamDTO);
+        //        MentorTeam existingMentorTeam = getMentorTeam(id);
+        //
+        //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //        if (authentication == null || !authentication.isAuthenticated()) {
+        //            throw new IllegalStateException("No authenticated user found");
+        //        }
+        //
+        //        String username = authentication.getName();
+        //        User currentUser = userRepository
+        //                .findByUsername(username)
+        //                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        //
+        //        // Manually set the foreign keys
+        //        existingMentorTeam.setHackathon(hackathonRepository
+        //                .findById(Long.parseLong(mentorTeamDTO.getHackathonId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
+        //        existingMentorTeam.setTeam(teamRepository
+        //                .findById(Long.parseLong(mentorTeamDTO.getTeamId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
+        //        existingMentorTeam.setMentor(userRepository
+        //                .findById(Long.parseLong(mentorTeamDTO.getMentorId()))
+        //                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found")));
+        //
+        //        existingMentorTeam.setLastModifiedBy(currentUser);
+        //        existingMentorTeam.setLastModifiedDate(mentorTeamDTO.getUpdatedAt());
+        //        mentorTeamMapper.updateEntityFromDto(mentorTeamDTO, existingMentorTeam);
+        //
+        //        return mentorTeamMapper.toDto(mentorTeamRepository.save(existingMentorTeam));
+        return null;
     }
 
     // not use
@@ -102,22 +100,15 @@ public class MentorTeamServiceImpl implements MentorTeamService {
 
     @Override
     public List<MentorTeamDTO> getAllByHackathonIdAndTeamId(String hackathonId, String teamId) {
-        List<MentorTeam> mentorTeams = mentorTeamRepository.findAllByHackathonIdAndTeamId(
-                Long.parseLong(hackathonId), Long.parseLong(teamId)
-        );
-        return mentorTeams.stream()
-                .map(MentorTeamMapperManual::toDto)
-                .collect(Collectors.toList());
+        List<MentorTeam> mentorTeams =
+                mentorTeamRepository.findAllByHackathonIdAndTeamId(Long.parseLong(hackathonId), Long.parseLong(teamId));
+        return mentorTeams.stream().map(MentorTeamMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<MentorTeamDTO> getAllByMentorId(String mentorId) {
-        List<MentorTeam> mentorTeams = mentorTeamRepository.findAllByMentorId(
-                Long.parseLong(mentorId)
-        );
-        return mentorTeams.stream()
-                .map(MentorTeamMapperManual::toDto)
-                .collect(Collectors.toList());
+        List<MentorTeam> mentorTeams = mentorTeamRepository.findAllByMentorId(Long.parseLong(mentorId));
+        return mentorTeams.stream().map(MentorTeamMapperManual::toDto).collect(Collectors.toList());
     }
 
     private void validateForeignKeys(MentorTeamDTO mentorTeamDTO) {

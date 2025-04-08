@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.dto.TeamRequestMemberDTO;
-import com.hacof.hackathon.mapper.manual.TeamRequestMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -20,11 +18,13 @@ import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.*;
 import com.hacof.hackathon.dto.TeamRequestDTO;
+import com.hacof.hackathon.dto.TeamRequestMemberDTO;
 import com.hacof.hackathon.dto.TeamRequestSearchDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamRequestMapper;
+import com.hacof.hackathon.mapper.manual.TeamRequestMapperManual;
 import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.NotificationService;
 import com.hacof.hackathon.service.TeamRequestService;
@@ -95,13 +95,11 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     @Override
     public List<TeamRequestDTO> getAllTeamRequests() {
-//        if (teamRequestRepository.findAll().isEmpty()) {
-//            throw new ResourceNotFoundException("No team requests found");
-//        }
+        //        if (teamRequestRepository.findAll().isEmpty()) {
+        //            throw new ResourceNotFoundException("No team requests found");
+        //        }
         List<TeamRequest> teamRequests = teamRequestRepository.findAll();
-        return teamRequests.stream()
-                .map(TeamRequestMapperManual::toDto)
-                .collect(Collectors.toList());
+        return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -124,7 +122,6 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         userIds.add(String.valueOf(currentUser.getId()));
 
-
         TeamRequest teamRequest = TeamRequest.builder()
                 .hackathon(hackathon)
                 .name(request.getName())
@@ -134,23 +131,24 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .teamRequestMembers(new ArrayList<>())
                 .build();
 
-//        request.getTeamRequestMembers().forEach(member -> {
-//            if (member.getUserId() == null || member.getUserId().trim().isEmpty()) {
-//                log.error("UserId is null for member: {}", member);
-//                throw new InvalidInputException("UserId cannot be null");
-//            }
-//
-//            User user = userRepository
-//                    .findById(Long.parseLong(member.getUserId()))
-//                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + member.getUserId()));
-//
-//            TeamRequestMember memberEntity = TeamRequestMember.builder()
-//                    .teamRequest(teamRequest)
-//                    .user(user)
-//                    .status(TeamRequestMemberStatus.PENDING)
-//                    .build();
-//            teamRequest.getTeamRequestMembers().add(memberEntity);
-//        });
+        //        request.getTeamRequestMembers().forEach(member -> {
+        //            if (member.getUserId() == null || member.getUserId().trim().isEmpty()) {
+        //                log.error("UserId is null for member: {}", member);
+        //                throw new InvalidInputException("UserId cannot be null");
+        //            }
+        //
+        //            User user = userRepository
+        //                    .findById(Long.parseLong(member.getUserId()))
+        //                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " +
+        // member.getUserId()));
+        //
+        //            TeamRequestMember memberEntity = TeamRequestMember.builder()
+        //                    .teamRequest(teamRequest)
+        //                    .user(user)
+        //                    .status(TeamRequestMemberStatus.PENDING)
+        //                    .build();
+        //            teamRequest.getTeamRequestMembers().add(memberEntity);
+        //        });
 
         userIds.forEach(userId -> {
             User user = userRepository
@@ -165,14 +163,14 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             teamRequest.getTeamRequestMembers().add(memberEntity);
         });
 
-
         TeamRequest saved = teamRequestRepository.save(teamRequest);
 
         // Send email to all members
         teamRequest.getTeamRequestMembers().stream()
                 .map(TeamRequestMember::getUser)
                 .forEach(user -> {
-                    emailService.sendEmail(user.getEmail(), "Team Request Created", "A new team request has been created.");
+                    emailService.sendEmail(
+                            user.getEmail(), "Team Request Created", "A new team request has been created.");
                 });
 
         TeamRequestDTO response = toDto(saved);
@@ -282,7 +280,9 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             // Create UserTeam entries only if they don't exist
             for (TeamRequestMember member : request.getTeamRequestMembers()) {
                 if (userTeamRepository.existsByUserAndTeam(member.getUser(), team)) {
-                    log.debug("UserTeam entry already exists for user {}", member.getUser().getUsername());
+                    log.debug(
+                            "UserTeam entry already exists for user {}",
+                            member.getUser().getUsername());
                 } else {
                     UserTeam userTeam = UserTeam.builder()
                             .user(member.getUser())
@@ -324,7 +324,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             }
 
             // Fetch board for boardUser creation
-            Board board = boardRepository.findByTeamId(team.getId())
+            Board board = boardRepository
+                    .findByTeamId(team.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Board not found for team: " + team.getId()));
             for (UserTeam userTeam : team.getTeamMembers()) {
                 User user = userTeam.getUser();
@@ -360,8 +361,10 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             }
 
             // Create ConversationUsers only if they don't exist
-            Conversation conversation = conversationRepository.findByTeamId(team.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Conversation not found for team: " + team.getId()));
+            Conversation conversation = conversationRepository
+                    .findByTeamId(team.getId())
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Conversation not found for team: " + team.getId()));
 
             for (UserTeam userTeam : team.getTeamMembers()) {
                 User user = userTeam.getUser();
@@ -382,7 +385,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
             // Create TeamRound entry only if it doesn't exist
             Round round = roundRepository
-                    .findFirstByHackathonIdOrderByRoundNumberAsc(request.getHackathon().getId())
+                    .findFirstByHackathonIdOrderByRoundNumberAsc(
+                            request.getHackathon().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("No rounds found for hackathon"));
             TeamRound teamRound = TeamRound.builder()
                     .team(team)
@@ -393,8 +397,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             teamRoundRepository.save(teamRound);
             log.debug("Created team round for team {}", team.getId());
 
-
-          // Create TeamHackathon entry only if it doesn't exist
+            // Create TeamHackathon entry only if it doesn't exist
             if (teamHackathonRepository.existsByTeamAndHackathon(team, request.getHackathon())) {
                 log.debug("TeamHackathon entry already exists for team {}", team.getId());
             } else {
@@ -534,7 +537,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByUsername(username)
+        return userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Current user not found"));
     }
 }

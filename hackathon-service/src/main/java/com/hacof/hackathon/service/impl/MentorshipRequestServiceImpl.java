@@ -4,20 +4,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.constant.MentorshipStatus;
-import com.hacof.hackathon.entity.*;
-import com.hacof.hackathon.exception.InvalidInputException;
-import com.hacof.hackathon.mapper.manual.MentorshipRequestMapperManual;
-import com.hacof.hackathon.repository.*;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.hacof.hackathon.constant.MentorshipStatus;
 import com.hacof.hackathon.dto.MentorshipRequestDTO;
+import com.hacof.hackathon.entity.*;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.MentorshipRequestMapper;
+import com.hacof.hackathon.mapper.manual.MentorshipRequestMapperManual;
+import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.MentorshipRequestService;
 
 import lombok.RequiredArgsConstructor;
@@ -51,8 +51,6 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
         Team team = teamRepository
                 .findById(Long.parseLong(mentorshipRequestDTO.getTeamId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
-
-
 
         User evaluatedBy = null;
         if (mentorshipRequestDTO.getEvaluatedById() != null) {
@@ -95,7 +93,8 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
 
         log.debug("Current user: {}", currentUser.getUsername());
         if (dto.getStatus() != null) {
-            MentorshipStatus newStatus = MentorshipStatus.valueOf(dto.getStatus().toUpperCase());
+            MentorshipStatus newStatus =
+                    MentorshipStatus.valueOf(dto.getStatus().toUpperCase());
             mentorshipRequest.setStatus(newStatus);
 
             if (newStatus == MentorshipStatus.APPROVED) {
@@ -124,12 +123,12 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
             mentorshipRequest.setTeam(team);
         }
 
-//        if (dto.getEvaluatedById() != null) {
-//            User evaluatedBy = userRepository
-//                    .findById(Long.parseLong(dto.getEvaluatedById()))
-//                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-//            mentorshipRequest.setEvaluatedBy(evaluatedBy);
-//        }
+        //        if (dto.getEvaluatedById() != null) {
+        //            User evaluatedBy = userRepository
+        //                    .findById(Long.parseLong(dto.getEvaluatedById()))
+        //                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        //            mentorshipRequest.setEvaluatedBy(evaluatedBy);
+        //        }
         mentorshipRequest.setEvaluatedAt(LocalDateTime.now());
         mentorshipRequest.setEvaluatedBy(currentUser);
 
@@ -173,7 +172,7 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
     @Override
     public List<MentorshipRequestDTO> getAllByMentorId(String mentorId) {
         List<MentorshipRequest> requests = mentorshipRequestRepository.findAllByMentorId(Long.parseLong(mentorId));
-        return requests.stream().map(MentorshipRequestMapperManual  ::toDto).collect(Collectors.toList());
+        return requests.stream().map(MentorshipRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     private Long parseLongSafely(String value) {
@@ -186,9 +185,7 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
 
     private void createMentorTeamIfNotExists(MentorshipRequest mentorshipRequest) {
         boolean exists = mentorTeamRepository.existsByHackathonAndMentorAndTeam(
-                mentorshipRequest.getHackathon(),
-                mentorshipRequest.getMentor(),
-                mentorshipRequest.getTeam());
+                mentorshipRequest.getHackathon(), mentorshipRequest.getMentor(), mentorshipRequest.getTeam());
 
         if (!exists) {
             MentorTeam mentorTeam = new MentorTeam();
@@ -197,8 +194,10 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
             mentorTeam.setTeam(mentorshipRequest.getTeam());
 
             mentorTeamRepository.save(mentorTeam);
-            log.info("Created MentorTeam for mentor: {}, team: {}",
-                    mentorTeam.getMentor().getUsername(), mentorTeam.getTeam().getName());
+            log.info(
+                    "Created MentorTeam for mentor: {}, team: {}",
+                    mentorTeam.getMentor().getUsername(),
+                    mentorTeam.getTeam().getName());
         } else {
             log.info("MentorTeam already exists for this combination. Skipped creation.");
         }

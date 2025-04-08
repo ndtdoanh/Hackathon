@@ -3,8 +3,9 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +21,7 @@ public class TeamRequestDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @NotNull(message = "Hackathon ID is required")
     String hackathonId;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     HackathonDTO hackathon;
 
@@ -35,6 +37,7 @@ public class TeamRequestDTO {
     // String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String reviewById;
+
     UserDTO reviewedBy; // user reviewed the request
 
     List<TeamRequestMemberDTO> teamRequestMembers;

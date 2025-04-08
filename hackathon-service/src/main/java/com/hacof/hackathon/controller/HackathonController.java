@@ -135,8 +135,7 @@ public class HackathonController {
     }
 
     @DeleteMapping("/results/{id}")
-    public ResponseEntity<CommonResponse<HackathonResultDTO>> deleteHackathonResult(
-            @PathVariable String id) {
+    public ResponseEntity<CommonResponse<HackathonResultDTO>> deleteHackathonResult(@PathVariable String id) {
         hackathonResultService.delete(Long.parseLong(id));
 
         return ResponseEntity.ok(new CommonResponse<>(

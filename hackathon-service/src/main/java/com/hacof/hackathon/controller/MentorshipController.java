@@ -44,8 +44,8 @@ public class MentorshipController {
     @PostMapping("/approve")
     public ResponseEntity<CommonResponse<MentorshipRequestDTO>> approveMentorshipRequest(
             @RequestBody @Valid CommonRequest<MentorshipRequestDTO> request) {
-        MentorshipRequestDTO mentorshipRequestDTO =
-                mentorshipRequestService.approveOrReject(Long.parseLong(request.getData().getId()), request.getData());
+        MentorshipRequestDTO mentorshipRequestDTO = mentorshipRequestService.approveOrReject(
+                Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -57,8 +57,8 @@ public class MentorshipController {
     @PostMapping("/reject")
     public ResponseEntity<CommonResponse<MentorshipRequestDTO>> rejectMentorshipRequest(
             @RequestBody @Valid CommonRequest<MentorshipRequestDTO> request) {
-        MentorshipRequestDTO mentorshipRequestDTO =
-                mentorshipRequestService.approveOrReject(Long.parseLong(request.getData().getId()), request.getData());
+        MentorshipRequestDTO mentorshipRequestDTO = mentorshipRequestService.approveOrReject(
+                Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -70,8 +70,8 @@ public class MentorshipController {
     @PutMapping
     public ResponseEntity<CommonResponse<MentorshipRequestDTO>> updateMentorshipRequest(
             @RequestBody @Valid CommonRequest<MentorshipRequestDTO> request) {
-        MentorshipRequestDTO mentorshipRequestDTO =
-                mentorshipRequestService.approveOrReject(Long.parseLong(request.getData().getId()), request.getData());
+        MentorshipRequestDTO mentorshipRequestDTO = mentorshipRequestService.approveOrReject(
+                Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -81,8 +81,7 @@ public class MentorshipController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<MentorshipRequestDTO>> deleteMentorshipRequest(
-            @PathVariable String id) {
+    public ResponseEntity<CommonResponse<MentorshipRequestDTO>> deleteMentorshipRequest(@PathVariable String id) {
         mentorshipRequestService.delete(Long.parseLong(id));
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
                 //                request.getRequestId(),
@@ -167,8 +166,8 @@ public class MentorshipController {
     public ResponseEntity<CommonResponse<MentorshipSessionRequestDTO>> approveMentorshipSessionRequest(
             @Valid @RequestBody CommonRequest<MentorshipSessionRequestDTO> request) {
         log.debug("Approving mentorship session request: {}", request.getData().getId());
-        MentorshipSessionRequestDTO updated =
-                mentorshipSessionRequestService.approveOrReject(request.getData().getId(), request.getData());
+        MentorshipSessionRequestDTO updated = mentorshipSessionRequestService.approveOrReject(
+                request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -180,8 +179,8 @@ public class MentorshipController {
     public ResponseEntity<CommonResponse<MentorshipSessionRequestDTO>> rejectMentorshipSessionRequest(
             @Valid @RequestBody CommonRequest<MentorshipSessionRequestDTO> request) {
         log.debug("Rejecting mentorship session request: {}", request.getData().getId());
-        MentorshipSessionRequestDTO updated =
-                mentorshipSessionRequestService.approveOrReject(request.getData().getId(), request.getData());
+        MentorshipSessionRequestDTO updated = mentorshipSessionRequestService.approveOrReject(
+                request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 //                request.getRequestId(),
                 //                LocalDateTime.now(),
@@ -201,8 +200,7 @@ public class MentorshipController {
     }
 
     @DeleteMapping("/sessions/{id}")
-    public ResponseEntity<CommonResponse<Void>> deleteMentorshipSessionRequest(
-            @PathVariable String id) {
+    public ResponseEntity<CommonResponse<Void>> deleteMentorshipSessionRequest(@PathVariable String id) {
         mentorshipSessionRequestService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),

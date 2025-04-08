@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +13,7 @@ import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -60,10 +60,8 @@ public class MentorTeamController {
 
     @PostMapping("/filter-by-hackathon-and-team")
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByHackathonIdAndTeamId(
-            @RequestParam String hackathonId,
-            @RequestParam String teamId) {
-        List<MentorTeamDTO> results = mentorTeamService.getAllByHackathonIdAndTeamId(
-                hackathonId, teamId);
+            @RequestParam String hackathonId, @RequestParam String teamId) {
+        List<MentorTeamDTO> results = mentorTeamService.getAllByHackathonIdAndTeamId(hackathonId, teamId);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),
                 //                LocalDateTime.now(),
@@ -72,8 +70,7 @@ public class MentorTeamController {
     }
 
     @PostMapping("/filter-by-mentor")
-    public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByMentorId(
-            @RequestParam String mentorId) {
+    public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByMentorId(@RequestParam String mentorId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByMentorId(mentorId);
         return ResponseEntity.ok(new CommonResponse<>(
                 //                UUID.randomUUID().toString(),

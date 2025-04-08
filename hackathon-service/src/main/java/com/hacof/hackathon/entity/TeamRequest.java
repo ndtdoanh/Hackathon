@@ -51,11 +51,11 @@ public class TeamRequest extends AuditUserBase {
     @Column(name = "status")
     TeamRequestStatus status;
 
-    //@JoinColumn(name = "confirmation_deadline")
+    // @JoinColumn(name = "confirmation_deadline")
     @Column(name = "confirmation_deadline")
     LocalDateTime confirmationDeadline;
 
-    //@JoinColumn(name = "note")
+    // @JoinColumn(name = "note")
     @Column(name = "note")
     String note;
 

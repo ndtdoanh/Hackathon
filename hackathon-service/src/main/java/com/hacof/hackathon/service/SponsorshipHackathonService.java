@@ -12,4 +12,6 @@ public interface SponsorshipHackathonService {
     void delete(Long id);
 
     List<SponsorshipHackathonDTO> getAll();
+
+    SponsorshipHackathonDTO getById(String id);
 }

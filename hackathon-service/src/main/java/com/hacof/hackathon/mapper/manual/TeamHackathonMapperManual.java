@@ -10,10 +10,10 @@ public class TeamHackathonMapperManual {
 
         TeamHackathonDTO dto = new TeamHackathonDTO();
         dto.setId(String.valueOf(entity.getId()));
-//        dto.setStatus(entity.getStatus());
-//        dto.setCreatedAt(entity.getCreatedAt());
-//        dto.setLastModifiedByUserName(entity.getLastModifiedByUserName());
-//        dto.setUpdatedAt(entity.getUpdatedAt());
+        //        dto.setStatus(entity.getStatus());
+        //        dto.setCreatedAt(entity.getCreatedAt());
+        //        dto.setLastModifiedByUserName(entity.getLastModifiedByUserName());
+        //        dto.setUpdatedAt(entity.getUpdatedAt());
 
         if (entity.getHackathon() != null) {
             dto.setHackathon(HackathonMapperManual.toDto(entity.getHackathon()));
@@ -31,10 +31,10 @@ public class TeamHackathonMapperManual {
             entity.setId(Long.parseLong(dto.getId()));
         }
 
-//        entity.setStatus(dto.getStatus());
-//        entity.setCreatedAt(dto.getCreatedAt());
-//        entity.setLastModifiedByUserName(dto.getLastModifiedByUserName());
-//        entity.setUpdatedAt(dto.getUpdatedAt());
+        //        entity.setStatus(dto.getStatus());
+        //        entity.setCreatedAt(dto.getCreatedAt());
+        //        entity.setLastModifiedByUserName(dto.getLastModifiedByUserName());
+        //        entity.setUpdatedAt(dto.getUpdatedAt());
 
         if (dto.getHackathon() != null) {
             entity.setHackathon(HackathonMapperManual.toEntity(dto.getHackathon()));

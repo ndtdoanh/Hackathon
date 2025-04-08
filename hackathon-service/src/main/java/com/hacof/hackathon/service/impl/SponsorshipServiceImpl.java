@@ -1,5 +1,6 @@
 package com.hacof.hackathon.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,28 +16,43 @@ import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.Sponsorship;
 import com.hacof.hackathon.entity.SponsorshipHackathon;
 import com.hacof.hackathon.entity.User;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.SponsorshipMapper;
+import com.hacof.hackathon.mapper.manual.SponsorshipMapperManual;
 import com.hacof.hackathon.repository.SponsorshipRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.SponsorshipService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(makeFinal = true)
 public class SponsorshipServiceImpl implements SponsorshipService {
-    private final SponsorshipRepository sponsorshipRepository;
-    private final UserRepository userRepository;
-    private final SponsorshipMapper sponsorshipMapper;
+    SponsorshipRepository sponsorshipRepository;
+    UserRepository userRepository;
 
     @Override
     public SponsorshipDTO create(SponsorshipDTO sponsorshipDTO) {
-        Sponsorship sponsorship = sponsorshipMapper.toEntity(sponsorshipDTO);
+        if (sponsorshipDTO.getTimeFrom() == null || sponsorshipDTO.getTimeTo() == null) {
+            throw new InvalidInputException("Time from and time to must be provided");
+        }
+        if (sponsorshipDTO.getTimeFrom().isAfter(sponsorshipDTO.getTimeTo())) {
+            throw new InvalidInputException("Time from must be before time to");
+        }
+        if (sponsorshipDTO.getTimeFrom().isBefore(LocalDateTime.now())) {
+            throw new InvalidInputException("Time from must be in the future");
+        }
+        if (sponsorshipDTO.getTimeTo().isBefore(LocalDateTime.now())) {
+            throw new InvalidInputException("Time to must be in the future");
+        }
+
+        Sponsorship sponsorship = SponsorshipMapperManual.toEntity(sponsorshipDTO);
         sponsorship = sponsorshipRepository.save(sponsorship);
-        return sponsorshipMapper.toDto(sponsorship);
+        return SponsorshipMapperManual.toDto(sponsorship);
     }
 
     @Override
@@ -86,7 +102,7 @@ public class SponsorshipServiceImpl implements SponsorshipService {
                 : new HashSet<>();
         sponsorship.setSponsorshipHackathons(sponsorshipHackathons);
         sponsorship = sponsorshipRepository.save(sponsorship);
-        return sponsorshipMapper.toDto(sponsorship);
+        return SponsorshipMapperManual.toDto(sponsorship);
     }
 
     @Override
@@ -99,11 +115,8 @@ public class SponsorshipServiceImpl implements SponsorshipService {
 
     @Override
     public List<SponsorshipDTO> getAll(Specification<Sponsorship> specification) {
-        //        if (sponsorshipRepository.findAll().isEmpty()) {
-        //            throw new ResourceNotFoundException("No sponsorships found");
-        //        }
         return sponsorshipRepository.findAll(specification).stream()
-                .map(sponsorshipMapper::toDto)
+                .map(SponsorshipMapperManual::toDto)
                 .collect(Collectors.toList());
     }
 }
