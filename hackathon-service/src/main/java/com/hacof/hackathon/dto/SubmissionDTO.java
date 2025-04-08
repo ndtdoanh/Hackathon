@@ -1,18 +1,20 @@
 package com.hacof.hackathon.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubmissionDTO {
-    private String id;
-    private String title;
-    private String description;
-    private String fileUrl;
-    private String status;
+    String id;
+    String roundId;
+    RoundDTO round;
+    String teamId;
+    TeamDTO team;
+    // List<FileUrlDTO> submissionFiles;
+    // List<JudgeSubmissionDTO> judgeSubmissions;
+    String status;
+    String submissionAt;
+    String finalScore;
 }

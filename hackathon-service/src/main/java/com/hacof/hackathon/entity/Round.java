@@ -18,7 +18,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hacof.hackathon.constant.RoundStatus;
 
 import lombok.AccessLevel;
@@ -86,9 +85,7 @@ public class Round extends AuditUserBase {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<TeamRound> teamRounds = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "round",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonManagedReference
-    List<RoundLocation> roundLocations = new ArrayList<>();
+    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
+    //    @JsonManagedReference
+    List<RoundLocation> roundLocations;
 }

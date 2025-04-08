@@ -14,8 +14,9 @@ import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.LocationMapper;
+import com.hacof.hackathon.mapper.manual.LocationMapperManual;
 import com.hacof.hackathon.repository.LocationRepository;
+import com.hacof.hackathon.repository.RoundLocationRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.LocationService;
 
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(makeFinal = true)
 public class LocationServiceImpl implements LocationService {
     LocationRepository locationRepository;
-    LocationMapper locationMapper;
+    RoundLocationRepository roundLocationRepository;
     UserRepository userRepository;
 
     @Override
@@ -40,8 +41,10 @@ public class LocationServiceImpl implements LocationService {
             throw new ResourceNotFoundException("Location name already exists");
         }
 
-        Location location = locationMapper.toEntity(locationDTO);
-        return locationMapper.toDto(locationRepository.save(location));
+        //        Location location = locationMapper.toEntity(locationDTO);
+        //        return locationMapper.toDto(locationRepository.save(location));
+        Location location = LocationMapperManual.toEntity(locationDTO);
+        return LocationMapperManual.toDto(locationRepository.save(location));
     }
 
     @Override
@@ -74,7 +77,7 @@ public class LocationServiceImpl implements LocationService {
         existingLocation.setLastModifiedDate(locationDTO.getUpdatedAt());
         existingLocation.setLastModifiedBy(currentUser);
         existingLocation.setCreatedBy(createdBy);
-        return locationMapper.toDto(locationRepository.save(existingLocation));
+        return LocationMapperManual.toDto(locationRepository.save(existingLocation));
     }
 
     @Override
@@ -82,6 +85,7 @@ public class LocationServiceImpl implements LocationService {
         if (!locationRepository.existsById(id)) {
             throw new ResourceNotFoundException("Location not found");
         }
+        roundLocationRepository.deleteById(id);
         locationRepository.deleteById(id);
     }
 
@@ -92,7 +96,7 @@ public class LocationServiceImpl implements LocationService {
         //        }
 
         return locationRepository.findAll(spec).stream()
-                .map(locationMapper::toDto)
+                .map(LocationMapperManual::toDto)
                 .collect(Collectors.toList());
     }
 

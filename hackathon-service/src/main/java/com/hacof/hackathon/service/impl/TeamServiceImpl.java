@@ -6,8 +6,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.exception.InvalidInputException;
-import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -16,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.hacof.hackathon.constant.*;
 import com.hacof.hackathon.dto.TeamDTO;
 import com.hacof.hackathon.entity.*;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamMapper;
+import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.TeamService;
 import com.hacof.hackathon.specification.TeamSpecification;
@@ -36,6 +36,7 @@ public class TeamServiceImpl implements TeamService {
     UserRepository userRepository;
     TeamRepository teamRepository;
     TeamMapper teamMapper;
+    UserTeamRepository userTeamRepository;
     BoardRepository boardRepository;
     BoardUserRepository boardUserRepository;
     ConversationRepository conversationRepository;
@@ -50,127 +51,62 @@ public class TeamServiceImpl implements TeamService {
         List<TeamDTO> createdTeams = new ArrayList<>();
         List<IndividualRegistrationRequest> approvedRequests =
                 individualRegistrationRequestRepository.findAllByStatus(IndividualRegistrationRequestStatus.PENDING);
+
         List<User> users = approvedRequests.stream()
-                .map(request -> request.getCreatedBy())
+                .map(IndividualRegistrationRequest::getCreatedBy)
                 .distinct()
                 .collect(Collectors.toList());
-        log.debug("Fetched approved users: {}", users);
 
         List<User> eligibleUsers =
                 users.stream().filter(user -> user.getStatus() == Status.ACTIVE).collect(Collectors.toList());
-        log.debug("Eligible users: {}", eligibleUsers);
 
         Random random = new Random();
         for (int i = 0; i < eligibleUsers.size(); i += 4) {
-            int teamSize =
-                    Math.min(4 + random.nextInt(3), eligibleUsers.size() - i); // Random team size between 4 and 6
+            int teamSize = Math.min(4 + random.nextInt(3), eligibleUsers.size() - i); // Team size between 4 and 6
             List<User> teamMembers = new ArrayList<>(eligibleUsers.subList(i, i + teamSize));
-            log.debug("Creating team with members: {}", teamMembers);
 
-            // Create a new team
+            // Create and save the team
             Team team = new Team();
             team.setName("Team " + UUID.randomUUID().toString());
             teamRepository.save(team);
-            log.debug("Created team: {}", team);
 
             // Assign members to the team
-            teamMembers.forEach(member -> {
+            for (User member : teamMembers) {
                 UserTeam userTeam = new UserTeam();
                 userTeam.setUser(member);
                 userTeam.setTeam(team);
-                member.getUserTeams().add(userTeam);
-                userRepository.save(member);
-                log.debug("Assigned user {} to team {}", member, team);
-            });
-
-            // Modify set team leader
-            User teamLeader;
-            if (teamLeaderId != null && !teamLeaderId.isEmpty()) {
-                teamLeader = userRepository
-                        .findById(Long.parseLong(teamLeaderId))
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found: " + teamLeaderId));
-            } else {
-                teamLeader = teamMembers.get(random.nextInt(teamMembers.size()));
+                userTeamRepository.save(userTeam);
             }
+
+            // Assign team leader
+            User teamLeader = (teamLeaderId != null && !teamLeaderId.isEmpty())
+                    ? userRepository
+                            .findById(Long.parseLong(teamLeaderId))
+                            .orElseThrow(() -> new ResourceNotFoundException("User not found: " + teamLeaderId))
+                    : teamMembers.get(random.nextInt(teamMembers.size()));
             team.setTeamLeader(teamLeader);
             teamRepository.save(team);
-            log.debug("Set team leader: {}", teamLeader);
 
-            //            List<TeamHackathon> teamHackathons = team.getTeamHackathons();
-            //            if (teamHackathons == null || teamHackathons.isEmpty()) {
-            //                throw new ResourceNotFoundException("Hackathon not found for team: " + team.getId());
-            //            }
-            //            Hackathon hackathon = teamHackathons.get(0).getHackathon();
-            //            // Create Schedule
-            //            Schedule schedule =
-            //                    Schedule.builder().team(team).hackathon(hackathon).build();
-            //            scheduleRepository.save(schedule);
-            //            log.debug("Created schedule for team {}", team.getId());
-            //
-            //            // Create Board
-            //            Board board = Board.builder().team(team).owner(team.getCreatedBy()).build();
-            //            boardRepository.save(board);
-            //            log.debug("Created board for team {}", team.getId());
-            //
-            //            // Create BoardUsers
-            //            for (UserTeam userTeam : team.getTeamMembers()) {
-            //                BoardUser boardUser = BoardUser.builder()
-            //                        .board(board)
-            //                        .user(userTeam.getUser())
-            //                        .role(
-            //                                userTeam.getUser().getId()
-            //                                                == team.getTeamLeader().getId()
-            //                                        ? BoardUserRole.ADMIN
-            //                                        : BoardUserRole.MEMBER)
-            //                        .build();
-            //                boardUserRepository.save(boardUser);
-            //            }
-            //            log.debug("Created board users for team {}", team.getId());
-            //
-            //            // Create Conversation
-            //            Conversation conversation = Conversation.builder()
-            //                    .team(team)
-            //                    .type(ConversationType.PRIVATE)
-            //                    .name(team.getName())
-            //                    .build();
-            //            conversationRepository.save(conversation);
-            //            log.debug("Created conversation for team {}", team.getId());
-            //
-            //            // Create ConversationUsers
-            //            for (UserTeam userTeam : team.getTeamMembers()) {
-            //                ConversationUser conversationUser = ConversationUser.builder()
-            //                        .user(userTeam.getUser())
-            //                        .conversation(conversation)
-            //                        .isDeleted(false)
-            //                        .build();
-            //                conversationUserRepository.save(conversationUser);
-            //            }
-            //            log.debug("Created conversation users for team {}", team.getId());
-            //
-            //            // Create TeamRound
-            //            Round round = roundRepository
-            //                    .findFirstByHackathonIdOrderByRoundNumberAsc(hackathon.getId())
-            //                    .orElseThrow(() -> new ResourceNotFoundException("No rounds found for hackathon"));
-            //            TeamRound teamRound = TeamRound.builder()
-            //                    .team(team)
-            //                    .round(round)
-            //                    .status(TeamRoundStatus.PENDING)
-            //                    .description("Team " + team.getName() + " registered for round " +
-            // round.getRoundNumber())
-            //                    .build();
-            //            teamRoundRepository.save(teamRound);
-            //            log.debug("Created team round for team {}", team.getId());
+            // Create related entities
+            createRelatedEntitiesForTeam(team, teamMembers);
 
-            //            UserDTO teamLeaderDTO = new UserDTO();
-            //            teamLeaderDTO.setId(String.valueOf(teamLeader.getId()));
-            //            teamDTO.setTeamLeaderId(teamLeaderDTO);
-            //
-            //            createdTeams.add(teamDTO);
-            //            log.debug("Added team to createdTeams: {}", teamDTO);
+            // Convert to DTO and add to the result list
+            createdTeams.add(TeamMapperManual.toDto(team));
         }
 
-        log.debug("Finished createBulkTeams with createdTeams: {}", createdTeams);
         return createdTeams;
+    }
+
+    private void createRelatedEntitiesForTeam(Team team, List<User> teamMembers) {
+        // Example for creating a Schedule entity
+        Schedule schedule = new Schedule();
+        schedule.setTeam(team);
+        schedule.setName(team.getName() + " Schedule");
+        schedule.setDescription("Schedule for " + team.getName());
+        scheduleRepository.save(schedule);
+
+        // Repeat similar steps for the other entities: Board, BoardUser, Conversation,
+        // ConversationUser, TeamRound, TeamHackathon, etc.
     }
 
     @Override

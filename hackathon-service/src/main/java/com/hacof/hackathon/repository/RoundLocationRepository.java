@@ -10,4 +10,7 @@ public interface RoundLocationRepository extends JpaRepository<RoundLocation, Lo
     List<RoundLocation> findByLocationId(Long locationId);
 
     List<RoundLocation> findByRoundId(Long roundId);
+
+    void deleteByRoundId(Long roundId);
+
 }

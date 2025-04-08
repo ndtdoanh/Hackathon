@@ -18,11 +18,17 @@ public class MentorTeamLimitDTO {
     @NotNull(message = "Hackathon ID is required")
     String hackathonId;
 
+    HackathonDTO hackathon;
+
     @NotNull(message = "Mentor ID is required")
     String mentorId;
 
+    UserDTO mentor;
+
     @NotNull(message = "Team ID is required")
     String teamId;
+
+    TeamDTO team;
 
     @NotNull(message = "Max Teams is required")
     int maxTeams;

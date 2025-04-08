@@ -1,30 +1,21 @@
 package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import com.hacof.hackathon.constant.TeamRoundStatus;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TeamRoundDTO {
+public class TeamRoundJudgeDTO {
     String id;
-
-    String teamId;
-    TeamDTO team;
-
-    String roundId;
-    RoundDTO round;
-
-    TeamRoundStatus status;
-
-    String description;
-
-    List<TeamRoundJudgeDTO> teamRoundJudges;
+    String teamRoundId;
+    TeamRoundDTO teamRound;
+    String judgeId;
+    UserDTO judge;
 
     String createdByUserName; // save username
     LocalDateTime createdAt;

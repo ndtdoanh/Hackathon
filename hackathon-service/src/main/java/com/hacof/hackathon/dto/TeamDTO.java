@@ -1,5 +1,6 @@
 package com.hacof.hackathon.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -18,12 +19,10 @@ public class TeamDTO {
     UserDTO teamLeader;
     Set<UserTeamDTO> teamMembers;
 
-    @JsonIgnore
     String bio;
 
     boolean isDeleted;
 
-    @JsonIgnore
     String deletedById;
 
     UserDTO deletedBy;
@@ -53,4 +52,9 @@ public class TeamDTO {
 
     @JsonIgnore
     List<SubmissionDTO> submissions;
+
+    String createdByUserName; // save username
+    LocalDateTime createdAt;
+    String lastModifiedByUserName; // save username
+    LocalDateTime updatedAt = LocalDateTime.now();
 }

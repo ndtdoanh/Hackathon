@@ -517,7 +517,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     private void validateTeamSize(int size, Hackathon hackathon) {
         if (size < hackathon.getMinTeamSize() || size > hackathon.getMaxTeamSize()) {
-            throw new IllegalArgumentException(String.format(
+            throw new InvalidInputException(String.format(
                     "Team Members must be from %d to %d people",
                     hackathon.getMinTeamSize(), hackathon.getMaxTeamSize()));
         }

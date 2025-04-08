@@ -104,14 +104,17 @@ public class TeamRoundController {
 
     @PostMapping("/filter-by-judge-and-round")
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByJudgeIdAndRoundId(
-            @RequestBody CommonRequest<Map<String, String>> request) {
-        String judgeId = request.getData().get("judgeId");
-        String roundId = request.getData().get("roundId");
+            @RequestBody Map<String, String> request) {
+        String judgeId = request.get("judgeId");
+        String roundId = request.get("roundId");
+
+        if (judgeId == null || roundId == null) {
+            return ResponseEntity.badRequest().body(new CommonResponse<>(
+                    new CommonResponse.Result("0400", "Invalid request: judgeId or roundId is missing"), null));
+        }
+
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(judgeId, roundId);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
                 new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
     }
 }

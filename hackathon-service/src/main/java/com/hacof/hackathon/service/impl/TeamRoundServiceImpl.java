@@ -1,8 +1,8 @@
 package com.hacof.hackathon.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -14,12 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.TeamRoundDTO;
 import com.hacof.hackathon.dto.TeamRoundSearchDTO;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.Round;
-import com.hacof.hackathon.entity.Team;
-import com.hacof.hackathon.entity.TeamRound;
+import com.hacof.hackathon.entity.*;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.TeamRoundMapper;
+import com.hacof.hackathon.mapper.manual.TeamRoundMapperManual;
 import com.hacof.hackathon.repository.RoundRepository;
 import com.hacof.hackathon.repository.TeamRepository;
 import com.hacof.hackathon.repository.TeamRoundRepository;
@@ -27,33 +25,60 @@ import com.hacof.hackathon.service.TeamRoundService;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@FieldDefaults(makeFinal = true)
 public class TeamRoundServiceImpl implements TeamRoundService {
-    private final TeamRoundRepository teamRoundRepository;
-    private final TeamRepository teamRepository;
-    private final RoundRepository roundRepository;
-    private final TeamRoundMapper teamRoundMapper;
+    TeamRoundRepository teamRoundRepository;
+    TeamRepository teamRepository;
+    RoundRepository roundRepository;
+    // TeamRoundMapper teamRoundMapper;
 
+    //    @Override
+    //    public TeamRoundDTO create(TeamRoundDTO teamRoundDTO) {
+    //        log.debug("Tạo team round mới");
+    //
+    //        // Validate team exists
+    //        Team team = validateTeam(teamRoundDTO.getTeamId());
+    //
+    //        // Validate round exists
+    //        Round round = validateRound(teamRoundDTO.getRoundId());
+    //
+    //        // Validate team belongs to hackathon
+    //        validateTeamInHackathon(team, round.getHackathon());
+    //
+    //        // Validate team not already in round
+    //        validateTeamNotInRound(team.getId(), round.getId());
+    //
+    //        // Create team round
+    //        TeamRound teamRound = TeamRound.builder()
+    //                .team(team)
+    //                .round(round)
+    //                .status(teamRoundDTO.getStatus())
+    //                .description(teamRoundDTO.getDescription())
+    //                .teamRoundJudges(new ArrayList<>())
+    //                .build();
+    //
+    //        return teamRoundMapper.toDto(teamRoundRepository.save(teamRound));
+    //    }
     @Override
     public TeamRoundDTO create(TeamRoundDTO teamRoundDTO) {
-        log.debug("Tạo team round mới");
-
-        // Validate team exists
         Team team = validateTeam(teamRoundDTO.getTeamId());
 
-        // Validate round exists
         Round round = validateRound(teamRoundDTO.getRoundId());
 
-        // Validate team belongs to hackathon
         validateTeamInHackathon(team, round.getHackathon());
 
-        // Validate team not already in round
         validateTeamNotInRound(team.getId(), round.getId());
+
+        String currentUser =
+                teamRoundDTO.getCreatedByUserName() != null ? teamRoundDTO.getCreatedByUserName() : "admin";
+        LocalDateTime now = LocalDateTime.now();
 
         // Create team round
         TeamRound teamRound = TeamRound.builder()
@@ -64,7 +89,24 @@ public class TeamRoundServiceImpl implements TeamRoundService {
                 .teamRoundJudges(new ArrayList<>())
                 .build();
 
-        return teamRoundMapper.toDto(teamRoundRepository.save(teamRound));
+        // Handle teamRoundJudges nếu có
+        //        if (teamRoundDTO.getTeamRoundJudges() != null && !teamRoundDTO.getTeamRoundJudges().isEmpty()) {
+        //            for (TeamRoundJudgeDTO judgeDTO : teamRoundDTO.getTeamRoundJudges()) {
+        //                User judge = validateJudge(judgeDTO.getJudgeId());
+        //
+        //                TeamRoundJudge judgeEntity = TeamRoundJudge.builder()
+        //                        .teamRound(teamRound)
+        //                        .judge(judge)
+        //                        .createdByUserName(currentUser)
+        //                        .createdAt(now)
+        //                        .lastModifiedByUserName(currentUser)
+        //                        .updatedAt(now)
+        //                        .build();
+        //
+        //                teamRound.getTeamRoundJudges().add(judgeEntity);
+        //            }
+        //        }
+        return TeamRoundMapperManual.toDto(teamRoundRepository.save(teamRound));
     }
 
     @Override
@@ -83,10 +125,11 @@ public class TeamRoundServiceImpl implements TeamRoundService {
         //            existingTeamRound.setRound(newRound);
         //        }
 
-        existingTeamRound.setStatus(teamRoundDTO.getStatus());
-        existingTeamRound.setDescription(teamRoundDTO.getDescription());
-
-        return teamRoundMapper.toDto(teamRoundRepository.save(existingTeamRound));
+        //        existingTeamRound.setStatus(teamRoundDTO.getStatus());
+        //        existingTeamRound.setDescription(teamRoundDTO.getDescription());
+        //
+        //        return teamRoundMapper.toDto(teamRoundRepository.save(existingTeamRound));
+        return null;
     }
 
     @Override
@@ -121,19 +164,19 @@ public class TeamRoundServiceImpl implements TeamRoundService {
 
         PageRequest pageRequest = PageRequest.of(searchDTO.getPage(), searchDTO.getSize(), sort);
 
-        return teamRoundRepository.findAll(spec, pageRequest).map(teamRoundMapper::toDto);
+        return teamRoundRepository.findAll(spec, pageRequest).map(TeamRoundMapperManual::toDto);
     }
 
     private Team validateTeam(String teamId) {
         return teamRepository
                 .findById(Long.parseLong(teamId))
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy team"));
+                .orElseThrow(() -> new ResourceNotFoundException("Team was not found"));
     }
 
     private Round validateRound(String roundId) {
         return roundRepository
                 .findById(Long.parseLong(roundId))
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy vòng thi"));
+                .orElseThrow(() -> new ResourceNotFoundException("Round was not found"));
     }
 
     private void validateTeamInHackathon(Team team, Hackathon hackathon) {
@@ -141,32 +184,35 @@ public class TeamRoundServiceImpl implements TeamRoundService {
                 .anyMatch(th -> th.getHackathon().getId() == (hackathon.getId()));
 
         if (!exists) {
-            throw new IllegalArgumentException("Team không thuộc hackathon này");
+            throw new InvalidInputException("Team was not belong to hackathon");
         }
     }
 
     private void validateTeamNotInRound(Long teamId, Long roundId) {
         if (teamRoundRepository.existsByTeamIdAndRoundId(teamId, roundId)) {
-            throw new IllegalArgumentException("Team đã tồn tại trong vòng thi này");
+            throw new InvalidInputException("Team was already in round");
         }
     }
 
     private TeamRound getTeamRound(String id) {
         return teamRoundRepository
                 .findById(Long.parseLong(id))
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy team round"));
+                .orElseThrow(() -> new ResourceNotFoundException("Team round was not found"));
     }
 
     @Override
     public List<TeamRoundDTO> getAllByRoundId(String roundId) {
-        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundId(Long.parseLong(roundId));
-        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
+        //        List<TeamRound> teamRounds = teamRoundRepository.findAllByRoundId(Long.parseLong(roundId));
+        //        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
+        return null;
     }
 
     @Override
     public List<TeamRoundDTO> getAllByJudgeIdAndRoundId(String judgeId, String roundId) {
-        List<TeamRound> teamRounds =
-                teamRoundRepository.findAllByJudgeIdAndRoundId(Long.parseLong(judgeId), Long.parseLong(roundId));
-        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
+        //        List<TeamRound> teamRounds =
+        //                teamRoundRepository.findAllByJudgeIdAndRoundId(Long.parseLong(judgeId),
+        // Long.parseLong(roundId));
+        //        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
+        return null;
     }
 }

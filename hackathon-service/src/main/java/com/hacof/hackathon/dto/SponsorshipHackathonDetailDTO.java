@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hacof.hackathon.entity.FileUrl;
 
 import lombok.AccessLevel;
@@ -23,6 +23,7 @@ public class SponsorshipHackathonDetailDTO {
 
     // @NotNull(message = "SponsorshipHackathonId is required")
     String sponsorshipHackathonId;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     SponsorshipHackathonDTO sponsorshipHackathon;
 
