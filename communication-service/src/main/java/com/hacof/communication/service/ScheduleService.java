@@ -20,4 +20,7 @@ public interface ScheduleService {
     List<ScheduleResponseDTO> getSchedulesByTeamId(Long teamId);
 
     List<ScheduleResponseDTO> getSchedulesByCreatedByUsernameAndHackathonId(String createdByUsername, Long hackathonId);
+
+    List<ScheduleResponseDTO> getSchedulesByTeamIdAndHackathonId(Long teamId, Long hackathonId);
+
 }
