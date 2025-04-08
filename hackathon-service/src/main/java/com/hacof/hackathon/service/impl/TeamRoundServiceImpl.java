@@ -169,4 +169,22 @@ public class TeamRoundServiceImpl implements TeamRoundService {
                 teamRoundRepository.findAllByJudgeIdAndRoundId(Long.parseLong(judgeId), Long.parseLong(roundId));
         return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional
+    public List<TeamRoundDTO> updateBulk(List<TeamRoundDTO> teamRoundDTOs) {
+        List<TeamRound> teamRounds = new ArrayList<>();
+        for (TeamRoundDTO teamRoundDTO : teamRoundDTOs) {
+            TeamRound existingTeamRound = teamRoundRepository.findById(Long.parseLong(teamRoundDTO.getId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Not found team round with ID: " + teamRoundDTO.getId()));
+
+            existingTeamRound.setStatus(teamRoundDTO.getStatus());
+            existingTeamRound.setDescription(teamRoundDTO.getDescription());
+
+
+            teamRounds.add(teamRoundRepository.save(existingTeamRound));
+        }
+        return teamRounds.stream().map(teamRoundMapper::toDto).collect(Collectors.toList());
+    }
+
 }
