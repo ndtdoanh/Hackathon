@@ -15,4 +15,7 @@ public interface BoardService {
     BoardResponseDTO getBoard(Long id);
 
     List<BoardResponseDTO> getAllBoards();
+
+    List<BoardResponseDTO> getBoardsByTeamAndHackathon(Long teamId, Long hackathonId);
+
 }
