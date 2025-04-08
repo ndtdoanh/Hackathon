@@ -15,7 +15,9 @@ public class TeamRequestMapperManual {
 
         TeamRequestDTO dto = new TeamRequestDTO();
         dto.setId(String.valueOf(teamRequest.getId()));
-        dto.setHackathonId(String.valueOf(teamRequest.getHackathon().getId()));
+        if (teamRequest.getHackathon() != null) {
+            dto.setHackathon(HackathonMapperManual.toDto(teamRequest.getHackathon()));
+        }
         dto.setName(teamRequest.getName());
         dto.setStatus(teamRequest.getStatus().toString());
         dto.setConfirmationDeadline(teamRequest.getConfirmationDeadline().toString());
