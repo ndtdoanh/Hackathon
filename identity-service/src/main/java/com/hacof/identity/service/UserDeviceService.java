@@ -16,6 +16,10 @@ public interface UserDeviceService {
 
     UserDeviceResponse getUserDevice(Long id);
 
+    List<UserDeviceResponse> getUserDevicesByDeviceId(String deviceId);
+
+    List<UserDeviceResponse> getUserDevicesByUserId(String userId);
+
     UserDeviceResponse updateUserDevice(Long id, UserDeviceRequest request, List<MultipartFile> files)
             throws IOException;
 

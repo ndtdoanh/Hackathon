@@ -3,6 +3,7 @@ package com.hacof.identity.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.hacof.identity.dto.response.FileUrlResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -73,6 +74,22 @@ public class DeviceController {
         return ApiResponse.<List<DeviceResponse>>builder()
                 .data(deviceService.getDevicesByRoundLocationId(roundLocationId))
                 .message("Get devices by roundLocationId")
+                .build();
+    }
+
+    @GetMapping("/{deviceId}/file-urls")
+    public ApiResponse<List<FileUrlResponse>> getFileUrlsByDeviceId(@PathVariable Long deviceId) {
+        return ApiResponse.<List<FileUrlResponse>>builder()
+                .data(deviceService.getFileUrlsByDeviceId(deviceId))
+                .message("Get file URLs by deviceId")
+                .build();
+    }
+
+    @GetMapping("/file-urls/{id}")
+    public ApiResponse<FileUrlResponse> getFileUrlById(@PathVariable Long id) {
+        return ApiResponse.<FileUrlResponse>builder()
+                .data(deviceService.getFileUrlById(id))
+                .message("Get file URL by ID")
                 .build();
     }
 

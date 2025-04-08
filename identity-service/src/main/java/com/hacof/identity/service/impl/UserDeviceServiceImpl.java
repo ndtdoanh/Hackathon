@@ -94,6 +94,20 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     }
 
     @Override
+    public List<UserDeviceResponse> getUserDevicesByDeviceId(String deviceId) {
+        return userDeviceRepository.findByDeviceId(Long.valueOf(deviceId)).stream()
+                .map(userDeviceMapper::toUserDeviceResponse)
+                .toList();
+    }
+
+    @Override
+    public List<UserDeviceResponse> getUserDevicesByUserId(String userId) {
+        return userDeviceRepository.findByUserId(Long.valueOf(userId)).stream()
+                .map(userDeviceMapper::toUserDeviceResponse)
+                .toList();
+    }
+
+    @Override
     public UserDeviceResponse updateUserDevice(Long id, UserDeviceRequest request, List<MultipartFile> files)
             throws IOException {
         UserDevice existingUserDevice = userDeviceRepository

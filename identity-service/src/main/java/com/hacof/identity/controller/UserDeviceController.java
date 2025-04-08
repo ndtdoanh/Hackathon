@@ -60,6 +60,22 @@ public class UserDeviceController {
                 .build();
     }
 
+    @GetMapping("/device/{deviceId}")
+    public ApiResponse<List<UserDeviceResponse>> getUserDevicesByDeviceId(@PathVariable String deviceId) {
+        return ApiResponse.<List<UserDeviceResponse>>builder()
+                .data(userDeviceService.getUserDevicesByDeviceId(deviceId))
+                .message("Get UserDevices by deviceId")
+                .build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<UserDeviceResponse>> getUserDevicesByUserId(@PathVariable String userId) {
+        return ApiResponse.<List<UserDeviceResponse>>builder()
+                .data(userDeviceService.getUserDevicesByUserId(userId))
+                .message("Get UserDevices by userId")
+                .build();
+    }
+
     @PutMapping("/{Id}")
     @PreAuthorize("hasAuthority('UPDATE_USER_DEVICE')")
     public ResponseEntity<ApiResponse<UserDeviceResponse>> updateUserDevice(

@@ -5,5 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.identity.entity.UserDevice;
 
+import java.util.List;
+
 @Repository
-public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {}
+public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {
+    List<UserDevice> findByDeviceId(Long deviceId);
+    List<UserDevice> findByUserId(Long userId);
+}
