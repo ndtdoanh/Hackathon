@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +28,18 @@ public class EmailServiceImpl implements EmailService {
 
         mailSender.send(message);
         log.info("Sent notifications to email: {}", to);
+    }
+
+    @Async("emailTaskExecutor")
+    public CompletableFuture<Void> sendEmailAsync(String to, String subject, String content) {
+        try {
+            sendEmail(to, subject, content);
+            return CompletableFuture.completedFuture(null);
+        } catch (MessagingException e) {
+            log.error("Failed to send email to: {}", to, e);
+            CompletableFuture<Void> failedFuture = new CompletableFuture<>();
+            failedFuture.completeExceptionally(e);
+            return failedFuture;
+        }
     }
 }
