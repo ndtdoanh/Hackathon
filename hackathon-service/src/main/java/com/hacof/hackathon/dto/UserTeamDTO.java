@@ -14,7 +14,9 @@ public class UserTeamDTO {
     String id;
 
     String userId;
+    UserDTO user;
     String teamId;
+    TeamDTO team;
 
     @JsonIgnore
     private LocalDateTime createdDate;

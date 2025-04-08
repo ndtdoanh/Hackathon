@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/v1/upload")
+@RequestMapping("/api/v1/files")
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -32,6 +32,7 @@ public class UploadController {
     FileUrlMapper fileUrlMapper;
     FileUrlRepository fileUrlRepository;
 
+    // use to upload Hackathon banner image
     @PostMapping
     public ResponseEntity<CommonResponse<String>> uploadImage(@RequestParam("file") MultipartFile file) {
         String imageUrl = s3Service.uploadFile(file);
@@ -41,6 +42,7 @@ public class UploadController {
         return ResponseEntity.ok(response);
     }
 
+    // pending - not use
     @PostMapping("/multiple")
     public ResponseEntity<CommonResponse<List<String>>> uploadMultipleFiles(
             @RequestParam("files") MultipartFile[] files) {
@@ -51,6 +53,7 @@ public class UploadController {
         return ResponseEntity.ok(response);
     }
 
+    // getAllFiles
     @GetMapping
     public ResponseEntity<CommonResponse<List<String>>> getAllFiles() {
         List<String> fileUrls = s3Service.getAllFiles();
@@ -60,6 +63,7 @@ public class UploadController {
         return ResponseEntity.ok(response);
     }
 
+    // use to upload files to S3 and save the file URL in the database - link to Hackathon
     @PostMapping("/upload")
     public ApiResponse<List<FileUrlResponse>> uploadFiles(@RequestParam("files") List<MultipartFile> files)
             throws IOException {

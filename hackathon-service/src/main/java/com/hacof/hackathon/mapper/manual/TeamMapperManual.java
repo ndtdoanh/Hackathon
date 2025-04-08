@@ -4,6 +4,8 @@ import com.hacof.hackathon.dto.TeamDTO;
 import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.entity.User;
 
+import java.util.stream.Collectors;
+
 public class TeamMapperManual {
 
     public static Team toEntity(TeamDTO dto) {
@@ -30,7 +32,6 @@ public class TeamMapperManual {
             entity.setTeamLeader(leader);
         }
 
-
         return entity;
     }
 
@@ -38,20 +39,24 @@ public class TeamMapperManual {
         if (entity == null) return null;
 
         TeamDTO dto = new TeamDTO();
-
         dto.setId(String.valueOf(entity.getId()));
         dto.setName(entity.getName());
-        dto.setBio(entity.getBio());
-        dto.setDeleted(entity.getIsDeleted() != null && entity.getIsDeleted());
 
         if (entity.getTeamLeader() != null) {
             dto.setTeamLeaderId(String.valueOf(entity.getTeamLeader().getId()));
             dto.setTeamLeader(UserMapperManual.toDto(entity.getTeamLeader()));
         }
 
-        if (entity.getDeletedBy() != null) {
-            dto.setDeletedBy(UserMapperManual.toDto(entity.getDeletedBy()));
-            dto.setDeletedById(String.valueOf(entity.getDeletedBy().getId()));
+        if (entity.getTeamMembers() != null && !entity.getTeamMembers().isEmpty()) {
+            dto.setTeamMembers(entity.getTeamMembers().stream()
+                    .map(UserTeamMapperManual::toDto)
+                    .collect(Collectors.toSet()));
+        }
+
+        if (entity.getTeamHackathons() != null && !entity.getTeamHackathons().isEmpty()) {
+            dto.setTeamHackathons(entity.getTeamHackathons().stream()
+                    .map(TeamHackathonMapperManual::toDto)
+                    .collect(Collectors.toList()));
         }
 
         return dto;

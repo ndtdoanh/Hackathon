@@ -5,24 +5,6 @@ import com.hacof.hackathon.dto.UserDTO;
 import com.hacof.hackathon.entity.User;
 
 public class UserMapperManual {
-
-    //    public static UserDTO toDto(User user) {
-    //        UserDTO dto = new UserDTO();
-    //        dto.setId(String.valueOf(user.getId()));
-    //        dto.setEmail(user.getEmail());
-    //        dto.setUsername(user.getUsername());
-    //        dto.setFirstName(user.getFirstName());
-    //        dto.setLastName(user.getLastName());
-    //        dto.setAvatarUrl(user.getAvatarUrl());
-    //        dto.setBio(user.getBio());
-    //
-    //        dto.setStatus(user.getStatus().name());
-    //        //dto.setCreatedByUserName(user.getCreatedByUserName());
-    //        //dto.setCreatedAt(user.getCreatedAt());
-    //        //dto.setLastModifiedByUserName(user.getLastModifiedByUserName());
-    //        //.setUpdatedAt(user.getUpdatedAt());
-    //        return dto;
-    //    }
     public static UserDTO toDto(User user) {
         if (user == null) {
             return null;

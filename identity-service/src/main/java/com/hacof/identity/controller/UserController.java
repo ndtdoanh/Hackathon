@@ -236,24 +236,20 @@ public class UserController {
             @RequestParam("file") MultipartFile file, Authentication authentication) {
         try {
             AvatarResponse avatarResponse = userService.uploadAvatar(file, authentication);
-            return ResponseEntity.ok(
-                    ApiResponse.<AvatarResponse>builder()
-                            .message("Avatar uploaded successfully")
-                            .data(avatarResponse)
-                            .build()
-            );
+            return ResponseEntity.ok(ApiResponse.<AvatarResponse>builder()
+                    .message("Avatar uploaded successfully")
+                    .data(avatarResponse)
+                    .build());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.<AvatarResponse>builder()
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.<AvatarResponse>builder()
                             .message(e.getMessage())
-                            .build()
-            );
+                            .build());
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    ApiResponse.<AvatarResponse>builder()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.<AvatarResponse>builder()
                             .message("Upload failed: " + e.getMessage())
-                            .build()
-            );
+                            .build());
         }
     }
 }
