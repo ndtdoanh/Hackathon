@@ -3,8 +3,10 @@ package com.hacof.hackathon.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.constant.TeamRoundStatus;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -39,7 +41,7 @@ public class TeamRoundServiceImpl implements TeamRoundService {
     TeamRoundRepository teamRoundRepository;
     TeamRepository teamRepository;
     RoundRepository roundRepository;
-    
+
     @Override
     public TeamRoundDTO create(TeamRoundDTO teamRoundDTO) {
         Team team = validateTeam(teamRoundDTO.getTeamId());
@@ -84,26 +86,69 @@ public class TeamRoundServiceImpl implements TeamRoundService {
     }
 
     @Override
-    public TeamRoundDTO update(String id, TeamRoundDTO teamRoundDTO) {
-        TeamRound existingTeamRound = getTeamRound(id);
+    public TeamRoundDTO update(String id, TeamRoundDTO dto) {
+        if (dto == null) {
+            throw new InvalidInputException("Request body cannot be null");
+        }
 
-        //        // Validate team exists if changing
-        //        if (!existingTeamRound.getTeam().getId().toString().equals(teamRoundDTO.getTeamId())) {
-        //            Team newTeam = validateTeam(teamRoundDTO.getTeamId());
-        //            existingTeamRound.setTeam(newTeam);
-        //        }
-        //
-        //        // Validate round exists if changing
-        //        if (!existingTeamRound.getRound().getId().toString().equals(teamRoundDTO.getRoundId())) {
-        //            Round newRound = validateRound(teamRoundDTO.getRoundId());
-        //            existingTeamRound.setRound(newRound);
-        //        }
+        Long teamRoundId = parseId(id, "TeamRound");
+        Long teamId = parseId(dto.getTeamId(), "Team");
+        Long roundId = parseId(dto.getRoundId(), "Round");
 
-        //        existingTeamRound.setStatus(teamRoundDTO.getStatus());
-        //        existingTeamRound.setDescription(teamRoundDTO.getDescription());
-        //
-        //        return teamRoundMapper.toDto(teamRoundRepository.save(existingTeamRound));
-        return null;
+        TeamRound existing = teamRoundRepository.findById(Long.parseLong(id))
+                .orElseThrow(() -> new ResourceNotFoundException("TeamRound not found"));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new ResourceNotFoundException("Team not found with ID: " + teamId));
+
+        Round round = roundRepository.findById(roundId)
+                .orElseThrow(() -> new ResourceNotFoundException("Round not found with ID: " + roundId));
+
+        boolean alreadyInRound = teamRoundRepository
+                .existsByTeamIdAndRoundIdAndIdNot(teamId, roundId, teamRoundId);
+
+        // Check if the team is already in this round (excluding the current one)
+
+        if (alreadyInRound) {
+            throw new InvalidInputException("Team is already registered in this round");
+        }
+
+        existing.setStatus(dto.getStatus());
+        existing.setDescription(dto.getDescription());
+        teamRoundRepository.save(existing);
+
+
+        if (dto.getStatus() == TeamRoundStatus.PASSED) {
+            createNextRoundForTeam(existing);
+        }
+
+        return TeamRoundMapperManual.toDto(existing);
+    }
+
+    private void createNextRoundForTeam(TeamRound passedRound) {
+        Round currentRound = passedRound.getRound();
+        int nextRoundNumber = currentRound.getRoundNumber() + 1;
+        Long hackathonId = currentRound.getHackathon().getId();
+
+        Optional<Round> nextRoundOpt = roundRepository.findByHackathonIdAndRoundNumber(hackathonId, nextRoundNumber);
+
+        if (nextRoundOpt.isPresent()) {
+            Round nextRound = nextRoundOpt.get();
+
+            boolean exists = teamRoundRepository.existsByTeamIdAndRoundId(
+                    passedRound.getTeam().getId(), nextRound.getId());
+
+            if (!exists) {
+                TeamRound nextTeamRound = new TeamRound();
+                nextTeamRound.setTeam(passedRound.getTeam());
+                nextTeamRound.setRound(nextRound);
+                nextTeamRound.setStatus(TeamRoundStatus.PENDING);
+                nextTeamRound.setDescription("Auto-generated for next round");
+
+
+                teamRoundRepository.save(nextTeamRound);
+            }
+        }
     }
 
     @Override
@@ -219,5 +264,13 @@ public class TeamRoundServiceImpl implements TeamRoundService {
             teamRounds.add(teamRoundRepository.save(existingTeamRound));
         }
         return teamRounds.stream().map(TeamRoundMapperManual::toDto).collect(Collectors.toList());
+    }
+
+    private Long parseId(String idStr, String fieldName) {
+        try {
+            return Long.parseLong(idStr);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException(fieldName + " ID is invalid");
+        }
     }
 }

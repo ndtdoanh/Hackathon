@@ -5,6 +5,8 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,31 +25,27 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/team-rounds")
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TeamRoundController {
-    private final TeamRoundService teamRoundService;
+    TeamRoundService teamRoundService;
 
     @PostMapping
     public ResponseEntity<CommonResponse<TeamRoundDTO>> createTeamRound(
             @Valid @RequestBody CommonRequest<TeamRoundDTO> request) {
-        log.debug("Tạo team round mới: {}", request.getData());
         TeamRoundDTO created = teamRoundService.create(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
-                new CommonResponse.Result("0000", "Tạo thành công team round"), created));
+                new CommonResponse.Result("0000", "Team Round create successfully!"), created));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(
-            @PathVariable String id, @Valid @RequestBody CommonRequest<TeamRoundDTO> request) {
-        TeamRoundDTO updated = teamRoundService.update(id, request.getData());
+            @Valid @RequestBody TeamRoundDTO request) {
+        String id = request.getId();
+        TeamRoundDTO updated = teamRoundService.update(id, request);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
-                new CommonResponse.Result("0000", "Cập nhật thành công team round"), updated));
+                new CommonResponse.Result("0000", "Update successfully"), updated));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteTeamRound(@PathVariable String id) {
