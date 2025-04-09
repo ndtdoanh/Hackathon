@@ -45,6 +45,8 @@ public class Location extends AuditUserBase {
     @Column(name = "longitude")
     Double longitude;
 
-    @OneToMany(mappedBy = "location", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(
+            mappedBy = "location",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<RoundLocation> roundLocations;
 }

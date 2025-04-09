@@ -98,9 +98,7 @@ public class TeamRoundController {
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
 
         return ResponseEntity.ok(new CommonResponse<>(
-                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
-                teamRounds
-        ));
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
     }
 
     @PostMapping("/filter-by-judge-and-round")
