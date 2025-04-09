@@ -61,7 +61,7 @@ public class MentorTeamController {
                 new CommonResponse.Result("0000", "Mentor team deleted successfully"), null));
     }
 
-    @PostMapping("/filter-by-hackathon-and-team")
+    @GetMapping("/filter-by-hackathon-and-team")
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByHackathonIdAndTeamId(
             @RequestParam String hackathonId, @RequestParam String teamId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByHackathonIdAndTeamId(hackathonId, teamId);
@@ -72,7 +72,7 @@ public class MentorTeamController {
                 new CommonResponse.Result("0000", "Fetched mentor teams successfully"), results));
     }
 
-    @PostMapping("/filter-by-mentor")
+    @GetMapping("/filter-by-mentor")
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByMentorId(@RequestParam String mentorId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByMentorId(mentorId);
         return ResponseEntity.ok(new CommonResponse<>(
