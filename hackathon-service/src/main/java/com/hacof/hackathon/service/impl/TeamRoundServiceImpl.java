@@ -39,35 +39,7 @@ public class TeamRoundServiceImpl implements TeamRoundService {
     TeamRoundRepository teamRoundRepository;
     TeamRepository teamRepository;
     RoundRepository roundRepository;
-    // TeamRoundMapper teamRoundMapper;
-
-    //    @Override
-    //    public TeamRoundDTO create(TeamRoundDTO teamRoundDTO) {
-    //        log.debug("Tạo team round mới");
-    //
-    //        // Validate team exists
-    //        Team team = validateTeam(teamRoundDTO.getTeamId());
-    //
-    //        // Validate round exists
-    //        Round round = validateRound(teamRoundDTO.getRoundId());
-    //
-    //        // Validate team belongs to hackathon
-    //        validateTeamInHackathon(team, round.getHackathon());
-    //
-    //        // Validate team not already in round
-    //        validateTeamNotInRound(team.getId(), round.getId());
-    //
-    //        // Create team round
-    //        TeamRound teamRound = TeamRound.builder()
-    //                .team(team)
-    //                .round(round)
-    //                .status(teamRoundDTO.getStatus())
-    //                .description(teamRoundDTO.getDescription())
-    //                .teamRoundJudges(new ArrayList<>())
-    //                .build();
-    //
-    //        return teamRoundMapper.toDto(teamRoundRepository.save(teamRound));
-    //    }
+    
     @Override
     public TeamRoundDTO create(TeamRoundDTO teamRoundDTO) {
         Team team = validateTeam(teamRoundDTO.getTeamId());

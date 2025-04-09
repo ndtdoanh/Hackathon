@@ -24,8 +24,6 @@ public class TeamRoundDTO {
 
     String description;
 
-    List<TeamRoundJudgeDTO> teamRoundJudges;
-
     String createdByUserName; // save username
     LocalDateTime createdAt;
     String lastModifiedByUserName; // save username

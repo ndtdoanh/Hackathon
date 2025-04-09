@@ -1,7 +1,5 @@
 package com.hacof.hackathon.mapper.manual;
 
-import java.util.stream.Collectors;
-
 import com.hacof.hackathon.dto.TeamRoundDTO;
 import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.entity.Team;
@@ -27,11 +25,7 @@ public class TeamRoundMapperManual {
                 entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
         dto.setCreatedAt(entity.getCreatedDate());
         dto.setUpdatedAt(entity.getLastModifiedDate());
-        if (entity.getTeamRoundJudges() != null) {
-            dto.setTeamRoundJudges(entity.getTeamRoundJudges().stream()
-                    .map(TeamRoundJudgeMapperManual::toDto)
-                    .collect(Collectors.toList()));
-        }
+
 
         return dto;
     }

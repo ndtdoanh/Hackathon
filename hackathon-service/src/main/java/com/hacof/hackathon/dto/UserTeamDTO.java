@@ -13,16 +13,12 @@ import lombok.experimental.FieldDefaults;
 public class UserTeamDTO {
     String id;
 
-    @JsonIgnore
     String userId;
 
-    @JsonIgnore
     UserDTO user;
 
-    @JsonIgnore
     String teamId;
 
-    @JsonIgnore
     TeamDTO team;
 
     @JsonIgnore
