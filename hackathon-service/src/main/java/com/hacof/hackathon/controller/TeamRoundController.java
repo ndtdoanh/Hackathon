@@ -128,7 +128,7 @@ public class TeamRoundController {
     }
 
     @GetMapping("/filter-by-round-and-team")
-    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundIdAndTeamId(
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByJudgeIdAndRoundId(
             @RequestParam String roundId, @RequestParam String judgeId) {
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(roundId, judgeId);
         return ResponseEntity.ok(new CommonResponse<>(

@@ -37,7 +37,6 @@ public class TeamRoundJudge extends AuditCreatedBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_round_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonBackReference
     TeamRound teamRound;
 
     @ManyToOne(fetch = FetchType.LAZY)

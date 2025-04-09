@@ -64,6 +64,5 @@ public class TeamRound extends AuditUserBase {
     @OneToMany(
             mappedBy = "teamRound",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonManagedReference
-    List<TeamRoundJudge> teamRoundJudges = new ArrayList<>();
+    List<TeamRoundJudge> teamRoundJudges;
 }
