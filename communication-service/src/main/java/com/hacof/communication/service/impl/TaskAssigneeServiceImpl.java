@@ -56,7 +56,8 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
             throw new IllegalArgumentException("User is already assigned to this task");
         }
 
-        TaskAssignee taskAssignee = taskAssigneeMapper.toEntity(taskAssigneeRequestDTO, taskOptional.get(), userOptional.get());
+        TaskAssignee taskAssignee =
+                taskAssigneeMapper.toEntity(taskAssigneeRequestDTO, taskOptional.get(), userOptional.get());
         taskAssignee = taskAssigneeRepository.save(taskAssignee);
 
         return taskAssigneeMapper.toDto(taskAssignee);
@@ -85,11 +86,12 @@ public class TaskAssigneeServiceImpl implements TaskAssigneeService {
             throw new IllegalArgumentException("User with ID " + userId + " not found");
         }
 
-        Optional<TaskAssignee> existingAssignee = taskAssigneeRepository.findByTaskAndUser(taskOptional.get(), userOptional.get());
-        if (existingAssignee.isPresent() && !Long.valueOf(existingAssignee.get().getId()).equals(id)) {
+        Optional<TaskAssignee> existingAssignee =
+                taskAssigneeRepository.findByTaskAndUser(taskOptional.get(), userOptional.get());
+        if (existingAssignee.isPresent()
+                && !Long.valueOf(existingAssignee.get().getId()).equals(id)) {
             throw new IllegalArgumentException("User is already assigned to this task.");
         }
-
 
         TaskAssignee taskAssignee = taskAssigneeOptional.get();
         taskAssignee.setTask(taskOptional.get());

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import com.hacof.communication.dto.request.NotificationRequest;
-import com.hacof.communication.dto.request.UpdateNotificationRequest;
 import com.hacof.communication.dto.response.NotificationResponse;
 
 public interface NotificationService {

@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.dto.request.BoardListRequestDTO;
+import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import com.hacof.communication.dto.response.BoardListResponseDTO;
 import com.hacof.communication.entity.Board;
 import com.hacof.communication.entity.BoardList;
@@ -33,7 +33,8 @@ public class BoardListServiceImpl implements BoardListService {
     @Override
     public BoardListResponseDTO createBoardList(BoardListRequestDTO boardListRequestDTO) {
         // Validate Board ID
-        if (boardListRequestDTO.getBoardId() == null || boardListRequestDTO.getBoardId().isEmpty()) {
+        if (boardListRequestDTO.getBoardId() == null
+                || boardListRequestDTO.getBoardId().isEmpty()) {
             throw new IllegalArgumentException("Board ID cannot be null or empty.");
         }
 
@@ -43,10 +44,10 @@ public class BoardListServiceImpl implements BoardListService {
         }
 
         // Validate Board List name and description
-        if (boardListRequestDTO.getName() == null || boardListRequestDTO.getName().trim().isEmpty()) {
+        if (boardListRequestDTO.getName() == null
+                || boardListRequestDTO.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Board List name cannot be null or empty.");
         }
-
 
         // Check for duplicate Board List name under the same Board
         Optional<BoardList> existingBoardList = boardListRepository.findByNameAndBoardId(
@@ -77,14 +78,16 @@ public class BoardListServiceImpl implements BoardListService {
         }
 
         // Validate Board List name and description
-        if (boardListRequestDTO.getName() == null || boardListRequestDTO.getName().trim().isEmpty()) {
+        if (boardListRequestDTO.getName() == null
+                || boardListRequestDTO.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Board List name cannot be null or empty.");
         }
 
         // Check for duplicate Board List name under the same Board, except the current one
         Optional<BoardList> existingBoardList = boardListRepository.findByNameAndBoardId(
                 boardListRequestDTO.getName(), Long.parseLong(boardListRequestDTO.getBoardId()));
-        if (existingBoardList.isPresent() && !Long.valueOf(existingBoardList.get().getId()).equals(Long.valueOf(id))) {
+        if (existingBoardList.isPresent()
+                && !Long.valueOf(existingBoardList.get().getId()).equals(Long.valueOf(id))) {
             throw new IllegalArgumentException("A Board List with the same name already exists in this Board.");
         }
 

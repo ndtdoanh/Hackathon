@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -202,14 +203,18 @@ public class TeamController {
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(@Valid @RequestBody List<TeamBulkRequestDTO> bulkRequest) {
+    public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(
+            @Valid @RequestBody List<TeamBulkRequestDTO> bulkRequest) {
         List<TeamDTO> createdTeams = teamService.createBulkTeams(bulkRequest);
-        return ResponseEntity.ok(new CommonResponse<>(new CommonResponse.Result("0000", "Bulk teams created successfully"), createdTeams));
+        return ResponseEntity.ok(new CommonResponse<>(
+                new CommonResponse.Result("0000", "Bulk teams created successfully"), createdTeams));
     }
 
-//    @PutMapping("/bulk")
-//    public ResponseEntity<CommonResponse<List<TeamDTO>>> updateBulkTeams(@Valid @RequestBody List<TeamBulkRequestDTO> bulkRequest) {
-//        List<TeamDTO> updatedTeams = teamService.updateBulkTeams(bulkRequest);
-//        return ResponseEntity.ok(new CommonResponse<>(new CommonResponse.Result("0000", "Bulk teams updated successfully"), updatedTeams));
-//    }
+    //    @PutMapping("/bulk")
+    //    public ResponseEntity<CommonResponse<List<TeamDTO>>> updateBulkTeams(@Valid @RequestBody
+    // List<TeamBulkRequestDTO> bulkRequest) {
+    //        List<TeamDTO> updatedTeams = teamService.updateBulkTeams(bulkRequest);
+    //        return ResponseEntity.ok(new CommonResponse<>(new CommonResponse.Result("0000", "Bulk teams updated
+    // successfully"), updatedTeams));
+    //    }
 }

@@ -126,7 +126,8 @@ public class RoundMarkCriterionController {
     }
 
     @GetMapping("/by-round/{roundId}")
-    public ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> getByRoundId(@PathVariable Long roundId) {
+    public ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> getByRoundId(
+            @PathVariable Long roundId) {
         CommonResponse<List<RoundMarkCriterionResponseDTO>> response = new CommonResponse<>();
         try {
             List<RoundMarkCriterionResponseDTO> data = service.getByRoundId(roundId);

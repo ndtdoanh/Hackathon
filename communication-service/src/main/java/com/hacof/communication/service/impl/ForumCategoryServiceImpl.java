@@ -33,7 +33,8 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
         }
 
         if (forumCategoryRepository.existsByName(requestDTO.getName())) {
-            throw new IllegalArgumentException("A forum category with the name " + requestDTO.getName() + " already exists.");
+            throw new IllegalArgumentException(
+                    "A forum category with the name " + requestDTO.getName() + " already exists.");
         }
 
         ForumCategory forumCategory = ForumCategoryMapper.toEntity(requestDTO);
@@ -59,7 +60,8 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
         }
 
         if (forumCategoryRepository.existsByName(requestDTO.getName())) {
-            throw new IllegalArgumentException("A forum category with the name " + requestDTO.getName() + " already exists.");
+            throw new IllegalArgumentException(
+                    "A forum category with the name " + requestDTO.getName() + " already exists.");
         }
 
         ForumCategory forumCategory = optionalForumCategory.get();
@@ -80,7 +82,8 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
 
         ForumCategory forumCategory = optionalForumCategory.get();
 
-        if (forumCategory.getForumThreads() != null && !forumCategory.getForumThreads().isEmpty()) {
+        if (forumCategory.getForumThreads() != null
+                && !forumCategory.getForumThreads().isEmpty()) {
             throw new IllegalArgumentException("Cannot delete ForumCategory because it contains forum threads!");
         }
         forumCategoryRepository.deleteById(id);

@@ -1,6 +1,7 @@
 package com.hacof.hackathon.dto;
 
 import jakarta.validation.constraints.NotNull;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

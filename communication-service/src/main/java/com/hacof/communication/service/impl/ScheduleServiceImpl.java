@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.entity.Hackathon;
-import com.hacof.communication.repository.HackathonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.dto.request.ScheduleRequestDTO;
 import com.hacof.communication.dto.response.ScheduleResponseDTO;
+import com.hacof.communication.entity.Hackathon;
 import com.hacof.communication.entity.Schedule;
 import com.hacof.communication.entity.Team;
 import com.hacof.communication.mapper.ScheduleMapper;
+import com.hacof.communication.repository.HackathonRepository;
 import com.hacof.communication.repository.ScheduleRepository;
 import com.hacof.communication.repository.TeamRepository;
 import com.hacof.communication.service.ScheduleService;
@@ -50,12 +50,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .findById(Long.parseLong(scheduleRequestDTO.getHackathonId()))
                 .orElseThrow(() -> new IllegalArgumentException("Hackathon not found!"));
 
-
         if (scheduleRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
 
-        boolean scheduleExists = scheduleRepository.existsByTeamIdAndName(Long.parseLong(scheduleRequestDTO.getTeamId()), scheduleRequestDTO.getName());
+        boolean scheduleExists = scheduleRepository.existsByTeamIdAndName(
+                Long.parseLong(scheduleRequestDTO.getTeamId()), scheduleRequestDTO.getName());
         if (scheduleExists) {
             throw new IllegalArgumentException("A schedule with the same name already exists for this team.");
         }
@@ -92,7 +92,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Name cannot be empty");
         }
 
-        boolean scheduleExists = scheduleRepository.existsByTeamIdAndNameAndIdNot(Long.parseLong(scheduleRequestDTO.getTeamId()), scheduleRequestDTO.getName(), id);
+        boolean scheduleExists = scheduleRepository.existsByTeamIdAndNameAndIdNot(
+                Long.parseLong(scheduleRequestDTO.getTeamId()), scheduleRequestDTO.getName(), id);
         if (scheduleExists) {
             throw new IllegalArgumentException("A schedule with the same name already exists for this team.");
         }
@@ -160,5 +161,4 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
     }
-
 }

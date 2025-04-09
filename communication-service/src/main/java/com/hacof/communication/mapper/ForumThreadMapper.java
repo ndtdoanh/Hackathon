@@ -40,10 +40,11 @@ public class ForumThreadMapper {
 
         // Map List of ThreadPost to List of ThreadPostResponseDTO
         // Ensure threadPosts is not null to avoid NullPointerException
-        List<ThreadPostResponseDTO> threadPostResponseDTOList = (entity.getThreadPosts() == null ?
-                List.of() : entity.getThreadPosts().stream()
-                .map(ForumThreadMapper::toThreadPostResponseDTO)
-                .collect(Collectors.toList()));
+        List<ThreadPostResponseDTO> threadPostResponseDTOList = (entity.getThreadPosts() == null
+                ? List.of()
+                : entity.getThreadPosts().stream()
+                        .map(ForumThreadMapper::toThreadPostResponseDTO)
+                        .collect(Collectors.toList()));
 
         responseDTO.setThreadPosts(threadPostResponseDTOList);
 

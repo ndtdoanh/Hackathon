@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.entity.FileUrl;
-import com.hacof.communication.repository.FileUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
+import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Schedule;
 import com.hacof.communication.entity.ScheduleEvent;
 import com.hacof.communication.mapper.ScheduleEventMapper;
+import com.hacof.communication.repository.FileUrlRepository;
 import com.hacof.communication.repository.ScheduleEventRepository;
 import com.hacof.communication.repository.ScheduleRepository;
 import com.hacof.communication.service.ScheduleEventService;
@@ -62,9 +62,11 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
 
         // Handle file URLs
         List<FileUrl> fileUrls = null;
-        if (scheduleEventRequestDTO.getFileUrls() != null && !scheduleEventRequestDTO.getFileUrls().isEmpty()) {
+        if (scheduleEventRequestDTO.getFileUrls() != null
+                && !scheduleEventRequestDTO.getFileUrls().isEmpty()) {
             // Find the file URLs that are provided and not yet associated with any ScheduleEvent
-            fileUrls = fileUrlRepository.findAllByFileUrlInAndScheduleEventIsNull(scheduleEventRequestDTO.getFileUrls());
+            fileUrls =
+                    fileUrlRepository.findAllByFileUrlInAndScheduleEventIsNull(scheduleEventRequestDTO.getFileUrls());
 
             // Associate the files with the ScheduleEvent (this will be done once the entity is created)
         }
@@ -85,12 +87,12 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         }
 
         // Reload the ScheduleEvent to ensure file URLs are correctly linked and return the response DTO
-        scheduleEvent = scheduleEventRepository.findById(scheduleEvent.getId())
+        scheduleEvent = scheduleEventRepository
+                .findById(scheduleEvent.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Failed to reload ScheduleEvent"));
 
         return scheduleEventMapper.toDto(scheduleEvent); // Return the response DTO
     }
-
 
     @Override
     public ScheduleEventResponseDTO updateScheduleEvent(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO) {
@@ -133,9 +135,10 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         scheduleEvent.setRecurrenceRule(scheduleEventRequestDTO.getRecurrenceRule());
 
         // Nếu có fileUrls trong request, tìm kiếm các file và gán cho scheduleEvent
-        if (scheduleEventRequestDTO.getFileUrls() != null && !scheduleEventRequestDTO.getFileUrls().isEmpty()) {
-            List<FileUrl> fileUrls = fileUrlRepository
-                    .findAllByFileUrlInAndScheduleEventIsNull(scheduleEventRequestDTO.getFileUrls()); // Tìm các file chưa được gán vào bất kỳ event nào
+        if (scheduleEventRequestDTO.getFileUrls() != null
+                && !scheduleEventRequestDTO.getFileUrls().isEmpty()) {
+            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndScheduleEventIsNull(
+                    scheduleEventRequestDTO.getFileUrls()); // Tìm các file chưa được gán vào bất kỳ event nào
 
             for (FileUrl file : fileUrls) {
                 file.setScheduleEvent(scheduleEvent); // Gán scheduleEvent cho file
@@ -148,7 +151,6 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
 
         return scheduleEventMapper.toDto(scheduleEvent); // Trả về DTO của scheduleEvent
     }
-
 
     @Override
     public void deleteScheduleEvent(Long id) {

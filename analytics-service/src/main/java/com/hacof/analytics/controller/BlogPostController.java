@@ -35,7 +35,7 @@ public class BlogPostController {
     }
 
     @GetMapping
-//    @PreAuthorize("hasAuthority('GET_BLOG_POSTS')")
+    //    @PreAuthorize("hasAuthority('GET_BLOG_POSTS')")
     public ApiResponse<List<BlogPostResponse>> getBlogPosts() {
         return ApiResponse.<List<BlogPostResponse>>builder()
                 .data(blogPostService.getBlogPosts())
@@ -44,7 +44,7 @@ public class BlogPostController {
     }
 
     @GetMapping("/{id}")
-//    @PreAuthorize("hasAuthority('GET_BLOG_POST')")
+    //    @PreAuthorize("hasAuthority('GET_BLOG_POST')")
     public ApiResponse<BlogPostResponse> getBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
                 .data(blogPostService.getBlogPost(id))
@@ -53,7 +53,7 @@ public class BlogPostController {
     }
 
     @GetMapping("/published")
-//    @PreAuthorize("hasAuthority('GET_PUBLISHED_BLOG_POST')")
+    //    @PreAuthorize("hasAuthority('GET_PUBLISHED_BLOG_POST')")
     public ApiResponse<List<BlogPostResponse>> getPublishedBlogPosts() {
         return ApiResponse.<List<BlogPostResponse>>builder()
                 .data(blogPostService.getPublishedBlogPosts())

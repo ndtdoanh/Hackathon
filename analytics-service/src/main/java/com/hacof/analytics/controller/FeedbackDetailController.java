@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.analytics.dto.ApiResponse;
@@ -27,7 +26,7 @@ public class FeedbackDetailController {
     FeedbackDetailService feedbackDetailService;
 
     @PostMapping
-//    @PreAuthorize("hasAuthority('CREATE_FEEDBACK_DETAIL')")
+    //    @PreAuthorize("hasAuthority('CREATE_FEEDBACK_DETAIL')")
     public ResponseEntity<ApiResponse<FeedbackDetailResponse>> createFeedbackDetail(
             @RequestBody @Valid FeedbackDetailCreateRequest request) {
 
@@ -40,7 +39,7 @@ public class FeedbackDetailController {
     }
 
     @GetMapping
-//    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS')")
+    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetails() {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
                 .data(feedbackDetailService.getFeedbackDetails())
@@ -49,7 +48,7 @@ public class FeedbackDetailController {
     }
 
     @GetMapping("/{id}")
-//    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAIL')")
+    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAIL')")
     public ApiResponse<FeedbackDetailResponse> getFeedbackDetail(@PathVariable Long id) {
         return ApiResponse.<FeedbackDetailResponse>builder()
                 .data(feedbackDetailService.getFeedbackDetail(id))
@@ -58,7 +57,7 @@ public class FeedbackDetailController {
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasAuthority('UPDATE_FEEDBACK_DETAIL')")
+    //    @PreAuthorize("hasAuthority('UPDATE_FEEDBACK_DETAIL')")
     public ApiResponse<FeedbackDetailResponse> updateFeedbackDetail(
             @PathVariable Long id, @RequestBody @Valid FeedbackDetailUpdateRequest request) {
 
@@ -69,7 +68,7 @@ public class FeedbackDetailController {
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasAuthority('DELETE_FEEDBACK_DETAIL')")
+    //    @PreAuthorize("hasAuthority('DELETE_FEEDBACK_DETAIL')")
     public ApiResponse<Void> deleteFeedbackDetail(@PathVariable Long id) {
         feedbackDetailService.deleteFeedbackDetail(id);
         return ApiResponse.<Void>builder()
@@ -78,7 +77,7 @@ public class FeedbackDetailController {
     }
 
     @GetMapping("/by-feedback")
-//    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK')")
+    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackId(@RequestParam Long feedbackId) {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
                 .data(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
@@ -87,7 +86,7 @@ public class FeedbackDetailController {
     }
 
     @GetMapping("/by-mentor")
-//    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_MENTOR')")
+    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_MENTOR')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByMentorId(@RequestParam Long mentorId) {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
                 .data(feedbackDetailService.getFeedbackDetailsByMentorId(mentorId))
@@ -96,7 +95,7 @@ public class FeedbackDetailController {
     }
 
     @GetMapping("/by-hackathon")
-//    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_HACKATHON')")
+    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_HACKATHON')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByHackathonId(@RequestParam Long hackathonId) {
         List<FeedbackDetailResponse> response = feedbackDetailService.getFeedbackDetailsByHackathonId(hackathonId);
         return ApiResponse.<List<FeedbackDetailResponse>>builder()

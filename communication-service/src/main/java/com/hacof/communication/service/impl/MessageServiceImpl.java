@@ -1,6 +1,5 @@
 package com.hacof.communication.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,8 +53,7 @@ public class MessageServiceImpl implements MessageService {
         message.setCreatedBy(currentUser);
         message = messageRepository.save(message);
 
-        List<FileUrl> fileUrls = fileUrlRepository
-                .findAllByFileUrlInAndMessageIsNull(request.getFileUrls());
+        List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndMessageIsNull(request.getFileUrls());
 
         for (FileUrl file : fileUrls) {
             file.setMessage(message);

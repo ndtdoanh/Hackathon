@@ -109,8 +109,9 @@ public class TeamRoundController {
         String roundId = request.get("roundId");
 
         if (judgeId == null || roundId == null) {
-            return ResponseEntity.badRequest().body(new CommonResponse<>(
-                    new CommonResponse.Result("0400", "Invalid request: judgeId or roundId is missing"), null));
+            return ResponseEntity.badRequest()
+                    .body(new CommonResponse<>(
+                            new CommonResponse.Result("0400", "Invalid request: judgeId or roundId is missing"), null));
         }
 
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(judgeId, roundId);
@@ -122,7 +123,7 @@ public class TeamRoundController {
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> updateBulkTeamRounds(
             @Valid @RequestBody List<TeamRoundDTO> teamRoundDTOList) {
         List<TeamRoundDTO> updatedTeamRounds = teamRoundService.updateBulk(teamRoundDTOList);
-        return ResponseEntity.ok(new CommonResponse<>(
-                new CommonResponse.Result("0000", "Bulk update successful"), updatedTeamRounds));
+        return ResponseEntity.ok(
+                new CommonResponse<>(new CommonResponse.Result("0000", "Bulk update successful"), updatedTeamRounds));
     }
 }

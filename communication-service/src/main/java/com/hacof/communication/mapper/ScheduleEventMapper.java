@@ -3,11 +3,11 @@ package com.hacof.communication.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.dto.response.ScheduleResponseDTO;
 import org.springframework.stereotype.Component;
 
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
+import com.hacof.communication.dto.response.ScheduleResponseDTO;
 import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Schedule;
 import com.hacof.communication.entity.ScheduleEvent;
@@ -41,13 +41,13 @@ public class ScheduleEventMapper {
         // Map file URLs from the scheduleEvent entity (assuming the file URLs are stored as FileUrl objects)
         List<String> fileUrls = scheduleEvent.getFileUrls() != null
                 ? scheduleEvent.getFileUrls().stream()
-                .map(FileUrl::getFileUrl)  // Assuming FileUrl entity has a method to get the URL string
-                .collect(Collectors.toList())
+                        .map(FileUrl::getFileUrl) // Assuming FileUrl entity has a method to get the URL string
+                        .collect(Collectors.toList())
                 : null;
 
         return ScheduleEventResponseDTO.builder()
                 .id(String.valueOf(scheduleEvent.getId()))
-                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false))  // Mapping the schedule
+                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false)) // Mapping the schedule
                 .name(scheduleEvent.getName())
                 .description(scheduleEvent.getDescription())
                 .location(scheduleEvent.getLocation())
@@ -57,8 +57,11 @@ public class ScheduleEventMapper {
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
                 .createdDate(scheduleEvent.getCreatedDate())
                 .lastModifiedDate(scheduleEvent.getLastModifiedDate())
-                .createdBy(scheduleEvent.getCreatedBy() != null ? scheduleEvent.getCreatedBy().getUsername() : null)
-                .fileUrls(fileUrls)  // Adding the file URLs
+                .createdBy(
+                        scheduleEvent.getCreatedBy() != null
+                                ? scheduleEvent.getCreatedBy().getUsername()
+                                : null)
+                .fileUrls(fileUrls) // Adding the file URLs
                 .build();
     }
 
@@ -69,7 +72,9 @@ public class ScheduleEventMapper {
         return new ScheduleResponseDTO(
                 String.valueOf(schedule.getId()),
                 schedule.getTeam() != null ? String.valueOf(schedule.getTeam().getId()) : null,
-                schedule.getHackathon() != null ? String.valueOf(schedule.getHackathon().getId()) : null,
+                schedule.getHackathon() != null
+                        ? String.valueOf(schedule.getHackathon().getId())
+                        : null,
                 schedule.getName(),
                 schedule.getDescription(),
                 schedule.getCreatedDate(),

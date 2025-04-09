@@ -97,10 +97,10 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
     @Override
     public List<TeamRoundJudgeResponseDTO> getTeamRoundJudgesByTeamRoundId(Long teamRoundId) {
         List<TeamRoundJudge> teamRoundJudges = teamRoundJudgeRepository.findByTeamRoundId(teamRoundId);
-//
-//        if (teamRoundJudges.isEmpty()) {
-//            throw new IllegalArgumentException("No TeamRoundJudge found for teamRoundId: " + teamRoundId);
-//        }
+        //
+        //        if (teamRoundJudges.isEmpty()) {
+        //            throw new IllegalArgumentException("No TeamRoundJudge found for teamRoundId: " + teamRoundId);
+        //        }
 
         return teamRoundJudges.stream().map(teamRoundJudgeMapper::toResponseDTO).collect(Collectors.toList());
     }

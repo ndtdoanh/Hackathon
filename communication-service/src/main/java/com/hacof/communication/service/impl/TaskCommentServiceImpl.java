@@ -30,7 +30,8 @@ public class TaskCommentServiceImpl implements TaskCommentService {
 
     @Override
     public TaskCommentResponseDTO createTaskComment(TaskCommentRequestDTO taskCommentRequestDTO) {
-        if (taskCommentRequestDTO.getContent() == null || taskCommentRequestDTO.getContent().trim().isEmpty()) {
+        if (taskCommentRequestDTO.getContent() == null
+                || taskCommentRequestDTO.getContent().trim().isEmpty()) {
             throw new IllegalArgumentException("Comment content cannot be empty");
         }
 
@@ -55,7 +56,8 @@ public class TaskCommentServiceImpl implements TaskCommentService {
 
     @Override
     public TaskCommentResponseDTO updateTaskComment(Long id, TaskCommentRequestDTO taskCommentRequestDTO) {
-        if (taskCommentRequestDTO.getContent() == null || taskCommentRequestDTO.getContent().trim().isEmpty()) {
+        if (taskCommentRequestDTO.getContent() == null
+                || taskCommentRequestDTO.getContent().trim().isEmpty()) {
             throw new IllegalArgumentException("Comment content cannot be empty");
         }
 
