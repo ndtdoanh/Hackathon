@@ -15,7 +15,7 @@ public class TeamRoundMapperManual {
         TeamRoundDTO dto = new TeamRoundDTO();
         dto.setId(String.valueOf(entity.getId()));
         dto.setTeamId(entity.getTeam() != null ? String.valueOf(entity.getTeam().getId()) : null);
-        dto.setTeam(TeamMapperManual.toDto(entity.getTeam()));
+        dto.setTeam(TeamMapperManual.toDtoWithLeaderAndMembers(entity.getTeam()));
         dto.setRoundId(
                 entity.getRound() != null ? String.valueOf(entity.getRound().getId()) : null);
         dto.setRound(RoundMapperManual.toDto(entity.getRound()));

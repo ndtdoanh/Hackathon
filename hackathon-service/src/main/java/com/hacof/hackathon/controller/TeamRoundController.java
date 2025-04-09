@@ -92,14 +92,15 @@ public class TeamRoundController {
 
     @PostMapping("/filter-by-round")
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundId(
-            @RequestBody CommonRequest<Map<String, String>> request) {
-        String roundId = request.getData().get("roundId");
+            @RequestBody Map<String, String> request) {
+
+        String roundId = request.get("roundId");
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
+
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
-                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
+                teamRounds
+        ));
     }
 
     @PostMapping("/filter-by-judge-and-round")

@@ -76,7 +76,7 @@ public class TeamMapperManual {
                     .map(UserTeamMapperManual::toDto)
                     .collect(Collectors.toSet()));
         }
-
         return dto;
     }
+
 }
