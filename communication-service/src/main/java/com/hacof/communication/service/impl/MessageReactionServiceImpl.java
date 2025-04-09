@@ -39,9 +39,8 @@ public class MessageReactionServiceImpl implements MessageReactionService {
                 .findById(messageId)
                 .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_EXISTED));
 
-        User currentUser = userRepository
-                .findByUsername(request.getCreatedByUserName())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User currentUser =
+                securityUtil.getCurrentUser().orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Optional<MessageReaction> existingReaction =
                 reactionRepository.findByMessageIdAndCreatedBy(messageId, currentUser);
