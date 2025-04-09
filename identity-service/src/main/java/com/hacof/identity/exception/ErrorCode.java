@@ -44,7 +44,8 @@ public enum ErrorCode {
     LOG_NOT_FOUND(1034, "Log not found", HttpStatus.NOT_FOUND),
     ROLE_NOT_ALLOWED(1035, "You can only assign roles: JUDGE or MENTOR", HttpStatus.BAD_REQUEST),
     FILE_URL_NOT_EXISTED(1036, "FileUrl not existed", HttpStatus.BAD_REQUEST),
-    DEVICE_NOT_FOUND(1037, "Device not found", HttpStatus.NOT_FOUND);
+    ACCOUNT_LOCKED(1037, "Account locked", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1038, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

@@ -2,12 +2,12 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
-import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.dto.request.TaskRequestDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.response.CommonResponse;

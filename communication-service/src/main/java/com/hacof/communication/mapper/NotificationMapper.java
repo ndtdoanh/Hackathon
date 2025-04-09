@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import com.hacof.communication.constant.NotificationStatus;
 import com.hacof.communication.dto.request.NotificationDeliveryRequest;

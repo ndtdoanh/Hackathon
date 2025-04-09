@@ -2,7 +2,6 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
-import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -11,8 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.ApiResponse;
+import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import com.hacof.communication.dto.request.NotificationRequest;
-import com.hacof.communication.dto.request.UpdateNotificationRequest;
 import com.hacof.communication.dto.response.NotificationResponse;
 import com.hacof.communication.service.NotificationService;
 

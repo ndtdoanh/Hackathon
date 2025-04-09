@@ -31,7 +31,7 @@ public class BoardUserMapper {
                 .description(board.getDescription())
                 .ownerName(board.getOwner() != null ? board.getOwner().getUsername() : null)
                 .teamId(String.valueOf(board.getTeam().getId()))
-                .hackathonId(String.valueOf(board.getHackathon().getId()))// Lấy tên team (nếu có)
+                .hackathonId(String.valueOf(board.getHackathon().getId())) // Lấy tên team (nếu có)
                 .createdBy(board.getCreatedBy().getUsername())
                 .createdDate(board.getCreatedDate())
                 .lastModifiedDate(board.getLastModifiedDate())

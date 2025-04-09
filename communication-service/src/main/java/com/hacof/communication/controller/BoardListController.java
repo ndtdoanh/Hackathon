@@ -2,13 +2,13 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
-import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.BoardListRequestDTO;
+import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import com.hacof.communication.dto.response.BoardListResponseDTO;
 import com.hacof.communication.response.CommonResponse;
 import com.hacof.communication.service.BoardListService;

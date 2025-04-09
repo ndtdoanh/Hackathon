@@ -118,8 +118,7 @@ public class BoardController {
 
     @GetMapping("/by-team-and-hackathon")
     public ResponseEntity<CommonResponse<List<BoardResponseDTO>>> getBoardsByTeamAndHackathon(
-            @RequestParam Long teamId,
-            @RequestParam Long hackathonId) {
+            @RequestParam Long teamId, @RequestParam Long hackathonId) {
 
         CommonResponse<List<BoardResponseDTO>> response = new CommonResponse<>();
         try {
@@ -134,5 +133,4 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

@@ -32,21 +32,25 @@ public class ForumThreadServiceImpl implements ForumThreadService {
     @Override
     public ForumThreadResponseDTO createForumThread(ForumThreadRequestDTO forumThreadRequestDTO) {
         // Validate title and forumCategoryId
-        if (forumThreadRequestDTO.getTitle() == null || forumThreadRequestDTO.getTitle().isEmpty()) {
+        if (forumThreadRequestDTO.getTitle() == null
+                || forumThreadRequestDTO.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Title cannot be null or empty.");
         }
-        if (forumThreadRequestDTO.getForumCategoryId() == null || forumThreadRequestDTO.getForumCategoryId().isEmpty()) {
+        if (forumThreadRequestDTO.getForumCategoryId() == null
+                || forumThreadRequestDTO.getForumCategoryId().isEmpty()) {
             throw new IllegalArgumentException("Forum category ID cannot be null or empty.");
         }
 
         // Check if the ForumCategory exists
-        Optional<ForumCategory> forumCategoryOptional = forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
+        Optional<ForumCategory> forumCategoryOptional =
+                forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }
         ForumCategory forumCategory = forumCategoryOptional.get();
 
-        if (forumThreadRepository.existsByTitleAndForumCategoryId(forumThreadRequestDTO.getTitle(), forumCategory.getId())) {
+        if (forumThreadRepository.existsByTitleAndForumCategoryId(
+                forumThreadRequestDTO.getTitle(), forumCategory.getId())) {
             throw new IllegalArgumentException("A thread with the same title already exists in this category.");
         }
 
@@ -58,10 +62,12 @@ public class ForumThreadServiceImpl implements ForumThreadService {
 
     @Override
     public ForumThreadResponseDTO updateForumThread(Long id, ForumThreadRequestDTO forumThreadRequestDTO) {
-        if (forumThreadRequestDTO.getTitle() == null || forumThreadRequestDTO.getTitle().isEmpty()) {
+        if (forumThreadRequestDTO.getTitle() == null
+                || forumThreadRequestDTO.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Title cannot be null or empty.");
         }
-        if (forumThreadRequestDTO.getForumCategoryId() == null || forumThreadRequestDTO.getForumCategoryId().isEmpty()) {
+        if (forumThreadRequestDTO.getForumCategoryId() == null
+                || forumThreadRequestDTO.getForumCategoryId().isEmpty()) {
             throw new IllegalArgumentException("Forum category ID cannot be null or empty.");
         }
 
@@ -72,13 +78,15 @@ public class ForumThreadServiceImpl implements ForumThreadService {
         ForumThread forumThread = forumThreadOptional.get();
 
         // Check if the ForumCategory exists
-        Optional<ForumCategory> forumCategoryOptional = forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
+        Optional<ForumCategory> forumCategoryOptional =
+                forumCategoryRepository.findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()));
         if (!forumCategoryOptional.isPresent()) {
             throw new IllegalArgumentException("ForumCategory not found!");
         }
         ForumCategory forumCategory = forumCategoryOptional.get();
 
-        if (forumThreadRepository.existsByTitleAndForumCategoryId(forumThreadRequestDTO.getTitle(), forumCategory.getId())) {
+        if (forumThreadRepository.existsByTitleAndForumCategoryId(
+                forumThreadRequestDTO.getTitle(), forumCategory.getId())) {
             throw new IllegalArgumentException("A thread with the same title already exists in this category.");
         }
 
@@ -100,7 +108,8 @@ public class ForumThreadServiceImpl implements ForumThreadService {
         }
         ForumThread forumThread = forumThreadOptional.get();
 
-        if (forumThread.getThreadPosts() != null && !forumThread.getThreadPosts().isEmpty()) {
+        if (forumThread.getThreadPosts() != null
+                && !forumThread.getThreadPosts().isEmpty()) {
             throw new IllegalArgumentException("Cannot delete ForumThread because it contains thread posts!");
         }
         forumThreadRepository.deleteById(id);

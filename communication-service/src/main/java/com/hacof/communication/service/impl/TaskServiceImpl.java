@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
-import com.hacof.communication.entity.FileUrl;
-import com.hacof.communication.repository.FileUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.dto.request.TaskRequestDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.entity.BoardList;
+import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Task;
 import com.hacof.communication.mapper.TaskMapper;
 import com.hacof.communication.repository.BoardListRepository;
+import com.hacof.communication.repository.FileUrlRepository;
 import com.hacof.communication.repository.TaskRepository;
 import com.hacof.communication.service.TaskService;
 
@@ -37,7 +37,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
-        if (taskRequestDTO.getBoardListId() == null || taskRequestDTO.getBoardListId().isEmpty()) {
+        if (taskRequestDTO.getBoardListId() == null
+                || taskRequestDTO.getBoardListId().isEmpty()) {
             throw new IllegalArgumentException("BoardList ID cannot be null or empty");
         }
         Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
@@ -50,7 +51,8 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
 
-        if (taskRequestDTO.getDescription() == null || taskRequestDTO.getDescription().isEmpty()) {
+        if (taskRequestDTO.getDescription() == null
+                || taskRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Task description cannot be empty");
         }
 
@@ -85,7 +87,8 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task with ID " + id + " not found!");
         }
 
-        if (taskRequestDTO.getBoardListId() == null || taskRequestDTO.getBoardListId().isEmpty()) {
+        if (taskRequestDTO.getBoardListId() == null
+                || taskRequestDTO.getBoardListId().isEmpty()) {
             throw new IllegalArgumentException("BoardList ID cannot be null or empty");
         }
         Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
@@ -98,7 +101,8 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
 
-        if (taskRequestDTO.getDescription() == null || taskRequestDTO.getDescription().isEmpty()) {
+        if (taskRequestDTO.getDescription() == null
+                || taskRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Task description cannot be empty");
         }
 
@@ -106,10 +110,12 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Position must be a non-negative integer");
         }
 
-        if (taskRequestDTO.getFileUrls() != null && !taskRequestDTO.getFileUrls().isEmpty()) {
+        if (taskRequestDTO.getFileUrls() != null
+                && !taskRequestDTO.getFileUrls().isEmpty()) {
             List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
             if (fileUrls.size() != taskRequestDTO.getFileUrls().size()) {
-                throw new IllegalArgumentException("Some file URLs are invalid or already associated with other tasks.");
+                throw new IllegalArgumentException(
+                        "Some file URLs are invalid or already associated with other tasks.");
             }
 
             for (FileUrl file : fileUrls) {
@@ -169,7 +175,8 @@ public class TaskServiceImpl implements TaskService {
 
             Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
             if (!boardListOptional.isPresent()) {
-                throw new IllegalArgumentException("BoardList with ID " + updateRequest.getBoardListId() + " not found!");
+                throw new IllegalArgumentException(
+                        "BoardList with ID " + updateRequest.getBoardListId() + " not found!");
             }
 
             Task task = taskOptional.get();

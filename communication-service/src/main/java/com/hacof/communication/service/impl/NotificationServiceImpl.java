@@ -9,19 +9,17 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.constant.NotificationMethod;
-import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
-import com.hacof.communication.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
+import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.constant.NotificationStatus;
 import com.hacof.communication.constant.RoleType;
+import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
 import com.hacof.communication.dto.request.NotificationDeliveryRequest;
 import com.hacof.communication.dto.request.NotificationRequest;
-import com.hacof.communication.dto.request.UpdateNotificationRequest;
 import com.hacof.communication.dto.response.NotificationResponse;
 import com.hacof.communication.entity.Notification;
 import com.hacof.communication.entity.NotificationDelivery;
@@ -36,12 +34,14 @@ import com.hacof.communication.repository.NotificationRepository;
 import com.hacof.communication.repository.RoleRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.repository.UserRoleRepository;
+import com.hacof.communication.service.EmailService;
 import com.hacof.communication.service.NotificationService;
 import com.hacof.communication.util.SecurityUtil;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -117,7 +117,8 @@ public class NotificationServiceImpl implements NotificationService {
                     .map(user -> NotificationDelivery.builder()
                             .notification(notification)
                             .recipient(user)
-                            .role(RoleType.fromString(userRoleMap.get(user.getId()).getName()))
+                            .role(RoleType.fromString(
+                                    userRoleMap.get(user.getId()).getName()))
                             .method(deliveryRequest.getMethod())
                             .status(NotificationStatus.SENT)
                             .build())
@@ -147,7 +148,8 @@ public class NotificationServiceImpl implements NotificationService {
                 String subject = "New announcement from the system";
                 String content = buildNotificationEmailContent(notification.getContent(), notification.getMetadata());
 
-                CompletableFuture<Void> future = emailService.sendEmailAsync(recipient.getEmail(), subject, content)
+                CompletableFuture<Void> future = emailService
+                        .sendEmailAsync(recipient.getEmail(), subject, content)
                         .thenRun(() -> {
                             delivery.setStatus(NotificationStatus.SENT);
                             notificationDeliveryRepository.save(delivery);
@@ -172,7 +174,8 @@ public class NotificationServiceImpl implements NotificationService {
             if (recipient.getEmail() != null && !recipient.getEmail().isEmpty()) {
                 try {
                     String subject = "New announcement from the system";
-                    String content = buildNotificationEmailContent(notification.getContent(), notification.getMetadata());
+                    String content =
+                            buildNotificationEmailContent(notification.getContent(), notification.getMetadata());
                     emailService.sendEmail(recipient.getEmail(), subject, content);
 
                     delivery.setStatus(NotificationStatus.SENT);
@@ -240,9 +243,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     @Override
     public void updateReadStatusBulk(BulkUpdateReadStatusRequest request) {
-        List<Long> ids = request.getDeliveryIds().stream()
-                .map(Long::valueOf)
-                .toList();
+        List<Long> ids = request.getDeliveryIds().stream().map(Long::valueOf).toList();
 
         List<NotificationDelivery> deliveries = notificationDeliveryRepository.findAllById(ids);
 

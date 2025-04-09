@@ -1,5 +1,8 @@
 package com.hacof.communication.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.hacof.communication.dto.request.TaskRequestDTO;
@@ -7,9 +10,6 @@ import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.entity.BoardList;
 import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Task;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class TaskMapper {
@@ -39,7 +39,8 @@ public class TaskMapper {
                 .description(task.getDescription())
                 .position(task.getPosition())
                 .dueDate(task.getDueDate())
-                .boardListId(String.valueOf(task.getBoardList() != null ? task.getBoardList().getId() : null))
+                .boardListId(String.valueOf(
+                        task.getBoardList() != null ? task.getBoardList().getId() : null))
                 .createdBy(task.getCreatedBy() != null ? task.getCreatedBy().getUsername() : null)
                 .createdDate(task.getCreatedDate())
                 .lastModifiedDate(task.getLastModifiedDate())
