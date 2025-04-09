@@ -28,10 +28,10 @@ public class ThreadPostMapper {
         responseDTO.setId(String.valueOf(threadPost.getId()));
         responseDTO.setContent(threadPost.getContent());
         responseDTO.setDeleted(threadPost.isDeleted());
-        responseDTO.setCreatedBy(
+        responseDTO.setCreatedByUserName(
                 threadPost.getCreatedBy() != null ? threadPost.getCreatedBy().getUsername() : null);
-        responseDTO.setCreatedDate(threadPost.getCreatedDate());
-        responseDTO.setLastModifiedDate(threadPost.getLastModifiedDate());
+        responseDTO.setCreatedAt(threadPost.getCreatedDate());
+        responseDTO.setUpdatedAt(threadPost.getLastModifiedDate());
 
         // **Mapping ForumThread**
         responseDTO.setForumThread(mapForumThread(threadPost));
@@ -65,9 +65,9 @@ public class ThreadPostMapper {
                     threadPost.getForumThread().getForumCategory()));
         }
 
-        forumThreadDTO.setCreatedDate(
+        forumThreadDTO.setCreatedAt(
                 threadPost.getForumThread().getCreatedDate().toString());
-        forumThreadDTO.setLastModifiedDate(
+        forumThreadDTO.setUpdatedAt(
                 threadPost.getForumThread().getLastModifiedDate().toString());
 
         return forumThreadDTO;
@@ -80,12 +80,12 @@ public class ThreadPostMapper {
                         .map(like -> {
                             ThreadPostLikeResponseDTO likeDTO = new ThreadPostLikeResponseDTO();
                             likeDTO.setId(String.valueOf(like.getId()));
-                            likeDTO.setCreatedBy(
+                            likeDTO.setCreatedByUserName(
                                     like.getCreatedBy() != null
                                             ? like.getCreatedBy().getUsername()
                                             : null);
-                            likeDTO.setCreatedDate(like.getCreatedDate());
-                            likeDTO.setLastModifiedDate(like.getLastModifiedDate());
+                            likeDTO.setCreatedAt(like.getCreatedDate());
+                            likeDTO.setUpdatedAt(like.getLastModifiedDate());
                             return likeDTO;
                         })
                         .collect(Collectors.toList());
@@ -105,8 +105,8 @@ public class ThreadPostMapper {
                                             ? String.valueOf(
                                                     report.getReviewedBy().getId())
                                             : null);
-                            reportDTO.setCreatedDate(report.getCreatedDate());
-                            reportDTO.setLastModifiedDate(report.getLastModifiedDate());
+                            reportDTO.setCreatedAt(report.getCreatedDate());
+                            reportDTO.setUpdatedAt(report.getLastModifiedDate());
                             return reportDTO;
                         })
                         .collect(Collectors.toList());

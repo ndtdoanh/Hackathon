@@ -17,8 +17,8 @@ public class ForumThreadResponseDTO {
     ForumCategoryResponseDTO forumCategory; // Include ForumCategory DTO
     boolean isLocked;
     boolean isPinned;
-    String createdBy;
-    String createdDate;
-    String lastModifiedDate;
+    String createdByUserName;
+    String createdAt;
+    String updatedAt;
     List<ThreadPostResponseDTO> threadPosts; // Include List of ThreadPost DTOs
 }

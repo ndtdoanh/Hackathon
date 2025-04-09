@@ -16,7 +16,7 @@ public class ForumCategoryResponseDTO {
     String name;
     String description;
     String section;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
     List<ForumThreadResponseDTO> forumThreads;
 }

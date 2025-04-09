@@ -16,6 +16,6 @@ public class ThreadPostReportResponseDTO {
     String reason;
     String status;
     String reviewedById;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

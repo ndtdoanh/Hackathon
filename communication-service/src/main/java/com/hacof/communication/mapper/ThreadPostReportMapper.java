@@ -36,10 +36,10 @@ public class ThreadPostReportMapper {
         threadPostResponseDTO.setId(
                 String.valueOf(threadPostReport.getThreadPost().getId()));
         threadPostResponseDTO.setContent(threadPostReport.getThreadPost().getContent());
-        threadPostResponseDTO.setCreatedBy(
+        threadPostResponseDTO.setCreatedByUserName(
                 threadPostReport.getThreadPost().getCreatedBy().getUsername());
-        threadPostResponseDTO.setCreatedDate(threadPostReport.getThreadPost().getCreatedDate());
-        threadPostResponseDTO.setLastModifiedDate(
+        threadPostResponseDTO.setCreatedAt(threadPostReport.getThreadPost().getCreatedDate());
+        threadPostResponseDTO.setUpdatedAt(
                 threadPostReport.getThreadPost().getLastModifiedDate());
 
         // Map the ForumThread entity to ForumThreadResponseDTO
@@ -48,11 +48,11 @@ public class ThreadPostReportMapper {
                 String.valueOf(threadPostReport.getThreadPost().getForumThread().getId()));
         forumThreadResponseDTO.setTitle(
                 threadPostReport.getThreadPost().getForumThread().getTitle());
-        forumThreadResponseDTO.setCreatedBy(
+        forumThreadResponseDTO.setCreatedByUserName(
                 threadPostReport.getThreadPost().getForumThread().getCreatedBy().getUsername());
-        forumThreadResponseDTO.setCreatedDate(
+        forumThreadResponseDTO.setCreatedAt(
                 String.valueOf(threadPostReport.getThreadPost().getForumThread().getCreatedDate()));
-        forumThreadResponseDTO.setLastModifiedDate(
+        forumThreadResponseDTO.setUpdatedAt(
                 String.valueOf(threadPostReport.getThreadPost().getForumThread().getLastModifiedDate()));
 
         // Map ForumCategory inside ForumThread
@@ -77,12 +77,12 @@ public class ThreadPostReportMapper {
                 .getForumThread()
                 .getForumCategory()
                 .getSection());
-        forumCategoryResponseDTO.setCreatedDate(threadPostReport
+        forumCategoryResponseDTO.setCreatedAt(threadPostReport
                 .getThreadPost()
                 .getForumThread()
                 .getForumCategory()
                 .getCreatedDate());
-        forumCategoryResponseDTO.setLastModifiedDate(threadPostReport
+        forumCategoryResponseDTO.setUpdatedAt(threadPostReport
                 .getThreadPost()
                 .getForumThread()
                 .getForumCategory()
@@ -115,8 +115,8 @@ public class ThreadPostReportMapper {
                 threadPostReport.getReviewedBy() != null
                         ? String.valueOf(threadPostReport.getReviewedBy().getId())
                         : null);
-        responseDTO.setCreatedDate(threadPostReport.getCreatedDate());
-        responseDTO.setLastModifiedDate(threadPostReport.getLastModifiedDate());
+        responseDTO.setCreatedAt(threadPostReport.getCreatedDate());
+        responseDTO.setUpdatedAt(threadPostReport.getLastModifiedDate());
 
         return responseDTO;
     }

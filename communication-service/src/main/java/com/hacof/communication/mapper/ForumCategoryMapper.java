@@ -28,8 +28,8 @@ public class ForumCategoryMapper {
         responseDTO.setName(entity.getName());
         responseDTO.setDescription(entity.getDescription());
         responseDTO.setSection(entity.getSection());
-        responseDTO.setCreatedDate(entity.getCreatedDate());
-        responseDTO.setLastModifiedDate(entity.getLastModifiedDate());
+        responseDTO.setCreatedAt(entity.getCreatedDate());
+        responseDTO.setUpdatedAt(entity.getLastModifiedDate());
 
         // Kiểm tra null cho forumThreads
         List<ForumThreadResponseDTO> forumThreadsDTO = (entity.getForumThreads() != null)
@@ -48,9 +48,9 @@ public class ForumCategoryMapper {
         ForumThreadResponseDTO forumThreadResponseDTO = new ForumThreadResponseDTO();
         forumThreadResponseDTO.setId(String.valueOf(forumThread.getId()));
         forumThreadResponseDTO.setTitle(forumThread.getTitle());
-        forumThreadResponseDTO.setCreatedBy(forumThread.getCreatedBy().getUsername());
-        forumThreadResponseDTO.setCreatedDate(forumThread.getCreatedDate().toString());
-        forumThreadResponseDTO.setLastModifiedDate(
+        forumThreadResponseDTO.setCreatedByUserName(forumThread.getCreatedBy().getUsername());
+        forumThreadResponseDTO.setCreatedAt(forumThread.getCreatedDate().toString());
+        forumThreadResponseDTO.setUpdatedAt(
                 forumThread.getLastModifiedDate().toString());
 
         // Map ForumCategory of ForumThread (In case ForumThread is related to ForumCategory)
@@ -60,8 +60,8 @@ public class ForumCategoryMapper {
         forumCategoryResponseDTO.setName(forumThread.getForumCategory().getName());
         forumCategoryResponseDTO.setDescription(forumThread.getForumCategory().getDescription());
         forumCategoryResponseDTO.setSection(forumThread.getForumCategory().getSection());
-        forumCategoryResponseDTO.setCreatedDate(forumThread.getForumCategory().getCreatedDate());
-        forumCategoryResponseDTO.setLastModifiedDate(
+        forumCategoryResponseDTO.setCreatedAt(forumThread.getForumCategory().getCreatedDate());
+        forumCategoryResponseDTO.setUpdatedAt(
                 forumThread.getForumCategory().getLastModifiedDate());
 
         forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
@@ -73,9 +73,9 @@ public class ForumCategoryMapper {
         ThreadPostResponseDTO threadPostResponseDTO = new ThreadPostResponseDTO();
         threadPostResponseDTO.setId(String.valueOf(threadPost.getId()));
         threadPostResponseDTO.setContent(threadPost.getContent());
-        threadPostResponseDTO.setCreatedBy(threadPost.getCreatedBy().getUsername());
-        threadPostResponseDTO.setCreatedDate(threadPost.getCreatedDate());
-        threadPostResponseDTO.setLastModifiedDate(threadPost.getLastModifiedDate());
+        threadPostResponseDTO.setCreatedByUserName(threadPost.getCreatedBy().getUsername());
+        threadPostResponseDTO.setCreatedAt(threadPost.getCreatedDate());
+        threadPostResponseDTO.setUpdatedAt(threadPost.getLastModifiedDate());
 
         return threadPostResponseDTO;
     }

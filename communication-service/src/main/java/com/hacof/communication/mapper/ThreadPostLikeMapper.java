@@ -30,10 +30,10 @@ public class ThreadPostLikeMapper {
         threadPostResponseDTO.setId(
                 String.valueOf(threadPostLike.getThreadPost().getId()));
         threadPostResponseDTO.setContent(threadPostLike.getThreadPost().getContent());
-        threadPostResponseDTO.setCreatedBy(
+        threadPostResponseDTO.setCreatedByUserName(
                 threadPostLike.getThreadPost().getCreatedBy().getUsername());
-        threadPostResponseDTO.setCreatedDate(threadPostLike.getThreadPost().getCreatedDate());
-        threadPostResponseDTO.setLastModifiedDate(threadPostLike.getThreadPost().getLastModifiedDate());
+        threadPostResponseDTO.setCreatedAt(threadPostLike.getThreadPost().getCreatedDate());
+        threadPostResponseDTO.setUpdatedAt(threadPostLike.getThreadPost().getLastModifiedDate());
 
         // Map the ForumThread entity to ForumThreadResponseDTO
         ForumThreadResponseDTO forumThreadResponseDTO = new ForumThreadResponseDTO();
@@ -41,11 +41,11 @@ public class ThreadPostLikeMapper {
                 String.valueOf(threadPostLike.getThreadPost().getForumThread().getId()));
         forumThreadResponseDTO.setTitle(
                 threadPostLike.getThreadPost().getForumThread().getTitle());
-        forumThreadResponseDTO.setCreatedBy(
+        forumThreadResponseDTO.setCreatedByUserName(
                 threadPostLike.getThreadPost().getForumThread().getCreatedBy().getUsername());
-        forumThreadResponseDTO.setCreatedDate(
+        forumThreadResponseDTO.setCreatedAt(
                 String.valueOf(threadPostLike.getThreadPost().getForumThread().getCreatedDate()));
-        forumThreadResponseDTO.setLastModifiedDate(
+        forumThreadResponseDTO.setUpdatedAt(
                 String.valueOf(threadPostLike.getThreadPost().getForumThread().getLastModifiedDate()));
 
         // Map ForumCategory inside ForumThread
@@ -70,12 +70,12 @@ public class ThreadPostLikeMapper {
                 .getForumThread()
                 .getForumCategory()
                 .getSection());
-        forumCategoryResponseDTO.setCreatedDate(threadPostLike
+        forumCategoryResponseDTO.setCreatedAt(threadPostLike
                 .getThreadPost()
                 .getForumThread()
                 .getForumCategory()
                 .getCreatedDate());
-        forumCategoryResponseDTO.setLastModifiedDate(threadPostLike
+        forumCategoryResponseDTO.setUpdatedAt(threadPostLike
                 .getThreadPost()
                 .getForumThread()
                 .getForumCategory()
@@ -101,9 +101,9 @@ public class ThreadPostLikeMapper {
         responseDTO.setThreadPost(threadPostResponseDTO);
 
         // Set remaining ThreadPostLike details
-        responseDTO.setCreatedBy(threadPostLike.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
-        responseDTO.setCreatedDate(threadPostLike.getCreatedDate());
-        responseDTO.setLastModifiedDate(threadPostLike.getLastModifiedDate());
+        responseDTO.setCreatedByUserName(threadPostLike.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
+        responseDTO.setCreatedAt(threadPostLike.getCreatedDate());
+        responseDTO.setUpdatedAt(threadPostLike.getLastModifiedDate());
 
         return responseDTO;
     }

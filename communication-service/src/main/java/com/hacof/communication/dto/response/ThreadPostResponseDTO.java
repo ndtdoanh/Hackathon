@@ -14,9 +14,9 @@ public class ThreadPostResponseDTO {
     ForumThreadResponseDTO forumThread;
     String content;
     boolean isDeleted;
-    String createdBy;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    String createdByUserName;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
     List<ThreadPostLikeResponseDTO> threadPostLikes;
     List<ThreadPostReportResponseDTO> threadPostReports;
 }

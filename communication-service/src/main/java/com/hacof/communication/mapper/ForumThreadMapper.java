@@ -34,9 +34,9 @@ public class ForumThreadMapper {
 
         responseDTO.setLocked(entity.isLocked());
         responseDTO.setPinned(entity.isPinned());
-        responseDTO.setCreatedBy(entity.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
-        responseDTO.setCreatedDate(entity.getCreatedDate().toString());
-        responseDTO.setLastModifiedDate(entity.getLastModifiedDate().toString());
+        responseDTO.setCreatedByUserName(entity.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
+        responseDTO.setCreatedAt(entity.getCreatedDate().toString());
+        responseDTO.setUpdatedAt(entity.getLastModifiedDate().toString());
 
         // Map List of ThreadPost to List of ThreadPostResponseDTO
         // Ensure threadPosts is not null to avoid NullPointerException
@@ -58,8 +58,8 @@ public class ForumThreadMapper {
         forumCategoryResponseDTO.setName(forumCategory.getName());
         forumCategoryResponseDTO.setDescription(forumCategory.getDescription());
         forumCategoryResponseDTO.setSection(forumCategory.getSection());
-        forumCategoryResponseDTO.setCreatedDate(forumCategory.getCreatedDate());
-        forumCategoryResponseDTO.setLastModifiedDate(forumCategory.getLastModifiedDate());
+        forumCategoryResponseDTO.setCreatedAt(forumCategory.getCreatedDate());
+        forumCategoryResponseDTO.setUpdatedAt(forumCategory.getLastModifiedDate());
         return forumCategoryResponseDTO;
     }
 
@@ -68,9 +68,9 @@ public class ForumThreadMapper {
         ThreadPostResponseDTO threadPostResponseDTO = new ThreadPostResponseDTO();
         threadPostResponseDTO.setId(String.valueOf(threadPost.getId()));
         threadPostResponseDTO.setContent(threadPost.getContent());
-        threadPostResponseDTO.setCreatedBy(threadPost.getCreatedBy().getUsername());
-        threadPostResponseDTO.setCreatedDate(threadPost.getCreatedDate());
-        threadPostResponseDTO.setLastModifiedDate(threadPost.getLastModifiedDate());
+        threadPostResponseDTO.setCreatedByUserName(threadPost.getCreatedBy().getUsername());
+        threadPostResponseDTO.setCreatedAt(threadPost.getCreatedDate());
+        threadPostResponseDTO.setUpdatedAt(threadPost.getLastModifiedDate());
 
         return threadPostResponseDTO;
     }

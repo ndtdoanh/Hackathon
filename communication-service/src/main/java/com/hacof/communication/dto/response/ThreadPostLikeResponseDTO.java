@@ -14,7 +14,7 @@ public class ThreadPostLikeResponseDTO {
 
     String id;
     ThreadPostResponseDTO threadPost; // Include the full ThreadPost object
-    String createdBy;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    String createdByUserName;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }
