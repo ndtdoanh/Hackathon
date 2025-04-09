@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamResponseDTO {
-    Long id;
+    String id;
     String name;
     UserResponse teamLeader;
     List<UserResponse> teamMembers;
@@ -24,7 +24,7 @@ public class TeamResponseDTO {
 
     public TeamResponseDTO(Team team) {
         if (team != null) {
-            this.id = team.getId();
+            this.id = String.valueOf(team.getId());
             this.name = team.getName();
             this.teamLeader = team.getTeamLeader() != null ? new UserResponse() : null;
             this.bio = team.getBio();

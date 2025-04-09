@@ -85,7 +85,7 @@ public class SubmissionMapper {
         }
 
         return TeamResponseDTO.builder()
-                .id(team.getId())
+                .id(String.valueOf(team.getId()))
                 .name(team.getName())
                 .teamLeader(team.getTeamLeader() != null ? mapUserToDto(team.getTeamLeader()) : null)
                 .teamMembers(
