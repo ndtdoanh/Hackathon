@@ -40,7 +40,7 @@ public class MessageController {
     public void handleWebSocketMessage(@Payload MessageRequest request, @DestinationVariable Long conversationId) {
         log.info("Received WebSocket message for conversation: {}", conversationId);
         log.info("Message content: {}", request.getContent());
-        log.info("Sender info: {}", request.getCreatedByUserName());
+//        log.info("Sender info: {}", request.getCreatedByUserName());
 
         MessageResponse messageResponse = messageService.createMessage(conversationId, request);
         log.info("Created message response: {}", messageResponse);

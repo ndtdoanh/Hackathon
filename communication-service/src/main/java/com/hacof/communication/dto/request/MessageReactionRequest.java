@@ -16,5 +16,4 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageReactionRequest {
     ReactionType reactionType;
-    String createdByUserName;
 }
