@@ -34,9 +34,9 @@ public class ForumCategoryMapper {
         // Kiểm tra null cho forumThreads
         List<ForumThreadResponseDTO> forumThreadsDTO = (entity.getForumThreads() != null)
                 ? entity.getForumThreads().stream()
-                .map(ForumCategoryMapper::toForumThreadResponseDTO)
-                .collect(Collectors.toList())
-                : new ArrayList<>();  // Trường hợp forumThreads là null, trả về danh sách rỗng
+                        .map(ForumCategoryMapper::toForumThreadResponseDTO)
+                        .collect(Collectors.toList())
+                : new ArrayList<>(); // Trường hợp forumThreads là null, trả về danh sách rỗng
 
         responseDTO.setForumThreads(forumThreadsDTO);
 
@@ -50,16 +50,19 @@ public class ForumCategoryMapper {
         forumThreadResponseDTO.setTitle(forumThread.getTitle());
         forumThreadResponseDTO.setCreatedBy(forumThread.getCreatedBy().getUsername());
         forumThreadResponseDTO.setCreatedDate(forumThread.getCreatedDate().toString());
-        forumThreadResponseDTO.setLastModifiedDate(forumThread.getLastModifiedDate().toString());
+        forumThreadResponseDTO.setLastModifiedDate(
+                forumThread.getLastModifiedDate().toString());
 
         // Map ForumCategory of ForumThread (In case ForumThread is related to ForumCategory)
         ForumCategoryResponseDTO forumCategoryResponseDTO = new ForumCategoryResponseDTO();
-        forumCategoryResponseDTO.setId(String.valueOf(forumThread.getForumCategory().getId()));
+        forumCategoryResponseDTO.setId(
+                String.valueOf(forumThread.getForumCategory().getId()));
         forumCategoryResponseDTO.setName(forumThread.getForumCategory().getName());
         forumCategoryResponseDTO.setDescription(forumThread.getForumCategory().getDescription());
         forumCategoryResponseDTO.setSection(forumThread.getForumCategory().getSection());
         forumCategoryResponseDTO.setCreatedDate(forumThread.getForumCategory().getCreatedDate());
-        forumCategoryResponseDTO.setLastModifiedDate(forumThread.getForumCategory().getLastModifiedDate());
+        forumCategoryResponseDTO.setLastModifiedDate(
+                forumThread.getForumCategory().getLastModifiedDate());
 
         forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
 

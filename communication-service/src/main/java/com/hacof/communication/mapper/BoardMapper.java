@@ -1,11 +1,11 @@
 package com.hacof.communication.mapper;
 
-import com.hacof.communication.entity.Hackathon;
 import org.springframework.stereotype.Component;
 
 import com.hacof.communication.dto.request.BoardRequestDTO;
 import com.hacof.communication.dto.response.BoardResponseDTO;
 import com.hacof.communication.entity.Board;
+import com.hacof.communication.entity.Hackathon;
 import com.hacof.communication.entity.Team;
 import com.hacof.communication.entity.User;
 
@@ -18,7 +18,7 @@ public class BoardMapper {
                 .description(boardRequestDTO.getDescription())
                 .owner(owner)
                 .team(team)
-                .hackathon(hackathon)  // Mapping hackathon
+                .hackathon(hackathon) // Mapping hackathon
                 .build();
     }
 
@@ -30,7 +30,10 @@ public class BoardMapper {
                 .description(board.getDescription())
                 .ownerName(board.getOwner().getUsername())
                 .teamId(String.valueOf(board.getTeam().getId()))
-                .hackathonId(board.getHackathon() != null ? String.valueOf(board.getHackathon().getId()) : null) // Handle hackathonId
+                .hackathonId(
+                        board.getHackathon() != null
+                                ? String.valueOf(board.getHackathon().getId())
+                                : null) // Handle hackathonId
                 .createdBy(board.getCreatedBy().getUsername())
                 .createdDate(board.getCreatedDate())
                 .lastModifiedDate(board.getLastModifiedDate())

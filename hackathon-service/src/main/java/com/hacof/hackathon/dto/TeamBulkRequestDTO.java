@@ -1,11 +1,12 @@
 package com.hacof.hackathon.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -23,4 +24,3 @@ public class TeamBulkRequestDTO {
     @NotEmpty(message = "Team Hackathons cannot be empty")
     private List<TeamHackathonBulkDTO> teamHackathons;
 }
-

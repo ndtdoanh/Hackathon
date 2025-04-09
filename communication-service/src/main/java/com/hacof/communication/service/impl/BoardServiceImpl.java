@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 import com.hacof.communication.dto.request.BoardRequestDTO;
 import com.hacof.communication.dto.response.BoardResponseDTO;
 import com.hacof.communication.entity.Board;
+import com.hacof.communication.entity.Hackathon;
 import com.hacof.communication.entity.Team;
 import com.hacof.communication.entity.User;
-import com.hacof.communication.entity.Hackathon;
 import com.hacof.communication.mapper.BoardMapper;
 import com.hacof.communication.repository.BoardRepository;
+import com.hacof.communication.repository.HackathonRepository;
 import com.hacof.communication.repository.TeamRepository;
 import com.hacof.communication.repository.UserRepository;
-import com.hacof.communication.repository.HackathonRepository;
 import com.hacof.communication.service.BoardService;
 
 @Service
@@ -33,7 +33,7 @@ public class BoardServiceImpl implements BoardService {
     private TeamRepository teamRepository;
 
     @Autowired
-    private HackathonRepository hackathonRepository;  // Added Hackathon Repository
+    private HackathonRepository hackathonRepository; // Added Hackathon Repository
 
     @Autowired
     private BoardMapper boardMapper;
@@ -53,13 +53,15 @@ public class BoardServiceImpl implements BoardService {
         }
 
         // Validate Hackathon
-        Optional<Hackathon> hackathonOptional = hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
+        Optional<Hackathon> hackathonOptional =
+                hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
         if (!hackathonOptional.isPresent()) {
             throw new IllegalArgumentException("Hackathon with ID " + boardRequestDTO.getHackathonId() + " not found!");
         }
 
         // Check for existing board with the same name in the same team
-        Optional<Board> existingBoard = boardRepository.findByNameAndTeamId(boardRequestDTO.getName(), Long.parseLong(boardRequestDTO.getTeamId()));
+        Optional<Board> existingBoard = boardRepository.findByNameAndTeamId(
+                boardRequestDTO.getName(), Long.parseLong(boardRequestDTO.getTeamId()));
         if (existingBoard.isPresent()) {
             throw new IllegalArgumentException("A Board with the same name already exists for this team.");
         }
@@ -69,7 +71,8 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException("Board name cannot be empty");
         }
 
-        if (boardRequestDTO.getDescription() == null || boardRequestDTO.getDescription().isEmpty()) {
+        if (boardRequestDTO.getDescription() == null
+                || boardRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Board description cannot be empty");
         }
 
@@ -119,14 +122,17 @@ public class BoardServiceImpl implements BoardService {
         }
 
         // Validate hackathon existence
-        Optional<Hackathon> hackathonOptional = hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
+        Optional<Hackathon> hackathonOptional =
+                hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
         if (!hackathonOptional.isPresent()) {
             throw new IllegalArgumentException("Hackathon with ID " + boardRequestDTO.getHackathonId() + " not found!");
         }
 
         // Check for duplicate board name in the same team, except for the current board being updated
-        Optional<Board> existingBoard = boardRepository.findByNameAndTeamId(boardRequestDTO.getName(), Long.parseLong(boardRequestDTO.getTeamId()));
-        if (existingBoard.isPresent() && !Long.valueOf(existingBoard.get().getId()).equals(Long.valueOf(id))) {
+        Optional<Board> existingBoard = boardRepository.findByNameAndTeamId(
+                boardRequestDTO.getName(), Long.parseLong(boardRequestDTO.getTeamId()));
+        if (existingBoard.isPresent()
+                && !Long.valueOf(existingBoard.get().getId()).equals(Long.valueOf(id))) {
             throw new IllegalArgumentException("A Board with the same name already exists for this team.");
         }
 
@@ -135,7 +141,8 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException("Board name cannot be empty");
         }
 
-        if (boardRequestDTO.getDescription() == null || boardRequestDTO.getDescription().isEmpty()) {
+        if (boardRequestDTO.getDescription() == null
+                || boardRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Board description cannot be empty");
         }
 
@@ -195,6 +202,4 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findByTeamIdAndHackathonId(teamId, hackathonId);
         return boards.stream().map(boardMapper::toDto).collect(Collectors.toList());
     }
-
 }
-

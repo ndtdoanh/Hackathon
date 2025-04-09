@@ -75,7 +75,8 @@ public class BoardUserServiceImpl implements BoardUserService {
     @Override
     public BoardUserResponseDTO updateBoardUser(Long id, BoardUserRequestDTO requestDTO) {
         // Check if the BoardUser exists
-        BoardUser boardUser = boardUserRepository.findById(id)
+        BoardUser boardUser = boardUserRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
 
         // Validate Board existence
@@ -109,7 +110,8 @@ public class BoardUserServiceImpl implements BoardUserService {
     @Override
     public void deleteBoardUser(Long id) {
         // Check if the BoardUser exists
-        BoardUser boardUser = boardUserRepository.findById(id)
+        BoardUser boardUser = boardUserRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
 
         // Mark as deleted (soft delete)
@@ -119,7 +121,8 @@ public class BoardUserServiceImpl implements BoardUserService {
 
     @Override
     public BoardUserResponseDTO getBoardUser(Long id) {
-        BoardUser boardUser = boardUserRepository.findById(id)
+        BoardUser boardUser = boardUserRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
 
         return boardUserMapper.toDto(boardUser);

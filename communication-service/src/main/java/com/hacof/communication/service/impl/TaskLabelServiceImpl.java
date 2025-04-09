@@ -51,7 +51,8 @@ public class TaskLabelServiceImpl implements TaskLabelService {
             throw new IllegalArgumentException("BoardLabel not found!");
         }
 
-        Optional<TaskLabel> existingTaskLabel = taskLabelRepository.findByTaskAndBoardLabel(taskOptional.get(), boardLabelOptional.get());
+        Optional<TaskLabel> existingTaskLabel =
+                taskLabelRepository.findByTaskAndBoardLabel(taskOptional.get(), boardLabelOptional.get());
         if (existingTaskLabel.isPresent()) {
             throw new IllegalArgumentException("This task already has the specified board label.");
         }
@@ -88,7 +89,8 @@ public class TaskLabelServiceImpl implements TaskLabelService {
         }
 
         TaskLabel taskLabel = taskLabelOptional.get();
-        if (taskLabel.getTask().equals(taskOptional.get()) && taskLabel.getBoardLabel().equals(boardLabelOptional.get())) {
+        if (taskLabel.getTask().equals(taskOptional.get())
+                && taskLabel.getBoardLabel().equals(boardLabelOptional.get())) {
             throw new IllegalArgumentException("This task already has the specified board label.");
         }
 

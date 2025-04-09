@@ -3,7 +3,6 @@ package com.hacof.communication.dto.request;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hacof.communication.entity.FileUrl;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

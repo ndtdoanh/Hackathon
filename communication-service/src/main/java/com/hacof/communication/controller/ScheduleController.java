@@ -160,8 +160,7 @@ public class ScheduleController {
 
     @GetMapping("/by-team-and-hackathon")
     public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getSchedulesByTeamIdAndHackathonId(
-            @RequestParam Long teamId,
-            @RequestParam Long hackathonId) {
+            @RequestParam Long teamId, @RequestParam Long hackathonId) {
 
         CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
         try {
@@ -181,5 +180,4 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

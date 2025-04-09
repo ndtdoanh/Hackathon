@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import com.hacof.communication.dto.request.ScheduleRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 import com.hacof.communication.dto.response.ScheduleResponseDTO;
+import com.hacof.communication.entity.Hackathon;
 import com.hacof.communication.entity.Schedule;
 import com.hacof.communication.entity.ScheduleEvent;
 import com.hacof.communication.entity.Team;
-import com.hacof.communication.entity.Hackathon;
 
 @Component
 public class ScheduleMapper {
@@ -30,19 +30,28 @@ public class ScheduleMapper {
         // Convert ScheduleEvents to DTOs
         List<ScheduleEventResponseDTO> scheduleEvents = (schedule.getScheduleEvents() != null)
                 ? schedule.getScheduleEvents().stream()
-                .map(this::mapScheduleEventToDto) // Mapping each ScheduleEvent
-                .collect(Collectors.toList())
+                        .map(this::mapScheduleEventToDto) // Mapping each ScheduleEvent
+                        .collect(Collectors.toList())
                 : List.of();
 
         return ScheduleResponseDTO.builder()
                 .id(String.valueOf(schedule.getId()))
-                .teamId(schedule.getTeam() != null ? String.valueOf(schedule.getTeam().getId()) : null)
-                .hackathonId(schedule.getHackathon() != null ? String.valueOf(schedule.getHackathon().getId()) : null)
+                .teamId(
+                        schedule.getTeam() != null
+                                ? String.valueOf(schedule.getTeam().getId())
+                                : null)
+                .hackathonId(
+                        schedule.getHackathon() != null
+                                ? String.valueOf(schedule.getHackathon().getId())
+                                : null)
                 .name(schedule.getName())
                 .description(schedule.getDescription())
                 .createdDate(schedule.getCreatedDate())
                 .lastModifiedDate(schedule.getLastModifiedDate())
-                .createdBy(schedule.getCreatedBy() != null ? schedule.getCreatedBy().getUsername() : null)
+                .createdBy(
+                        schedule.getCreatedBy() != null
+                                ? schedule.getCreatedBy().getUsername()
+                                : null)
                 .scheduleEvents(scheduleEvents)
                 .build();
     }
@@ -58,7 +67,10 @@ public class ScheduleMapper {
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
                 .createdDate(scheduleEvent.getCreatedDate())
                 .lastModifiedDate(scheduleEvent.getLastModifiedDate())
-                .createdBy(scheduleEvent.getCreatedBy() != null ? scheduleEvent.getCreatedBy().getUsername() : null)
+                .createdBy(
+                        scheduleEvent.getCreatedBy() != null
+                                ? scheduleEvent.getCreatedBy().getUsername()
+                                : null)
                 .build();
     }
 }

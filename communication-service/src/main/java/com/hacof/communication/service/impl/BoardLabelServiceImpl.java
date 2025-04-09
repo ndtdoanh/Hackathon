@@ -37,7 +37,8 @@ public class BoardLabelServiceImpl implements BoardLabelService {
         }
 
         // Validate BoardLabel name
-        if (boardLabelRequestDTO.getName() == null || boardLabelRequestDTO.getName().isEmpty()) {
+        if (boardLabelRequestDTO.getName() == null
+                || boardLabelRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Board label name cannot be empty.");
         }
 
@@ -49,7 +50,8 @@ public class BoardLabelServiceImpl implements BoardLabelService {
         }
 
         // Validate color (optional check based on your requirements)
-        if (boardLabelRequestDTO.getColor() == null || boardLabelRequestDTO.getColor().isEmpty()) {
+        if (boardLabelRequestDTO.getColor() == null
+                || boardLabelRequestDTO.getColor().isEmpty()) {
             throw new IllegalArgumentException("Board label color cannot be empty.");
         }
 
@@ -77,16 +79,19 @@ public class BoardLabelServiceImpl implements BoardLabelService {
         // Check for duplicate board label name in the same board
         Optional<BoardLabel> existingBoardLabel = boardLabelRepository.findByNameAndBoardId(
                 boardLabelRequestDTO.getName(), Long.valueOf(boardLabelRequestDTO.getBoardId()));
-        if (existingBoardLabel.isPresent() && !Long.valueOf(existingBoardLabel.get().getId()).equals(Long.valueOf(id))) {
+        if (existingBoardLabel.isPresent()
+                && !Long.valueOf(existingBoardLabel.get().getId()).equals(Long.valueOf(id))) {
             throw new IllegalArgumentException("A board label with the same name already exists in this board.");
         }
 
         // Validate name and color for the update
-        if (boardLabelRequestDTO.getName() == null || boardLabelRequestDTO.getName().isEmpty()) {
+        if (boardLabelRequestDTO.getName() == null
+                || boardLabelRequestDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Board label name cannot be empty.");
         }
 
-        if (boardLabelRequestDTO.getColor() == null || boardLabelRequestDTO.getColor().isEmpty()) {
+        if (boardLabelRequestDTO.getColor() == null
+                || boardLabelRequestDTO.getColor().isEmpty()) {
             throw new IllegalArgumentException("Board label color cannot be empty.");
         }
 

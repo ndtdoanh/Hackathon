@@ -3,14 +3,13 @@ package com.hacof.hackathon.service.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.dto.*;
 import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.*;
+import com.hacof.hackathon.dto.*;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
@@ -159,7 +158,8 @@ public class TeamServiceImpl implements TeamService {
         List<TeamDTO> createdTeams = new ArrayList<>();
 
         for (TeamBulkRequestDTO request : bulkRequest) {
-            User teamLeader = userRepository.findById(Long.parseLong(request.getTeamLeaderId()))
+            User teamLeader = userRepository
+                    .findById(Long.parseLong(request.getTeamLeaderId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Team leader not found"));
 
             Team team = TeamMapperManual.toEntity(new TeamDTO());
@@ -180,7 +180,8 @@ public class TeamServiceImpl implements TeamService {
             teamMemberRepository.save(teamLeaderUserTeam);
 
             for (TeamMemberBulkDTO member : request.getTeamMembers()) {
-                User user = userRepository.findById(Long.parseLong(member.getUserId()))
+                User user = userRepository
+                        .findById(Long.parseLong(member.getUserId()))
                         .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 UserTeam userTeam = new UserTeam();
@@ -190,7 +191,8 @@ public class TeamServiceImpl implements TeamService {
             }
 
             for (TeamHackathonBulkDTO hackathonDTO : request.getTeamHackathons()) {
-                Hackathon hackathon = hackathonRepository.findById(Long.parseLong(hackathonDTO.getHackathonId()))
+                Hackathon hackathon = hackathonRepository
+                        .findById(Long.parseLong(hackathonDTO.getHackathonId()))
                         .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
                 TeamHackathon teamHackathon = TeamHackathon.builder()
@@ -208,58 +210,61 @@ public class TeamServiceImpl implements TeamService {
         return createdTeams;
     }
 
-//    @Override
-//    public List<TeamDTO> updateBulkTeams(List<TeamBulkRequestDTO> bulkRequest) {
-//        List<TeamDTO> updatedTeams = new ArrayList<>();
-//
-//        for (TeamBulkRequestDTO request : bulkRequest) {
-//            Team existingTeam = teamRepository.findById(Long.parseLong(request.getTeamLeaderId())) // Modify this to fetch by Team ID instead of Team Leader ID
-//                    .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
-//
-//            User teamLeader = userRepository.findById(Long.parseLong(request.getTeamLeaderId()))
-//                    .orElseThrow(() -> new ResourceNotFoundException("Team leader not found"));
-//            existingTeam.setTeamLeader(teamLeader);
-//
-//            for (TeamMemberBulkDTO member : request.getTeamMembers()) {
-//                User user = userRepository.findById(Long.parseLong(member.getUserId()))
-//                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-//
-//                Optional<UserTeam> userTeamOpt = teamMemberRepository.findByUserIdAndTeamId(user.getId(), existingTeam.getId());
-//                if (userTeamOpt.isPresent()) {
-//                    UserTeam existingUserTeam = userTeamOpt.get();
-//                } else {
-//                    UserTeam userTeam = new UserTeam();
-//                    userTeam.setUser(user);
-//                    userTeam.setTeam(existingTeam);
-//                    teamMemberRepository.save(userTeam);
-//                }
-//            }
-//
-//            for (TeamHackathonBulkDTO hackathonDTO : request.getTeamHackathons()) {
-//                Hackathon hackathon = hackathonRepository.findById(Long.parseLong(hackathonDTO.getHackathonId()))
-//                        .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
-//
-//                Optional<TeamHackathon> teamHackathonOpt = teamHackathonRepository.findByTeamIdAndHackathonId(existingTeam.getId(), hackathon.getId());
-//                if (teamHackathonOpt.isPresent()) {
-//                    TeamHackathon teamHackathon = teamHackathonOpt.get();
-//                    teamHackathon.setStatus(TeamHackathonStatus.valueOf(hackathonDTO.getStatus()));
-//                    teamHackathonRepository.save(teamHackathon);
-//                } else {
-//                    TeamHackathon teamHackathon = new TeamHackathon();
-//                    teamHackathon.setTeam(existingTeam);
-//                    teamHackathon.setHackathon(hackathon);
-//                    teamHackathon.setStatus(TeamHackathonStatus.valueOf(hackathonDTO.getStatus()));
-//                    teamHackathonRepository.save(teamHackathon);
-//                }
-//            }
-//
-//            teamRepository.save(existingTeam);
-//
-//            updatedTeams.add(teamMapper.toDto(existingTeam));  // Using injected TeamMapper
-//
-//        }
-//        return updatedTeams;
-//    }
+    //    @Override
+    //    public List<TeamDTO> updateBulkTeams(List<TeamBulkRequestDTO> bulkRequest) {
+    //        List<TeamDTO> updatedTeams = new ArrayList<>();
+    //
+    //        for (TeamBulkRequestDTO request : bulkRequest) {
+    //            Team existingTeam = teamRepository.findById(Long.parseLong(request.getTeamLeaderId())) // Modify this
+    // to fetch by Team ID instead of Team Leader ID
+    //                    .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+    //
+    //            User teamLeader = userRepository.findById(Long.parseLong(request.getTeamLeaderId()))
+    //                    .orElseThrow(() -> new ResourceNotFoundException("Team leader not found"));
+    //            existingTeam.setTeamLeader(teamLeader);
+    //
+    //            for (TeamMemberBulkDTO member : request.getTeamMembers()) {
+    //                User user = userRepository.findById(Long.parseLong(member.getUserId()))
+    //                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    //
+    //                Optional<UserTeam> userTeamOpt = teamMemberRepository.findByUserIdAndTeamId(user.getId(),
+    // existingTeam.getId());
+    //                if (userTeamOpt.isPresent()) {
+    //                    UserTeam existingUserTeam = userTeamOpt.get();
+    //                } else {
+    //                    UserTeam userTeam = new UserTeam();
+    //                    userTeam.setUser(user);
+    //                    userTeam.setTeam(existingTeam);
+    //                    teamMemberRepository.save(userTeam);
+    //                }
+    //            }
+    //
+    //            for (TeamHackathonBulkDTO hackathonDTO : request.getTeamHackathons()) {
+    //                Hackathon hackathon = hackathonRepository.findById(Long.parseLong(hackathonDTO.getHackathonId()))
+    //                        .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+    //
+    //                Optional<TeamHackathon> teamHackathonOpt =
+    // teamHackathonRepository.findByTeamIdAndHackathonId(existingTeam.getId(), hackathon.getId());
+    //                if (teamHackathonOpt.isPresent()) {
+    //                    TeamHackathon teamHackathon = teamHackathonOpt.get();
+    //                    teamHackathon.setStatus(TeamHackathonStatus.valueOf(hackathonDTO.getStatus()));
+    //                    teamHackathonRepository.save(teamHackathon);
+    //                } else {
+    //                    TeamHackathon teamHackathon = new TeamHackathon();
+    //                    teamHackathon.setTeam(existingTeam);
+    //                    teamHackathon.setHackathon(hackathon);
+    //                    teamHackathon.setStatus(TeamHackathonStatus.valueOf(hackathonDTO.getStatus()));
+    //                    teamHackathonRepository.save(teamHackathon);
+    //                }
+    //            }
+    //
+    //            teamRepository.save(existingTeam);
+    //
+    //            updatedTeams.add(teamMapper.toDto(existingTeam));  // Using injected TeamMapper
+    //
+    //        }
+    //        return updatedTeams;
+    //    }
 
     //    @Override
     //    public List<TeamDTO> getTeamsByHackathon(long hackathonId) {

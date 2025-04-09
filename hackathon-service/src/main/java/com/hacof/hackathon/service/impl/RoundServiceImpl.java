@@ -1,14 +1,11 @@
 package com.hacof.hackathon.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.dto.RoundLocationDTO;
-import com.hacof.hackathon.mapper.manual.RoundMapperManual;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -18,10 +15,12 @@ import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.RoundStatus;
 import com.hacof.hackathon.dto.RoundDTO;
+import com.hacof.hackathon.dto.RoundLocationDTO;
 import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.LocationMapper;
+import com.hacof.hackathon.mapper.manual.RoundMapperManual;
 import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.RoundService;
 
@@ -61,7 +60,8 @@ public class RoundServiceImpl implements RoundService {
         }
 
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username)
+        User user = userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
         round.setCreatedBy(user);
         round.setLastModifiedBy(user);
@@ -78,7 +78,8 @@ public class RoundServiceImpl implements RoundService {
                 rl.setRound(round);
 
                 Long locationId = Long.parseLong(rlDTO.getLocationId());
-                Location location = locationRepository.findById(locationId)
+                Location location = locationRepository
+                        .findById(locationId)
                         .orElseThrow(() -> new ResourceNotFoundException("Location not found: " + locationId));
 
                 rl.setLocation(location);
@@ -116,7 +117,8 @@ public class RoundServiceImpl implements RoundService {
 
         Authentication authentication = getAuthenticatedUser();
         String username = authentication.getName();
-        User currentUser = userRepository.findByUsername(username)
+        User currentUser = userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
         User createdBy = existingRound.getCreatedBy();
@@ -133,7 +135,8 @@ public class RoundServiceImpl implements RoundService {
         existingRound.getRoundLocations().clear();
 
         for (RoundLocationDTO rlDTO : roundDTO.getRoundLocations()) {
-            Location location = locationRepository.findById(Long.parseLong(rlDTO.getLocationId()))
+            Location location = locationRepository
+                    .findById(Long.parseLong(rlDTO.getLocationId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Location not found: " + rlDTO.getLocationId()));
 
             RoundLocation rl = new RoundLocation();
@@ -164,9 +167,7 @@ public class RoundServiceImpl implements RoundService {
     @Override
     public List<RoundDTO> getRounds(Specification<Round> spec) {
         List<Round> rounds = roundRepository.findAll(spec);
-        return rounds.stream()
-                .map(RoundMapperManual::toDto)
-                .collect(Collectors.toList());
+        return rounds.stream().map(RoundMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -176,17 +177,13 @@ public class RoundServiceImpl implements RoundService {
         }
 
         List<Round> rounds = roundRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return rounds.stream()
-                .map(RoundMapperManual::toDto)
-                .collect(Collectors.toList());
+        return rounds.stream().map(RoundMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override
     public RoundDTO getById(String id) {
         Optional<Round> roundOptional = roundRepository.findById(Long.parseLong(id));
-        return roundOptional
-                .map(RoundMapperManual::toDto)
-                .orElse(null);
+        return roundOptional.map(RoundMapperManual::toDto).orElse(null);
     }
 
     private Hackathon validateHackathon(String hackathonId) {
