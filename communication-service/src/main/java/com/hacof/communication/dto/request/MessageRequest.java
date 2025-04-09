@@ -17,4 +17,5 @@ import lombok.experimental.FieldDefaults;
 public class MessageRequest {
     String content;
     List<String> fileUrls;
+    String createdByUserName;
 }

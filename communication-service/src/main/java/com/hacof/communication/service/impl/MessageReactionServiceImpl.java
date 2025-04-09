@@ -15,6 +15,7 @@ import com.hacof.communication.exception.ErrorCode;
 import com.hacof.communication.mapper.MessageReactionMapper;
 import com.hacof.communication.repository.MessageReactionRepository;
 import com.hacof.communication.repository.MessageRepository;
+import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.MessageReactionService;
 import com.hacof.communication.util.SecurityUtil;
 
@@ -30,6 +31,7 @@ public class MessageReactionServiceImpl implements MessageReactionService {
     MessageRepository messageRepository;
     MessageReactionMapper reactionMapper;
     SecurityUtil securityUtil;
+    UserRepository userRepository;
 
     @Override
     public MessageReactionResponse reactToMessage(Long messageId, MessageReactionRequest request) {
@@ -37,8 +39,9 @@ public class MessageReactionServiceImpl implements MessageReactionService {
                 .findById(messageId)
                 .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_EXISTED));
 
-        User currentUser =
-                securityUtil.getCurrentUser().orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User currentUser = userRepository
+                .findByUsername(request.getCreatedByUserName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Optional<MessageReaction> existingReaction =
                 reactionRepository.findByMessageIdAndCreatedBy(messageId, currentUser);

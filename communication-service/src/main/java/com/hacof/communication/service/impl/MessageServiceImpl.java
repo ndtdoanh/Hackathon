@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hacof.communication.dto.request.MessageRequest;
 import com.hacof.communication.dto.response.MessageReactionResponse;
@@ -20,12 +21,13 @@ import com.hacof.communication.repository.FileUrlRepository;
 import com.hacof.communication.repository.MessageRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.MessageService;
-import com.hacof.communication.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -36,6 +38,7 @@ public class MessageServiceImpl implements MessageService {
     UserRepository userRepository;
 
     @Override
+    @Transactional
     public MessageResponse createMessage(Long conversationId, MessageRequest request) {
         Conversation conversation = conversationRepository
                 .findById(conversationId)
@@ -47,7 +50,7 @@ public class MessageServiceImpl implements MessageService {
         message.setDeleted(false);
 
         User currentUser = userRepository
-                .findById(AuditContext.getCurrentUser().getId())
+                .findByUsername(request.getCreatedByUserName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         message.setCreatedBy(currentUser);
@@ -66,9 +69,7 @@ public class MessageServiceImpl implements MessageService {
         messageResponse.setConversationId(String.valueOf(conversationId));
         messageResponse.setContent(message.getContent());
         messageResponse.setCreatedAt(message.getCreatedDate());
-        messageResponse.setCreatedByUserName(
-                message.getCreatedBy() != null ? message.getCreatedBy().getUsername() : null);
-
+        messageResponse.setCreatedByUserName(currentUser.getUsername());
         List<String> fileUrlsResponse =
                 fileUrls.stream().map(FileUrl::getFileUrl).collect(Collectors.toList());
         messageResponse.setFileUrls(fileUrlsResponse);
