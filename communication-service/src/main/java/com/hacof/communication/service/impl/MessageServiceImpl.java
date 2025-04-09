@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.util.AuditContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +51,7 @@ public class MessageServiceImpl implements MessageService {
         message.setDeleted(false);
 
         User currentUser = userRepository
-                .findByUsername(request.getCreatedByUserName())
+                .findById(AuditContext.getCurrentUser().getId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         message.setCreatedBy(currentUser);
