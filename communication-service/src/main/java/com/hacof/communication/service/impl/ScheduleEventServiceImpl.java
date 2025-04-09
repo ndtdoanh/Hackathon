@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.dto.response.FileUrlResponse;
+import com.hacof.communication.exception.AppException;
+import com.hacof.communication.exception.ErrorCode;
+import com.hacof.communication.mapper.FileUrlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,9 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
 
     @Autowired
     private ScheduleEventMapper scheduleEventMapper;
+
+    @Autowired
+    private FileUrlMapper fileUrlMapper;
 
     @Override
     public ScheduleEventResponseDTO createScheduleEvent(ScheduleEventRequestDTO scheduleEventRequestDTO) {
@@ -183,5 +190,12 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
             throw new IllegalArgumentException("No schedule events found for the given scheduleId: " + scheduleId);
         }
         return scheduleEvents.stream().map(scheduleEventMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FileUrlResponse> getFileUrlsByScheduleEventId(Long scheduleEventId) {
+        ScheduleEvent scheduleEvent = scheduleEventRepository.findById(scheduleEventId)
+                .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
+        return fileUrlMapper.toResponseList(scheduleEvent.getFileUrls());
     }
 }

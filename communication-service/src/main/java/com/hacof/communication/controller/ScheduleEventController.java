@@ -2,6 +2,7 @@ package com.hacof.communication.controller;
 
 import java.util.List;
 
+import com.hacof.communication.dto.response.FileUrlResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -138,5 +139,19 @@ public class ScheduleEventController {
             response.setMessage("Internal Server Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @GetMapping("/{scheduleEventId}/file-urls")
+    public ResponseEntity<CommonResponse<List<FileUrlResponse>>> getFileUrlsByScheduleEventId(
+            @PathVariable Long scheduleEventId) {
+
+        List<FileUrlResponse> fileUrls = scheduleEventService.getFileUrlsByScheduleEventId(scheduleEventId);
+
+        CommonResponse<List<FileUrlResponse>> response = new CommonResponse<>();
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("File URLs fetched successfully!");
+        response.setData(fileUrls);
+
+        return ResponseEntity.ok(response);
     }
 }

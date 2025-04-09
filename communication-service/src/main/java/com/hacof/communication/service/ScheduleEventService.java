@@ -3,6 +3,7 @@ package com.hacof.communication.service;
 import java.util.List;
 
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 
 public interface ScheduleEventService {
@@ -18,4 +19,6 @@ public interface ScheduleEventService {
     List<ScheduleEventResponseDTO> getAllScheduleEvents();
 
     List<ScheduleEventResponseDTO> getScheduleEventsByScheduleId(Long scheduleId);
+
+    List<FileUrlResponse> getFileUrlsByScheduleEventId(Long scheduleEventId);
 }
