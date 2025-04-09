@@ -17,8 +17,7 @@ public interface TeamRoundRepository extends JpaRepository<TeamRound, Long>, Jpa
 
     List<TeamRound> findAllByRoundId(Long roundId);
 
-    @Query("SELECT tr FROM TeamRound tr JOIN tr.teamRoundJudges trj " +
-            "WHERE tr.round.id = :roundId AND trj.judge.id = :judgeId")
-    List<TeamRound> findAllByRoundIdAndJudgeId(@Param("roundId") Long roundId,
-                                               @Param("judgeId") Long judgeId);
+    @Query("SELECT tr FROM TeamRound tr JOIN tr.teamRoundJudges trj "
+            + "WHERE tr.round.id = :roundId AND trj.judge.id = :judgeId")
+    List<TeamRound> findAllByRoundIdAndJudgeId(@Param("roundId") Long roundId, @Param("judgeId") Long judgeId);
 }

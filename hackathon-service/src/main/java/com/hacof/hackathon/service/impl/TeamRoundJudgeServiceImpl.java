@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.TeamRoundJudgeDTO;
@@ -19,6 +18,7 @@ import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.TeamRoundJudgeService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

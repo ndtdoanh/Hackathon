@@ -61,46 +61,41 @@ public class TeamRoundController {
                 new CommonResponse.Result("0000", "Xóa thành công team round"), null));
     }
 
+//    @GetMapping
+//    public ResponseEntity<CommonResponse<Page<TeamRoundDTO>>> searchTeamRounds(
+//            @RequestParam(required = false) String teamId,
+//            @RequestParam(required = false) String roundId,
+//            @RequestParam(required = false) TeamRoundStatus status,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size,
+//            @RequestParam(defaultValue = "createdDate") String sortBy,
+//            @RequestParam(defaultValue = "desc") String sortDirection) {
+//
+//        TeamRoundSearchDTO searchDTO = TeamRoundSearchDTO.builder()
+//                .teamId(teamId)
+//                .roundId(roundId)
+//                .status(status)
+//                .page(page)
+//                .size(size)
+//                .sortBy(sortBy)
+//                .sortDirection(sortDirection)
+//                .build();
+//
+//        Page<TeamRoundDTO> result = teamRoundService.searchTeamRounds(searchDTO);
+//
+//        return ResponseEntity.ok(new CommonResponse<>(
+//                //                UUID.randomUUID().toString(),
+//                //                LocalDateTime.now(),
+//                //                "HACOF",
+//                new CommonResponse.Result("0000", "Tìm kiếm thành công"), result));
+//    }
+
     @GetMapping
-    public ResponseEntity<CommonResponse<Page<TeamRoundDTO>>> searchTeamRounds(
-            @RequestParam(required = false) String teamId,
-            @RequestParam(required = false) String roundId,
-            @RequestParam(required = false) TeamRoundStatus status,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdDate") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDirection) {
-
-        TeamRoundSearchDTO searchDTO = TeamRoundSearchDTO.builder()
-                .teamId(teamId)
-                .roundId(roundId)
-                .status(status)
-                .page(page)
-                .size(size)
-                .sortBy(sortBy)
-                .sortDirection(sortDirection)
-                .build();
-
-        Page<TeamRoundDTO> result = teamRoundService.searchTeamRounds(searchDTO);
-
-        return ResponseEntity.ok(new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
-                new CommonResponse.Result("0000", "Tìm kiếm thành công"), result));
-    }
-
-    @PostMapping("/filter-by-round")
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getAllByRoundId(
-            @RequestBody Map<String, String> request) {
-
-        String roundId = request.get("roundId");
+            @RequestParam("roundId") String roundId) {
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByRoundId(roundId);
-
         return ResponseEntity.ok(new CommonResponse<>(
-                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
-                teamRounds
-        ));
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
     }
 
     @PostMapping("/filter-by-judge-and-round")

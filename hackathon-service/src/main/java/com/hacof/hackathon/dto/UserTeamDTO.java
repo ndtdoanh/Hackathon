@@ -15,10 +15,13 @@ public class UserTeamDTO {
 
     @JsonIgnore
     String userId;
+
     @JsonIgnore
     UserDTO user;
+
     @JsonIgnore
     String teamId;
+
     @JsonIgnore
     TeamDTO team;
 
