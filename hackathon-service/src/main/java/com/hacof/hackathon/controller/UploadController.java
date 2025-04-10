@@ -2,8 +2,10 @@ package com.hacof.hackathon.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,11 @@ public class UploadController {
         String imageUrl = s3Service.uploadFile(file);
         log.debug("Image uploaded to S3: {}", imageUrl);
         CommonResponse<String> response =
-                new CommonResponse<>(new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl);
+
+                new CommonResponse<>(
+                        UUID.randomUUID().toString(),
+                        LocalDateTime.now(),
+                        "HACOF",new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl);
         return ResponseEntity.ok(response);
     }
 
@@ -49,7 +55,10 @@ public class UploadController {
         List<String> fileUrls = s3Service.uploadFiles(files);
         log.debug("Files uploaded to S3: {}", fileUrls);
         CommonResponse<List<String>> response =
-                new CommonResponse<>(new CommonResponse.Result("0000", "Files uploaded successfully"), fileUrls);
+                new CommonResponse<>(
+                        UUID.randomUUID().toString(),
+                        LocalDateTime.now(),
+                        "HACOF",new CommonResponse.Result("0000", "Files uploaded successfully"), fileUrls);
         return ResponseEntity.ok(response);
     }
 
@@ -59,7 +68,10 @@ public class UploadController {
         List<String> fileUrls = s3Service.getAllFiles();
         log.debug("Retrieved all files from S3: {}", fileUrls);
         CommonResponse<List<String>> response =
-                new CommonResponse<>(new CommonResponse.Result("0000", "Files retrieved successfully"), fileUrls);
+                new CommonResponse<>(
+                        UUID.randomUUID().toString(),
+                        LocalDateTime.now(),
+                        "HACOF",new CommonResponse.Result("0000", "Files retrieved successfully"), fileUrls);
         return ResponseEntity.ok(response);
     }
 

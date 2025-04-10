@@ -1,6 +1,8 @@
 package com.hacof.hackathon.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -34,7 +36,11 @@ public class RoundController {
     public ResponseEntity<CommonResponse<RoundDTO>> createRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         RoundDTO roundDTO = roundService.create(request.getData());
         CommonResponse<RoundDTO> response =
-                new CommonResponse<>(new CommonResponse.Result("0000", "Round created successfully"), roundDTO);
+                new CommonResponse<>(
+                        UUID.randomUUID().toString(),
+                        LocalDateTime.now(),
+                        "HACOF",
+                        new CommonResponse.Result("0000", "Round created successfully"), roundDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -42,9 +48,9 @@ public class RoundController {
     public ResponseEntity<CommonResponse<RoundDTO>> updateRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         RoundDTO roundDTO = roundService.update(request.getData().getId(), request.getData());
         CommonResponse<RoundDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Round updated successfully"), roundDTO);
         return ResponseEntity.ok(response);
     }
@@ -53,9 +59,9 @@ public class RoundController {
     public ResponseEntity<CommonResponse<RoundDTO>> deleteRound(@PathVariable String id) {
         roundService.delete(Long.parseLong(id));
         CommonResponse<RoundDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Round deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
@@ -76,9 +82,9 @@ public class RoundController {
 
         List<RoundDTO> roundDTOs = roundService.getRounds(spec);
         CommonResponse<List<RoundDTO>> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result("0000", "Rounds retrieved successfully"), roundDTOs);
         return ResponseEntity.ok(response);
     }
@@ -88,9 +94,9 @@ public class RoundController {
             @RequestBody @Valid CommonRequest<RoundLocationDTO> request) {
         RoundLocationDTO roundLocationDTO = roundLocationService.create(request.getData());
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Round Location created successfully"), roundLocationDTO);
         return ResponseEntity.ok(response);
     }
@@ -101,9 +107,9 @@ public class RoundController {
         RoundLocationDTO roundLocationDTO =
                 roundLocationService.update(Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Round Location updated successfully"), roundLocationDTO);
         return ResponseEntity.ok(response);
     }
@@ -112,9 +118,9 @@ public class RoundController {
     public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteRoundLocation(@PathVariable String id) {
         roundLocationService.delete(Long.parseLong(id));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Round Location deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
@@ -123,9 +129,9 @@ public class RoundController {
     public ResponseEntity<CommonResponse<List<RoundLocationDTO>>> getAllRoundLocations() {
         List<RoundLocationDTO> roundLocations = roundLocationService.getAll();
         CommonResponse<List<RoundLocationDTO>> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Fetched all Round Locations successfully"), roundLocations);
         return ResponseEntity.ok(response);
     }
@@ -134,9 +140,9 @@ public class RoundController {
     public ResponseEntity<CommonResponse<RoundLocationDTO>> getRoundLocationById(@PathVariable Long id) {
         RoundLocationDTO roundLocationDTO = roundLocationService.getById(id);
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Fetched Round Location successfully"), roundLocationDTO);
         return ResponseEntity.ok(response);
     }
@@ -145,9 +151,9 @@ public class RoundController {
     public ResponseEntity<CommonResponse<List<RoundDTO>>> getAllByHackathonId(@RequestParam String hackathonId) {
         List<RoundDTO> rounds = roundService.getAllByHackathonId(hackathonId);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Fetched rounds successfully"), rounds));
     }
 }

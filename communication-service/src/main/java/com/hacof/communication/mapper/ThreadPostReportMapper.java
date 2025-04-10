@@ -39,8 +39,7 @@ public class ThreadPostReportMapper {
         threadPostResponseDTO.setCreatedByUserName(
                 threadPostReport.getThreadPost().getCreatedBy().getUsername());
         threadPostResponseDTO.setCreatedAt(threadPostReport.getThreadPost().getCreatedDate());
-        threadPostResponseDTO.setUpdatedAt(
-                threadPostReport.getThreadPost().getLastModifiedDate());
+        threadPostResponseDTO.setUpdatedAt(threadPostReport.getThreadPost().getLastModifiedDate());
 
         // Map the ForumThread entity to ForumThreadResponseDTO
         ForumThreadResponseDTO forumThreadResponseDTO = new ForumThreadResponseDTO();

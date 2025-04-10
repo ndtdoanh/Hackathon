@@ -1,6 +1,8 @@
 package com.hacof.hackathon.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -33,9 +35,9 @@ public class MentorTeamController {
         log.debug("Creating mentor team: {}", request.getData());
         MentorTeamDTO created = mentorTeamService.create(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Mentor team created successfully"), created));
     }
 
@@ -45,9 +47,9 @@ public class MentorTeamController {
         log.debug("Updating mentor team: {}", request.getData().getId());
         MentorTeamDTO updated = mentorTeamService.update(request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Mentor team updated successfully"), updated));
     }
 
@@ -55,9 +57,9 @@ public class MentorTeamController {
     public ResponseEntity<CommonResponse<Void>> deleteMentorTeam(@PathVariable String id) {
         mentorTeamService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result("0000", "Mentor team deleted successfully"), null));
     }
 
@@ -66,9 +68,9 @@ public class MentorTeamController {
             @RequestParam String hackathonId, @RequestParam String teamId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByHackathonIdAndTeamId(hackathonId, teamId);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result("0000", "Fetched mentor teams successfully"), results));
     }
 
@@ -76,9 +78,9 @@ public class MentorTeamController {
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByMentorId(@RequestParam String mentorId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByMentorId(mentorId);
         return ResponseEntity.ok(new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result("0000", "Fetched mentor teams successfully"), results));
     }
 
@@ -89,9 +91,9 @@ public class MentorTeamController {
             @RequestBody @Valid CommonRequest<MentorTeamLimitDTO> request) {
         MentorTeamLimitDTO mentorTeamLimitDTO = mentorTeamLimitService.create(request.getData());
         CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Mentor team limit created successfully"), mentorTeamLimitDTO);
         return ResponseEntity.ok(response);
     }
@@ -102,9 +104,9 @@ public class MentorTeamController {
         MentorTeamLimitDTO mentorTeamLimitDTO =
                 mentorTeamLimitService.update(Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Mentor team limit updated successfully"), mentorTeamLimitDTO);
         return ResponseEntity.ok(response);
     }
@@ -113,9 +115,9 @@ public class MentorTeamController {
     public ResponseEntity<CommonResponse<MentorTeamLimitDTO>> deleteMentorTeamLimit(@PathVariable String id) {
         mentorTeamLimitService.delete(Long.parseLong(id));
         CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Mentor team limit deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
@@ -124,9 +126,9 @@ public class MentorTeamController {
     public ResponseEntity<CommonResponse<List<MentorTeamLimitDTO>>> getAllMentorTeamLimits() {
         List<MentorTeamLimitDTO> mentorTeamLimits = mentorTeamLimitService.getAll();
         CommonResponse<List<MentorTeamLimitDTO>> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Fetched all mentor team limits successfully"), mentorTeamLimits);
         return ResponseEntity.ok(response);
     }
@@ -135,9 +137,9 @@ public class MentorTeamController {
     public ResponseEntity<CommonResponse<MentorTeamLimitDTO>> getMentorTeamLimitById(@PathVariable Long id) {
         MentorTeamLimitDTO mentorTeamLimit = mentorTeamLimitService.getById(id);
         CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Fetched mentor team limit successfully"), mentorTeamLimit);
         return ResponseEntity.ok(response);
     }

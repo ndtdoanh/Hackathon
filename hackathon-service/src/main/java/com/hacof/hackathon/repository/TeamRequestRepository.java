@@ -21,7 +21,7 @@ public interface TeamRequestRepository extends JpaRepository<TeamRequest, Long>,
     @Query("SELECT tr FROM TeamRequest tr JOIN tr.teamRequestMembers trm WHERE trm.user.id = :userId")
     List<TeamRequest> findAllByUserId(@Param("userId") Long userId);
 
-    //List<TeamRequest> findAllByHackathonId(Long hackathonId);
+    // List<TeamRequest> findAllByHackathonId(Long hackathonId);
     List<TeamRequest> findAllByHackathon_Id(Long hackathonId);
 
     @Query(
@@ -29,12 +29,10 @@ public interface TeamRequestRepository extends JpaRepository<TeamRequest, Long>,
     List<TeamRequest> findByMemberIdAndHackathonId(
             @Param("memberId") Long memberId, @Param("hackathonId") Long hackathonId);
 
-    @Query("SELECT CASE WHEN COUNT(trm) > 0 THEN true ELSE false END " +
-            "FROM TeamRequestMember trm " +
-            "WHERE trm.user.id = :userId " +
-            "AND trm.teamRequest.hackathon.id = :hackathonId " +
-            "AND trm.teamRequest.status = 'APPROVED'")
+    @Query("SELECT CASE WHEN COUNT(trm) > 0 THEN true ELSE false END " + "FROM TeamRequestMember trm "
+            + "WHERE trm.user.id = :userId "
+            + "AND trm.teamRequest.hackathon.id = :hackathonId "
+            + "AND trm.teamRequest.status = 'APPROVED'")
     boolean existsApprovedTeamRequestByUserIdAndHackathonId(
-            @Param("userId") Long userId,
-            @Param("hackathonId") Long hackathonId);
+            @Param("userId") Long userId, @Param("hackathonId") Long hackathonId);
 }

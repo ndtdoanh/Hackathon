@@ -1,7 +1,9 @@
 package com.hacof.hackathon.exception;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -52,9 +54,9 @@ public class GlobalExceptionHandler {
         });
 
         CommonResponse<Map<String, String>> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result(StatusCode.INVALID_INPUT.getCode(), "Invalid input"), errors);
 
         return ResponseEntity.badRequest().body(response);
@@ -75,9 +77,9 @@ public class GlobalExceptionHandler {
 
     private <T> ResponseEntity<CommonResponse<T>> buildResponseEntity(StatusCode statusCode, String message, T data) {
         CommonResponse<T> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result(statusCode.getCode(), message), data);
         return ResponseEntity.ok(response);
     }

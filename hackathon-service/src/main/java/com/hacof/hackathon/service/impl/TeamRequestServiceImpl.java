@@ -127,7 +127,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                     Long.parseLong(userId), hackathon.getId());
 
             if (exists) {
-                throw new InvalidInputException("User with ID " + userId + " already belongs to an approved team in this hackathon.");
+                throw new InvalidInputException(
+                        "User with ID " + userId + " already belongs to an approved team in this hackathon.");
             }
         }
 
@@ -461,9 +462,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             throw new ResourceNotFoundException("No team requests found for Hackathon ID = " + id);
         }
 
-        return teamRequests.stream()
-                .map(TeamRequestMapperManual::toDto)
-                .collect(Collectors.toList());
+        return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     @Override

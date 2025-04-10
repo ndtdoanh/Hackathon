@@ -1,7 +1,10 @@
 package com.hacof.identity.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.hacof.identity.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -36,9 +39,12 @@ public class UserHackathonController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_USER_HACKATHON')")
     public ResponseEntity<ApiResponse<UserHackathonResponseDTO>> createUserHackathon(
-            @RequestBody @Valid UserHackathonRequestDTO request) {
-        UserHackathonResponseDTO response = userHackathonService.createUserHackathon(request);
+            @RequestBody @Valid ApiRequest<UserHackathonRequestDTO> request) {
+        UserHackathonResponseDTO response = userHackathonService.createUserHackathon(request.getData());
         ApiResponse<UserHackathonResponseDTO> apiResponse = ApiResponse.<UserHackathonResponseDTO>builder()
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
                 .data(response)
                 .message("UserHackathon created successfully")
                 .build();
@@ -49,6 +55,9 @@ public class UserHackathonController {
     @GetMapping
     public ApiResponse<List<UserHackathonResponseDTO>> getUserHackathons() {
         return ApiResponse.<List<UserHackathonResponseDTO>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userHackathonService.getUserHackathons())
                 .message("Get all UserHackathons")
                 .build();
@@ -57,6 +66,9 @@ public class UserHackathonController {
     @GetMapping("/{Id}")
     public ApiResponse<UserHackathonResponseDTO> getUserHackathon(@PathVariable("Id") Long id) {
         return ApiResponse.<UserHackathonResponseDTO>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userHackathonService.getUserHackathon(id))
                 .message("Get UserHackathon by Id")
                 .build();
@@ -68,6 +80,9 @@ public class UserHackathonController {
         List<UserHackathonResponseDTO> response = userHackathonService.getUserHackathonsByHackathonId(hackathonId);
 
         return ApiResponse.<List<UserHackathonResponseDTO>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(response)
                 .message("Get all UserHackathons by Hackathon ID")
                 .build();
@@ -81,6 +96,9 @@ public class UserHackathonController {
                 userHackathonService.getUserHackathonsByHackathonIdAndRoles(hackathonId, roles);
 
         return ApiResponse.<List<UserHackathonResponseDTO>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userHackathons)
                 .message("Get UserHackathons by Hackathon ID and Roles")
                 .build();
@@ -91,6 +109,9 @@ public class UserHackathonController {
     public ApiResponse<Void> deleteUserHackathon(@PathVariable("Id") Long id) {
         userHackathonService.deleteUserHackathon(id);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("UserHackathon has been deleted")
                 .build();
     }
@@ -98,11 +119,14 @@ public class UserHackathonController {
     @PostMapping("/bulk")
     @PreAuthorize("hasAuthority('CREATE_USER_HACKATHON')")
     public ResponseEntity<ApiResponse<List<UserHackathonResponseDTO>>> createBulkUserHackathon(
-            @RequestBody @Valid UserHackathonBulkRequestDTO bulkRequest) {
+            @RequestBody @Valid ApiRequest<UserHackathonBulkRequestDTO> bulkRequest) {
 
-        List<UserHackathonResponseDTO> responses = userHackathonService.createBulkUserHackathon(bulkRequest);
+        List<UserHackathonResponseDTO> responses = userHackathonService.createBulkUserHackathon(bulkRequest.getData());
 
         ApiResponse<List<UserHackathonResponseDTO>> apiResponse = ApiResponse.<List<UserHackathonResponseDTO>>builder()
+                .requestId(bulkRequest.getRequestId())
+                .requestDateTime(bulkRequest.getRequestDateTime())
+                .channel(bulkRequest.getChannel())
                 .data(responses)
                 .message("Bulk create UserHackathons successfully")
                 .build();

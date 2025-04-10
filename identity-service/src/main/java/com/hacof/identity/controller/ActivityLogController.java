@@ -2,6 +2,7 @@ package com.hacof.identity.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +32,9 @@ public class ActivityLogController {
     @PreAuthorize("hasAuthority('GET_LOGS')")
     public ApiResponse<List<ActivityLogResponse>> getLogs() {
         return ApiResponse.<List<ActivityLogResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(activityLogService.getLogs())
                 .message("Get all logs successfully")
                 .build();
@@ -40,6 +44,9 @@ public class ActivityLogController {
     @PreAuthorize("hasAuthority('GET_LOG')")
     public ApiResponse<ActivityLogResponse> getLog(@PathVariable("Id") Long id) {
         return ApiResponse.<ActivityLogResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(activityLogService.getLog(id))
                 .message("Get log by ID successfully")
                 .build();
@@ -57,6 +64,9 @@ public class ActivityLogController {
             @RequestParam(required = false) Status status) {
 
         return ApiResponse.<List<ActivityLogResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(activityLogService.searchLogs(action, target, username, fromDate, toDate, ipAddress, status))
                 .message("Search logs successfully")
                 .build();

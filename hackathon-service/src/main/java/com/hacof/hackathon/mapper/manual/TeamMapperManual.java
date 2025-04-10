@@ -1,11 +1,9 @@
 package com.hacof.hackathon.mapper.manual;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.hacof.hackathon.dto.TeamDTO;
-import com.hacof.hackathon.dto.UserDTO;
 import com.hacof.hackathon.dto.UserTeamDTO;
 import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.entity.User;
@@ -66,22 +64,22 @@ public class TeamMapperManual {
         return dto;
     }
 
-//    public static TeamDTO toDtoWithLeaderAndMembers(Team team) {
-//        if (team == null) return null;
-//
-//        TeamDTO dto = new TeamDTO();
-//        dto.setId(String.valueOf(team.getId()));
-//        dto.setName(team.getName());
-//
-//        dto.setTeamLeader(UserMapperManual.toDto(team.getTeamLeader()));
-//
-//        if (team.getTeamMembers() != null) {
-//            dto.setTeamMembers(team.getTeamMembers().stream()
-//                    .map(UserTeamMapperManual::toDto)
-//                    .collect(Collectors.toSet()));
-//        }
-//        return dto;
-//    }
+    //    public static TeamDTO toDtoWithLeaderAndMembers(Team team) {
+    //        if (team == null) return null;
+    //
+    //        TeamDTO dto = new TeamDTO();
+    //        dto.setId(String.valueOf(team.getId()));
+    //        dto.setName(team.getName());
+    //
+    //        dto.setTeamLeader(UserMapperManual.toDto(team.getTeamLeader()));
+    //
+    //        if (team.getTeamMembers() != null) {
+    //            dto.setTeamMembers(team.getTeamMembers().stream()
+    //                    .map(UserTeamMapperManual::toDto)
+    //                    .collect(Collectors.toSet()));
+    //        }
+    //        return dto;
+    //    }
 
     public static TeamDTO toDtoWithLeaderAndMembers(Team team) {
         if (team == null) return null;
@@ -104,5 +102,4 @@ public class TeamMapperManual {
 
         return dto;
     }
-
 }

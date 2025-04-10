@@ -10,6 +10,8 @@ import com.hacof.hackathon.util.CommonResponse;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/v1/round-locations")
 @RequiredArgsConstructor
@@ -33,9 +35,9 @@ public class RoundLocationController {
             @RequestBody CommonRequest<RoundLocationDTO> request) {
         roundLocationService.deleteByRoundId(Long.parseLong(request.getData().getRoundId()));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Round Location deleted successfully"), null);
         return ResponseEntity.ok(response);
     }

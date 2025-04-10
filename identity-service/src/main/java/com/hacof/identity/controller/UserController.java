@@ -1,8 +1,11 @@
 package com.hacof.identity.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.hacof.identity.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -52,24 +55,30 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createUser(
-            @RequestHeader("Authorization") String authorizationToken, @Valid @RequestBody UserCreateRequest request) {
+            @RequestHeader("Authorization") String authorizationToken, @Valid @RequestBody ApiRequest<UserCreateRequest> request) {
 
         String token = authorizationToken.replace("Bearer ", "");
 
-        UserResponse userResponse = userService.createUser(token, request);
+        UserResponse userResponse = userService.createUser(token, request.getData());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<UserResponse>builder()
+                        .requestId(request.getRequestId())
+                        .requestDateTime(request.getRequestDateTime())
+                        .channel(request.getChannel())
                         .message("User created successfully")
                         .data(userResponse)
                         .build());
     }
 
     @PostMapping("/create-password")
-    public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid PasswordCreateRequest request) {
-        userService.createPassword(request);
+    public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid ApiRequest<PasswordCreateRequest> request) {
+        userService.createPassword(request.getData());
 
         ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
                 .message("Password has been created, you could use it to log-in")
                 .build();
 
@@ -79,6 +88,9 @@ public class UserController {
     @GetMapping
     public ApiResponse<List<UserResponse>> getUsers() {
         return ApiResponse.<List<UserResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userService.getUsers())
                 .message("Get all users")
                 .build();
@@ -87,6 +99,9 @@ public class UserController {
     @GetMapping("/{Id}")
     public ApiResponse<UserResponse> getUser(@PathVariable("Id") long userId) {
         return ApiResponse.<UserResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userService.getUserById(userId))
                 .message("Get user by Id")
                 .build();
@@ -95,6 +110,9 @@ public class UserController {
     @GetMapping("username/{username}")
     public ApiResponse<UserResponse> getUser(@PathVariable String username) {
         return ApiResponse.<UserResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userService.getUserByUserName(username))
                 .message("Get user by Username")
                 .build();
@@ -103,6 +121,9 @@ public class UserController {
     @GetMapping("/users-by-roles")
     public ApiResponse<List<UserResponse>> getUsersByRoles() {
         return ApiResponse.<List<UserResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userService.getUsersByRoles())
                 .message("Get users by roles: ORGANIZER, JUDGE, MENTOR")
                 .build();
@@ -111,6 +132,9 @@ public class UserController {
     @GetMapping("/team-members")
     public ApiResponse<List<UserResponse>> getTeamMembers() {
         return ApiResponse.<List<UserResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userService.getTeamMembers())
                 .message("Get team members")
                 .build();
@@ -119,6 +143,9 @@ public class UserController {
     @GetMapping("/users-by-created-by/{createdByUserName}")
     public ApiResponse<List<UserResponse>> getUsersByCreatedByUserName(@PathVariable String createdByUserName) {
         return ApiResponse.<List<UserResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userService.getUsersByCreatedByUserName(createdByUserName))
                 .message("Get users created by: " + createdByUserName)
                 .build();
@@ -127,15 +154,21 @@ public class UserController {
     @GetMapping("/my-info")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userService.getMyInfo())
                 .message("Get my-info")
                 .build();
     }
 
     @PutMapping("/my-info")
-    public ApiResponse<UserResponse> updateUser(@Valid @RequestBody UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(@Valid @RequestBody ApiRequest<UserUpdateRequest> request) {
         return ApiResponse.<UserResponse>builder()
-                .data(userService.updateMyInfo(request))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .data(userService.updateMyInfo(request.getData()))
                 .message("User updated successfully")
                 .build();
     }
@@ -143,10 +176,13 @@ public class UserController {
     @PutMapping("/organizer/{userId}")
     @PreAuthorize("hasAuthority('UPDATE_JUDGE_MENTOR_BY_ORGANIZER')")
     public ApiResponse<UserResponse> updateJudgeMentorByOrganizer(
-            @PathVariable Long userId, @Valid @RequestBody OrganizerUpdateForJudgeMentor request) {
+            @PathVariable Long userId, @Valid @RequestBody ApiRequest<OrganizerUpdateForJudgeMentor> request) {
 
         return ApiResponse.<UserResponse>builder()
-                .data(userService.updateJudgeMentorByOrganization(userId, request))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .data(userService.updateJudgeMentorByOrganization(userId, request.getData()))
                 .message("Updated Judge or Mentor by Organizer successfully")
                 .build();
     }
@@ -155,28 +191,46 @@ public class UserController {
     @PreAuthorize("hasAuthority('DELETE_USER')")
     public ApiResponse<String> deleteUser(@PathVariable("Id") long userId) {
         userService.deleteUser(userId);
-        return ApiResponse.<String>builder().data("User has been deleted").build();
+        return ApiResponse.<String>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data("User has been deleted")
+                .build();
     }
 
     @PostMapping("/add-email")
     public ResponseEntity<ApiResponse<String>> addEmail(
-            @Valid @RequestBody AddEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
+            @Valid @RequestBody ApiRequest<AddEmailRequest> request, @AuthenticationPrincipal Jwt jwt) {
         try {
 
-            String message = userService.addEmail(request.getEmail());
+            String message = userService.addEmail(request.getData().getEmail());
 
-            log.info("User {} requested to add email: {}", request.getEmail());
+            log.info("User {} requested to add email: {}", request.getData().getEmail());
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(ApiResponse.<String>builder().message(message).build());
+                    .body(ApiResponse.<String>builder()
+                            .requestId(request.getRequestId())
+                            .requestDateTime(request.getRequestDateTime())
+                            .channel(request.getChannel())
+                            .message(message)
+                            .build());
         } catch (IllegalArgumentException e) {
             log.warn("Invalid email request: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.<String>builder().message(e.getMessage()).build());
+                    .body(ApiResponse.<String>builder()
+                            .requestId(request.getRequestId())
+                            .requestDateTime(request.getRequestDateTime())
+                            .channel(request.getChannel())
+                            .message(e.getMessage())
+                            .build());
         } catch (Exception e) {
             log.error("Error processing add email request: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.<String>builder()
+                            .requestId(request.getRequestId())
+                            .requestDateTime(request.getRequestDateTime())
+                            .channel(request.getChannel())
                             .message("Error occurred when processing requests")
                             .build());
         }
@@ -184,50 +238,77 @@ public class UserController {
 
     @PostMapping("/verify-email")
     public ResponseEntity<ApiResponse<String>> verifyEmail(
-            @Valid @RequestBody VerifyEmailRequest request, @AuthenticationPrincipal Jwt jwt) {
+            @Valid @RequestBody ApiRequest<VerifyEmailRequest> request, @AuthenticationPrincipal Jwt jwt) {
         try {
             Long userId = jwt.getClaim("user_id");
-            String message = userService.verifyEmail(userId, request.getOtp());
+            String message = userService.verifyEmail(userId, request.getData().getOtp());
 
             log.info("User {} successfully verified email", userId);
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(ApiResponse.<String>builder().message(message).build());
+                    .body(ApiResponse.<String>builder()
+                            .requestId(request.getRequestId())
+                            .requestDateTime(request.getRequestDateTime())
+                            .channel(request.getChannel())
+                            .message(message)
+                            .build());
         } catch (IllegalArgumentException e) {
             log.warn("Invalid OTP verification: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.<String>builder().message(e.getMessage()).build());
+                    .body(ApiResponse.<String>builder()
+                            .requestId(request.getRequestId())
+                            .requestDateTime(request.getRequestDateTime())
+                            .channel(request.getChannel())
+                            .message(e.getMessage())
+                            .build());
         } catch (IllegalStateException e) {
             log.warn("Email verification state error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.<String>builder().message(e.getMessage()).build());
+                    .body(ApiResponse.<String>builder()
+                            .requestId(request.getRequestId())
+                            .requestDateTime(request.getRequestDateTime())
+                            .channel(request.getChannel())
+                            .message(e.getMessage())
+                            .build());
         } catch (Exception e) {
             log.error("Error processing verify email request: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.<String>builder()
+                            .requestId(request.getRequestId())
+                            .requestDateTime(request.getRequestDateTime())
+                            .channel(request.getChannel())
                             .message("Error occurred when processing requests")
                             .build());
         }
     }
 
     @PostMapping("/change-password")
-    public ApiResponse<String> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+    public ApiResponse<String> changePassword(@Valid @RequestBody ApiRequest<ChangePasswordRequest> request) {
         return ApiResponse.<String>builder()
-                .message(userService.changePassword(request))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .message(userService.changePassword(request.getData()))
                 .build();
     }
 
     @PostMapping("/forgot-password")
-    public ApiResponse<String> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
+    public ApiResponse<String> forgotPassword(@RequestBody @Valid ApiRequest<ForgotPasswordRequest> request) {
         return ApiResponse.<String>builder()
-                .message(userService.forgotPassword(request))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .message(userService.forgotPassword(request.getData()))
                 .build();
     }
 
     @PostMapping("/reset-password")
-    public ApiResponse<String> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    public ApiResponse<String> resetPassword(@Valid @RequestBody ApiRequest<ResetPasswordRequest> request) {
         return ApiResponse.<String>builder()
-                .message(userService.resetPassword(request))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .message(userService.resetPassword(request.getData()))
                 .build();
     }
 
@@ -237,17 +318,26 @@ public class UserController {
         try {
             AvatarResponse avatarResponse = userService.uploadAvatar(file, authentication);
             return ResponseEntity.ok(ApiResponse.<AvatarResponse>builder()
+                    .requestId(UUID.randomUUID().toString())
+                    .requestDateTime(LocalDateTime.now())
+                    .channel("HACOF")
                     .message("Avatar uploaded successfully")
                     .data(avatarResponse)
                     .build());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.<AvatarResponse>builder()
+                            .requestId(UUID.randomUUID().toString())
+                            .requestDateTime(LocalDateTime.now())
+                            .channel("HACOF")
                             .message(e.getMessage())
                             .build());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.<AvatarResponse>builder()
+                            .requestId(UUID.randomUUID().toString())
+                            .requestDateTime(LocalDateTime.now())
+                            .channel("HACOF")
                             .message("Upload failed: " + e.getMessage())
                             .build());
         }

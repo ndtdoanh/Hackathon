@@ -65,8 +65,7 @@ public class ThreadPostMapper {
                     threadPost.getForumThread().getForumCategory()));
         }
 
-        forumThreadDTO.setCreatedAt(
-                threadPost.getForumThread().getCreatedDate().toString());
+        forumThreadDTO.setCreatedAt(threadPost.getForumThread().getCreatedDate().toString());
         forumThreadDTO.setUpdatedAt(
                 threadPost.getForumThread().getLastModifiedDate().toString());
 

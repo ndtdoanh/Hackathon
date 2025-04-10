@@ -1,6 +1,8 @@
 package com.hacof.hackathon.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -49,9 +51,9 @@ public class LocationController {
         List<LocationDTO> locationDTOs = locationService.getLocations(spec);
 
         CommonResponse<List<LocationDTO>> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Locations retrieved successfully"),
                 locationDTOs);
         return ResponseEntity.ok(response);
@@ -62,9 +64,9 @@ public class LocationController {
             @Valid @RequestBody CommonRequest<LocationDTO> request) {
         LocationDTO locationDTO = locationService.create(request.getData());
         CommonResponse<LocationDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Location created successfully"), locationDTO);
         return ResponseEntity.ok(response);
     }
@@ -75,9 +77,9 @@ public class LocationController {
         LocationDTO locationDTO =
                 locationService.update(Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<LocationDTO> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
+                                request.getRequestId(),
+                                LocalDateTime.now(),
+                                request.getChannel(),
                 new CommonResponse.Result("0000", "Location updated successfully"), locationDTO);
         return ResponseEntity.ok(response);
     }
@@ -86,9 +88,9 @@ public class LocationController {
     public ResponseEntity<CommonResponse<LocationDTO>> deleteLocation(@PathVariable String id) {
         locationService.delete(Long.parseLong(id));
         CommonResponse<LocationDTO> response = new CommonResponse<>(
-                //                UUID.randomUUID().toString(),
-                //                LocalDateTime.now(),
-                //                "HACOF",
+                                UUID.randomUUID().toString(),
+                                LocalDateTime.now(),
+                                "HACOF",
                 new CommonResponse.Result("0000", "Location deleted successfully"), null);
         return ResponseEntity.ok(response);
     }

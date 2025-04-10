@@ -1,9 +1,10 @@
 package com.hacof.identity.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-import com.hacof.identity.dto.response.FileUrlResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.DeviceRequest;
 import com.hacof.identity.dto.response.DeviceResponse;
+import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.service.DeviceService;
 
 import lombok.AccessLevel;
@@ -38,6 +40,9 @@ public class DeviceController {
         DeviceResponse deviceResponse = deviceService.createDevice(request, files);
 
         ApiResponse<DeviceResponse> response = ApiResponse.<DeviceResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(deviceResponse)
                 .message("Device created successfully")
                 .build();
@@ -48,6 +53,9 @@ public class DeviceController {
     @GetMapping
     public ApiResponse<List<DeviceResponse>> getAllDevices() {
         return ApiResponse.<List<DeviceResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(deviceService.getDevices())
                 .message("Get all devices")
                 .build();
@@ -56,6 +64,9 @@ public class DeviceController {
     @GetMapping("/{Id}")
     public ApiResponse<DeviceResponse> getDeviceById(@PathVariable("Id") Long id) {
         return ApiResponse.<DeviceResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(deviceService.getDevice(id))
                 .message("Get device by Id")
                 .build();
@@ -64,6 +75,9 @@ public class DeviceController {
     @GetMapping("/round/{roundId}")
     public ApiResponse<List<DeviceResponse>> getDevicesByRoundId(@PathVariable String roundId) {
         return ApiResponse.<List<DeviceResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(deviceService.getDevicesByRoundId(roundId))
                 .message("Get devices by roundId")
                 .build();
@@ -72,6 +86,9 @@ public class DeviceController {
     @GetMapping("/round-location/{roundLocationId}")
     public ApiResponse<List<DeviceResponse>> getDevicesByRoundLocationId(@PathVariable String roundLocationId) {
         return ApiResponse.<List<DeviceResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(deviceService.getDevicesByRoundLocationId(roundLocationId))
                 .message("Get devices by roundLocationId")
                 .build();
@@ -80,6 +97,9 @@ public class DeviceController {
     @GetMapping("/{deviceId}/file-urls")
     public ApiResponse<List<FileUrlResponse>> getFileUrlsByDeviceId(@PathVariable Long deviceId) {
         return ApiResponse.<List<FileUrlResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(deviceService.getFileUrlsByDeviceId(deviceId))
                 .message("Get file URLs by deviceId")
                 .build();
@@ -88,6 +108,9 @@ public class DeviceController {
     @GetMapping("/file-urls/{id}")
     public ApiResponse<FileUrlResponse> getFileUrlById(@PathVariable Long id) {
         return ApiResponse.<FileUrlResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(deviceService.getFileUrlById(id))
                 .message("Get file URL by ID")
                 .build();
@@ -104,6 +127,9 @@ public class DeviceController {
         DeviceResponse updatedDevice = deviceService.updateDevice(id, request, files);
 
         return ResponseEntity.ok(ApiResponse.<DeviceResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(updatedDevice)
                 .message("Device updated successfully")
                 .build());
@@ -113,6 +139,11 @@ public class DeviceController {
     @PreAuthorize("hasAuthority('DELETE_DEVICE')")
     public ApiResponse<Void> deleteDevice(@PathVariable("Id") Long id) {
         deviceService.deleteDevice(id);
-        return ApiResponse.<Void>builder().message("Device has been deleted").build();
+        return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .message("Device has been deleted")
+                .build();
     }
 }
