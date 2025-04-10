@@ -168,18 +168,16 @@ public class TeamServiceImpl implements TeamService {
 
             team = teamRepository.save(team);
 
-            for (TeamMemberBulkDTO member : request.getTeamMembers()) {
-                if (member.getUserId().equals(request.getTeamLeaderId())) {
-                    throw new IllegalArgumentException("Team leader cannot be added as a team member.");
-                }
-            }
-
             UserTeam teamLeaderUserTeam = new UserTeam();
             teamLeaderUserTeam.setUser(teamLeader);
             teamLeaderUserTeam.setTeam(team);
             teamMemberRepository.save(teamLeaderUserTeam);
 
             for (TeamMemberBulkDTO member : request.getTeamMembers()) {
+                if (member.getUserId().equals(request.getTeamLeaderId())) {
+                    continue;
+                }
+
                 User user = userRepository
                         .findById(Long.parseLong(member.getUserId()))
                         .orElseThrow(() -> new ResourceNotFoundException("User not found"));
