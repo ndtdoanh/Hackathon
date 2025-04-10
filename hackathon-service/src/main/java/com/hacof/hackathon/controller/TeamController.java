@@ -120,16 +120,17 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Fetched team requests successfully"), teamRequests));
     }
 
-    @PostMapping("/requests/filter-by-hackathon")
+    @GetMapping("/requests/filter-by-hackathon")
     public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByHackathonId(
-            @RequestBody Map<String, String> request) {
+            @RequestParam("hackathonId") String hackathonId) {
 
-        if (request == null) {
+        if (hackathonId == null || hackathonId.isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new CommonResponse<>(new CommonResponse.Result("0600", "Invalid request data"), null));
+                    .body(new CommonResponse<>(new CommonResponse.Result("0600", "Hackathon ID is required"), null));
         }
-        String hackathonId = request.get("hackathonId");
+
         List<TeamRequestDTO> teamRequests = teamRequestService.filterByHackathonId(hackathonId);
+
         return ResponseEntity.ok(new CommonResponse<>(
                 new CommonResponse.Result("0000", "Fetched team requests successfully"), teamRequests));
     }

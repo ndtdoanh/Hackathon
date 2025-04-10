@@ -454,16 +454,26 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     @Override
     public List<TeamRequestDTO> filterByHackathonId(String hackathonId) {
-        if (hackathonId == null) {
-            throw new IllegalArgumentException("Hackathon ID must not be null");
+        if (hackathonId == null || hackathonId.isBlank()) {
+            throw new IllegalArgumentException("Hackathon ID must not be null or blank");
         }
-        //        if (teamRequestRepository
-        //                .findAllByHackathonId(Long.parseLong(hackathonId))
-        //                .isEmpty()) {
-        //            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID");
-        //        }
-        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
+
+        Long id;
+        try {
+            id = Long.parseLong(hackathonId);
+        } catch (NumberFormatException ex) {
+            throw new InvalidInputException("Hackathon ID must be a valid number");
+        }
+
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathon_Id(id);
+
+        if (teamRequests.isEmpty()) {
+            throw new ResourceNotFoundException("No team requests found for Hackathon ID = " + id);
+        }
+
+        return teamRequests.stream()
+                .map(TeamRequestMapperManual::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

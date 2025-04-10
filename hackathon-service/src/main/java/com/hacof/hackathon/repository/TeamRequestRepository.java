@@ -21,7 +21,8 @@ public interface TeamRequestRepository extends JpaRepository<TeamRequest, Long>,
     @Query("SELECT tr FROM TeamRequest tr JOIN tr.teamRequestMembers trm WHERE trm.user.id = :userId")
     List<TeamRequest> findAllByUserId(@Param("userId") Long userId);
 
-    List<TeamRequest> findAllByHackathonId(Long hackathonId);
+    //List<TeamRequest> findAllByHackathonId(Long hackathonId);
+    List<TeamRequest> findAllByHackathon_Id(Long hackathonId);
 
     @Query(
             "SELECT tr FROM TeamRequest tr JOIN tr.teamRequestMembers trm WHERE tr.hackathon.id = :hackathonId AND trm.user.id = :memberId")
