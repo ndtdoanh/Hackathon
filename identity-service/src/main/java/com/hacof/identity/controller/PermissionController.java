@@ -1,7 +1,10 @@
 package com.hacof.identity.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.hacof.identity.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -36,9 +39,12 @@ public class PermissionController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_PERMISSION')")
     public ResponseEntity<ApiResponse<PermissionResponse>> createPermission(
-            @RequestBody @Valid PermissionCreateRequest request) {
-        PermissionResponse permissionResponse = permissionService.createPermission(request);
+            @RequestBody @Valid ApiRequest<PermissionCreateRequest> request) {
+        PermissionResponse permissionResponse = permissionService.createPermission(request.getData());
         ApiResponse<PermissionResponse> response = ApiResponse.<PermissionResponse>builder()
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
                 .data(permissionResponse)
                 .message("Permission created successfully")
                 .build();
@@ -49,6 +55,9 @@ public class PermissionController {
     @GetMapping
     public ApiResponse<List<PermissionResponse>> getPermissions() {
         return ApiResponse.<List<PermissionResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(permissionService.getPermissions())
                 .message("Get all permissions")
                 .build();
@@ -57,6 +66,9 @@ public class PermissionController {
     @GetMapping("/{Id}")
     public ApiResponse<PermissionResponse> getPermission(@PathVariable("Id") Long Id) {
         return ApiResponse.<PermissionResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(permissionService.getPermission(Id))
                 .message("Get permission by Id")
                 .build();
@@ -65,9 +77,12 @@ public class PermissionController {
     @PutMapping("/{Id}")
     @PreAuthorize("hasAuthority('UPDATE_PERMISSION')")
     public ApiResponse<PermissionResponse> updatePermission(
-            @PathVariable("Id") Long Id, @RequestBody PermissionUpdateRequest request) {
+            @PathVariable("Id") Long Id, @RequestBody ApiRequest<PermissionUpdateRequest> request) {
         return ApiResponse.<PermissionResponse>builder()
-                .data(permissionService.updatePermission(Id, request))
+                .data(permissionService.updatePermission(Id, request.getData()))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
                 .message("Permission updated successfully")
                 .build();
     }
@@ -77,6 +92,9 @@ public class PermissionController {
     public ApiResponse<Void> deletePermission(@PathVariable("Id") Long id) {
         permissionService.deletePermission(id);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("Permission has been deleted")
                 .build();
     }
@@ -87,6 +105,9 @@ public class PermissionController {
             @PathVariable("roleId") Long roleId, @PathVariable("permissionId") Long permissionId) {
         permissionService.deletePermissionFromRole(roleId, permissionId);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("Permission has been removed from role")
                 .build();
     }
