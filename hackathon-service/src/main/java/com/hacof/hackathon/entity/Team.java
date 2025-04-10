@@ -1,5 +1,6 @@
 package com.hacof.hackathon.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class Team extends AuditUserBase {
     User teamLeader;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<UserTeam> teamMembers;
+    Set<UserTeam> teamMembers = new HashSet<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TeamHackathon> teamHackathons;
