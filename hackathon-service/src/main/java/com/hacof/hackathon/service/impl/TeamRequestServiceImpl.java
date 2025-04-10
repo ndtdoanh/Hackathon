@@ -121,6 +121,15 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
 
         userIds.add(String.valueOf(currentUser.getId()));
+        // Check if any of the users already belong to an APPROVED team request in the same hackathon
+        for (String userId : userIds) {
+            boolean exists = teamRequestRepository.existsApprovedTeamRequestByUserIdAndHackathonId(
+                    Long.parseLong(userId), hackathon.getId());
+
+            if (exists) {
+                throw new InvalidInputException("User with ID " + userId + " already belongs to an approved team in this hackathon.");
+            }
+        }
 
         TeamRequest teamRequest = TeamRequest.builder()
                 .hackathon(hackathon)
@@ -130,25 +139,6 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .note(request.getNote())
                 .teamRequestMembers(new ArrayList<>())
                 .build();
-
-        //        request.getTeamRequestMembers().forEach(member -> {
-        //            if (member.getUserId() == null || member.getUserId().trim().isEmpty()) {
-        //                log.error("UserId is null for member: {}", member);
-        //                throw new InvalidInputException("UserId cannot be null");
-        //            }
-        //
-        //            User user = userRepository
-        //                    .findById(Long.parseLong(member.getUserId()))
-        //                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " +
-        // member.getUserId()));
-        //
-        //            TeamRequestMember memberEntity = TeamRequestMember.builder()
-        //                    .teamRequest(teamRequest)
-        //                    .user(user)
-        //                    .status(TeamRequestMemberStatus.PENDING)
-        //                    .build();
-        //            teamRequest.getTeamRequestMembers().add(memberEntity);
-        //        });
 
         userIds.forEach(userId -> {
             User user = userRepository
@@ -454,16 +444,26 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
     @Override
     public List<TeamRequestDTO> filterByHackathonId(String hackathonId) {
-        if (hackathonId == null) {
-            throw new IllegalArgumentException("Hackathon ID must not be null");
+        if (hackathonId == null || hackathonId.isBlank()) {
+            throw new IllegalArgumentException("Hackathon ID must not be null or blank");
         }
-        //        if (teamRequestRepository
-        //                .findAllByHackathonId(Long.parseLong(hackathonId))
-        //                .isEmpty()) {
-        //            throw new ResourceNotFoundException("No team requests found for the given Hackathon ID");
-        //        }
-        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathonId(Long.parseLong(hackathonId));
-        return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
+
+        Long id;
+        try {
+            id = Long.parseLong(hackathonId);
+        } catch (NumberFormatException ex) {
+            throw new InvalidInputException("Hackathon ID must be a valid number");
+        }
+
+        List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathon_Id(id);
+
+        if (teamRequests.isEmpty()) {
+            throw new ResourceNotFoundException("No team requests found for Hackathon ID = " + id);
+        }
+
+        return teamRequests.stream()
+                .map(TeamRequestMapperManual::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
