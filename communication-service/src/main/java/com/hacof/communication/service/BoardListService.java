@@ -19,4 +19,6 @@ public interface BoardListService {
     List<BoardListResponseDTO> getAllBoardLists();
 
     List<BoardListResponseDTO> updateBulkBoardLists(List<BulkBoardListUpdateRequestDTO> bulkUpdateRequest);
+
+    List<BoardListResponseDTO> getBoardListByBoardId(Long boardId);
 }

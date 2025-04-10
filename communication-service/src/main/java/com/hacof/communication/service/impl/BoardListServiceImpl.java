@@ -169,4 +169,13 @@ public class BoardListServiceImpl implements BoardListService {
 
         return updatedBoardLists;
     }
+
+    @Override
+    public List<BoardListResponseDTO> getBoardListByBoardId(Long boardId) {
+        List<BoardList> boardLists = boardListRepository.findByBoardId(boardId);
+
+        return boardLists.stream()
+                .map(boardListMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
