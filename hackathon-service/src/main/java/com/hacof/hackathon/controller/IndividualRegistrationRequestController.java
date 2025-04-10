@@ -54,14 +54,12 @@ public class IndividualRegistrationRequestController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteIndividualRegistration(
-            @RequestBody IndividualRegistrationRequestDTO request) {
-        individualRegistrationRequestService.delete(Long.parseLong(request.getId()));
+            @PathVariable("id") Long id) {
+        individualRegistrationRequestService.delete(id);
+
         CommonResponse<Void> response = new CommonResponse<>(
-                //                request.getRequestId(),
-                //                LocalDateTime.now(),
-                //                request.getChannel(),
                 new CommonResponse.Result("0000", "Individual registration deleted successfully"), null);
         return ResponseEntity.ok(response);
     }
