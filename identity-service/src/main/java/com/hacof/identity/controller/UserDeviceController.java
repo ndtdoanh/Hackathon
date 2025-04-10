@@ -1,7 +1,9 @@
 package com.hacof.identity.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -37,6 +39,9 @@ public class UserDeviceController {
         UserDeviceResponse userDeviceResponse = userDeviceService.createUserDevice(request, files);
 
         ApiResponse<UserDeviceResponse> response = ApiResponse.<UserDeviceResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceResponse)
                 .message("UserDevice created successfully")
                 .build();
@@ -47,6 +52,9 @@ public class UserDeviceController {
     @GetMapping
     public ApiResponse<List<UserDeviceResponse>> getUserDevices() {
         return ApiResponse.<List<UserDeviceResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceService.getUserDevices())
                 .message("Get all UserDevices")
                 .build();
@@ -55,6 +63,9 @@ public class UserDeviceController {
     @GetMapping("/{Id}")
     public ApiResponse<UserDeviceResponse> getUserDevice(@PathVariable("Id") Long id) {
         return ApiResponse.<UserDeviceResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceService.getUserDevice(id))
                 .message("Get UserDevice by ID")
                 .build();
@@ -63,6 +74,9 @@ public class UserDeviceController {
     @GetMapping("/device/{deviceId}")
     public ApiResponse<List<UserDeviceResponse>> getUserDevicesByDeviceId(@PathVariable String deviceId) {
         return ApiResponse.<List<UserDeviceResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceService.getUserDevicesByDeviceId(deviceId))
                 .message("Get UserDevices by deviceId")
                 .build();
@@ -71,6 +85,9 @@ public class UserDeviceController {
     @GetMapping("/user/{userId}")
     public ApiResponse<List<UserDeviceResponse>> getUserDevicesByUserId(@PathVariable String userId) {
         return ApiResponse.<List<UserDeviceResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceService.getUserDevicesByUserId(userId))
                 .message("Get UserDevices by userId")
                 .build();
@@ -87,6 +104,9 @@ public class UserDeviceController {
         UserDeviceResponse updatedUserDevice = userDeviceService.updateUserDevice(id, request, files);
 
         return ResponseEntity.ok(ApiResponse.<UserDeviceResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(updatedUserDevice)
                 .message("UserDevice updated successfully")
                 .build());
@@ -97,6 +117,9 @@ public class UserDeviceController {
     public ApiResponse<Void> deleteUserDevice(@PathVariable("Id") Long id) {
         userDeviceService.deleteUserDevice(id);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("UserDevice deleted successfully")
                 .build();
     }
