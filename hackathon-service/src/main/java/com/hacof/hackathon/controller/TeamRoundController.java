@@ -38,7 +38,6 @@ public class TeamRoundController {
                         LocalDateTime.now(),
                         "HACOF",new CommonResponse.Result("0000", "Team Round create successfully!"), created));
     }
- // 100 may cai method :)
 
     @PutMapping
     public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(@Valid @RequestBody TeamRoundDTO request) {
