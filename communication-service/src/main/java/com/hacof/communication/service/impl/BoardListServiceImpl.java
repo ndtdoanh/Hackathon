@@ -49,12 +49,12 @@ public class BoardListServiceImpl implements BoardListService {
             throw new IllegalArgumentException("Board List name cannot be null or empty.");
         }
 
-        // Check for duplicate Board List name under the same Board
-        Optional<BoardList> existingBoardList = boardListRepository.findByNameAndBoardId(
-                boardListRequestDTO.getName(), Long.parseLong(boardListRequestDTO.getBoardId()));
-        if (existingBoardList.isPresent()) {
-            throw new IllegalArgumentException("Board List with the same name already exists in this Board.");
-        }
+//        // Check for duplicate Board List name under the same Board
+//        Optional<BoardList> existingBoardList = boardListRepository.findByNameAndBoardId(
+//                boardListRequestDTO.getName(), Long.parseLong(boardListRequestDTO.getBoardId()));
+//        if (existingBoardList.isPresent()) {
+//            throw new IllegalArgumentException("Board List with the same name already exists in this Board.");
+//        }
 
         // Create BoardList from DTO and save
         BoardList boardList = boardListMapper.toEntity(boardListRequestDTO, boardOptional.get());
