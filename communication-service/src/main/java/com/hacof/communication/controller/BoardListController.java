@@ -138,4 +138,20 @@ public class BoardListController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/by-board/{boardId}")
+    public ResponseEntity<CommonResponse<List<BoardListResponseDTO>>> getBoardListByBoardId(@PathVariable Long boardId) {
+        CommonResponse<List<BoardListResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardListResponseDTO> boardLists = boardListService.getBoardListByBoardId(boardId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Board lists fetched successfully!");
+            response.setData(boardLists);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

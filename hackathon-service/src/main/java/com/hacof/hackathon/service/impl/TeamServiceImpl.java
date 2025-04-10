@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.*;
@@ -255,20 +257,26 @@ public class TeamServiceImpl implements TeamService {
                     .findById(Long.parseLong(request.getTeamLeaderId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Team leader not found"));
 
+            // Create Team
             Team team = TeamMapperManual.toEntity(new TeamDTO());
             team.setTeamLeader(teamLeader);
             team.setName("Team " + teamLeader.getUsername());
-
             team = teamRepository.save(team);
 
+            // Create UserTeam entry for Team Leader
             UserTeam teamLeaderUserTeam = new UserTeam();
             teamLeaderUserTeam.setUser(teamLeader);
             teamLeaderUserTeam.setTeam(team);
             teamMemberRepository.save(teamLeaderUserTeam);
 
+            if (team.getTeamMembers() == null) {
+                team.setTeamMembers(new HashSet<>());
+            }
+
+            // Add Team Members excluding Team Leader
             for (TeamMemberBulkDTO member : request.getTeamMembers()) {
                 if (member.getUserId().equals(request.getTeamLeaderId())) {
-                    continue;
+                    continue; // Skip team leader as member
                 }
 
                 User user = userRepository
@@ -281,11 +289,13 @@ public class TeamServiceImpl implements TeamService {
                 teamMemberRepository.save(userTeam);
             }
 
-            for (TeamHackathonBulkDTO hackathonDTO : request.getTeamHackathons()) {
-                Hackathon hackathon = hackathonRepository
-                        .findById(Long.parseLong(hackathonDTO.getHackathonId()))
-                        .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+            // Retrieve hackathon (assumes all hackathons in the list are the same)
+            Hackathon hackathon = hackathonRepository
+                    .findById(Long.parseLong(request.getTeamHackathons().get(0).getHackathonId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
+            // Create Hackathon associations for the team
+            for (TeamHackathonBulkDTO hackathonDTO : request.getTeamHackathons()) {
                 TeamHackathon teamHackathon = TeamHackathon.builder()
                         .team(team)
                         .hackathon(hackathon)
@@ -293,6 +303,92 @@ public class TeamServiceImpl implements TeamService {
                         .build();
 
                 teamHackathonRepository.save(teamHackathon);
+            }
+
+            // Create Schedule entry only if it doesn't exist
+            if (!scheduleRepository.existsByTeamAndHackathon(team, hackathon)) {
+                Schedule schedule = Schedule.builder()
+                        .team(team)
+                        .hackathon(hackathon)
+                        .name(team.getName() + " Schedule")
+                        .description("Schedule for " + team.getName())
+                        .build();
+                scheduleRepository.save(schedule);
+            }
+
+            // Get current authenticated user
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                throw new InvalidInputException("No authenticated user found");
+            }
+
+            String username = authentication.getName();
+            User currentUser = userRepository
+                    .findByUsername(username)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+            // Create Board entry only if it doesn't exist
+            if (!boardRepository.existsByTeam(team)) {
+                Board board = Board.builder()
+                        .team(team)
+                        .owner(currentUser)
+                        .name(team.getName() + " Board")
+                        .description("Board for team " + team.getName())
+                        .hackathon(hackathon)
+                        .build();
+                boardRepository.save(board);
+            }
+
+            // Create TeamRound entry only if it doesn't exist
+            Round round = roundRepository
+                    .findFirstByHackathonIdOrderByRoundNumberAsc(hackathon.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("No rounds found for hackathon"));
+
+            TeamRound teamRound = TeamRound.builder()
+                    .team(team)
+                    .round(round)
+                    .status(TeamRoundStatus.PENDING)
+                    .description("Team " + team.getName() + " registered for round " + round.getRoundNumber())
+                    .build();
+
+            teamRoundRepository.save(teamRound);
+
+            // Create Conversation entry only if it doesn't exist
+            if (!conversationRepository.existsByTeam(team)) {
+                Conversation conversation = Conversation.builder()
+                        .team(team)
+                        .type(ConversationType.PRIVATE)
+                        .name(team.getName())
+                        .hackathon(hackathon)
+                        .build();
+                conversationRepository.save(conversation);
+            }
+
+            // Create ConversationUser entries only if they don't exist
+            Conversation conversation = conversationRepository
+                    .findByTeamId(team.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Conversation not found!"));
+
+            for (UserTeam userTeam : team.getTeamMembers()) {
+                User user = userTeam.getUser();
+
+                // Kiểm tra xem ConversationUser đã tồn tại chưa
+                boolean exists = conversationUserRepository.existsByConversationAndUser(conversation, user);
+                log.debug("Checking if conversation user exists: Conversation ID = {}, User ID = {}, Exists = {}",
+                        conversation.getId(), user.getId(), exists);
+
+                if (!exists) {
+                    // Tạo ConversationUser mới nếu không tồn tại
+                    ConversationUser conversationUser = ConversationUser.builder()
+                            .user(user)
+                            .conversation(conversation)
+                            .isDeleted(false)
+                            .build();
+                    conversationUserRepository.save(conversationUser);
+                    log.debug("Created ConversationUser for user {} in conversation {}", user.getUsername(), conversation.getId());
+                } else {
+                    log.debug("ConversationUser already exists for user {} in conversation {}", user.getUsername(), conversation.getId());
+                }
             }
 
             createdTeams.add(TeamMapperManual.toDto(team));
