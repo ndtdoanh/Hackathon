@@ -1,6 +1,8 @@
 package com.hacof.identity.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -36,6 +38,9 @@ public class UserDeviceTrackController {
         UserDeviceTrackResponse userDeviceTrackResponse = userDeviceTrackService.createUserDeviceTrack(request, files);
 
         ApiResponse<UserDeviceTrackResponse> response = ApiResponse.<UserDeviceTrackResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceTrackResponse)
                 .message("UserDeviceTrack created successfully")
                 .build();
@@ -46,6 +51,9 @@ public class UserDeviceTrackController {
     @GetMapping
     public ApiResponse<List<UserDeviceTrackResponse>> getUserDeviceTracks() {
         return ApiResponse.<List<UserDeviceTrackResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceTrackService.getUserDeviceTracks())
                 .message("Get all device tracks")
                 .build();
@@ -54,6 +62,9 @@ public class UserDeviceTrackController {
     @GetMapping("/{Id}")
     public ApiResponse<UserDeviceTrackResponse> getUserDeviceTrackById(@PathVariable("Id") Long id) {
         return ApiResponse.<UserDeviceTrackResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceTrackService.getUserDeviceTrack(id))
                 .message("Get device track by id")
                 .build();
@@ -71,6 +82,9 @@ public class UserDeviceTrackController {
                 userDeviceTrackService.updateUserDeviceTrack(id, request, files);
 
         return ResponseEntity.ok(ApiResponse.<UserDeviceTrackResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(userDeviceTrackResponse)
                 .message("UserDeviceTrack updated successfully")
                 .build());
@@ -81,6 +95,9 @@ public class UserDeviceTrackController {
     public ApiResponse<Void> deleteUserDeviceTrack(@PathVariable("Id") Long id) {
         userDeviceTrackService.deleteUserDeviceTrack(id);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("UserDeviceTrack deleted successfully")
                 .build();
     }
