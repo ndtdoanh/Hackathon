@@ -28,4 +28,13 @@ public interface TeamRequestRepository extends JpaRepository<TeamRequest, Long>,
             "SELECT tr FROM TeamRequest tr JOIN tr.teamRequestMembers trm WHERE tr.hackathon.id = :hackathonId AND trm.user.id = :memberId")
     List<TeamRequest> findByMemberIdAndHackathonId(
             @Param("memberId") Long memberId, @Param("hackathonId") Long hackathonId);
+
+    @Query("SELECT CASE WHEN COUNT(trm) > 0 THEN true ELSE false END " +
+            "FROM TeamRequestMember trm " +
+            "WHERE trm.user.id = :userId " +
+            "AND trm.teamRequest.hackathon.id = :hackathonId " +
+            "AND trm.teamRequest.status = 'APPROVED'")
+    boolean existsApprovedTeamRequestByUserIdAndHackathonId(
+            @Param("userId") Long userId,
+            @Param("hackathonId") Long hackathonId);
 }
