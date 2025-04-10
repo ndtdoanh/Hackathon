@@ -101,7 +101,8 @@ public class ThreadPostLikeMapper {
         responseDTO.setThreadPost(threadPostResponseDTO);
 
         // Set remaining ThreadPostLike details
-        responseDTO.setCreatedByUserName(threadPostLike.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
+        responseDTO.setCreatedByUserName(
+                threadPostLike.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
         responseDTO.setCreatedAt(threadPostLike.getCreatedDate());
         responseDTO.setUpdatedAt(threadPostLike.getLastModifiedDate());
 

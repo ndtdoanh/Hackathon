@@ -4,18 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.dto.response.FileUrlResponse;
-import com.hacof.communication.exception.AppException;
-import com.hacof.communication.exception.ErrorCode;
-import com.hacof.communication.mapper.FileUrlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Schedule;
 import com.hacof.communication.entity.ScheduleEvent;
+import com.hacof.communication.mapper.FileUrlMapper;
 import com.hacof.communication.mapper.ScheduleEventMapper;
 import com.hacof.communication.repository.FileUrlRepository;
 import com.hacof.communication.repository.ScheduleEventRepository;
@@ -194,7 +192,8 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
 
     @Override
     public List<FileUrlResponse> getFileUrlsByScheduleEventId(Long scheduleEventId) {
-        ScheduleEvent scheduleEvent = scheduleEventRepository.findById(scheduleEventId)
+        ScheduleEvent scheduleEvent = scheduleEventRepository
+                .findById(scheduleEventId)
                 .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
         return fileUrlMapper.toResponseList(scheduleEvent.getFileUrls());
     }

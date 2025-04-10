@@ -1,7 +1,6 @@
 package com.hacof.identity.service.impl;
 
 import java.text.ParseException;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -192,62 +191,63 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
-//    @Override
-//    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-//
-//        String username = request.getUsername();
-//        String failKey = "login:fail:" + username;
-//        String lockKey = "login:lock:" + username;
-//
-//        String lockUntilStr = redisTemplate.opsForValue().get(lockKey);
-//        if (lockUntilStr != null) {
-//            long lockUntil = Long.parseLong(lockUntilStr);
-//            long now = System.currentTimeMillis();
-//            if (now < lockUntil) {
-//                long secondsLeft = (lockUntil - now) / 1000;
-//
-//                throw new AppException(ErrorCode.ACCOUNT_LOCKED,
-//                        "You have entered the wrong many times, please try again later " + secondsLeft + " seconds.");
-//            } else {
-//                redisTemplate.delete(lockKey);
-//            }
-//        }
-//
-//        var user = userRepository
-//                .findByUsername(request.getUsername())
-//                .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
-//
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-//        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-//
-//        if (!authenticated) {
-//            Long failCount = redisTemplate.opsForValue().increment(failKey);
-//            redisTemplate.expire(failKey, Duration.ofMinutes(5));
-//
-//            if (failCount == 3) {
-//                long lockUntil = System.currentTimeMillis() + 30_000;
-//                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofSeconds(30));
-//            } else if (failCount == 5) {
-//                long lockUntil = System.currentTimeMillis() + 60_000;
-//                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofSeconds(60));
-//            } else if (failCount == 7) {
-//                long lockUntil = System.currentTimeMillis() + 60 * 60_000L;
-//                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofHours(1));
-//            } else if (failCount == 10) {
-//                long lockUntil = System.currentTimeMillis() + 24 * 60 * 60_000L;
-//                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofDays(1));
-//            } else {
-//            }
-//
-//            throw new AppException(ErrorCode.INVALID_CREDENTIALS, "False password " + failCount + " times");
-//        }
-//
-//        redisTemplate.delete(failKey);
-//        redisTemplate.delete(lockKey);
-//
-//        var token = generateToken(user);
-//        return AuthenticationResponse.builder().token(token).authenticated(true).build();
-//    }
+    //    @Override
+    //    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    //
+    //        String username = request.getUsername();
+    //        String failKey = "login:fail:" + username;
+    //        String lockKey = "login:lock:" + username;
+    //
+    //        String lockUntilStr = redisTemplate.opsForValue().get(lockKey);
+    //        if (lockUntilStr != null) {
+    //            long lockUntil = Long.parseLong(lockUntilStr);
+    //            long now = System.currentTimeMillis();
+    //            if (now < lockUntil) {
+    //                long secondsLeft = (lockUntil - now) / 1000;
+    //
+    //                throw new AppException(ErrorCode.ACCOUNT_LOCKED,
+    //                        "You have entered the wrong many times, please try again later " + secondsLeft + "
+    // seconds.");
+    //            } else {
+    //                redisTemplate.delete(lockKey);
+    //            }
+    //        }
+    //
+    //        var user = userRepository
+    //                .findByUsername(request.getUsername())
+    //                .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
+    //
+    //        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+    //        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+    //
+    //        if (!authenticated) {
+    //            Long failCount = redisTemplate.opsForValue().increment(failKey);
+    //            redisTemplate.expire(failKey, Duration.ofMinutes(5));
+    //
+    //            if (failCount == 3) {
+    //                long lockUntil = System.currentTimeMillis() + 30_000;
+    //                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofSeconds(30));
+    //            } else if (failCount == 5) {
+    //                long lockUntil = System.currentTimeMillis() + 60_000;
+    //                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofSeconds(60));
+    //            } else if (failCount == 7) {
+    //                long lockUntil = System.currentTimeMillis() + 60 * 60_000L;
+    //                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofHours(1));
+    //            } else if (failCount == 10) {
+    //                long lockUntil = System.currentTimeMillis() + 24 * 60 * 60_000L;
+    //                redisTemplate.opsForValue().set(lockKey, String.valueOf(lockUntil), Duration.ofDays(1));
+    //            } else {
+    //            }
+    //
+    //            throw new AppException(ErrorCode.INVALID_CREDENTIALS, "False password " + failCount + " times");
+    //        }
+    //
+    //        redisTemplate.delete(failKey);
+    //        redisTemplate.delete(lockKey);
+    //
+    //        var token = generateToken(user);
+    //        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+    //    }
 
     @Override
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
@@ -331,11 +331,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         Date expiryTime = (isRefresh)
                 ? new Date(signedJWT
-                .getJWTClaimsSet()
-                .getIssueTime()
-                .toInstant()
-                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
-                .toEpochMilli())
+                        .getJWTClaimsSet()
+                        .getIssueTime()
+                        .toInstant()
+                        .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                        .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);

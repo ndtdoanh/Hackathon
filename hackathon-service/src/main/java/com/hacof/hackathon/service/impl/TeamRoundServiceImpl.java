@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.constant.TeamRoundStatus;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.hacof.hackathon.constant.TeamRoundStatus;
 import com.hacof.hackathon.dto.TeamRoundDTO;
 import com.hacof.hackathon.dto.TeamRoundSearchDTO;
 import com.hacof.hackathon.entity.*;
@@ -95,17 +95,19 @@ public class TeamRoundServiceImpl implements TeamRoundService {
         Long teamId = parseId(dto.getTeamId(), "Team");
         Long roundId = parseId(dto.getRoundId(), "Round");
 
-        TeamRound existing = teamRoundRepository.findById(Long.parseLong(id))
+        TeamRound existing = teamRoundRepository
+                .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("TeamRound not found"));
 
-        Team team = teamRepository.findById(teamId)
+        Team team = teamRepository
+                .findById(teamId)
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found with ID: " + teamId));
 
-        Round round = roundRepository.findById(roundId)
+        Round round = roundRepository
+                .findById(roundId)
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found with ID: " + roundId));
 
-        boolean alreadyInRound = teamRoundRepository
-                .existsByTeamIdAndRoundIdAndIdNot(teamId, roundId, teamRoundId);
+        boolean alreadyInRound = teamRoundRepository.existsByTeamIdAndRoundIdAndIdNot(teamId, roundId, teamRoundId);
 
         // Check if the team is already in this round (excluding the current one)
 
@@ -116,7 +118,6 @@ public class TeamRoundServiceImpl implements TeamRoundService {
         existing.setStatus(dto.getStatus());
         existing.setDescription(dto.getDescription());
         teamRoundRepository.save(existing);
-
 
         if (dto.getStatus() == TeamRoundStatus.PASSED) {
             createNextRoundForTeam(existing);
@@ -144,7 +145,6 @@ public class TeamRoundServiceImpl implements TeamRoundService {
                 nextTeamRound.setRound(nextRound);
                 nextTeamRound.setStatus(TeamRoundStatus.PENDING);
                 nextTeamRound.setDescription("Auto-generated for next round");
-
 
                 teamRoundRepository.save(nextTeamRound);
             }

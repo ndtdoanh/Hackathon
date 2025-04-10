@@ -3,7 +3,6 @@ package com.hacof.identity.controller;
 import java.io.IOException;
 import java.util.List;
 
-import com.hacof.identity.dto.response.FileUrlResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.DeviceRequest;
 import com.hacof.identity.dto.response.DeviceResponse;
+import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.service.DeviceService;
 
 import lombok.AccessLevel;

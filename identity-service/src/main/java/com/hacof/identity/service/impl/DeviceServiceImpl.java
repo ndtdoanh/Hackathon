@@ -4,18 +4,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.identity.dto.response.FileUrlResponse;
-import com.hacof.identity.mapper.FileUrlMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.request.DeviceRequest;
 import com.hacof.identity.dto.response.DeviceResponse;
+import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.entity.Device;
 import com.hacof.identity.entity.FileUrl;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.DeviceMapper;
+import com.hacof.identity.mapper.FileUrlMapper;
 import com.hacof.identity.repository.DeviceRepository;
 import com.hacof.identity.repository.FileUrlRepository;
 import com.hacof.identity.repository.HackathonRepository;
@@ -115,14 +115,15 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<FileUrlResponse> getFileUrlsByDeviceId(Long deviceId) {
-        Device device = deviceRepository.findById(deviceId)
-                .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_EXISTED));
+        Device device =
+                deviceRepository.findById(deviceId).orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_EXISTED));
         return fileUrlMapper.toResponseList(device.getFileUrls());
     }
 
     @Override
     public FileUrlResponse getFileUrlById(Long id) {
-        return fileUrlRepository.findById(id)
+        return fileUrlRepository
+                .findById(id)
                 .map(fileUrlMapper::toResponse)
                 .orElseThrow(() -> new AppException(ErrorCode.FILE_URL_NOT_EXISTED));
     }

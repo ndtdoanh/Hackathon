@@ -24,14 +24,10 @@ public class GlobalExceptionHanler {
     ResponseEntity<ApiResponse<?>> handlingAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();
 
-        String message = exception.getMessage() != null
-                ? exception.getMessage()
-                : errorCode.getMessage();
+        String message = exception.getMessage() != null ? exception.getMessage() : errorCode.getMessage();
 
-        ApiResponse<?> apiResponse = ApiResponse.builder()
-                .code(errorCode.getCode())
-                .message(message)
-                .build();
+        ApiResponse<?> apiResponse =
+                ApiResponse.builder().code(errorCode.getCode()).message(message).build();
 
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }

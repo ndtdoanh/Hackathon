@@ -3,11 +3,11 @@ package com.hacof.identity.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.hacof.identity.dto.response.FileUrlResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.request.DeviceRequest;
 import com.hacof.identity.dto.response.DeviceResponse;
+import com.hacof.identity.dto.response.FileUrlResponse;
 
 public interface DeviceService {
 

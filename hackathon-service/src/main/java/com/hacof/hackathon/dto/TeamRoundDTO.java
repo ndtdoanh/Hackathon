@@ -1,7 +1,6 @@
 package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.hacof.hackathon.constant.TeamRoundStatus;
 

@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.util.AuditContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +21,7 @@ import com.hacof.communication.repository.FileUrlRepository;
 import com.hacof.communication.repository.MessageRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.MessageService;
+import com.hacof.communication.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

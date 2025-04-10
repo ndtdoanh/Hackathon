@@ -1,8 +1,6 @@
 package com.hacof.hackathon.service;
 
-import java.util.List;
-
-//public interface TeamRoundJudgeService {
+// public interface TeamRoundJudgeService {
 //    TeamRoundJudgeDTO create(TeamRoundJudgeDTO dto);
 //
 //    TeamRoundJudgeDTO update(Long id, TeamRoundJudgeDTO dto);
@@ -12,4 +10,4 @@ import java.util.List;
 //    List<TeamRoundJudgeDTO> getAll();
 //
 //    TeamRoundJudgeDTO getById(Long id);
-//}
+// }

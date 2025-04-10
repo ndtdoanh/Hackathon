@@ -26,7 +26,6 @@ public class TeamRoundMapperManual {
         dto.setCreatedAt(entity.getCreatedDate());
         dto.setUpdatedAt(entity.getLastModifiedDate());
 
-
         return dto;
     }
 
