@@ -8,12 +8,14 @@ import com.hacof.analytics.dto.request.FeedbackDetailRequest;
 import com.hacof.analytics.dto.response.FeedbackDetailResponse;
 import com.hacof.analytics.entity.Feedback;
 import com.hacof.analytics.entity.FeedbackDetail;
+import com.hacof.analytics.entity.User;
 import com.hacof.analytics.exception.AppException;
 import com.hacof.analytics.exception.ErrorCode;
 import com.hacof.analytics.mapper.FeedbackDetailMapper;
 import com.hacof.analytics.repository.FeedbackDetailRepository;
 import com.hacof.analytics.repository.FeedbackRepository;
 import com.hacof.analytics.service.FeedbackDetailService;
+import com.hacof.analytics.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,14 @@ public class FeedbackDetailServiceImpl implements FeedbackDetailService {
 
     @Override
     public FeedbackDetailResponse createFeedbackDetail(FeedbackDetailRequest request) {
+
+        Long feedbackId = Long.parseLong(request.getFeedbackId());
+        User currentUser = AuditContext.getCurrentUser();
+
+        if (feedbackDetailRepository.existsByFeedbackIdAndCreatedBy_Username(feedbackId, currentUser.getUsername())) {
+            throw new AppException(ErrorCode.FEEDBACK_DETAIL_ALREADY_SUBMITTED);
+        }
+
         Feedback feedback = feedbackRepository
                 .findById(Long.parseLong(request.getFeedbackId()))
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));

@@ -1,6 +1,8 @@
 package com.hacof.analytics.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.hacof.analytics.dto.ApiRequest;
 import com.hacof.analytics.dto.ApiResponse;
 import com.hacof.analytics.dto.request.FeedbackRequest;
 import com.hacof.analytics.dto.response.FeedbackResponse;
@@ -26,10 +29,14 @@ public class FeedbackController {
 
     @PostMapping
     //    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
-    public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(@RequestBody @Valid FeedbackRequest request) {
+    public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
+            @RequestBody @Valid ApiRequest<FeedbackRequest> request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<FeedbackResponse>builder()
-                        .data(feedbackService.createFeedback(request))
+                        .requestId(request.getRequestId())
+                        .requestDateTime(request.getRequestDateTime())
+                        .channel(request.getChannel())
+                        .data(feedbackService.createFeedback(request.getData()))
                         .message("Feedback created successfully")
                         .build());
     }
@@ -38,6 +45,9 @@ public class FeedbackController {
     //    @PreAuthorize("hasAuthority('GET_FEEDBACKS')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacks() {
         return ApiResponse.<List<FeedbackResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(feedbackService.getFeedbacks())
                 .message("Get all feedbacks")
                 .build();
@@ -47,6 +57,9 @@ public class FeedbackController {
     //    @PreAuthorize("hasAuthority('GET_FEEDBACK')")
     public ApiResponse<FeedbackResponse> getFeedback(@PathVariable Long id) {
         return ApiResponse.<FeedbackResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(feedbackService.getFeedback(id))
                 .message("Get feedback by ID")
                 .build();
@@ -56,7 +69,12 @@ public class FeedbackController {
     //    @PreAuthorize("hasAuthority('DELETE_FEEDBACK')")
     public ApiResponse<Void> deleteFeedback(@PathVariable Long id) {
         feedbackService.deleteFeedback(id);
-        return ApiResponse.<Void>builder().message("Feedback deleted").build();
+        return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .message("Feedback deleted")
+                .build();
     }
 
     //    @GetMapping("/by-team")
