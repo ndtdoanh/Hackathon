@@ -1,7 +1,10 @@
 package com.hacof.communication.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.hacof.communication.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -53,9 +56,12 @@ public class MessageController {
     @PostMapping("/{conversationId}")
     //    @PreAuthorize("hasAuthority('CREATE_MESSAGE')")
     public ResponseEntity<ApiResponse<MessageResponse>> createMessage(
-            @PathVariable Long conversationId, @RequestBody @Valid MessageRequest request) {
-        MessageResponse messageResponse = messageService.createMessage(conversationId, request);
+            @PathVariable Long conversationId, @RequestBody @Valid ApiRequest<MessageRequest> request) {
+        MessageResponse messageResponse = messageService.createMessage(conversationId, request.getData());
         ApiResponse<MessageResponse> response = ApiResponse.<MessageResponse>builder()
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
                 .data(messageResponse)
                 .message("Message created successfully")
                 .build();
@@ -70,6 +76,9 @@ public class MessageController {
     public ApiResponse<MessageResponse> getMessageById(@PathVariable Long messageId) {
         MessageResponse messageResponse = messageService.getMessageById(messageId);
         return ApiResponse.<MessageResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(messageResponse)
                 .message("Message retrieved successfully")
                 .build();
@@ -82,7 +91,9 @@ public class MessageController {
         List<MessageResponse> messages = messageService.getMessagesByConversation(conversationId);
         log.info("Found {} messages", messages.size());
         return ApiResponse.<List<MessageResponse>>builder()
-                .code(200)
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(messageService.getMessagesByConversation(conversationId))
                 .message("Get all messages in conversation")
                 .build();

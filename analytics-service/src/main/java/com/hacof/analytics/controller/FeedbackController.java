@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.analytics.dto.ApiRequest;
@@ -28,7 +29,7 @@ public class FeedbackController {
     FeedbackService feedbackService;
 
     @PostMapping
-    //    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
+    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
     public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
             @RequestBody @Valid ApiRequest<FeedbackRequest> request) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -66,7 +67,7 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/{id}")
-    //    @PreAuthorize("hasAuthority('DELETE_FEEDBACK')")
+    @PreAuthorize("hasAuthority('DELETE_FEEDBACK')")
     public ApiResponse<Void> deleteFeedback(@PathVariable Long id) {
         feedbackService.deleteFeedback(id);
         return ApiResponse.<Void>builder()

@@ -1,7 +1,10 @@
 package com.hacof.communication.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.hacof.communication.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +28,12 @@ public class ConversationController {
 
     @PostMapping("/single")
     //    @PreAuthorize("hasAuthority('CREATE_CONVERSATION')")
-    public ApiResponse<ConversationResponse> createSingleConversation(@RequestBody @Valid ConversationRequest request) {
+    public ApiResponse<ConversationResponse> createSingleConversation(@RequestBody @Valid ApiRequest<ConversationRequest> request) {
         return ApiResponse.<ConversationResponse>builder()
-                .data(conversationService.createSingleConversation(request))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .data(conversationService.createSingleConversation(request.getData()))
                 .message("Single conversation created successfully")
                 .build();
     }
@@ -46,6 +52,9 @@ public class ConversationController {
     //    @PreAuthorize("hasAuthority('GET_CONVERSATION')")
     public ApiResponse<ConversationResponse> getConversationById(@PathVariable("id") Long id) {
         return ApiResponse.<ConversationResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(conversationService.getConversationById(id))
                 .message("Conversation retrieved successfully")
                 .build();
@@ -55,6 +64,9 @@ public class ConversationController {
     //    @PreAuthorize("hasAuthority('GET_USER_CONVERSATIONS')")
     public ApiResponse<List<ConversationResponse>> getConversationsByUserId(@PathVariable("userId") Long userId) {
         return ApiResponse.<List<ConversationResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(conversationService.getConversationsByUserId(userId))
                 .message("User conversations retrieved successfully")
                 .build();
@@ -75,6 +87,9 @@ public class ConversationController {
     public ApiResponse<Void> deleteConversation(@PathVariable("id") Long id) {
         conversationService.deleteConversation(id);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("Conversation deleted successfully")
                 .build();
     }

@@ -1,7 +1,10 @@
 package com.hacof.communication.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.hacof.communication.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -37,35 +40,6 @@ public class MessageReactionController {
     MessageReactionService reactionService;
     SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping("/{messageId}")
-    //    @PreAuthorize("hasAuthority('REACT_TO_MESSAGE')")
-    public ResponseEntity<ApiResponse<MessageReactionResponse>> reactToMessage(
-            @PathVariable Long messageId, @RequestBody @Valid MessageReactionRequest request) {
-        MessageReactionResponse reactionResponse = reactionService.reactToMessage(messageId, request);
-        ApiResponse<MessageReactionResponse> response = ApiResponse.<MessageReactionResponse>builder()
-                .data(reactionResponse)
-                .message("Reaction added successfully")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @DeleteMapping("/{reactionId}")
-    //    @PreAuthorize("hasAuthority('DELETE_REACTION')")
-    public ApiResponse<Void> deleteReaction(@PathVariable Long reactionId) {
-        reactionService.removeReaction(reactionId);
-        return ApiResponse.<Void>builder().message("Reaction has been removed").build();
-    }
-
-    @GetMapping("/message/{messageId}")
-    //    @PreAuthorize("hasAuthority('GET_REACTIONS_BY_MESSAGE')")
-    public ApiResponse<List<MessageReactionResponse>> getReactionsByMessage(@PathVariable Long messageId) {
-        return ApiResponse.<List<MessageReactionResponse>>builder()
-                .data(reactionService.getReactionsByMessage(messageId))
-                .message("Get all reactions for message")
-                .build();
-    }
-
     @MessageMapping("/reactions/{messageId}")
     public void handleReaction(@Payload MessageReactionRequest request, @DestinationVariable Long messageId) {
         log.info("Message ID: {}", messageId);
@@ -78,5 +52,45 @@ public class MessageReactionController {
         String destination = "/topic/messages/" + messageId;
         log.info("Sending to destination: {}", destination);
         messagingTemplate.convertAndSend(destination, reactionResponse);
+    }
+
+    @PostMapping("/{messageId}")
+    //    @PreAuthorize("hasAuthority('REACT_TO_MESSAGE')")
+    public ResponseEntity<ApiResponse<MessageReactionResponse>> reactToMessage(
+            @PathVariable Long messageId, @RequestBody @Valid ApiRequest<MessageReactionRequest> request) {
+        MessageReactionResponse reactionResponse = reactionService.reactToMessage(messageId, request.getData());
+        ApiResponse<MessageReactionResponse> response = ApiResponse.<MessageReactionResponse>builder()
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .data(reactionResponse)
+                .message("Reaction added successfully")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("/{reactionId}")
+    //    @PreAuthorize("hasAuthority('DELETE_REACTION')")
+    public ApiResponse<Void> deleteReaction(@PathVariable Long reactionId) {
+        reactionService.removeReaction(reactionId);
+        return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .message("Reaction has been removed")
+                .build();
+    }
+
+    @GetMapping("/message/{messageId}")
+    //    @PreAuthorize("hasAuthority('GET_REACTIONS_BY_MESSAGE')")
+    public ApiResponse<List<MessageReactionResponse>> getReactionsByMessage(@PathVariable Long messageId) {
+        return ApiResponse.<List<MessageReactionResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(reactionService.getReactionsByMessage(messageId))
+                .message("Get all reactions for message")
+                .build();
     }
 }

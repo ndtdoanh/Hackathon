@@ -1,7 +1,10 @@
 package com.hacof.communication.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.hacof.communication.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -29,9 +32,12 @@ public class NotificationController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_NOTIFICATION')")
     public ResponseEntity<ApiResponse<NotificationResponse>> createNotification(
-            @RequestBody @Valid NotificationRequest request) {
-        NotificationResponse notificationResponse = notificationService.createNotification(request);
+            @RequestBody @Valid ApiRequest<NotificationRequest> request) {
+        NotificationResponse notificationResponse = notificationService.createNotification(request.getData());
         ApiResponse<NotificationResponse> response = ApiResponse.<NotificationResponse>builder()
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
                 .data(notificationResponse)
                 .message("Notification created successfully")
                 .build();
@@ -43,6 +49,9 @@ public class NotificationController {
     //    @PreAuthorize("hasAuthority('GET_NOTIFICATIONS')")
     public ApiResponse<List<NotificationResponse>> getNotifications() {
         return ApiResponse.<List<NotificationResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(notificationService.getNotifications())
                 .message("Fetched all notifications")
                 .build();
@@ -52,6 +61,9 @@ public class NotificationController {
     //    @PreAuthorize("hasAuthority('GET_NOTIFICATION')")
     public ApiResponse<NotificationResponse> getNotification(@PathVariable("id") Long id) {
         return ApiResponse.<NotificationResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(notificationService.getNotification(id))
                 .message("Fetched notification by ID")
                 .build();
@@ -61,6 +73,9 @@ public class NotificationController {
     //    @PreAuthorize("hasAuthority('GET_NOTIFICATION')")
     public ApiResponse<List<NotificationResponse>> getNotificationsBySenderId(@PathVariable Long senderId) {
         return ApiResponse.<List<NotificationResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(notificationService.getNotificationsBySenderId(senderId))
                 .message("Notifications retrieved successfully")
                 .build();
@@ -69,6 +84,9 @@ public class NotificationController {
     @GetMapping("/user/{userId}")
     public ApiResponse<List<NotificationResponse>> getNotificationsByUserId(@PathVariable Long userId) {
         return ApiResponse.<List<NotificationResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(notificationService.getNotificationsByUserId(userId))
                 .message("Notifications for user retrieved successfully")
                 .build();
@@ -79,15 +97,21 @@ public class NotificationController {
     public ApiResponse<Void> deleteNotification(@PathVariable("id") Long id) {
         notificationService.deleteNotification(id);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("Notification has been deleted")
                 .build();
     }
 
     @PutMapping("/notification-deliveries/read-status")
     @PreAuthorize("hasAuthority('UPDATE_READ_STATUS')")
-    public ApiResponse<String> updateReadStatusBulk(@RequestBody BulkUpdateReadStatusRequest request) {
-        notificationService.updateReadStatusBulk(request);
+    public ApiResponse<String> updateReadStatusBulk(@RequestBody ApiRequest<BulkUpdateReadStatusRequest> request) {
+        notificationService.updateReadStatusBulk(request.getData());
         return ApiResponse.<String>builder()
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
                 .message("Read status updated successfully")
                 .data("OK")
                 .build();
