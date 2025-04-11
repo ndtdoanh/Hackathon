@@ -1,7 +1,9 @@
 package com.hacof.submission.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.submission.dto.request.SubmissionRequestDTO;
 import com.hacof.submission.dto.response.SubmissionResponseDTO;
-import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
 import com.hacof.submission.service.SubmissionService;
 
 @RestController
@@ -21,6 +24,19 @@ public class SubmissionController {
 
     @Autowired
     private SubmissionService submissionService;
+
+    public void setCommonResponseFields(CommonResponse<SubmissionResponseDTO> response) {
+        response.setRequestId(UUID.randomUUID().toString());
+        response.setRequestDateTime(LocalDateTime.now());
+        response.setChannel("HACOF");
+    }
+
+
+    private void setDefaultResponseFields(CommonResponse<?> response) {
+        response.setRequestId(UUID.randomUUID().toString());
+        response.setRequestDateTime(LocalDateTime.now());
+        response.setChannel("HACOF");
+    }
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_SUBMISSION')")
@@ -43,19 +59,23 @@ public class SubmissionController {
 
             SubmissionResponseDTO createdSubmission = submissionService.createSubmission(submissionRequestDTO, files);
 
+            setCommonResponseFields(response);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Submission created successfully!");
             response.setData(createdSubmission);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (IOException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage("Error uploading files: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -67,11 +87,13 @@ public class SubmissionController {
         CommonResponse<SubmissionResponseDTO> response = new CommonResponse<>();
         try {
             SubmissionResponseDTO submission = submissionService.getSubmissionById(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched submission successfully!");
             response.setData(submission);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage("Submission not found!");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -83,11 +105,13 @@ public class SubmissionController {
         CommonResponse<List<SubmissionResponseDTO>> response = new CommonResponse<>();
         try {
             List<SubmissionResponseDTO> submissions = submissionService.getAllSubmissions();
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched all submissions successfully!");
             response.setData(submissions);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -113,15 +137,18 @@ public class SubmissionController {
             SubmissionResponseDTO updatedSubmission =
                     submissionService.updateSubmission(id, submissionRequestDTO, files);
 
+            setCommonResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Submission updated successfully!");
             response.setData(updatedSubmission);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("An error occurred: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -134,10 +161,12 @@ public class SubmissionController {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
             submissionService.deleteSubmission(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Submission deleted successfully!");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage("Submission not found!");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -149,17 +178,20 @@ public class SubmissionController {
             @RequestParam Long roundId, @RequestParam String createdByUsername) {
         CommonResponse<List<SubmissionResponseDTO>> response = new CommonResponse<>();
         try {
-            List<SubmissionResponseDTO> responseDTOs =
+            List<SubmissionResponseDTO> list =
                     submissionService.getSubmissionsByRoundAndCreatedBy(roundId, createdByUsername);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched submissions by round and creator successfully.");
-            response.setData(responseDTOs);
+            response.setData(list);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -171,16 +203,19 @@ public class SubmissionController {
             @RequestParam Long teamId, @RequestParam Long roundId) {
         CommonResponse<List<SubmissionResponseDTO>> response = new CommonResponse<>();
         try {
-            List<SubmissionResponseDTO> responseDTOs = submissionService.getSubmissionsByTeamAndRound(teamId, roundId);
+            List<SubmissionResponseDTO> list = submissionService.getSubmissionsByTeamAndRound(teamId, roundId);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched submissions by team and round successfully.");
-            response.setData(responseDTOs);
+            response.setData(list);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

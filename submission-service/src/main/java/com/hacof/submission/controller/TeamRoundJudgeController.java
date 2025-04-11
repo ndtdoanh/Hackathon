@@ -1,6 +1,8 @@
 package com.hacof.submission.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
 import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
-import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
 import com.hacof.submission.service.TeamRoundJudgeService;
 
 @RestController
@@ -20,20 +23,32 @@ public class TeamRoundJudgeController {
     @Autowired
     private TeamRoundJudgeService service;
 
+    private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
+        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
+        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
+    }
+
+    private void setDefaultResponseFields(CommonResponse<?> response) {
+        response.setRequestId(UUID.randomUUID().toString());
+        response.setRequestDateTime(LocalDateTime.now());
+        response.setChannel("HACOF");
+    }
+
     @GetMapping
     public ResponseEntity<CommonResponse<List<TeamRoundJudgeResponseDTO>>> getAll() {
         CommonResponse<List<TeamRoundJudgeResponseDTO>> response = new CommonResponse<>();
         try {
             List<TeamRoundJudgeResponseDTO> data = service.getAllTeamRoundJudges();
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched all team round judges successfully!");
             response.setData(data);
-
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
@@ -42,17 +57,19 @@ public class TeamRoundJudgeController {
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> getById(@PathVariable Long id) {
         CommonResponse<TeamRoundJudgeResponseDTO> response = new CommonResponse<>();
         try {
-            TeamRoundJudgeResponseDTO teamRoundJudge = service.getTeamRoundJudgeById(id);
+            TeamRoundJudgeResponseDTO data = service.getTeamRoundJudgeById(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched team round judge by ID successfully!");
-            response.setData(teamRoundJudge);
-
+            response.setData(data);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -62,19 +79,22 @@ public class TeamRoundJudgeController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_TEAM_ROUND_JUDGE')")
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> create(
-            @RequestBody TeamRoundJudgeRequestDTO teamRoundJudgeRequestDTO) {
+            @RequestBody CommonRequest<TeamRoundJudgeRequestDTO> request) {
         CommonResponse<TeamRoundJudgeResponseDTO> response = new CommonResponse<>();
         try {
-            TeamRoundJudgeResponseDTO created = service.createTeamRoundJudge(teamRoundJudgeRequestDTO);
+            TeamRoundJudgeResponseDTO created = service.createTeamRoundJudge(request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Team round judge created successfully!");
             response.setData(created);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -84,20 +104,22 @@ public class TeamRoundJudgeController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE_TEAM_ROUND_JUDGE')")
     public ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> update(
-            @PathVariable Long id, @RequestBody TeamRoundJudgeRequestDTO updatedTeamRoundJudge) {
+            @PathVariable Long id, @RequestBody CommonRequest<TeamRoundJudgeRequestDTO> request) {
         CommonResponse<TeamRoundJudgeResponseDTO> response = new CommonResponse<>();
         try {
-            TeamRoundJudgeResponseDTO updated = service.updateTeamRoundJudge(id, updatedTeamRoundJudge);
+            TeamRoundJudgeResponseDTO updated = service.updateTeamRoundJudge(id, request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Team round judge updated successfully!");
             response.setData(updated);
-
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -110,14 +132,17 @@ public class TeamRoundJudgeController {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
             service.deleteTeamRoundJudge(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Team round judge deleted successfully!");
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -130,15 +155,18 @@ public class TeamRoundJudgeController {
         CommonResponse<List<TeamRoundJudgeResponseDTO>> response = new CommonResponse<>();
         try {
             List<TeamRoundJudgeResponseDTO> data = service.getTeamRoundJudgesByTeamRoundId(teamRoundId);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched team round judges successfully!");
             response.setData(data);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -152,14 +180,17 @@ public class TeamRoundJudgeController {
         CommonResponse<Void> response = new CommonResponse<>();
         try {
             service.deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(teamRoundId, judgeId);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Team round judge deleted successfully!");
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
