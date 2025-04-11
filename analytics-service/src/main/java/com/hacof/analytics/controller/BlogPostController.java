@@ -1,12 +1,15 @@
 package com.hacof.analytics.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.hacof.analytics.dto.ApiRequest;
 import com.hacof.analytics.dto.ApiResponse;
 import com.hacof.analytics.dto.request.BlogPostRequest;
 import com.hacof.analytics.dto.response.BlogPostResponse;
@@ -25,9 +28,13 @@ public class BlogPostController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_BLOG_POST')")
-    public ResponseEntity<ApiResponse<BlogPostResponse>> createBlogPost(@RequestBody BlogPostRequest request) {
+    public ResponseEntity<ApiResponse<BlogPostResponse>> createBlogPost(
+            @RequestBody ApiRequest<BlogPostRequest> request) {
         ApiResponse<BlogPostResponse> response = ApiResponse.<BlogPostResponse>builder()
-                .data(blogPostService.createBlogPost(request))
+                .requestId(request.getRequestId())
+                .requestDateTime(request.getRequestDateTime())
+                .channel(request.getChannel())
+                .data(blogPostService.createBlogPost(request.getData()))
                 .message("Blog post created successfully")
                 .build();
 
@@ -38,6 +45,9 @@ public class BlogPostController {
     //    @PreAuthorize("hasAuthority('GET_BLOG_POSTS')")
     public ApiResponse<List<BlogPostResponse>> getBlogPosts() {
         return ApiResponse.<List<BlogPostResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(blogPostService.getBlogPosts())
                 .message("List of blog posts")
                 .build();
@@ -47,6 +57,9 @@ public class BlogPostController {
     //    @PreAuthorize("hasAuthority('GET_BLOG_POST')")
     public ApiResponse<BlogPostResponse> getBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(blogPostService.getBlogPost(id))
                 .message("Blog post retrieved")
                 .build();
@@ -56,6 +69,9 @@ public class BlogPostController {
     //    @PreAuthorize("hasAuthority('GET_PUBLISHED_BLOG_POST')")
     public ApiResponse<List<BlogPostResponse>> getPublishedBlogPosts() {
         return ApiResponse.<List<BlogPostResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(blogPostService.getPublishedBlogPosts())
                 .message("List of published blog posts")
                 .build();
@@ -65,6 +81,9 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('SUBMIT_BLOG_POST')")
     public ApiResponse<BlogPostResponse> submitBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(blogPostService.submitBlogPost(id))
                 .message("Blog post submitted for review")
                 .build();
@@ -74,6 +93,9 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('APPROVE_BLOG_POST')")
     public ApiResponse<BlogPostResponse> approveBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(blogPostService.approveBlogPost(id))
                 .message("Blog post approved and published")
                 .build();
@@ -83,6 +105,9 @@ public class BlogPostController {
     @PreAuthorize("hasAuthority('REJECT_BLOG_POST')")
     public ApiResponse<BlogPostResponse> rejectBlogPost(@PathVariable Long id) {
         return ApiResponse.<BlogPostResponse>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .data(blogPostService.rejectBlogPost(id))
                 .message("Blog post rejected")
                 .build();
@@ -93,6 +118,9 @@ public class BlogPostController {
     public ApiResponse<Void> deleteBlogPost(@PathVariable Long id) {
         blogPostService.deleteBlogPost(id);
         return ApiResponse.<Void>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
                 .message("Blog post deleted successfully")
                 .build();
     }

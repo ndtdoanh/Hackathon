@@ -17,4 +17,6 @@ public interface FeedbackDetailRepository extends JpaRepository<FeedbackDetail, 
     List<FeedbackDetail> findByFeedback_Hackathon_Id(Long hackathonId);
 
     Optional<FeedbackDetail> findByFeedback_IdAndFeedback_CreatedBy_Id(Long feedbackId, Long createdById);
+
+    boolean existsByFeedbackIdAndCreatedBy_Username(Long feedbackId, String username);
 }

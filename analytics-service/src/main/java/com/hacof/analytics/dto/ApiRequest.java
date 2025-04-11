@@ -2,7 +2,8 @@ package com.hacof.analytics.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Size;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.AccessLevel;
@@ -17,16 +18,14 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> {
-    @Builder.Default
-    int code = 1000;
-
+public class ApiRequest<T> {
+    @Size(max = 36)
     String requestId;
 
     @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     LocalDateTime requestDateTime;
 
+    @Size(max = 30)
     String channel;
 
     String message;
