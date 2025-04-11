@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import com.hacof.submission.response.CommonResponse;
+import com.hacof.submission.util.CommonResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
