@@ -3,24 +3,22 @@ package com.hacof.analytics.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import com.hacof.analytics.constant.FeedbackType;
-import com.hacof.analytics.dto.request.FeedbackCreateRequest;
+import com.hacof.analytics.dto.request.FeedbackRequest;
 import com.hacof.analytics.dto.response.FeedbackResponse;
 import com.hacof.analytics.entity.Feedback;
 import com.hacof.analytics.entity.Hackathon;
-import com.hacof.analytics.entity.Team;
-import com.hacof.analytics.entity.User;
-import com.hacof.analytics.entity.UserRole;
 import com.hacof.analytics.exception.AppException;
 import com.hacof.analytics.exception.ErrorCode;
+import com.hacof.analytics.mapper.FeedbackDetailMapper;
 import com.hacof.analytics.mapper.FeedbackMapper;
+import com.hacof.analytics.repository.FeedbackDetailRepository;
 import com.hacof.analytics.repository.FeedbackRepository;
 import com.hacof.analytics.repository.HackathonRepository;
 import com.hacof.analytics.repository.TeamRepository;
 import com.hacof.analytics.repository.UserRepository;
 import com.hacof.analytics.service.FeedbackService;
-import com.hacof.analytics.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,43 +33,30 @@ public class FeedbackServiceImpl implements FeedbackService {
     UserRepository userRepository;
     HackathonRepository hackathonRepository;
     TeamRepository teamRepository;
+    FeedbackDetailMapper feedbackDetailMapper;
+    FeedbackDetailRepository feedbackDetailRepository;
 
     @Override
-    public FeedbackResponse createFeedback(FeedbackCreateRequest request) {
-        User currentUser = AuditContext.getCurrentUser();
-
-        Hackathon hackathon = null;
-        User mentor = null;
-
-        if (request.getFeedbackType() == FeedbackType.HACKATHON) {
-            hackathon = hackathonRepository
-                    .findById(Long.parseLong(request.getTargetId()))
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_FEEDBACK));
-        } else if (request.getFeedbackType() == FeedbackType.MENTOR) {
-            mentor = userRepository
-                    .findById(Long.parseLong(request.getTargetId()))
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_FEEDBACK));
-
-            if (mentor.getUserRoles().stream().map(UserRole::getRole).noneMatch(role -> role.getName()
-                    .equals("MENTOR"))) {
-                throw new AppException(ErrorCode.INVALID_TARGET);
-            }
-        } else {
-            throw new AppException(ErrorCode.INVALID_FEEDBACK_TYPE);
+    public FeedbackResponse createFeedback(FeedbackRequest request) {
+        if (!StringUtils.hasText(request.getHackathonId())) {
+            throw new AppException(ErrorCode.HACKATHON_REQUIRED);
         }
 
-        Team team = teamRepository
-                .findById(Long.parseLong(request.getTeamId()))
-                .orElseThrow(() -> new AppException(ErrorCode.INVALID_FEEDBACK));
+        Long hackathonId = Long.parseLong(request.getHackathonId());
 
-        Feedback feedback = feedbackMapper.toFeedback(request);
-        feedback.setCreatedBy(currentUser);
-        feedback.setTeam(team);
+        if (feedbackRepository.existsByHackathonId(hackathonId)) {
+            throw new AppException(ErrorCode.FEEDBACK_EXISTED);
+        }
+
+        Hackathon hackathon = hackathonRepository
+                .findById(Long.parseLong(request.getHackathonId()))
+                .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND));
+
+        Feedback feedback = new Feedback();
         feedback.setHackathon(hackathon);
-        feedback.setMentor(mentor);
 
-        feedbackRepository.save(feedback);
-        return feedbackMapper.toFeedbackResponse(feedback);
+        Feedback saved = feedbackRepository.save(feedback);
+        return feedbackMapper.toFeedbackResponse(saved);
     }
 
     @Override

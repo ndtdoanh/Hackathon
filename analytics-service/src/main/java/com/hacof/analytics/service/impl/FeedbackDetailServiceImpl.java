@@ -4,19 +4,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.hacof.analytics.dto.request.FeedbackDetailCreateRequest;
-import com.hacof.analytics.dto.request.FeedbackDetailUpdateRequest;
+import com.hacof.analytics.dto.request.FeedbackDetailRequest;
 import com.hacof.analytics.dto.response.FeedbackDetailResponse;
 import com.hacof.analytics.entity.Feedback;
 import com.hacof.analytics.entity.FeedbackDetail;
-import com.hacof.analytics.entity.User;
 import com.hacof.analytics.exception.AppException;
 import com.hacof.analytics.exception.ErrorCode;
 import com.hacof.analytics.mapper.FeedbackDetailMapper;
 import com.hacof.analytics.repository.FeedbackDetailRepository;
 import com.hacof.analytics.repository.FeedbackRepository;
 import com.hacof.analytics.service.FeedbackDetailService;
-import com.hacof.analytics.util.AuditContext;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,25 +28,18 @@ public class FeedbackDetailServiceImpl implements FeedbackDetailService {
     FeedbackDetailMapper feedbackDetailMapper;
 
     @Override
-    public FeedbackDetailResponse createFeedbackDetail(FeedbackDetailCreateRequest request) {
+    public FeedbackDetailResponse createFeedbackDetail(FeedbackDetailRequest request) {
         Feedback feedback = feedbackRepository
                 .findById(Long.parseLong(request.getFeedbackId()))
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
 
-        User currentUser = AuditContext.getCurrentUser();
+        FeedbackDetail feedbackDetail = feedbackDetailMapper.toFeedbackDetail(request);
 
-        feedbackDetailRepository
-                .findByFeedback_IdAndFeedback_CreatedBy_Id(
-                        Long.parseLong(request.getFeedbackId()), currentUser.getId()) // Ép kiểu
-                .ifPresent(feedbackDetail -> {
-                    throw new AppException(ErrorCode.FEEDBACK_DETAIL_ALREADY_EXISTS);
-                });
+        feedbackDetail.setFeedback(feedback);
 
-        FeedbackDetail feedbackDetail =
-                new FeedbackDetail(feedback, request.getContent(), 10, request.getRate(), request.getNote());
+        FeedbackDetail saved = feedbackDetailRepository.save(feedbackDetail);
 
-        feedbackDetail = feedbackDetailRepository.save(feedbackDetail);
-        return feedbackDetailMapper.toFeedbackDetailResponse(feedbackDetail);
+        return feedbackDetailMapper.toFeedbackDetailResponse(saved);
     }
 
     @Override
@@ -62,20 +52,6 @@ public class FeedbackDetailServiceImpl implements FeedbackDetailService {
         FeedbackDetail feedbackDetail = feedbackDetailRepository
                 .findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_DETAIL_NOT_FOUND));
-        return feedbackDetailMapper.toFeedbackDetailResponse(feedbackDetail);
-    }
-
-    @Override
-    public FeedbackDetailResponse updateFeedbackDetail(Long id, FeedbackDetailUpdateRequest request) {
-        FeedbackDetail feedbackDetail = feedbackDetailRepository
-                .findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_DETAIL_NOT_FOUND));
-
-        feedbackDetail.setContent(request.getContent());
-        feedbackDetail.setRate(request.getRate());
-        feedbackDetail.setNote(request.getNote());
-        feedbackDetail = feedbackDetailRepository.save(feedbackDetail);
-
         return feedbackDetailMapper.toFeedbackDetailResponse(feedbackDetail);
     }
 

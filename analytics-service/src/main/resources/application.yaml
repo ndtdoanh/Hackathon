@@ -12,7 +12,7 @@ spring:
 #    username: root
 #    password: 12345
     username: root
-    password: trungkien
+    password: 12345
 
   jpa:
     hibernate:

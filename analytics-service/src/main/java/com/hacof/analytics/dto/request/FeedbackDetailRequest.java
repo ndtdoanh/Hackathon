@@ -15,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FeedbackDetailUpdateRequest {
-
+public class FeedbackDetailRequest {
+    String feedbackId;
     String content;
     int maxRating;
 

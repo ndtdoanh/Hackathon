@@ -23,4 +23,5 @@ public class FeedbackDetailResponse {
     String note;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    String createdByUserName;
 }

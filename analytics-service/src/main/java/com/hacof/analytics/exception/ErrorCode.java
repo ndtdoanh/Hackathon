@@ -24,7 +24,8 @@ public enum ErrorCode {
     BLOG_CANNOT_SUBMIT(1013, "Only drafts can be submitted", HttpStatus.BAD_REQUEST),
     BLOG_CANNOT_APPROVE(1014, "Only pending review blogs can be approved", HttpStatus.BAD_REQUEST),
     BLOG_CANNOT_REJECT(1015, "Only pending review blogs can be rejected", HttpStatus.BAD_REQUEST),
-    BLOG_SLUG_ALREADY_EXISTS(1016, "Blog post slug already exists", HttpStatus.BAD_REQUEST);
+    HACKATHON_REQUIRED(1016, "Hackathon required", HttpStatus.BAD_REQUEST),
+    BLOG_SLUG_ALREADY_EXISTS(1017, "Blog post slug already exists", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

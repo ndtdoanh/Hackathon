@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.analytics.dto.ApiResponse;
-import com.hacof.analytics.dto.request.FeedbackCreateRequest;
+import com.hacof.analytics.dto.request.FeedbackRequest;
 import com.hacof.analytics.dto.response.FeedbackResponse;
 import com.hacof.analytics.service.FeedbackService;
 
@@ -26,8 +26,7 @@ public class FeedbackController {
 
     @PostMapping
     //    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
-    public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
-            @RequestBody @Valid FeedbackCreateRequest request) {
+    public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(@RequestBody @Valid FeedbackRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<FeedbackResponse>builder()
                         .data(feedbackService.createFeedback(request))
@@ -60,30 +59,30 @@ public class FeedbackController {
         return ApiResponse.<Void>builder().message("Feedback deleted").build();
     }
 
-    @GetMapping("/by-team")
-    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_TEAM')")
-    public ApiResponse<List<FeedbackResponse>> getFeedbacksByTeam(@RequestParam Long teamId) {
-        return ApiResponse.<List<FeedbackResponse>>builder()
-                .data(feedbackService.getFeedbacksByTeam(teamId))
-                .message("Get feedbacks by team")
-                .build();
-    }
+    //    @GetMapping("/by-team")
+    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_TEAM')")
+    //    public ApiResponse<List<FeedbackResponse>> getFeedbacksByTeam(@RequestParam Long teamId) {
+    //        return ApiResponse.<List<FeedbackResponse>>builder()
+    //                .data(feedbackService.getFeedbacksByTeam(teamId))
+    //                .message("Get feedbacks by team")
+    //                .build();
+    //    }
 
-    @GetMapping("/by-hackathon")
-    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_HACKATHON')")
-    public ApiResponse<List<FeedbackResponse>> getFeedbacksByHackathon(@RequestParam Long hackathonId) {
-        return ApiResponse.<List<FeedbackResponse>>builder()
-                .data(feedbackService.getFeedbacksByHackathon(hackathonId))
-                .message("Get feedbacks by hackathon")
-                .build();
-    }
+    //    @GetMapping("/by-hackathon")
+    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_HACKATHON')")
+    //    public ApiResponse<List<FeedbackResponse>> getFeedbacksByHackathon(@RequestParam Long hackathonId) {
+    //        return ApiResponse.<List<FeedbackResponse>>builder()
+    //                .data(feedbackService.getFeedbacksByHackathon(hackathonId))
+    //                .message("Get feedbacks by hackathon")
+    //                .build();
+    //    }
 
-    @GetMapping("/by-mentor")
-    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")
-    public ApiResponse<List<FeedbackResponse>> getFeedbacksByMentor(@RequestParam Long mentorId) {
-        return ApiResponse.<List<FeedbackResponse>>builder()
-                .data(feedbackService.getFeedbacksByMentor(mentorId))
-                .message("Get feedbacks by mentor")
-                .build();
-    }
+    //    @GetMapping("/by-mentor")
+    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")
+    //    public ApiResponse<List<FeedbackResponse>> getFeedbacksByMentor(@RequestParam Long mentorId) {
+    //        return ApiResponse.<List<FeedbackResponse>>builder()
+    //                .data(feedbackService.getFeedbacksByMentor(mentorId))
+    //                .message("Get feedbacks by mentor")
+    //                .build();
+    //    }
 }

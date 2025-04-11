@@ -2,11 +2,11 @@ package com.hacof.analytics.service;
 
 import java.util.List;
 
-import com.hacof.analytics.dto.request.FeedbackCreateRequest;
+import com.hacof.analytics.dto.request.FeedbackRequest;
 import com.hacof.analytics.dto.response.FeedbackResponse;
 
 public interface FeedbackService {
-    FeedbackResponse createFeedback(FeedbackCreateRequest request);
+    FeedbackResponse createFeedback(FeedbackRequest request);
 
     List<FeedbackResponse> getFeedbacks();
 
