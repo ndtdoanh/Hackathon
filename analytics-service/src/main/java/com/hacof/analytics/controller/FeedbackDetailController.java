@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.analytics.dto.ApiRequest;
@@ -68,7 +69,7 @@ public class FeedbackDetailController {
     }
 
     @DeleteMapping("/{id}")
-    //    @PreAuthorize("hasAuthority('DELETE_FEEDBACK_DETAIL')")
+    @PreAuthorize("hasAuthority('DELETE_FEEDBACK_DETAIL')")
     public ApiResponse<Void> deleteFeedbackDetail(@PathVariable Long id) {
         feedbackDetailService.deleteFeedbackDetail(id);
         return ApiResponse.<Void>builder()
