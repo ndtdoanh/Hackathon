@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.analytics.dto.ApiResponse;
-import com.hacof.analytics.dto.request.FeedbackDetailCreateRequest;
-import com.hacof.analytics.dto.request.FeedbackDetailUpdateRequest;
+import com.hacof.analytics.dto.request.FeedbackDetailRequest;
 import com.hacof.analytics.dto.response.FeedbackDetailResponse;
 import com.hacof.analytics.service.FeedbackDetailService;
 
@@ -28,7 +27,7 @@ public class FeedbackDetailController {
     @PostMapping
     //    @PreAuthorize("hasAuthority('CREATE_FEEDBACK_DETAIL')")
     public ResponseEntity<ApiResponse<FeedbackDetailResponse>> createFeedbackDetail(
-            @RequestBody @Valid FeedbackDetailCreateRequest request) {
+            @RequestBody @Valid FeedbackDetailRequest request) {
 
         FeedbackDetailResponse response = feedbackDetailService.createFeedbackDetail(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -56,17 +55,6 @@ public class FeedbackDetailController {
                 .build();
     }
 
-    @PutMapping("/{id}")
-    //    @PreAuthorize("hasAuthority('UPDATE_FEEDBACK_DETAIL')")
-    public ApiResponse<FeedbackDetailResponse> updateFeedbackDetail(
-            @PathVariable Long id, @RequestBody @Valid FeedbackDetailUpdateRequest request) {
-
-        return ApiResponse.<FeedbackDetailResponse>builder()
-                .data(feedbackDetailService.updateFeedbackDetail(id, request))
-                .message("Feedback Detail updated successfully")
-                .build();
-    }
-
     @DeleteMapping("/{id}")
     //    @PreAuthorize("hasAuthority('DELETE_FEEDBACK_DETAIL')")
     public ApiResponse<Void> deleteFeedbackDetail(@PathVariable Long id) {
@@ -76,31 +64,34 @@ public class FeedbackDetailController {
                 .build();
     }
 
-    @GetMapping("/by-feedback")
-    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK')")
-    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackId(@RequestParam Long feedbackId) {
-        return ApiResponse.<List<FeedbackDetailResponse>>builder()
-                .data(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
-                .message("Retrieved feedback details by feedbackId")
-                .build();
-    }
+    //    @GetMapping("/by-feedback")
+    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK')")
+    //    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackId(@RequestParam Long feedbackId)
+    // {
+    //        return ApiResponse.<List<FeedbackDetailResponse>>builder()
+    //                .data(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
+    //                .message("Retrieved feedback details by feedbackId")
+    //                .build();
+    //    }
 
-    @GetMapping("/by-mentor")
-    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_MENTOR')")
-    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByMentorId(@RequestParam Long mentorId) {
-        return ApiResponse.<List<FeedbackDetailResponse>>builder()
-                .data(feedbackDetailService.getFeedbackDetailsByMentorId(mentorId))
-                .message("Retrieved feedback details by mentorId")
-                .build();
-    }
+    //    @GetMapping("/by-mentor")
+    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_MENTOR')")
+    //    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByMentorId(@RequestParam Long mentorId) {
+    //        return ApiResponse.<List<FeedbackDetailResponse>>builder()
+    //                .data(feedbackDetailService.getFeedbackDetailsByMentorId(mentorId))
+    //                .message("Retrieved feedback details by mentorId")
+    //                .build();
+    //    }
 
-    @GetMapping("/by-hackathon")
-    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_HACKATHON')")
-    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByHackathonId(@RequestParam Long hackathonId) {
-        List<FeedbackDetailResponse> response = feedbackDetailService.getFeedbackDetailsByHackathonId(hackathonId);
-        return ApiResponse.<List<FeedbackDetailResponse>>builder()
-                .data(response)
-                .message("Retrieved feedback details by hackathon")
-                .build();
-    }
+    //    @GetMapping("/by-hackathon")
+    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_HACKATHON')")
+    //    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByHackathonId(@RequestParam Long
+    // hackathonId) {
+    //        List<FeedbackDetailResponse> response =
+    // feedbackDetailService.getFeedbackDetailsByHackathonId(hackathonId);
+    //        return ApiResponse.<List<FeedbackDetailResponse>>builder()
+    //                .data(response)
+    //                .message("Retrieved feedback details by hackathon")
+    //                .build();
+    //    }
 }

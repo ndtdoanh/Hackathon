@@ -3,8 +3,6 @@ package com.hacof.analytics.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hacof.analytics.constant.FeedbackType;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +17,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FeedbackResponse {
     String id;
-    String targetId;
     String teamId;
-    FeedbackType feedbackType;
+    String hackathonId;
+    String mentorId;
     List<FeedbackDetailResponse> feedbackDetails;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
