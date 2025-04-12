@@ -121,7 +121,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
 
         userIds.add(String.valueOf(currentUser.getId()));
-        // Check if any of the users already belong to an APPROVED team request in the same hackathon
+
+        // Check if any users already belong to an APPROVED team
         for (String userId : userIds) {
             boolean exists = teamRequestRepository.existsApprovedTeamRequestByUserIdAndHackathonId(
                     Long.parseLong(userId), hackathon.getId());
@@ -156,16 +157,10 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         TeamRequest saved = teamRequestRepository.save(teamRequest);
 
-        // Send email to all members
-        teamRequest.getTeamRequestMembers().stream()
-                .map(TeamRequestMember::getUser)
-                .forEach(user -> {
-                    emailService.sendEmail(
-                            user.getEmail(), "Team Request Created", "A new team request has been created.");
-                });
+        // Send notifications (will use bulk email)
+        notificationService.notifyTeamRequestCreated(saved);
 
         TeamRequestDTO response = toDto(saved);
-
         response.getTeamRequestMembers()
                 .forEach(memberDTO -> memberDTO.setTeamRequestId(String.valueOf(saved.getId())));
         return response;
