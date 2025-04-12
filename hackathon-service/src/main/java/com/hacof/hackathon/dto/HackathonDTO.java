@@ -3,6 +3,7 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
 import org.hibernate.validator.constraints.URL;
@@ -35,10 +36,12 @@ public class HackathonDTO {
 
     @NotNull(message = "Enroll Start Date is required")
     @FutureOrPresent(message = "Enroll Start Date must be in the present or future")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime enrollStartDate;
 
     @NotNull(message = "Enroll End Date is required")
     @FutureOrPresent(message = "Enroll End Date must be in the present or future")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime enrollEndDate;
 
     @NotNull(message = "Max Teams is required")
@@ -46,10 +49,12 @@ public class HackathonDTO {
 
     @NotNull(message = " Start Date is required")
     @FutureOrPresent(message = "Start Date must be in the present or future")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime startDate;
 
     @NotNull(message = " End Date is required")
     @FutureOrPresent(message = " End Date must be in the present or future")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime endDate;
 
     @NotBlank(message = "Information is required")
@@ -128,5 +133,45 @@ public class HackathonDTO {
     @AssertTrue(message = "Minimum Team Members must be less than or equal to Maximum Team Members")
     private boolean isMaxTeamSizeValid() {
         return maximumTeamMembers >= minimumTeamMembers;
+    }
+
+    @Override
+    public String toString() {
+        return "HackathonDTO{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", subTitle='" + subTitle + '\'' +
+                ", bannerImageUrl='" + bannerImageUrl + '\'' +
+                ", enrollStartDate=" + enrollStartDate +
+                ", enrollEndDate=" + enrollEndDate +
+                ", enrollmentCount=" + enrollmentCount +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", information='" + information + '\'' +
+                ", description='" + description + '\'' +
+                ", contact='" + contact + '\'' +
+                ", category='" + category + '\'' +
+                ", organization='" + organization + '\'' +
+                ", enrollmentStatus='" + enrollmentStatus + '\'' +
+                ", status='" + status + '\'' +
+                ", minimumTeamMembers=" + minimumTeamMembers +
+                ", maximumTeamMembers=" + maximumTeamMembers +
+                ", documentation=" + documentation +
+                ", roundIds=" + roundIds +
+                ", teamHackathons=" + teamHackathons +
+                ", hackathonResults=" + hackathonResults +
+                ", userHackathons=" + userHackathons +
+                ", teamRequests=" + teamRequests +
+                ", individualRegistrationRequests=" + individualRegistrationRequests +
+                ", mentorshipRequests=" + mentorshipRequests +
+                ", mentorshipSessionRequests=" + mentorshipSessionRequests +
+                ", sponsorshipHackathons=" + sponsorshipHackathons +
+                ", devices=" + devices +
+                ", feedbacks=" + feedbacks +
+                ", createdByUserName='" + createdByUserName + '\'' +
+                ", createdAt=" + createdAt +
+                ", lastModifiedByUserName='" + lastModifiedByUserName + '\'' +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

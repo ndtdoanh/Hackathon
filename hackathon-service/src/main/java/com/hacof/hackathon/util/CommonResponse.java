@@ -3,10 +3,8 @@ package com.hacof.hackathon.util;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,14 +13,26 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonResponse<T> {
-        private String requestId;
+    private String requestId;
 
-        @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
-        private LocalDateTime requestDateTime;
+    @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
+    @JsonSerialize(using = CustomLocalDateTimeSerialize.class)
+    private LocalDateTime requestDateTime;
 
-        private String channel;
+    private String channel;
     private Result result;
     private T data;
+
+    @Override
+    public String toString() {
+        return "CommonResponse{" +
+                "requestId='" + requestId + '\'' +
+                ", requestDateTime=" + requestDateTime +
+                ", channel='" + channel + '\'' +
+                ", result=" + result +
+                ", data=" + data +
+                '}';
+    }
 
     @Getter
     @Setter
@@ -31,6 +41,14 @@ public class CommonResponse<T> {
     public static class Result {
         private String responseCode;
         private String description;
+
+        @Override
+        public String toString() {
+            return "Result{" +
+                    "responseCode='" + responseCode + '\'' +
+                    ", description='" + description + '\'' +
+                    '}';
+        }
     }
 
     @JsonGetter("message")

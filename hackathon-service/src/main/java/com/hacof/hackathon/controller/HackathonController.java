@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -35,6 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 public class HackathonController {
     HackathonService hackathonService;
     HackathonResultService hackathonResultService;
+    static final ObjectMapper objectMapper = new ObjectMapper();
+
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
@@ -79,8 +83,17 @@ public class HackathonController {
                                 request.getChannel(),
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon created successfully"),
                 createdHackathon);
-        log.debug("Created hackathon: {}", createdHackathon);
+        log.info("Hackathon created response: {}", response);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    private void logAsJson(String prefix, Object data) {
+        try {
+            String json = objectMapper.writeValueAsString(data);
+            log.info("{}: {}", prefix, json);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to log {} as JSON", prefix, e);
+        }
     }
 
     @PutMapping
