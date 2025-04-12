@@ -1,9 +1,8 @@
-package com.hacof.hackathon.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+package com.hacof.hackathon.constant;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {

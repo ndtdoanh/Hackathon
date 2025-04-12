@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         GenericErrorException.class,
         ResourceNotFoundException.class,
         TimeoutException.class,
-        CustomException.class
+        CustomException.class, NotificationException.class
     })
     public ResponseEntity<CommonResponse<Void>> handleException(Exception ex) {
         StatusCode statusCode = getStatusByException(ex);
@@ -33,16 +33,6 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(statusCode, ex.getMessage());
     }
 
-    //    @ExceptionHandler(MethodArgumentNotValidException.class)
-    //    public ResponseEntity<CommonResponse<List<String>>> handleValidationExceptions(MethodArgumentNotValidException
-    // ex) {
-    //        List<String> errors = ex.getBindingResult().getAllErrors().stream()
-    //                .map(error -> ((FieldError) error).getField() + ": " + error.getDefaultMessage())
-    //                .collect(Collectors.toList());
-    //
-    //        log.error("Validation failed: {}", errors);
-    //        return buildResponseEntity(StatusCode.INVALID_INPUT, "Validation failed", errors);
-    //    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponse<Map<String, String>>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {

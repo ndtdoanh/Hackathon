@@ -1,8 +1,8 @@
 package com.hacof.hackathon.service.impl;
 
+import com.hacof.hackathon.exception.NotificationException;
 import jakarta.mail.internet.MimeMessage;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,35 +12,30 @@ import org.springframework.stereotype.Service;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.service.EmailService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class EmailServiceImpl implements EmailService {
-    @Autowired
-    JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+
+    public EmailServiceImpl(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    // For individual emails
     @Async
     @Override
     public void sendEmail(String to, String subject, String content) {
-        if (to == null || to.trim().isEmpty()) {
-            log.error("Email address is null or empty");
-            throw new InvalidInputException("Email address must not be null or empty");
-        }
+        validateEmailParameters(to, subject, content);
 
         try {
-            log.debug("Preparing to send email to: {}", to);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -50,29 +45,24 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(content, true);
 
             mailSender.send(message);
-            log.info("Email sent successfully to: {}", to);
+            log.debug("Email sent successfully to: {}", to);
         } catch (Exception e) {
-            log.error("Failed to send email to: {} - Error: {}", to, e.getMessage());
-            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
+            log.error("Failed to send email to: {}", to, e);
+            throw new NotificationException("Failed to send email to " + to, e);
         }
     }
 
-    // New bulk email method using BCC
     @Async
     @Override
     public void sendBulkEmails(List<String> toList, String subject, String content) {
-        if (toList == null || toList.isEmpty()) {
-            log.warn("Email addresses list is null or empty");
-            return;
-        }
+        validateEmailParameters(subject, content);
 
-        // Filter valid emails
         List<String> validEmails = toList.stream()
                 .filter(email -> email != null && !email.trim().isEmpty())
-                .collect(Collectors.toList());
-
+                .distinct()
+                .toList();
         if (validEmails.isEmpty()) {
-            log.debug("No valid email addresses provided");
+            log.warn("No valid email addresses provided for bulk send");
             return;
         }
 
@@ -81,16 +71,32 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setFrom(fromEmail);
-            helper.setTo(fromEmail); // Required field, set to sender
-            helper.setBcc(validEmails.toArray(new String[0])); // All recipients in BCC
+            helper.setTo(fromEmail); // Required field
+            helper.setBcc(validEmails.toArray(new String[0]));
             helper.setSubject(subject);
             helper.setText(content, true);
 
             mailSender.send(message);
-            log.info("Bulk email sent successfully to {} recipients", validEmails.size());
+            log.info("Bulk email sent to {} recipients", validEmails.size());
         } catch (Exception e) {
-            log.error("Failed to send bulk email - Error: {}", e.getMessage());
-            throw new RuntimeException("Failed to send bulk email: " + e.getMessage(), e);
+            log.error("Failed to send bulk email to {} recipients", validEmails.size(), e);
+            throw new NotificationException("Failed to send bulk email to " + validEmails.size() + " recipients", e);
+        }
+    }
+
+    private void validateEmailParameters(String subject, String content) {
+        if (subject == null || subject.trim().isEmpty()) {
+            throw new InvalidInputException("Email subject cannot be empty");
+        }
+        if (content == null || content.trim().isEmpty()) {
+            throw new InvalidInputException("Email content cannot be empty");
+        }
+    }
+
+    private void validateEmailParameters(String to, String subject, String content) {
+        validateEmailParameters(subject, content);
+        if (to == null || to.trim().isEmpty()) {
+            throw new InvalidInputException("Email recipient cannot be empty");
         }
     }
 }

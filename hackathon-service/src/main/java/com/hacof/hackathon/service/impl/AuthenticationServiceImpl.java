@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
 
+import com.hacof.hackathon.constant.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,7 +14,6 @@ import com.hacof.hackathon.dto.IntrospectRequest;
 import com.hacof.hackathon.dto.IntrospectResponse;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.AppException;
-import com.hacof.hackathon.exception.ErrorCode;
 import com.hacof.hackathon.repository.InvalidatedTokenRepository;
 import com.hacof.hackathon.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;

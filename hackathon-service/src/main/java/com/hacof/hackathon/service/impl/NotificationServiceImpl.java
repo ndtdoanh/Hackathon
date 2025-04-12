@@ -1,5 +1,6 @@
 package com.hacof.hackathon.service.impl;
 
+import com.hacof.hackathon.exception.InvalidInputException;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.TeamRequestMemberStatus;
@@ -9,114 +10,190 @@ import com.hacof.hackathon.entity.TeamRequestMember;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.service.EmailService;
 import com.hacof.hackathon.service.NotificationService;
-import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationServiceImpl implements NotificationService {
     private final EmailService emailService;
-    private final SecurityUtil securityUtil;
 
     @Override
     public void notifyTeamRequestCreated(TeamRequest request) {
-        String emailContent = String.format(
-                "You have been invited to join team %s in hackathon %s. Please respond to this invitation within %d days.",
-                request.getName(), request.getHackathon().getTitle(), 7);
+        validateTeamRequest(request);
 
-        // Collect all valid emails
-        List<String> memberEmails = request.getTeamRequestMembers().stream()
-                .map(member -> member.getUser())
-                .filter(Objects::nonNull)
-                .map(User::getEmail)
-                .filter(email -> email != null && !email.trim().isEmpty())
-                .collect(Collectors.toList());
+        String emailContent = String.format(
+                """
+                Dear Team Member,
+                
+                You have been invited to join team "%s" in hackathon "%s".
+                
+                Please respond to this invitation within %d days.
+                
+                Best regards,
+                Hackathon Team
+                """,
+                request.getName(),
+                request.getHackathon().getTitle(),
+                7
+        );
+
+        List<String> memberEmails = extractMemberEmails(request);
 
         if (!memberEmails.isEmpty()) {
             try {
-                // Send all emails in one BCC message
                 emailService.sendBulkEmails(memberEmails, "Team Invitation", emailContent);
                 log.info("Sent team invitation to {} members", memberEmails.size());
             } catch (Exception e) {
-                log.error("Failed to send team invitation emails: {}", e.getMessage());
+                log.error("Failed to send team invitation emails", e);
             }
-        } else {
-            log.warn("No valid emails found for team members");
         }
     }
 
     @Override
     public void notifyMemberResponse(TeamRequestMember member) {
-        String status = member.getStatus() == TeamRequestMemberStatus.APPROVED ? "APPROVED" : "REJECTED";
-        String emailContent = String.format(
-                "Member %s has %s your team invitation!",
-                member.getUser().getUsername(),
-                status);
+        validateMemberResponse(member);
 
-        try {
-            // Single email - keep using individual send
-            emailService.sendEmail(
-                    member.getTeamRequest().getCreatedBy().getEmail(),
-                    "Team Invitation Response",
-                    emailContent
-            );
-        } catch (Exception e) {
-            log.error("Failed to send member response notification", e);
+        String emailContent = String.format(
+                """
+                Dear Team Leader,
+                
+                Member %s has %s your team invitation for team "%s" in hackathon "%s".
+                
+                Current status of your team request:
+                - Total invited: %d
+                - Approved: %d
+                - Pending: %d
+                - Rejected: %d
+                
+                Best regards,
+                Hackathon Team
+                """,
+                member.getUser().getUsername(),
+                member.getStatus() == TeamRequestMemberStatus.APPROVED ? "APPROVED" : "REJECTED",
+                member.getTeamRequest().getName(),
+                member.getTeamRequest().getHackathon().getTitle(),
+                member.getTeamRequest().getTeamRequestMembers().size(),
+                countMembersByStatus(member.getTeamRequest(), TeamRequestMemberStatus.APPROVED),
+                countMembersByStatus(member.getTeamRequest(), TeamRequestMemberStatus.PENDING),
+                countMembersByStatus(member.getTeamRequest(), TeamRequestMemberStatus.REJECTED)
+        );
+
+        String creatorEmail = extractCreatorEmail(member.getTeamRequest());
+
+        if (creatorEmail != null) {
+            try {
+                emailService.sendEmail(creatorEmail, "Team Invitation Response", emailContent);
+                log.debug("Sent member response notification to creator: {}", creatorEmail);
+            } catch (Exception e) {
+                log.error("Failed to send member response notification", e);
+            }
         }
     }
 
     @Override
     public void notifyTeamRequestReviewed(TeamRequest request) {
+        validateTeamRequest(request);
+
         String status = request.getStatus() == TeamRequestStatus.APPROVED ? "approved" : "rejected";
         String reason = request.getStatus() == TeamRequestStatus.REJECTED ?
-                "\nReason: " + request.getNote() : "";
+                "\n\nReason: " + request.getNote() : "";
 
         String emailContent = String.format(
-                "Your team request for %s has been %s.%s",
+                """
+                Dear Team Members,
+                
+                Your team request "%s" for hackathon "%s" has been %s.%s
+                
+                Next steps:
+                - Approved teams: Prepare for the hackathon!
+                - Rejected teams: You may submit another request if allowed.
+                
+                Best regards,
+                Hackathon Organizers
+                """,
+                request.getName(),
                 request.getHackathon().getTitle(),
                 status,
-                reason);
+                reason
+        );
 
-        // Collect all emails (creator + members)
-        List<String> allRecipients = new ArrayList<>();
-
-        // Add creator email if valid
-        if (request.getCreatedBy() != null &&
-                request.getCreatedBy().getEmail() != null &&
-                !request.getCreatedBy().getEmail().trim().isEmpty()) {
-            allRecipients.add(request.getCreatedBy().getEmail());
-        }
-
-        // Add member emails
-        request.getTeamRequestMembers().stream()
-                .map(member -> member.getUser())
-                .filter(Objects::nonNull)
-                .map(User::getEmail)
-                .filter(email -> email != null && !email.trim().isEmpty())
-                .forEach(allRecipients::add);
+        List<String> allRecipients = extractAllRecipientEmails(request);
 
         if (!allRecipients.isEmpty()) {
             try {
-                // Send all notifications in one BCC message
-                emailService.sendBulkEmails(
-                        allRecipients,
-                        "Team Request Update",
-                        emailContent
-                );
-                log.info("Sent team request update to {} recipients", allRecipients.size());
+                emailService.sendBulkEmails(allRecipients, "Team Request Status Update", emailContent);
+                log.info("Sent team status update to {} recipients", allRecipients.size());
             } catch (Exception e) {
-                log.error("Failed to send team request update notifications", e);
+                log.error("Failed to send team status update", e);
             }
-        } else {
-            log.warn("No valid emails found for team request update");
+        }
+    }
+
+    // Helper methods
+    private List<String> extractMemberEmails(TeamRequest request) {
+        return request.getTeamRequestMembers().stream()
+                .map(TeamRequestMember::getUser)
+                .filter(Objects::nonNull)
+                .map(User::getEmail)
+                .filter(email -> email != null && !email.trim().isEmpty())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private String extractCreatorEmail(TeamRequest request) {
+        return Optional.ofNullable(request.getCreatedBy())
+                .map(User::getEmail)
+                .filter(email -> !email.trim().isEmpty())
+                .orElse(null);
+    }
+
+    private List<String> extractAllRecipientEmails(TeamRequest request) {
+        return Stream.concat(
+                Stream.ofNullable(request.getCreatedBy())
+                        .map(User::getEmail)
+                        .filter(email -> email != null && !email.trim().isEmpty()),
+
+                request.getTeamRequestMembers().stream()
+                        .map(TeamRequestMember::getUser)
+                        .filter(Objects::nonNull)
+                        .map(User::getEmail)
+                        .filter(email -> email != null && !email.trim().isEmpty())
+        ).distinct().collect(Collectors.toList());
+    }
+
+    private long countMembersByStatus(TeamRequest request, TeamRequestMemberStatus status) {
+        return request.getTeamRequestMembers().stream()
+                .filter(member -> member.getStatus() == status)
+                .count();
+    }
+
+    private void validateTeamRequest(TeamRequest request) {
+        if (request == null) {
+            throw new InvalidInputException("TeamRequest cannot be null");
+        }
+        if (request.getHackathon() == null) {
+            throw new InvalidInputException("Hackathon reference cannot be null");
+        }
+    }
+
+    private void validateMemberResponse(TeamRequestMember member) {
+        if (member == null) {
+            throw new InvalidInputException("TeamRequestMember cannot be null");
+        }
+        if (member.getUser() == null) {
+            throw new InvalidInputException("User cannot be null");
+        }
+        if (member.getTeamRequest() == null) {
+            throw new InvalidInputException("TeamRequest cannot be null");
         }
     }
 }
