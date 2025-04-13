@@ -128,4 +128,16 @@ public class BoardLabelServiceImpl implements BoardLabelService {
         List<BoardLabel> boardLabels = boardLabelRepository.findAll();
         return boardLabels.stream().map(boardLabelMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<BoardLabelResponseDTO> getBoardLabelsByBoardId(Long boardId) {
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board with ID " + boardId + " not found!");
+        }
+
+        List<BoardLabel> boardLabels = boardLabelRepository.findByBoardId(boardId);
+        return boardLabels.stream().map(boardLabelMapper::toDto).collect(Collectors.toList());
+    }
+
 }

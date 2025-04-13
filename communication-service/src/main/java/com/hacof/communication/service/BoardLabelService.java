@@ -16,4 +16,6 @@ public interface BoardLabelService {
     BoardLabelResponseDTO getBoardLabel(Long id);
 
     List<BoardLabelResponseDTO> getAllBoardLabels();
+
+    List<BoardLabelResponseDTO> getBoardLabelsByBoardId(Long boardId);
 }

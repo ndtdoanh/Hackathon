@@ -1,5 +1,6 @@
 package com.hacof.communication.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import com.hacof.communication.entity.BoardLabel;
 public interface BoardLabelRepository extends JpaRepository<BoardLabel, Long> {
 
     Optional<BoardLabel> findByNameAndBoardId(String name, Long boardId);
+
+    List<BoardLabel> findByBoardId(Long boardId);
 }
