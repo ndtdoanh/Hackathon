@@ -1,15 +1,19 @@
 package com.hacof.communication.controller;
 
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.BoardRequestDTO;
 import com.hacof.communication.dto.response.BoardResponseDTO;
-import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.util.CommonRequest;
+import com.hacof.communication.util.CommonResponse;
 import com.hacof.communication.service.BoardService;
 
 @RestController
@@ -19,20 +23,35 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
+        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
+        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
+    }
+
+    private void setDefaultResponseFields(CommonResponse<?> response) {
+        response.setRequestId(UUID.randomUUID().toString());
+        response.setRequestDateTime(LocalDateTime.now());
+        response.setChannel("HACOF");
+    }
+
     @PostMapping
-    public ResponseEntity<CommonResponse<BoardResponseDTO>> createBoard(@RequestBody BoardRequestDTO boardRequestDTO) {
+    public ResponseEntity<CommonResponse<BoardResponseDTO>> createBoard(@RequestBody CommonRequest<BoardRequestDTO> request) {
         CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
         try {
-            BoardResponseDTO createdBoard = boardService.createBoard(boardRequestDTO);
+            BoardResponseDTO createdBoard = boardService.createBoard(request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Board created successfully!");
             response.setData(createdBoard);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Internal Server Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -44,11 +63,13 @@ public class BoardController {
         CommonResponse<List<BoardResponseDTO>> response = new CommonResponse<>();
         try {
             List<BoardResponseDTO> boards = boardService.getAllBoards();
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Boards fetched successfully!");
             response.setData(boards);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error fetching boards: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -60,15 +81,18 @@ public class BoardController {
         CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
         try {
             BoardResponseDTO board = boardService.getBoard(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Board fetched successfully!");
             response.setData(board);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error fetching board: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -77,20 +101,22 @@ public class BoardController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<BoardResponseDTO>> updateBoard(
-            @PathVariable Long id, @RequestBody BoardRequestDTO boardRequestDTO) {
-
+            @PathVariable Long id, @RequestBody CommonRequest<BoardRequestDTO> request) {
         CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
         try {
-            BoardResponseDTO updatedBoard = boardService.updateBoard(id, boardRequestDTO);
+            BoardResponseDTO updatedBoard = boardService.updateBoard(id, request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Board updated successfully!");
             response.setData(updatedBoard);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -102,14 +128,17 @@ public class BoardController {
         CommonResponse<String> response = new CommonResponse<>();
         try {
             boardService.deleteBoard(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NO_CONTENT.value());
             response.setMessage("Board deleted successfully!");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error deleting board: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -119,15 +148,16 @@ public class BoardController {
     @GetMapping("/by-team-and-hackathon")
     public ResponseEntity<CommonResponse<List<BoardResponseDTO>>> getBoardsByTeamAndHackathon(
             @RequestParam Long teamId, @RequestParam Long hackathonId) {
-
         CommonResponse<List<BoardResponseDTO>> response = new CommonResponse<>();
         try {
             List<BoardResponseDTO> boards = boardService.getBoardsByTeamAndHackathon(teamId, hackathonId);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Boards fetched successfully by team and hackathon.");
             response.setData(boards);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error fetching boards: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

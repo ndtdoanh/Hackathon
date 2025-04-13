@@ -1,6 +1,8 @@
 package com.hacof.communication.controller;
 
 import java.util.List;
+import java.util.UUID;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import com.hacof.communication.constant.ScheduleEventStatus;
 import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
-import com.hacof.communication.response.CommonResponse;
+import com.hacof.communication.util.CommonRequest;
+import com.hacof.communication.util.CommonResponse;
 import com.hacof.communication.service.ScheduleEventAttendeeService;
 
 @RestController
@@ -20,22 +23,37 @@ public class ScheduleEventAttendeeController {
     @Autowired
     private ScheduleEventAttendeeService scheduleEventAttendeeService;
 
+    private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
+        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
+        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
+    }
+
+    private void setDefaultResponseFields(CommonResponse<?> response) {
+        response.setRequestId(UUID.randomUUID().toString());
+        response.setRequestDateTime(LocalDateTime.now());
+        response.setChannel("HACOF");
+    }
+
     @PostMapping
     public ResponseEntity<CommonResponse<ScheduleEventAttendeeResponseDTO>> createScheduleEventAttendee(
-            @RequestBody ScheduleEventAttendeeRequestDTO scheduleEventAttendeeRequestDTO) {
+            @RequestBody CommonRequest<ScheduleEventAttendeeRequestDTO> request) {
         CommonResponse<ScheduleEventAttendeeResponseDTO> response = new CommonResponse<>();
         try {
             ScheduleEventAttendeeResponseDTO createdScheduleEventAttendee =
-                    scheduleEventAttendeeService.createScheduleEventAttendee(scheduleEventAttendeeRequestDTO);
+                    scheduleEventAttendeeService.createScheduleEventAttendee(request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Schedule Event Attendee created successfully!");
             response.setData(createdScheduleEventAttendee);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -44,20 +62,23 @@ public class ScheduleEventAttendeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<ScheduleEventAttendeeResponseDTO>> updateScheduleEventAttendee(
-            @PathVariable Long id, @RequestBody ScheduleEventAttendeeRequestDTO scheduleEventAttendeeRequestDTO) {
+            @PathVariable Long id, @RequestBody CommonRequest<ScheduleEventAttendeeRequestDTO> request) {
         CommonResponse<ScheduleEventAttendeeResponseDTO> response = new CommonResponse<>();
         try {
             ScheduleEventAttendeeResponseDTO updatedScheduleEventAttendee =
-                    scheduleEventAttendeeService.updateScheduleEventAttendee(id, scheduleEventAttendeeRequestDTO);
+                    scheduleEventAttendeeService.updateScheduleEventAttendee(id, request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendee updated successfully!");
             response.setData(updatedScheduleEventAttendee);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -69,14 +90,17 @@ public class ScheduleEventAttendeeController {
         CommonResponse<String> response = new CommonResponse<>();
         try {
             scheduleEventAttendeeService.deleteScheduleEventAttendee(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NO_CONTENT.value());
             response.setMessage("Schedule Event Attendee deleted successfully!");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -90,15 +114,18 @@ public class ScheduleEventAttendeeController {
         try {
             ScheduleEventAttendeeResponseDTO scheduleEventAttendee =
                     scheduleEventAttendeeService.getScheduleEventAttendee(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendee fetched successfully!");
             response.setData(scheduleEventAttendee);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -111,11 +138,13 @@ public class ScheduleEventAttendeeController {
         try {
             List<ScheduleEventAttendeeResponseDTO> scheduleEventAttendees =
                     scheduleEventAttendeeService.getAllScheduleEventAttendees();
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendees fetched successfully!");
             response.setData(scheduleEventAttendees);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -129,15 +158,18 @@ public class ScheduleEventAttendeeController {
         try {
             ScheduleEventAttendeeResponseDTO updatedScheduleEventAttendee =
                     scheduleEventAttendeeService.changeStatus(id, status);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Attendee status updated successfully!");
             response.setData(updatedScheduleEventAttendee);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -151,15 +183,18 @@ public class ScheduleEventAttendeeController {
         try {
             List<ScheduleEventAttendeeResponseDTO> attendees =
                     scheduleEventAttendeeService.getScheduleEventAttendeesByEventId(scheduleEventId);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule event attendees fetched successfully!");
             response.setData(attendees);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
