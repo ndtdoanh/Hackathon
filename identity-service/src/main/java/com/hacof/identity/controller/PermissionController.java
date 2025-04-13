@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.hacof.identity.dto.ApiRequest;
 import jakarta.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +33,7 @@ import lombok.experimental.FieldDefaults;
 @RestController
 @RequestMapping("/api/v1/permissions")
 @RequiredArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PermissionController {
     PermissionService permissionService;
@@ -48,6 +50,7 @@ public class PermissionController {
                 .data(permissionResponse)
                 .message("Permission created successfully")
                 .build();
+        log.debug(response.toString());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
