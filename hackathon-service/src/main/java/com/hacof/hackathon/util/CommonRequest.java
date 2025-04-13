@@ -14,15 +14,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonRequest<T> {
-     @Size(max = 36)
-     private String requestId;
 
-     @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
-     private LocalDateTime requestDateTime;
+    @Size(max = 36)
+    private String requestId;
 
-        @Size(max = 30)
-     private String channel;
-//    // @Valid
-//    @JsonUnwrapped
+    @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
+    private LocalDateTime requestDateTime;
+
+    @Size(max = 30)
+    private String channel;
+//   @JsonUnwrapped
     private T data;
 }

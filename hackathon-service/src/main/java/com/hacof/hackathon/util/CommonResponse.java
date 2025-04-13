@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class CommonResponse<T> {
     private String requestId;
 
@@ -23,32 +24,14 @@ public class CommonResponse<T> {
     private Result result;
     private T data;
 
-    @Override
-    public String toString() {
-        return "CommonResponse{" +
-                "requestId='" + requestId + '\'' +
-                ", requestDateTime=" + requestDateTime +
-                ", channel='" + channel + '\'' +
-                ", result=" + result +
-                ", data=" + data +
-                '}';
-    }
-
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    @ToString
     public static class Result {
         private String responseCode;
         private String description;
-
-        @Override
-        public String toString() {
-            return "Result{" +
-                    "responseCode='" + responseCode + '\'' +
-                    ", description='" + description + '\'' +
-                    '}';
-        }
     }
 
     @JsonGetter("message")

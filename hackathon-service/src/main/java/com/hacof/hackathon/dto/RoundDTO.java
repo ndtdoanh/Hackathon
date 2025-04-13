@@ -37,6 +37,10 @@ public class RoundDTO {
     @NotBlank(message = "Round Title is required")
     String roundTitle;
 
+    @NotNull(message = "Total Teams is required")
+    @Min(value = 1, message = "Total Teams must be greater than 0")
+    int totalTeams; // total number of teams that can participate in this round
+
     @NotNull(message = "Round Status is required")
     String status; // Enum RoundStatus
 

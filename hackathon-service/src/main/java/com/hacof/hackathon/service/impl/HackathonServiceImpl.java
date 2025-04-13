@@ -7,7 +7,11 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,8 +45,10 @@ public class HackathonServiceImpl implements HackathonService {
     HackathonMapper hackathonMapper;
     UserRepository userRepository;
     FileUrlRepository fileUrlRepository;
+    RedisTemplate<String, Object> redisTemplate;
 
     @Override
+    @CacheEvict(value = "hackathons", allEntries = true)
     public HackathonDTO create(HackathonDTO hackathonDTO) {
         validateEnumValues(hackathonDTO);
         validateUniqueTitleForCreate(hackathonDTO.getTitle());
@@ -78,6 +84,10 @@ public class HackathonServiceImpl implements HackathonService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "hackathon", key = "#id"),
+            @CacheEvict(value = "hackathons", allEntries = true)
+    })
     public HackathonDTO update(String id, HackathonDTO hackathonDTO) {
         Hackathon existingHackathon = hackathonRepository
                 .findById(Long.parseLong(id))
@@ -85,7 +95,7 @@ public class HackathonServiceImpl implements HackathonService {
 
         validateEnumValues(hackathonDTO);
         validateUniqueTitleForUpdate(id, hackathonDTO.getTitle());
-        // get current user's information from SecurityContext
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("No authenticated user found");
@@ -96,6 +106,7 @@ public class HackathonServiceImpl implements HackathonService {
                 .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
+        // Update fields
         existingHackathon.setTitle(hackathonDTO.getTitle());
         existingHackathon.setSubTitle(hackathonDTO.getSubTitle());
         existingHackathon.setBannerImageUrl(hackathonDTO.getBannerImageUrl());
@@ -112,41 +123,37 @@ public class HackathonServiceImpl implements HackathonService {
         existingHackathon.setOrganization(OrganizationStatus.valueOf(hackathonDTO.getOrganization()));
         existingHackathon.setMaxTeams(hackathonDTO.getEnrollmentCount());
         existingHackathon.setStatus(Status.valueOf(hackathonDTO.getStatus()));
-        // existingHackathon.setDocumentation(hackathonMapper.mapToFileUrlList(hackathonDTO.getDocumentation()));
-        /** about update documentation:
-         * Step 1: Set null current documentations
-         * Step 2: Set new documentations
-         */
-        // Step 1: Set null current documentations
+
+        // Update documentation
         List<FileUrl> currentDocs = fileUrlRepository.findAllByHackathon(existingHackathon);
         for (FileUrl doc : currentDocs) {
             doc.setHackathon(null);
         }
         fileUrlRepository.saveAll(currentDocs);
 
-        // Step 2: Set new documentations
         List<FileUrl> fileUrls =
                 fileUrlRepository.findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
 
         for (FileUrl file : fileUrls) {
-            file.setHackathon(existingHackathon); // reassign for hackathon
+            file.setHackathon(existingHackathon);
         }
         fileUrlRepository.saveAll(fileUrls);
         existingHackathon.setDocumentation(fileUrls);
 
-        // still not change createdBy
+        // Update audit fields
         User createdBy = existingHackathon.getCreatedBy();
         existingHackathon.setLastModifiedBy(currentUser);
         existingHackathon.setLastModifiedDate(LocalDateTime.now());
         existingHackathon.setCreatedBy(createdBy);
+
         return hackathonMapper.toDto(hackathonRepository.save(existingHackathon));
     }
 
     @Override
+    @CacheEvict(value = {"hackathon", "hackathons"}, allEntries = true)
     public void deleteHackathon(Long id) {
         log.info("Deleting hackathon with id: {}", id);
 
-        // Check if exists
         if (!hackathonRepository.existsById(id)) {
             throw new ResourceNotFoundException("Hackathon not found with id: " + id);
         }
@@ -155,8 +162,9 @@ public class HackathonServiceImpl implements HackathonService {
     }
 
     @Override
+    @Cacheable(value = "hackathons", key = "#spec.toString()")
     public List<HackathonDTO> getHackathons(Specification<Hackathon> spec) {
-        log.debug("Searching hackathons with specification");
+        log.debug("Searching hackathons with specification (not from cache)");
         List<Hackathon> hackathons = hackathonRepository.findAll(spec);
 
         log.debug("Found {} hackathons matching the criteria", hackathons.size());
@@ -164,11 +172,13 @@ public class HackathonServiceImpl implements HackathonService {
     }
 
     @Override
+    @Cacheable(value = "hackathonExists", key = "#title")
     public boolean existsByTitle(String title) {
         return hackathonRepository.existsByTitle(title);
     }
 
     @Override
+    @Cacheable(value = "hackathonExists", key = "{#title, #id}")
     public boolean existsByTitleAndIdNot(String title, Long id) {
         return hackathonRepository.existsByTitleAndIdNot(title, id);
     }
