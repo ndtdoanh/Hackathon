@@ -40,14 +40,60 @@ public class TaskController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTask(
-            @PathVariable Long id, @RequestBody TaskRequestDTO taskRequestDTO) {
+//    @PutMapping("/{id}")
+//    public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTask(
+//            @PathVariable Long id, @RequestBody TaskRequestDTO taskRequestDTO) {
+//        CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
+//        try {
+//            TaskResponseDTO updatedTask = taskService.updateTask(id, taskRequestDTO);
+//            response.setStatus(HttpStatus.OK.value());
+//            response.setMessage("Task updated successfully!");
+//            response.setData(updatedTask);
+//            return ResponseEntity.ok(response);
+//        } catch (IllegalArgumentException e) {
+//            response.setStatus(HttpStatus.NOT_FOUND.value());
+//            response.setMessage(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+//        } catch (Exception e) {
+//            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+//            response.setMessage(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        }
+//    }
+
+    @PutMapping("/update-info/{id}")
+    public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTaskInfo(
+            @PathVariable Long id,
+            @RequestBody TaskRequestDTO taskRequestDTO) {
+
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
         try {
-            TaskResponseDTO updatedTask = taskService.updateTask(id, taskRequestDTO);
+            TaskResponseDTO updatedTask = taskService.updateTaskInfo(id, taskRequestDTO);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Task updated successfully!");
+            response.setMessage("Task info updated successfully!");
+            response.setData(updatedTask);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/update-files/{id}")
+    public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTaskFiles(
+            @PathVariable Long id,
+            @RequestBody TaskRequestDTO taskRequestDTO) {
+
+        CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
+        try {
+            TaskResponseDTO updatedTask = taskService.updateTaskFiles(id, taskRequestDTO);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task files updated successfully!");
             response.setData(updatedTask);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
@@ -132,4 +178,26 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/by-board-list/{boardListId}")
+    public ResponseEntity<CommonResponse<List<TaskResponseDTO>>> getTasksByBoardListId(
+            @PathVariable Long boardListId) {
+        CommonResponse<List<TaskResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TaskResponseDTO> tasks = taskService.getTasksByBoardListId(boardListId);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Tasks fetched successfully for BoardList ID: " + boardListId);
+            response.setData(tasks);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

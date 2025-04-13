@@ -10,7 +10,7 @@ public interface TaskService {
 
     TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO);
 
-    TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO);
+//    TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO);
 
     void deleteTask(Long id);
 
@@ -19,4 +19,10 @@ public interface TaskService {
     List<TaskResponseDTO> getAllTasks();
 
     List<TaskResponseDTO> updateBulkTasks(List<BulkTaskUpdateRequestDTO> bulkUpdateRequest);
+
+    List<TaskResponseDTO> getTasksByBoardListId(Long boardListId);
+
+    TaskResponseDTO updateTaskInfo(Long id, TaskRequestDTO taskRequestDTO);
+
+    TaskResponseDTO updateTaskFiles(Long id, TaskRequestDTO taskRequestDTO);
 }
