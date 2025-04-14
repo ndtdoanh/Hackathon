@@ -3,11 +3,11 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
 import org.hibernate.validator.constraints.URL;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.hackathon.entity.*;
 
@@ -137,41 +137,40 @@ public class HackathonDTO {
 
     @Override
     public String toString() {
-        return "HackathonDTO{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", subTitle='" + subTitle + '\'' +
-                ", bannerImageUrl='" + bannerImageUrl + '\'' +
-                ", enrollStartDate=" + enrollStartDate +
-                ", enrollEndDate=" + enrollEndDate +
-                ", enrollmentCount=" + enrollmentCount +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", information='" + information + '\'' +
-                ", description='" + description + '\'' +
-                ", contact='" + contact + '\'' +
-                ", category='" + category + '\'' +
-                ", organization='" + organization + '\'' +
-                ", enrollmentStatus='" + enrollmentStatus + '\'' +
-                ", status='" + status + '\'' +
-                ", minimumTeamMembers=" + minimumTeamMembers +
-                ", maximumTeamMembers=" + maximumTeamMembers +
-                ", documentation=" + documentation +
-                ", roundIds=" + roundIds +
-                ", teamHackathons=" + teamHackathons +
-                ", hackathonResults=" + hackathonResults +
-                ", userHackathons=" + userHackathons +
-                ", teamRequests=" + teamRequests +
-                ", individualRegistrationRequests=" + individualRegistrationRequests +
-                ", mentorshipRequests=" + mentorshipRequests +
-                ", mentorshipSessionRequests=" + mentorshipSessionRequests +
-                ", sponsorshipHackathons=" + sponsorshipHackathons +
-                ", devices=" + devices +
-                ", feedbacks=" + feedbacks +
-                ", createdByUserName='" + createdByUserName + '\'' +
-                ", createdAt=" + createdAt +
-                ", lastModifiedByUserName='" + lastModifiedByUserName + '\'' +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "HackathonDTO{" + "id='"
+                + id + '\'' + ", title='"
+                + title + '\'' + ", subTitle='"
+                + subTitle + '\'' + ", bannerImageUrl='"
+                + bannerImageUrl + '\'' + ", enrollStartDate="
+                + enrollStartDate + ", enrollEndDate="
+                + enrollEndDate + ", enrollmentCount="
+                + enrollmentCount + ", startDate="
+                + startDate + ", endDate="
+                + endDate + ", information='"
+                + information + '\'' + ", description='"
+                + description + '\'' + ", contact='"
+                + contact + '\'' + ", category='"
+                + category + '\'' + ", organization='"
+                + organization + '\'' + ", enrollmentStatus='"
+                + enrollmentStatus + '\'' + ", status='"
+                + status + '\'' + ", minimumTeamMembers="
+                + minimumTeamMembers + ", maximumTeamMembers="
+                + maximumTeamMembers + ", documentation="
+                + documentation + ", roundIds="
+                + roundIds + ", teamHackathons="
+                + teamHackathons + ", hackathonResults="
+                + hackathonResults + ", userHackathons="
+                + userHackathons + ", teamRequests="
+                + teamRequests + ", individualRegistrationRequests="
+                + individualRegistrationRequests + ", mentorshipRequests="
+                + mentorshipRequests + ", mentorshipSessionRequests="
+                + mentorshipSessionRequests + ", sponsorshipHackathons="
+                + sponsorshipHackathons + ", devices="
+                + devices + ", feedbacks="
+                + feedbacks + ", createdByUserName='"
+                + createdByUserName + '\'' + ", createdAt="
+                + createdAt + ", lastModifiedByUserName='"
+                + lastModifiedByUserName + '\'' + ", updatedAt="
+                + updatedAt + '}';
     }
 }

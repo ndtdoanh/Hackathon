@@ -1,8 +1,8 @@
 package com.hacof.communication.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import com.hacof.communication.constant.ScheduleEventStatus;
 import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
+import com.hacof.communication.service.ScheduleEventAttendeeService;
 import com.hacof.communication.util.CommonRequest;
 import com.hacof.communication.util.CommonResponse;
-import com.hacof.communication.service.ScheduleEventAttendeeService;
 
 @RestController
 @RequestMapping("/api/v1/schedule-event-attendees")
@@ -24,8 +24,12 @@ public class ScheduleEventAttendeeController {
     private ScheduleEventAttendeeService scheduleEventAttendeeService;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 

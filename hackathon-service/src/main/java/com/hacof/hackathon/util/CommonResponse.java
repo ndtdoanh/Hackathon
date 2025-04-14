@@ -1,12 +1,12 @@
 package com.hacof.hackathon.util;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.*;
 
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Setter
@@ -25,13 +25,12 @@ public class CommonResponse<T> {
 
     @Override
     public String toString() {
-        return "CommonResponse{" +
-                "requestId='" + requestId + '\'' +
-                ", requestDateTime=" + requestDateTime +
-                ", channel='" + channel + '\'' +
-                ", result=" + result +
-                ", data=" + data +
-                '}';
+        return "CommonResponse{" + "requestId='"
+                + requestId + '\'' + ", requestDateTime="
+                + requestDateTime + ", channel='"
+                + channel + '\'' + ", result="
+                + result + ", data="
+                + data + '}';
     }
 
     @Getter
@@ -44,10 +43,7 @@ public class CommonResponse<T> {
 
         @Override
         public String toString() {
-            return "Result{" +
-                    "responseCode='" + responseCode + '\'' +
-                    ", description='" + description + '\'' +
-                    '}';
+            return "Result{" + "responseCode='" + responseCode + '\'' + ", description='" + description + '\'' + '}';
         }
     }
 
@@ -55,5 +51,4 @@ public class CommonResponse<T> {
     public String getMessage() {
         return (result != null) ? result.getDescription() : null;
     }
-
 }

@@ -14,9 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.submission.dto.request.SubmissionRequestDTO;
 import com.hacof.submission.dto.response.SubmissionResponseDTO;
-import com.hacof.submission.util.CommonRequest;
-import com.hacof.submission.util.CommonResponse;
 import com.hacof.submission.service.SubmissionService;
+import com.hacof.submission.util.CommonResponse;
 
 @RestController
 @RequestMapping("/api/v1/submissions")
@@ -30,7 +29,6 @@ public class SubmissionController {
         response.setRequestDateTime(LocalDateTime.now());
         response.setChannel("HACOF");
     }
-
 
     private void setDefaultResponseFields(CommonResponse<?> response) {
         response.setRequestId(UUID.randomUUID().toString());

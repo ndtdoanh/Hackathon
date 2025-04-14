@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
 import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
+import com.hacof.submission.service.RoundMarkCriterionService;
 import com.hacof.submission.util.CommonRequest;
 import com.hacof.submission.util.CommonResponse;
-import com.hacof.submission.service.RoundMarkCriterionService;
 
 @RestController
 @RequestMapping("/api/v1/roundmarkcriteria")
@@ -24,8 +24,12 @@ public class RoundMarkCriterionController {
     private RoundMarkCriterionService service;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 

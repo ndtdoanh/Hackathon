@@ -15,5 +15,6 @@ import lombok.experimental.FieldDefaults;
 public class BlogPostRequest {
     String title;
     String slug;
+    String bannerImageUrl;
     String content;
 }

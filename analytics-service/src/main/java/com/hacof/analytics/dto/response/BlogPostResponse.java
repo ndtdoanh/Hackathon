@@ -20,6 +20,7 @@ public class BlogPostResponse {
     String id;
     String title;
     String slug;
+    String bannerImageUrl;
     String content;
     BlogPostStatus status;
     LocalDateTime createdAt;

@@ -34,9 +34,9 @@ public class IndividualRegistrationRequestController {
         IndividualRegistrationRequestDTO individualRegistrationRequestDTO =
                 individualRegistrationRequestService.create(request.getData());
         CommonResponse<IndividualRegistrationRequestDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
                 new CommonResponse.Result("0000", "Individual registration created successfully"),
                 individualRegistrationRequestDTO);
         return ResponseEntity.ok(response);
@@ -48,9 +48,9 @@ public class IndividualRegistrationRequestController {
         IndividualRegistrationRequestDTO individualRegistrationRequestDTO = individualRegistrationRequestService.update(
                 Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<IndividualRegistrationRequestDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
                 new CommonResponse.Result("0000", "Individual registration updated successfully"),
                 individualRegistrationRequestDTO);
         return ResponseEntity.ok(response);
@@ -64,7 +64,8 @@ public class IndividualRegistrationRequestController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Individual registration deleted successfully"), null);
+                new CommonResponse.Result("0000", "Individual registration deleted successfully"),
+                null);
         return ResponseEntity.ok(response);
     }
 
@@ -72,9 +73,9 @@ public class IndividualRegistrationRequestController {
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllIndividualRegistrations() {
         List<IndividualRegistrationRequestDTO> individualRegistrations = individualRegistrationRequestService.getAll();
         CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Fetched all individual registrations successfully"),
                 individualRegistrations);
         return ResponseEntity.ok(response);
@@ -85,9 +86,9 @@ public class IndividualRegistrationRequestController {
             @PathVariable Long id) {
         IndividualRegistrationRequestDTO individualRegistration = individualRegistrationRequestService.getById(id);
         CommonResponse<IndividualRegistrationRequestDTO> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result("0000", "Fetched individual registration successfully"),
                 individualRegistration);
         return ResponseEntity.ok(response);
@@ -102,7 +103,8 @@ public class IndividualRegistrationRequestController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"), requests);
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests);
         return ResponseEntity.ok(response);
     }
 
@@ -117,7 +119,8 @@ public class IndividualRegistrationRequestController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"), requests);
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests);
         return ResponseEntity.ok(response);
     }
 
@@ -130,7 +133,8 @@ public class IndividualRegistrationRequestController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"), requests);
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests);
         return ResponseEntity.ok(response);
     }
 
@@ -143,7 +147,8 @@ public class IndividualRegistrationRequestController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"), requests);
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests);
         return ResponseEntity.ok(response);
     }
 }

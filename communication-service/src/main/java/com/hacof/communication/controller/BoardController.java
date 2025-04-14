@@ -1,20 +1,19 @@
 package com.hacof.communication.controller;
 
-import java.util.List;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.BoardRequestDTO;
 import com.hacof.communication.dto.response.BoardResponseDTO;
+import com.hacof.communication.service.BoardService;
 import com.hacof.communication.util.CommonRequest;
 import com.hacof.communication.util.CommonResponse;
-import com.hacof.communication.service.BoardService;
 
 @RestController
 @RequestMapping("/api/v1/boards")
@@ -24,8 +23,12 @@ public class BoardController {
     private BoardService boardService;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 
@@ -36,7 +39,8 @@ public class BoardController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<BoardResponseDTO>> createBoard(@RequestBody CommonRequest<BoardRequestDTO> request) {
+    public ResponseEntity<CommonResponse<BoardResponseDTO>> createBoard(
+            @RequestBody CommonRequest<BoardRequestDTO> request) {
         CommonResponse<BoardResponseDTO> response = new CommonResponse<>();
         try {
             BoardResponseDTO createdBoard = boardService.createBoard(request.getData());

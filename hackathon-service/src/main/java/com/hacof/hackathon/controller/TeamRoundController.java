@@ -32,22 +32,24 @@ public class TeamRoundController {
     public ResponseEntity<CommonResponse<TeamRoundDTO>> createTeamRound(
             @Valid @RequestBody CommonRequest<TeamRoundDTO> request) {
         TeamRoundDTO created = teamRoundService.create(request.getData());
-        return ResponseEntity.ok(
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Team Round create successfully!"), created));
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Team Round create successfully!"),
+                created));
     }
 
     @PutMapping
     public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(@Valid @RequestBody TeamRoundDTO request) {
         String id = request.getId();
         TeamRoundDTO updated = teamRoundService.update(id, request);
-        return ResponseEntity.ok(
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Update successfully"), updated));
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Update successfully"),
+                updated));
     }
 
     @DeleteMapping("/{id}")
@@ -55,10 +57,11 @@ public class TeamRoundController {
         log.debug("Xóa team round: {}", id);
         teamRoundService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Xóa thành công team round"), null));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Xóa thành công team round"),
+                null));
     }
 
     @GetMapping
@@ -68,7 +71,8 @@ public class TeamRoundController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
+                teamRounds));
     }
 
     @PostMapping("/filter-by-judge-and-round")
@@ -83,7 +87,8 @@ public class TeamRoundController {
                             UUID.randomUUID().toString(),
                             LocalDateTime.now(),
                             "HACOF",
-                            new CommonResponse.Result("0400", "Invalid request: judgeId or roundId is missing"), null));
+                            new CommonResponse.Result("0400", "Invalid request: judgeId or roundId is missing"),
+                            null));
         }
 
         List<TeamRoundDTO> teamRounds = teamRoundService.getAllByJudgeIdAndRoundId(judgeId, roundId);
@@ -91,18 +96,19 @@ public class TeamRoundController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched team rounds successfully"), teamRounds));
+                new CommonResponse.Result("0000", "Fetched team rounds successfully"),
+                teamRounds));
     }
 
     @PutMapping("/bulk")
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> updateBulkTeamRounds(
             @Valid @RequestBody List<TeamRoundDTO> teamRoundDTOList) {
         List<TeamRoundDTO> updatedTeamRounds = teamRoundService.updateBulk(teamRoundDTOList);
-        return ResponseEntity.ok(
-
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Bulk update successful"), updatedTeamRounds));
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Bulk update successful"),
+                updatedTeamRounds));
     }
 }

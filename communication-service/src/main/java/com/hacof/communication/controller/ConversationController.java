@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.communication.dto.ApiRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.hacof.communication.dto.ApiRequest;
 import com.hacof.communication.dto.ApiResponse;
 import com.hacof.communication.dto.request.ConversationRequest;
 import com.hacof.communication.dto.response.ConversationResponse;
@@ -28,7 +28,8 @@ public class ConversationController {
 
     @PostMapping("/single")
     //    @PreAuthorize("hasAuthority('CREATE_CONVERSATION')")
-    public ApiResponse<ConversationResponse> createSingleConversation(@RequestBody @Valid ApiRequest<ConversationRequest> request) {
+    public ApiResponse<ConversationResponse> createSingleConversation(
+            @RequestBody @Valid ApiRequest<ConversationRequest> request) {
         return ApiResponse.<ConversationResponse>builder()
                 .requestId(request.getRequestId())
                 .requestDateTime(request.getRequestDateTime())

@@ -16,7 +16,7 @@ public class BoardListResponseDTO {
     String id;
     String name;
     int position;
-//    BoardResponseDTO board;
+    //    BoardResponseDTO board;
     String boardId;
     List<TaskResponseDTO> tasks;
     String createdBy;

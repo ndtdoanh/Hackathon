@@ -78,14 +78,6 @@ public class MessageServiceImpl implements MessageService {
         return messageResponse;
     }
 
-    private String extractFileName(String fileUrl) {
-        return fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-    }
-
-    private String extractFileType(String fileUrl) {
-        return fileUrl.contains(".") ? fileUrl.substring(fileUrl.lastIndexOf(".") + 1) : "unknown";
-    }
-
     @Override
     public MessageResponse getMessageById(Long messageId) {
         Message message = messageRepository
