@@ -100,6 +100,13 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public List<DeviceResponse> getDevicesByHackathonId(String hackathonId) {
+        return deviceRepository.findByHackathonId(Long.valueOf(hackathonId)).stream()
+                .map(deviceMapper::toDeviceResponse)
+                .toList();
+    }
+
+    @Override
     public List<DeviceResponse> getDevicesByRoundId(String roundId) {
         return deviceRepository.findByRoundId(Long.valueOf(roundId)).stream()
                 .map(deviceMapper::toDeviceResponse)

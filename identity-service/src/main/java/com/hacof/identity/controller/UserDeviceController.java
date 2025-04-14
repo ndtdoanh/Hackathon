@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.identity.dto.response.FileUrlResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -90,6 +91,17 @@ public class UserDeviceController {
                 .channel("HACOF")
                 .data(userDeviceService.getUserDevicesByUserId(userId))
                 .message("Get UserDevices by userId")
+                .build();
+    }
+
+    @GetMapping("/{userDeviceId}/file-urls")
+    public ApiResponse<List<FileUrlResponse>> getFileUrlsByUserDeviceId(@PathVariable Long userDeviceId) {
+        return ApiResponse.<List<FileUrlResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(userDeviceService.getFileUrlsByUserDeviceId(userDeviceId))
+                .message("Get file URLs by userDeviceId")
                 .build();
     }
 

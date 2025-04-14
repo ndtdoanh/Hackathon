@@ -3,6 +3,7 @@ package com.hacof.identity.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.hacof.identity.dto.response.FileUrlResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hacof.identity.dto.request.UserDeviceRequest;
@@ -19,6 +20,8 @@ public interface UserDeviceService {
     List<UserDeviceResponse> getUserDevicesByDeviceId(String deviceId);
 
     List<UserDeviceResponse> getUserDevicesByUserId(String userId);
+
+    List<FileUrlResponse> getFileUrlsByUserDeviceId(Long userDeviceId);
 
     UserDeviceResponse updateUserDevice(Long id, UserDeviceRequest request, List<MultipartFile> files)
             throws IOException;

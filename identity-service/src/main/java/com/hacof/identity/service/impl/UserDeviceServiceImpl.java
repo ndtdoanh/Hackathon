@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.entity.Device;
+import com.hacof.identity.mapper.FileUrlMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +37,7 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     UserDeviceMapper userDeviceMapper;
     S3Service s3Service;
     FileUrlRepository fileUrlRepository;
+    FileUrlMapper fileUrlMapper;
 
     @Override
     public UserDeviceResponse createUserDevice(UserDeviceRequest request, List<MultipartFile> files)
@@ -105,6 +109,13 @@ public class UserDeviceServiceImpl implements UserDeviceService {
         return userDeviceRepository.findByUserId(Long.valueOf(userId)).stream()
                 .map(userDeviceMapper::toUserDeviceResponse)
                 .toList();
+    }
+
+    @Override
+    public List<FileUrlResponse> getFileUrlsByUserDeviceId(Long userDeviceId) {
+        UserDevice userDevice =
+                userDeviceRepository.findById(userDeviceId).orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED));
+        return fileUrlMapper.toResponseList(userDevice.getFileUrls());
     }
 
     @Override

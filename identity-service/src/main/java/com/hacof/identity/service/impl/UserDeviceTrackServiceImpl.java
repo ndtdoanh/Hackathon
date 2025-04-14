@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.entity.Device;
+import com.hacof.identity.mapper.FileUrlMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +35,7 @@ public class UserDeviceTrackServiceImpl implements UserDeviceTrackService {
     UserDeviceTrackMapper userDeviceTrackMapper;
     S3Service s3Service;
     FileUrlRepository fileUrlRepository;
+    FileUrlMapper fileUrlMapper;
 
     @Override
     public UserDeviceTrackResponse createUserDeviceTrack(UserDeviceTrackRequest request, List<MultipartFile> files)
@@ -84,6 +88,20 @@ public class UserDeviceTrackServiceImpl implements UserDeviceTrackService {
                 .findById(id)
                 .map(userDeviceTrackMapper::toUserDeviceTrackResponse)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_TRACK_NOT_EXISTED));
+    }
+
+    @Override
+    public List<UserDeviceTrackResponse> getUserDeviceTracksByUserDeviceId(Long userDeviceId) {
+        return userDeviceTrackRepository.findByUserDeviceId(userDeviceId).stream()
+                .map(userDeviceTrackMapper::toUserDeviceTrackResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FileUrlResponse> getFileUrlsByUserDeviceTrackId(Long userDeviceTrackId) {
+        UserDeviceTrack userDeviceTrack =
+                userDeviceTrackRepository.findById(userDeviceTrackId).orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_TRACK_NOT_EXISTED));
+        return fileUrlMapper.toResponseList(userDeviceTrack.getFileUrls());
     }
 
     @Override

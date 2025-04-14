@@ -9,6 +9,9 @@ import com.hacof.identity.entity.Device;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
+
+    List<Device> findByHackathonId(Long hackathonId);
+
     List<Device> findByRoundId(Long roundId);
 
     List<Device> findByRoundLocationId(Long roundLocationId);

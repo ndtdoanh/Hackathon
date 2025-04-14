@@ -17,6 +17,8 @@ public interface DeviceService {
 
     DeviceResponse getDevice(Long id);
 
+    List<DeviceResponse> getDevicesByHackathonId(String hackathonId);
+
     List<DeviceResponse> getDevicesByRoundId(String roundId);
 
     List<DeviceResponse> getDevicesByRoundLocationId(String roundLocationId);
