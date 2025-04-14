@@ -1,20 +1,26 @@
 package com.hacof.submission.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
+import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.service.JudgeSubmissionService;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
-import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-import com.hacof.submission.util.CommonRequest;
-import com.hacof.submission.util.CommonResponse;
-import com.hacof.submission.service.JudgeSubmissionService;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/judge-submissions")
@@ -24,8 +30,12 @@ public class JudgeSubmissionController {
     private JudgeSubmissionService judgeSubmissionService;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 
@@ -41,7 +51,8 @@ public class JudgeSubmissionController {
             @RequestBody CommonRequest<JudgeSubmissionRequestDTO> request) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO createdJudgeSubmission = judgeSubmissionService.createJudgeSubmission(request.getData());
+            JudgeSubmissionResponseDTO createdJudgeSubmission =
+                    judgeSubmissionService.createJudgeSubmission(request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("JudgeSubmission created successfully!");
@@ -102,7 +113,8 @@ public class JudgeSubmissionController {
             @PathVariable Long id, @RequestBody CommonRequest<JudgeSubmissionRequestDTO> request) {
         CommonResponse<JudgeSubmissionResponseDTO> response = new CommonResponse<>();
         try {
-            JudgeSubmissionResponseDTO updatedJudgeSubmission = judgeSubmissionService.updateJudgeSubmission(id, request.getData());
+            JudgeSubmissionResponseDTO updatedJudgeSubmission =
+                    judgeSubmissionService.updateJudgeSubmission(id, request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Score and note updated successfully");

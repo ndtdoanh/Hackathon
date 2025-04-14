@@ -1,18 +1,35 @@
 package com.hacof.submission.mapper;
 
+import com.hacof.submission.constant.Status;
+import com.hacof.submission.dto.request.SubmissionRequestDTO;
+import com.hacof.submission.dto.response.FileUrlResponseDTO;
+import com.hacof.submission.dto.response.HackathonResponseDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionDetailResponseDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.dto.response.PermissionResponse;
+import com.hacof.submission.dto.response.RoleResponse;
+import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
+import com.hacof.submission.dto.response.RoundResponseDTO;
+import com.hacof.submission.dto.response.SubmissionResponseDTO;
+import com.hacof.submission.dto.response.TeamResponseDTO;
+import com.hacof.submission.dto.response.UserResponse;
+import com.hacof.submission.entity.Hackathon;
+import com.hacof.submission.entity.JudgeSubmissionDetail;
+import com.hacof.submission.entity.Permission;
+import com.hacof.submission.entity.Round;
+import com.hacof.submission.entity.RoundMarkCriterion;
+import com.hacof.submission.entity.Submission;
+import com.hacof.submission.entity.Team;
+import com.hacof.submission.entity.User;
+import com.hacof.submission.entity.UserRole;
+import com.hacof.submission.repository.RoundRepository;
+import com.hacof.submission.repository.TeamRepository;
+import org.springframework.stereotype.Component;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
-
-import com.hacof.submission.constant.Status;
-import com.hacof.submission.dto.request.SubmissionRequestDTO;
-import com.hacof.submission.dto.response.*;
-import com.hacof.submission.entity.*;
-import com.hacof.submission.repository.RoundRepository;
-import com.hacof.submission.repository.TeamRepository;
 
 @Component
 public class SubmissionMapper {
