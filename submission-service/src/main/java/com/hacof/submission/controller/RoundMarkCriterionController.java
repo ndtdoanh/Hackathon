@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import com.hacof.submission.util.CommonResponse;
 import com.hacof.submission.service.RoundMarkCriterionService;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/roundmarkcriteria")
 public class RoundMarkCriterionController {
 
@@ -44,6 +46,7 @@ public class RoundMarkCriterionController {
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Fetched all round mark criteria successfully!");
             response.setData(data);
+            log.debug(response.toString());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             setDefaultResponseFields(response);
