@@ -72,6 +72,17 @@ public class DeviceController {
                 .build();
     }
 
+    @GetMapping("/hackathon/{hackathonId}")
+    public ApiResponse<List<DeviceResponse>> getDevicesByHackathonId(@PathVariable String hackathonId) {
+        return ApiResponse.<List<DeviceResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(deviceService.getDevicesByHackathonId(hackathonId))
+                .message("Get devices by hackathonId")
+                .build();
+    }
+
     @GetMapping("/round/{roundId}")
     public ApiResponse<List<DeviceResponse>> getDevicesByRoundId(@PathVariable String roundId) {
         return ApiResponse.<List<DeviceResponse>>builder()

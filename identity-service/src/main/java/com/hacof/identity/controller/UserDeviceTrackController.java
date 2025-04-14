@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.identity.dto.response.FileUrlResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -67,6 +68,28 @@ public class UserDeviceTrackController {
                 .channel("HACOF")
                 .data(userDeviceTrackService.getUserDeviceTrack(id))
                 .message("Get device track by id")
+                .build();
+    }
+
+    @GetMapping("/user-device/{userDeviceId}")
+    public ApiResponse<List<UserDeviceTrackResponse>> getUserDeviceTracksByUserDeviceId(@PathVariable Long userDeviceId) {
+        return ApiResponse.<List<UserDeviceTrackResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(userDeviceTrackService.getUserDeviceTracksByUserDeviceId(userDeviceId))
+                .message("Get device tracks by userDeviceId")
+                .build();
+    }
+
+    @GetMapping("/{userDeviceTrackId}/file-urls")
+    public ApiResponse<List<FileUrlResponse>> getFileUrlsByUserDeviceTrackId(@PathVariable Long userDeviceTrackId) {
+        return ApiResponse.<List<FileUrlResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(userDeviceTrackService.getFileUrlsByUserDeviceTrackId(userDeviceTrackId))
+                .message("Get file URLs by userDeviceTrackId")
                 .build();
     }
 
