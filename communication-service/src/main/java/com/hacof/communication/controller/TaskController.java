@@ -1,8 +1,8 @@
 package com.hacof.communication.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.dto.request.TaskRequestDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
+import com.hacof.communication.service.TaskService;
 import com.hacof.communication.util.CommonRequest;
 import com.hacof.communication.util.CommonResponse;
-import com.hacof.communication.service.TaskService;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -24,8 +24,12 @@ public class TaskController {
     private TaskService taskService;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 
@@ -36,7 +40,8 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<TaskResponseDTO>> createTask(@RequestBody CommonRequest<TaskRequestDTO> request) {
+    public ResponseEntity<CommonResponse<TaskResponseDTO>> createTask(
+            @RequestBody CommonRequest<TaskRequestDTO> request) {
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
         try {
             TaskResponseDTO createdTask = taskService.createTask(request.getData());
@@ -60,8 +65,7 @@ public class TaskController {
 
     @PutMapping("/update-info/{id}")
     public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTaskInfo(
-            @PathVariable Long id,
-            @RequestBody CommonRequest<TaskRequestDTO> request) {
+            @PathVariable Long id, @RequestBody CommonRequest<TaskRequestDTO> request) {
 
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
         try {
@@ -86,8 +90,7 @@ public class TaskController {
 
     @PutMapping("/update-files/{id}")
     public ResponseEntity<CommonResponse<TaskResponseDTO>> updateTaskFiles(
-            @PathVariable Long id,
-            @RequestBody CommonRequest<TaskRequestDTO> request) {
+            @PathVariable Long id, @RequestBody CommonRequest<TaskRequestDTO> request) {
 
         CommonResponse<TaskResponseDTO> response = new CommonResponse<>();
         try {
@@ -198,8 +201,7 @@ public class TaskController {
     }
 
     @GetMapping("/by-board-list/{boardListId}")
-    public ResponseEntity<CommonResponse<List<TaskResponseDTO>>> getTasksByBoardListId(
-            @PathVariable Long boardListId) {
+    public ResponseEntity<CommonResponse<List<TaskResponseDTO>>> getTasksByBoardListId(@PathVariable Long boardListId) {
         CommonResponse<List<TaskResponseDTO>> response = new CommonResponse<>();
         try {
             List<TaskResponseDTO> tasks = taskService.getTasksByBoardListId(boardListId);
@@ -220,5 +222,4 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

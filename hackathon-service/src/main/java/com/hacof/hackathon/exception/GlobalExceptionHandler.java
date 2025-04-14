@@ -24,7 +24,8 @@ public class GlobalExceptionHandler {
         GenericErrorException.class,
         ResourceNotFoundException.class,
         TimeoutException.class,
-        CustomException.class, NotificationException.class
+        CustomException.class,
+        NotificationException.class
     })
     public ResponseEntity<CommonResponse<Void>> handleException(Exception ex) {
         StatusCode statusCode = getStatusByException(ex);
@@ -44,10 +45,11 @@ public class GlobalExceptionHandler {
         });
 
         CommonResponse<Map<String, String>> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result(StatusCode.INVALID_INPUT.getCode(), "Invalid input"), errors);
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(StatusCode.INVALID_INPUT.getCode(), "Invalid input"),
+                errors);
 
         return ResponseEntity.badRequest().body(response);
     }
@@ -67,10 +69,11 @@ public class GlobalExceptionHandler {
 
     private <T> ResponseEntity<CommonResponse<T>> buildResponseEntity(StatusCode statusCode, String message, T data) {
         CommonResponse<T> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result(statusCode.getCode(), message), data);
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(statusCode.getCode(), message),
+                data);
         return ResponseEntity.ok(response);
     }
 

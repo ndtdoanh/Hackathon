@@ -50,51 +50,54 @@ public class TeamServiceImpl implements TeamService {
     // Create Bulk Teams
     @Override
     public List<TeamDTO> createBulkTeams(String teamLeaderId, List<Long> userIds) {
-//        List<TeamDTO> createdTeams = new ArrayList<>();
-//        List<IndividualRegistrationRequest> approvedRequests =
-//                individualRegistrationRequestRepository.findAllByStatus(IndividualRegistrationRequestStatus.PENDING);
-//
-//        List<User> users = approvedRequests.stream()
-//                .map(IndividualRegistrationRequest::getCreatedBy)
-//                .distinct()
-//                .collect(Collectors.toList());
-//
-//        List<User> eligibleUsers =
-//                users.stream().filter(user -> user.getStatus() == Status.ACTIVE).collect(Collectors.toList());
-//
-//        Random random = new Random();
-//        for (int i = 0; i < eligibleUsers.size(); i += 4) {
-//            int teamSize = Math.min(4 + random.nextInt(3), eligibleUsers.size() - i); // Team size between 4 and 6
-//            List<User> teamMembers = new ArrayList<>(eligibleUsers.subList(i, i + teamSize));
-//
-//            // Create and save the team
-//            Team team = new Team();
-//            team.setName("Team " + UUID.randomUUID().toString());
-//            teamRepository.save(team);
-//
-//            // Assign members to the team
-//            for (User member : teamMembers) {
-//                UserTeam userTeam = new UserTeam();
-//                userTeam.setUser(member);
-//                userTeam.setTeam(team);
-//                userTeamRepository.save(userTeam);
-//            }
-//
-//            // Assign team leader
-//            User teamLeader = (teamLeaderId != null && !teamLeaderId.isEmpty())
-//                    ? userRepository
-//                            .findById(Long.parseLong(teamLeaderId))
-//                            .orElseThrow(() -> new ResourceNotFoundException("User not found: " + teamLeaderId))
-//                    : teamMembers.get(random.nextInt(teamMembers.size()));
-//            team.setTeamLeader(teamLeader);
-//            teamRepository.save(team);
-//
-//            // Create related entities
-//            createRelatedEntitiesForTeam(team, teamMembers);
-//
-//            // Convert to DTO and add to the result list
-//            createdTeams.add(TeamMapperManual.toDto(team));
-//        }
+        //        List<TeamDTO> createdTeams = new ArrayList<>();
+        //        List<IndividualRegistrationRequest> approvedRequests =
+        //
+        // individualRegistrationRequestRepository.findAllByStatus(IndividualRegistrationRequestStatus.PENDING);
+        //
+        //        List<User> users = approvedRequests.stream()
+        //                .map(IndividualRegistrationRequest::getCreatedBy)
+        //                .distinct()
+        //                .collect(Collectors.toList());
+        //
+        //        List<User> eligibleUsers =
+        //                users.stream().filter(user -> user.getStatus() == Status.ACTIVE).collect(Collectors.toList());
+        //
+        //        Random random = new Random();
+        //        for (int i = 0; i < eligibleUsers.size(); i += 4) {
+        //            int teamSize = Math.min(4 + random.nextInt(3), eligibleUsers.size() - i); // Team size between 4
+        // and 6
+        //            List<User> teamMembers = new ArrayList<>(eligibleUsers.subList(i, i + teamSize));
+        //
+        //            // Create and save the team
+        //            Team team = new Team();
+        //            team.setName("Team " + UUID.randomUUID().toString());
+        //            teamRepository.save(team);
+        //
+        //            // Assign members to the team
+        //            for (User member : teamMembers) {
+        //                UserTeam userTeam = new UserTeam();
+        //                userTeam.setUser(member);
+        //                userTeam.setTeam(team);
+        //                userTeamRepository.save(userTeam);
+        //            }
+        //
+        //            // Assign team leader
+        //            User teamLeader = (teamLeaderId != null && !teamLeaderId.isEmpty())
+        //                    ? userRepository
+        //                            .findById(Long.parseLong(teamLeaderId))
+        //                            .orElseThrow(() -> new ResourceNotFoundException("User not found: " +
+        // teamLeaderId))
+        //                    : teamMembers.get(random.nextInt(teamMembers.size()));
+        //            team.setTeamLeader(teamLeader);
+        //            teamRepository.save(team);
+        //
+        //            // Create related entities
+        //            createRelatedEntitiesForTeam(team, teamMembers);
+        //
+        //            // Convert to DTO and add to the result list
+        //            createdTeams.add(TeamMapperManual.toDto(team));
+        //        }
 
         return null;
     }
@@ -111,98 +114,98 @@ public class TeamServiceImpl implements TeamService {
     //        // ConversationUser, TeamRound, TeamHackathon, etc.
     //    }
 
-//    public void createRelatedEntitiesForTeam(Team team, List<User> teamMembers) {
-//        Hackathon hackathon = hackathonRepository
-//                .findById(team.getHackathon().getId())
-//                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
-//
-//        // 1. Schedule
-//        if (!scheduleRepository.existsByTeamAndHackathon(team, hackathon)) {
-//            Schedule schedule = Schedule.builder()
-//                    .team(team)
-//                    .hackathon(hackathon)
-//                    .name(team.getName() + " Schedule")
-//                    .description("Schedule for " + team.getName())
-//                    .build();
-//            scheduleRepository.save(schedule);
-//        }
-//
-//        // 2. Board
-//        Board board = boardRepository.findByTeamId(team.getId()).orElse(null);
-//        if (board == null) {
-//            board = Board.builder()
-//                    .team(team)
-//                    .owner(team.getTeamLeader())
-//                    .name(team.getName() + " Board")
-//                    .description("Board for team " + team.getName())
-//                    .hackathon(hackathon)
-//                    .build();
-//            boardRepository.save(board);
-//        }
-//
-//        // 3. BoardUser
-//        for (User user : teamMembers) {
-//            if (!boardUserRepository.existsByBoardAndUser(board, user)) {
-//                BoardUser boardUser = BoardUser.builder()
-//                        .board(board)
-//                        .user(user)
-//                        .role(
-//                                user.getId().equals(team.getTeamLeader().getId())
-//                                        ? BoardUserRole.ADMIN
-//                                        : BoardUserRole.MEMBER)
-//                        .isDeleted(false)
-//                        .build();
-//                boardUserRepository.save(boardUser);
-//            }
-//        }
-//
-//        // 4. Conversation
-//        Conversation conversation =
-//                conversationRepository.findByTeamId(team.getId()).orElse(null);
-//        if (conversation == null) {
-//            conversation = Conversation.builder()
-//                    .team(team)
-//                    .type(ConversationType.PRIVATE)
-//                    .name(team.getName())
-//                    .hackathon(hackathon)
-//                    .build();
-//            conversationRepository.save(conversation);
-//        }
-//
-//        // 5. ConversationUser
-//        for (User user : teamMembers) {
-//            if (!conversationUserRepository.existsByConversationAndUser(conversation, user)) {
-//                ConversationUser conversationUser = ConversationUser.builder()
-//                        .user(user)
-//                        .conversation(conversation)
-//                        .isDeleted(false)
-//                        .build();
-//                conversationUserRepository.save(conversationUser);
-//            }
-//        }
-//
-//        // 6. TeamRound
-//        Round round = roundRepository
-//                .findFirstByHackathonIdOrderByRoundNumberAsc(hackathon.getId())
-//                .orElseThrow(() -> new ResourceNotFoundException("No round found for hackathon"));
-//        TeamRound teamRound = TeamRound.builder()
-//                .team(team)
-//                .round(round)
-//                .status(TeamRoundStatus.PENDING)
-//                .description("Team " + team.getName() + " registered for round " + round.getRoundNumber())
-//                .build();
-//        teamRoundRepository.save(teamRound);
-//
-//        // 7. TeamHackathon
-//        if (!teamHackathonRepository.existsByTeamAndHackathon(team, hackathon)) {
-//            TeamHackathon teamHackathon = TeamHackathon.builder()
-//                    .team(team)
-//                    .hackathon(hackathon)
-//                    .status(TeamHackathonStatus.ACTIVE)
-//                    .build();
-//            teamHackathonRepository.save(teamHackathon);
-//        }
-//    }
+    //    public void createRelatedEntitiesForTeam(Team team, List<User> teamMembers) {
+    //        Hackathon hackathon = hackathonRepository
+    //                .findById(team.getHackathon().getId())
+    //                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+    //
+    //        // 1. Schedule
+    //        if (!scheduleRepository.existsByTeamAndHackathon(team, hackathon)) {
+    //            Schedule schedule = Schedule.builder()
+    //                    .team(team)
+    //                    .hackathon(hackathon)
+    //                    .name(team.getName() + " Schedule")
+    //                    .description("Schedule for " + team.getName())
+    //                    .build();
+    //            scheduleRepository.save(schedule);
+    //        }
+    //
+    //        // 2. Board
+    //        Board board = boardRepository.findByTeamId(team.getId()).orElse(null);
+    //        if (board == null) {
+    //            board = Board.builder()
+    //                    .team(team)
+    //                    .owner(team.getTeamLeader())
+    //                    .name(team.getName() + " Board")
+    //                    .description("Board for team " + team.getName())
+    //                    .hackathon(hackathon)
+    //                    .build();
+    //            boardRepository.save(board);
+    //        }
+    //
+    //        // 3. BoardUser
+    //        for (User user : teamMembers) {
+    //            if (!boardUserRepository.existsByBoardAndUser(board, user)) {
+    //                BoardUser boardUser = BoardUser.builder()
+    //                        .board(board)
+    //                        .user(user)
+    //                        .role(
+    //                                user.getId().equals(team.getTeamLeader().getId())
+    //                                        ? BoardUserRole.ADMIN
+    //                                        : BoardUserRole.MEMBER)
+    //                        .isDeleted(false)
+    //                        .build();
+    //                boardUserRepository.save(boardUser);
+    //            }
+    //        }
+    //
+    //        // 4. Conversation
+    //        Conversation conversation =
+    //                conversationRepository.findByTeamId(team.getId()).orElse(null);
+    //        if (conversation == null) {
+    //            conversation = Conversation.builder()
+    //                    .team(team)
+    //                    .type(ConversationType.PRIVATE)
+    //                    .name(team.getName())
+    //                    .hackathon(hackathon)
+    //                    .build();
+    //            conversationRepository.save(conversation);
+    //        }
+    //
+    //        // 5. ConversationUser
+    //        for (User user : teamMembers) {
+    //            if (!conversationUserRepository.existsByConversationAndUser(conversation, user)) {
+    //                ConversationUser conversationUser = ConversationUser.builder()
+    //                        .user(user)
+    //                        .conversation(conversation)
+    //                        .isDeleted(false)
+    //                        .build();
+    //                conversationUserRepository.save(conversationUser);
+    //            }
+    //        }
+    //
+    //        // 6. TeamRound
+    //        Round round = roundRepository
+    //                .findFirstByHackathonIdOrderByRoundNumberAsc(hackathon.getId())
+    //                .orElseThrow(() -> new ResourceNotFoundException("No round found for hackathon"));
+    //        TeamRound teamRound = TeamRound.builder()
+    //                .team(team)
+    //                .round(round)
+    //                .status(TeamRoundStatus.PENDING)
+    //                .description("Team " + team.getName() + " registered for round " + round.getRoundNumber())
+    //                .build();
+    //        teamRoundRepository.save(teamRound);
+    //
+    //        // 7. TeamHackathon
+    //        if (!teamHackathonRepository.existsByTeamAndHackathon(team, hackathon)) {
+    //            TeamHackathon teamHackathon = TeamHackathon.builder()
+    //                    .team(team)
+    //                    .hackathon(hackathon)
+    //                    .status(TeamHackathonStatus.ACTIVE)
+    //                    .build();
+    //            teamHackathonRepository.save(teamHackathon);
+    //        }
+    //    }
 
     @Override
     public TeamDTO updateTeam(long id, TeamDTO teamDTO) {
@@ -374,8 +377,11 @@ public class TeamServiceImpl implements TeamService {
 
                 // Kiểm tra xem ConversationUser đã tồn tại chưa
                 boolean exists = conversationUserRepository.existsByConversationAndUser(conversation, user);
-                log.debug("Checking if conversation user exists: Conversation ID = {}, User ID = {}, Exists = {}",
-                        conversation.getId(), user.getId(), exists);
+                log.debug(
+                        "Checking if conversation user exists: Conversation ID = {}, User ID = {}, Exists = {}",
+                        conversation.getId(),
+                        user.getId(),
+                        exists);
 
                 if (!exists) {
                     // Tạo ConversationUser mới nếu không tồn tại
@@ -385,9 +391,15 @@ public class TeamServiceImpl implements TeamService {
                             .isDeleted(false)
                             .build();
                     conversationUserRepository.save(conversationUser);
-                    log.debug("Created ConversationUser for user {} in conversation {}", user.getUsername(), conversation.getId());
+                    log.debug(
+                            "Created ConversationUser for user {} in conversation {}",
+                            user.getUsername(),
+                            conversation.getId());
                 } else {
-                    log.debug("ConversationUser already exists for user {} in conversation {}", user.getUsername(), conversation.getId());
+                    log.debug(
+                            "ConversationUser already exists for user {} in conversation {}",
+                            user.getUsername(),
+                            conversation.getId());
                 }
             }
 

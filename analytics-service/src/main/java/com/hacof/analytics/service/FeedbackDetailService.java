@@ -8,6 +8,8 @@ import com.hacof.analytics.dto.response.FeedbackDetailResponse;
 public interface FeedbackDetailService {
     FeedbackDetailResponse createFeedbackDetail(FeedbackDetailRequest request);
 
+    List<FeedbackDetailResponse> createBulkFeedbackDetails(List<FeedbackDetailRequest> requests);
+
     List<FeedbackDetailResponse> getFeedbackDetails();
 
     FeedbackDetailResponse getFeedbackDetail(Long id);

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
-import com.hacof.communication.util.CommonResponse;
-import com.hacof.communication.util.CommonRequest;
 import com.hacof.communication.service.ThreadPostReportService;
+import com.hacof.communication.util.CommonRequest;
+import com.hacof.communication.util.CommonResponse;
 
 @RestController
 @RequestMapping("/api/v1/thread-post-reports")
@@ -23,8 +23,12 @@ public class ThreadPostReportController {
     private ThreadPostReportService threadPostReportService;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 
@@ -39,7 +43,8 @@ public class ThreadPostReportController {
             @RequestBody CommonRequest<ThreadPostReportRequestDTO> request) {
         CommonResponse<ThreadPostReportResponseDTO> response = new CommonResponse<>();
         try {
-            ThreadPostReportResponseDTO createdReport = threadPostReportService.createThreadPostReport(request.getData());
+            ThreadPostReportResponseDTO createdReport =
+                    threadPostReportService.createThreadPostReport(request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Thread post report created successfully!");
@@ -105,7 +110,8 @@ public class ThreadPostReportController {
             @PathVariable Long id, @RequestBody CommonRequest<ThreadPostReportRequestDTO> request) {
         CommonResponse<ThreadPostReportResponseDTO> response = new CommonResponse<>();
         try {
-            ThreadPostReportResponseDTO updatedReport = threadPostReportService.updateThreadPostReport(id, request.getData());
+            ThreadPostReportResponseDTO updatedReport =
+                    threadPostReportService.updateThreadPostReport(id, request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Report updated successfully!");

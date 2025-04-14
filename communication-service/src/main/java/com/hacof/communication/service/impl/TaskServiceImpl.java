@@ -80,59 +80,61 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDto(task);
     }
 
-//    @Override
-//    public TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO) {
-//        Optional<Task> taskOptional = taskRepository.findById(id);
-//        if (!taskOptional.isPresent()) {
-//            throw new IllegalArgumentException("Task with ID " + id + " not found!");
-//        }
-//
-//        if (taskRequestDTO.getBoardListId() == null
-//                || taskRequestDTO.getBoardListId().isEmpty()) {
-//            throw new IllegalArgumentException("BoardList ID cannot be null or empty");
-//        }
-//        Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
-//        Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
-//        if (!boardListOptional.isPresent()) {
-//            throw new IllegalArgumentException("BoardList with ID " + taskRequestDTO.getBoardListId() + " not found!");
-//        }
-//
-//        if (taskRequestDTO.getTitle() == null || taskRequestDTO.getTitle().isEmpty()) {
-//            throw new IllegalArgumentException("Task title cannot be empty");
-//        }
-//
-//        if (taskRequestDTO.getDescription() == null
-//                || taskRequestDTO.getDescription().isEmpty()) {
-//            throw new IllegalArgumentException("Task description cannot be empty");
-//        }
-//
-//        if (taskRequestDTO.getPosition() < 0) {
-//            throw new IllegalArgumentException("Position must be a non-negative integer");
-//        }
-//
-//        if (taskRequestDTO.getFileUrls() != null
-//                && !taskRequestDTO.getFileUrls().isEmpty()) {
-//            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
-//            if (fileUrls.size() != taskRequestDTO.getFileUrls().size()) {
-//                throw new IllegalArgumentException(
-//                        "Some file URLs are invalid or already associated with other tasks.");
-//            }
-//
-//            for (FileUrl file : fileUrls) {
-//                file.setTask(taskOptional.get());
-//            }
-//            fileUrlRepository.saveAll(fileUrls);
-//        }
-//
-//        Task task = taskOptional.get();
-//        task.setTitle(taskRequestDTO.getTitle());
-//        task.setDescription(taskRequestDTO.getDescription());
-//        task.setDueDate(taskRequestDTO.getDueDate());
-//
-//        task = taskRepository.save(task);
-//
-//        return taskMapper.toDto(task);
-//    }
+    //    @Override
+    //    public TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO) {
+    //        Optional<Task> taskOptional = taskRepository.findById(id);
+    //        if (!taskOptional.isPresent()) {
+    //            throw new IllegalArgumentException("Task with ID " + id + " not found!");
+    //        }
+    //
+    //        if (taskRequestDTO.getBoardListId() == null
+    //                || taskRequestDTO.getBoardListId().isEmpty()) {
+    //            throw new IllegalArgumentException("BoardList ID cannot be null or empty");
+    //        }
+    //        Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
+    //        Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
+    //        if (!boardListOptional.isPresent()) {
+    //            throw new IllegalArgumentException("BoardList with ID " + taskRequestDTO.getBoardListId() + " not
+    // found!");
+    //        }
+    //
+    //        if (taskRequestDTO.getTitle() == null || taskRequestDTO.getTitle().isEmpty()) {
+    //            throw new IllegalArgumentException("Task title cannot be empty");
+    //        }
+    //
+    //        if (taskRequestDTO.getDescription() == null
+    //                || taskRequestDTO.getDescription().isEmpty()) {
+    //            throw new IllegalArgumentException("Task description cannot be empty");
+    //        }
+    //
+    //        if (taskRequestDTO.getPosition() < 0) {
+    //            throw new IllegalArgumentException("Position must be a non-negative integer");
+    //        }
+    //
+    //        if (taskRequestDTO.getFileUrls() != null
+    //                && !taskRequestDTO.getFileUrls().isEmpty()) {
+    //            List<FileUrl> fileUrls =
+    // fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
+    //            if (fileUrls.size() != taskRequestDTO.getFileUrls().size()) {
+    //                throw new IllegalArgumentException(
+    //                        "Some file URLs are invalid or already associated with other tasks.");
+    //            }
+    //
+    //            for (FileUrl file : fileUrls) {
+    //                file.setTask(taskOptional.get());
+    //            }
+    //            fileUrlRepository.saveAll(fileUrls);
+    //        }
+    //
+    //        Task task = taskOptional.get();
+    //        task.setTitle(taskRequestDTO.getTitle());
+    //        task.setDescription(taskRequestDTO.getDescription());
+    //        task.setDueDate(taskRequestDTO.getDueDate());
+    //
+    //        task = taskRepository.save(task);
+    //
+    //        return taskMapper.toDto(task);
+    //    }
 
     @Override
     public TaskResponseDTO updateTaskInfo(Long id, TaskRequestDTO taskRequestDTO) {
@@ -146,7 +148,8 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
 
-        if (taskRequestDTO.getDescription() == null || taskRequestDTO.getDescription().isEmpty()) {
+        if (taskRequestDTO.getDescription() == null
+                || taskRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Task description cannot be empty");
         }
 
@@ -170,12 +173,14 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskOptional.get();
 
         // If fileUrls are provided, process them
-        if (taskRequestDTO.getFileUrls() != null && !taskRequestDTO.getFileUrls().isEmpty()) {
+        if (taskRequestDTO.getFileUrls() != null
+                && !taskRequestDTO.getFileUrls().isEmpty()) {
             // Fetch the fileUrls that exist in the DB and are not already linked to another task
             List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
 
             if (fileUrls.size() != taskRequestDTO.getFileUrls().size()) {
-                throw new IllegalArgumentException("Some file URLs are invalid or already associated with other tasks.");
+                throw new IllegalArgumentException(
+                        "Some file URLs are invalid or already associated with other tasks.");
             }
 
             // Optionally remove old fileUrls if they should be replaced, or merge
@@ -185,7 +190,7 @@ public class TaskServiceImpl implements TaskService {
             // Add new fileUrls to the task
             for (FileUrl file : fileUrls) {
                 if (!task.getFileUrls().contains(file)) {
-                    task.getFileUrls().add(file);  // Add only new fileUrls
+                    task.getFileUrls().add(file); // Add only new fileUrls
                     file.setTask(task);
                 }
             }

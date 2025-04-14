@@ -139,5 +139,4 @@ public class BoardLabelServiceImpl implements BoardLabelService {
         List<BoardLabel> boardLabels = boardLabelRepository.findByBoardId(boardId);
         return boardLabels.stream().map(boardLabelMapper::toDto).collect(Collectors.toList());
     }
-
 }

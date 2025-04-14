@@ -1,15 +1,15 @@
 package com.hacof.communication.util;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.hacof.communication.dto.CustomLocalDateTimeDeserialized;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

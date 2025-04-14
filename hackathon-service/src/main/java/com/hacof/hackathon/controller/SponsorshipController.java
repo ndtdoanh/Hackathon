@@ -39,10 +39,11 @@ public class SponsorshipController {
             @RequestBody @Valid CommonRequest<SponsorshipDTO> request) {
         SponsorshipDTO sponsorshipDTO = sponsorshipService.create(request.getData());
         CommonResponse<SponsorshipDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Sponsorship created successfully"), sponsorshipDTO);
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Sponsorship created successfully"),
+                sponsorshipDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -52,10 +53,11 @@ public class SponsorshipController {
         SponsorshipDTO sponsorshipDTO =
                 sponsorshipService.update(request.getData().getId(), request.getData());
         CommonResponse<SponsorshipDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Sponsorship updated successfully"), sponsorshipDTO);
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Sponsorship updated successfully"),
+                sponsorshipDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -67,7 +69,8 @@ public class SponsorshipController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Sponsorship deleted successfully"), null);
+                new CommonResponse.Result("0000", "Sponsorship deleted successfully"),
+                null);
         return ResponseEntity.ok(response);
     }
 
@@ -89,7 +92,8 @@ public class SponsorshipController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched all sponsorships successfully"), sponsorships);
+                new CommonResponse.Result("0000", "Fetched all sponsorships successfully"),
+                sponsorships);
         return ResponseEntity.ok(response);
     }
 
@@ -99,9 +103,9 @@ public class SponsorshipController {
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDTO> request) {
         SponsorshipHackathonDTO sponsorshipHackathonDTO = sponsorshipHackathonService.create(request.getData());
         CommonResponse<SponsorshipHackathonDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
                 new CommonResponse.Result("0000", "Sponsorship Hackathon created successfully"),
                 sponsorshipHackathonDTO);
         return ResponseEntity.ok(response);
@@ -113,9 +117,9 @@ public class SponsorshipController {
         SponsorshipHackathonDTO sponsorshipHackathonDTO =
                 sponsorshipHackathonService.update(request.getData().getId(), request.getData());
         CommonResponse<SponsorshipHackathonDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
                 new CommonResponse.Result("0000", "Sponsorship Hackathon updated successfully"),
                 sponsorshipHackathonDTO);
         return ResponseEntity.ok(response);
@@ -128,7 +132,8 @@ public class SponsorshipController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Sponsorship Hackathon deleted successfully"), null);
+                new CommonResponse.Result("0000", "Sponsorship Hackathon deleted successfully"),
+                null);
         return ResponseEntity.ok(response);
     }
 
@@ -180,7 +185,8 @@ public class SponsorshipController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Sponsorship Hackathon Detail deleted successfully"), null);
+                new CommonResponse.Result("0000", "Sponsorship Hackathon Detail deleted successfully"),
+                null);
         return ResponseEntity.ok(response);
     }
 
