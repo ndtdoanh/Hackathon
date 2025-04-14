@@ -1,15 +1,16 @@
 package com.hacof.communication.controller;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.hacof.communication.service.FileUrlService;
 import com.hacof.communication.util.CommonRequest;
 import com.hacof.communication.util.CommonResponse;
-import com.hacof.communication.service.FileUrlService;
-import java.util.UUID;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/file-urls")
@@ -19,8 +20,12 @@ public class FileUrlController {
     private FileUrlService fileUrlService;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 

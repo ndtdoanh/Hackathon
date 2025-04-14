@@ -1,6 +1,11 @@
 package com.hacof.hackathon.service.impl;
 
-import com.hacof.hackathon.exception.InvalidInputException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.TeamRequestMemberStatus;
@@ -8,17 +13,12 @@ import com.hacof.hackathon.constant.TeamRequestStatus;
 import com.hacof.hackathon.entity.TeamRequest;
 import com.hacof.hackathon.entity.TeamRequestMember;
 import com.hacof.hackathon.entity.User;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.service.EmailService;
 import com.hacof.hackathon.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -32,19 +32,16 @@ public class NotificationServiceImpl implements NotificationService {
 
         String emailContent = String.format(
                 """
-                Dear Team Member,
-                
-                You have been invited to join team "%s" in hackathon "%s".
-                
-                Please respond to this invitation within %d days.
-                
-                Best regards,
-                Hackathon Team
-                """,
-                request.getName(),
-                request.getHackathon().getTitle(),
-                7
-        );
+				Dear Team Member,
+
+				You have been invited to join team "%s" in hackathon "%s".
+
+				Please respond to this invitation within %d days.
+
+				Best regards,
+				Hackathon Team
+				""",
+                request.getName(), request.getHackathon().getTitle(), 7);
 
         List<String> memberEmails = extractMemberEmails(request);
 
@@ -64,19 +61,19 @@ public class NotificationServiceImpl implements NotificationService {
 
         String emailContent = String.format(
                 """
-                Dear Team Leader,
-                
-                Member %s has %s your team invitation for team "%s" in hackathon "%s".
-                
-                Current status of your team request:
-                - Total invited: %d
-                - Approved: %d
-                - Pending: %d
-                - Rejected: %d
-                
-                Best regards,
-                Hackathon Team
-                """,
+				Dear Team Leader,
+
+				Member %s has %s your team invitation for team "%s" in hackathon "%s".
+
+				Current status of your team request:
+				- Total invited: %d
+				- Approved: %d
+				- Pending: %d
+				- Rejected: %d
+
+				Best regards,
+				Hackathon Team
+				""",
                 member.getUser().getUsername(),
                 member.getStatus() == TeamRequestMemberStatus.APPROVED ? "APPROVED" : "REJECTED",
                 member.getTeamRequest().getName(),
@@ -84,8 +81,7 @@ public class NotificationServiceImpl implements NotificationService {
                 member.getTeamRequest().getTeamRequestMembers().size(),
                 countMembersByStatus(member.getTeamRequest(), TeamRequestMemberStatus.APPROVED),
                 countMembersByStatus(member.getTeamRequest(), TeamRequestMemberStatus.PENDING),
-                countMembersByStatus(member.getTeamRequest(), TeamRequestMemberStatus.REJECTED)
-        );
+                countMembersByStatus(member.getTeamRequest(), TeamRequestMemberStatus.REJECTED));
 
         String creatorEmail = extractCreatorEmail(member.getTeamRequest());
 
@@ -104,27 +100,22 @@ public class NotificationServiceImpl implements NotificationService {
         validateTeamRequest(request);
 
         String status = request.getStatus() == TeamRequestStatus.APPROVED ? "approved" : "rejected";
-        String reason = request.getStatus() == TeamRequestStatus.REJECTED ?
-                "\n\nReason: " + request.getNote() : "";
+        String reason = request.getStatus() == TeamRequestStatus.REJECTED ? "\n\nReason: " + request.getNote() : "";
 
         String emailContent = String.format(
                 """
-                Dear Team Members,
-                
-                Your team request "%s" for hackathon "%s" has been %s.%s
-                
-                Next steps:
-                - Approved teams: Prepare for the hackathon!
-                - Rejected teams: You may submit another request if allowed.
-                
-                Best regards,
-                Hackathon Organizers
-                """,
-                request.getName(),
-                request.getHackathon().getTitle(),
-                status,
-                reason
-        );
+				Dear Team Members,
+
+				Your team request "%s" for hackathon "%s" has been %s.%s
+
+				Next steps:
+				- Approved teams: Prepare for the hackathon!
+				- Rejected teams: You may submit another request if allowed.
+
+				Best regards,
+				Hackathon Organizers
+				""",
+                request.getName(), request.getHackathon().getTitle(), status, reason);
 
         List<String> allRecipients = extractAllRecipientEmails(request);
 
@@ -158,16 +149,16 @@ public class NotificationServiceImpl implements NotificationService {
 
     private List<String> extractAllRecipientEmails(TeamRequest request) {
         return Stream.concat(
-                Stream.ofNullable(request.getCreatedBy())
-                        .map(User::getEmail)
-                        .filter(email -> email != null && !email.trim().isEmpty()),
-
-                request.getTeamRequestMembers().stream()
-                        .map(TeamRequestMember::getUser)
-                        .filter(Objects::nonNull)
-                        .map(User::getEmail)
-                        .filter(email -> email != null && !email.trim().isEmpty())
-        ).distinct().collect(Collectors.toList());
+                        Stream.ofNullable(request.getCreatedBy())
+                                .map(User::getEmail)
+                                .filter(email -> email != null && !email.trim().isEmpty()),
+                        request.getTeamRequestMembers().stream()
+                                .map(TeamRequestMember::getUser)
+                                .filter(Objects::nonNull)
+                                .map(User::getEmail)
+                                .filter(email -> email != null && !email.trim().isEmpty()))
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private long countMembersByStatus(TeamRequest request, TeamRequestMemberStatus status) {

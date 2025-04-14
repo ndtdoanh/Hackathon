@@ -29,6 +29,9 @@ public class BlogPost extends AuditCreatedBase {
     @Column(name = "slug", unique = true)
     String slug;
 
+    @Column(name = "banner_image_url")
+    String bannerImageUrl;
+
     @Lob
     @Column(name = "content")
     String content;

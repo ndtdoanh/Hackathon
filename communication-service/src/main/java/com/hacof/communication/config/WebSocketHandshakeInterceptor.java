@@ -1,32 +1,32 @@
-//package com.hacof.communication.config;
+// package com.hacof.communication.config;
 //
-//import com.nimbusds.jose.JOSEException;
-//import com.nimbusds.jose.crypto.MACVerifier;
-//import com.nimbusds.jwt.SignedJWT;
-//import lombok.AccessLevel;
-//import lombok.RequiredArgsConstructor;
-//import lombok.experimental.FieldDefaults;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.http.server.ServerHttpRequest;
-//import org.springframework.http.server.ServerHttpResponse;
-//import org.springframework.http.server.ServletServerHttpRequest;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.stereotype.Component;
-//import org.springframework.web.socket.WebSocketHandler;
-//import org.springframework.web.socket.server.HandshakeInterceptor;
+// import com.nimbusds.jose.JOSEException;
+// import com.nimbusds.jose.crypto.MACVerifier;
+// import com.nimbusds.jwt.SignedJWT;
+// import lombok.AccessLevel;
+// import lombok.RequiredArgsConstructor;
+// import lombok.experimental.FieldDefaults;
+// import lombok.extern.slf4j.Slf4j;
+// import org.springframework.beans.factory.annotation.Value;
+// import org.springframework.http.server.ServerHttpRequest;
+// import org.springframework.http.server.ServerHttpResponse;
+// import org.springframework.http.server.ServletServerHttpRequest;
+// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.stereotype.Component;
+// import org.springframework.web.socket.WebSocketHandler;
+// import org.springframework.web.socket.server.HandshakeInterceptor;
 //
-//import java.text.ParseException;
-//import java.util.*;
-//import java.util.stream.Collectors;
+// import java.text.ParseException;
+// import java.util.*;
+// import java.util.stream.Collectors;
 //
-//@Component
-//@RequiredArgsConstructor
-//@Slf4j
-//@FieldDefaults(level = AccessLevel.PRIVATE)
+// @Component
+// @RequiredArgsConstructor
+// @Slf4j
+// @FieldDefaults(level = AccessLevel.PRIVATE)
 //
-//public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
+// public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
 //
 //    @Value("${jwt.signerKey}")
 //    String signerKey;
@@ -79,4 +79,4 @@
 //    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
 //                               WebSocketHandler wsHandler, Exception exception) {
 //    }
-//}
+// }

@@ -39,12 +39,12 @@ public class UploadController {
     public ResponseEntity<CommonResponse<String>> uploadImage(@RequestParam("file") MultipartFile file) {
         String imageUrl = s3Service.uploadFile(file);
         log.debug("Image uploaded to S3: {}", imageUrl);
-        CommonResponse<String> response =
-
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl);
+        CommonResponse<String> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Image uploaded successfully"),
+                imageUrl);
         return ResponseEntity.ok(response);
     }
 
@@ -54,11 +54,12 @@ public class UploadController {
             @RequestParam("files") MultipartFile[] files) {
         List<String> fileUrls = s3Service.uploadFiles(files);
         log.debug("Files uploaded to S3: {}", fileUrls);
-        CommonResponse<List<String>> response =
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Files uploaded successfully"), fileUrls);
+        CommonResponse<List<String>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Files uploaded successfully"),
+                fileUrls);
         return ResponseEntity.ok(response);
     }
 
@@ -67,11 +68,12 @@ public class UploadController {
     public ResponseEntity<CommonResponse<List<String>>> getAllFiles() {
         List<String> fileUrls = s3Service.getAllFiles();
         log.debug("Retrieved all files from S3: {}", fileUrls);
-        CommonResponse<List<String>> response =
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Files retrieved successfully"), fileUrls);
+        CommonResponse<List<String>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Files retrieved successfully"),
+                fileUrls);
         return ResponseEntity.ok(response);
     }
 

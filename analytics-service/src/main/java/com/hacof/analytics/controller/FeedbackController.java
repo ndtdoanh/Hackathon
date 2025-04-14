@@ -29,7 +29,7 @@ public class FeedbackController {
     FeedbackService feedbackService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
+    //    @PreAuthorize("hasAuthority('CREATE_FEEDBACK')")
     public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
             @RequestBody @Valid ApiRequest<FeedbackRequest> request) {
         return ResponseEntity.status(HttpStatus.CREATED)

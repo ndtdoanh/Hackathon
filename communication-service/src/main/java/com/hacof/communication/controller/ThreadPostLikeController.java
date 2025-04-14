@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hacof.communication.dto.request.ThreadPostLikeRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
-import com.hacof.communication.util.CommonResponse;
-import com.hacof.communication.util.CommonRequest;
 import com.hacof.communication.service.ThreadPostLikeService;
+import com.hacof.communication.util.CommonRequest;
+import com.hacof.communication.util.CommonResponse;
 
 @RestController
 @RequestMapping("/api/v1/thread-post-likes")
@@ -23,8 +23,12 @@ public class ThreadPostLikeController {
     private ThreadPostLikeService threadPostLikeService;
 
     private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(request.getRequestId() != null ? request.getRequestId() : UUID.randomUUID().toString());
-        response.setRequestDateTime(request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
         response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
     }
 

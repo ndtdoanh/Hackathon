@@ -33,7 +33,8 @@ public class BoardListMapper {
                 .name(boardList.getName())
                 .position(boardList.getPosition())
                 .boardId(String.valueOf(boardList.getBoard().getId()))
-//                .board(boardList.getBoard() != null ? mapBoardToDto(boardList.getBoard()) : null) // Map Board
+                //                .board(boardList.getBoard() != null ? mapBoardToDto(boardList.getBoard()) : null) //
+                // Map Board
                 .tasks(boardList.getTasks() != null ? mapTasksToDto(boardList.getTasks()) : null) // Map Tasks
                 .createdBy(
                         boardList.getCreatedBy() != null

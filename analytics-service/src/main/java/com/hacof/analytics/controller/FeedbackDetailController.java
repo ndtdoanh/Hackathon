@@ -40,7 +40,24 @@ public class FeedbackDetailController {
                         .requestDateTime(request.getRequestDateTime())
                         .channel(request.getChannel())
                         .data(response)
-                        .message("Feedback Detail created successfully")
+                        .message("Feedback detail created successfully")
+                        .build());
+    }
+
+    @PostMapping("/bulk")
+    // @PreAuthorize("hasAuthority('CREATE_FEEDBACK_DETAIL')")
+    public ResponseEntity<ApiResponse<List<FeedbackDetailResponse>>> createBulkFeedbackDetails(
+            @RequestBody @Valid ApiRequest<List<FeedbackDetailRequest>> request) {
+
+        List<FeedbackDetailResponse> responses = feedbackDetailService.createBulkFeedbackDetails(request.getData());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.<List<FeedbackDetailResponse>>builder()
+                        .requestId(request.getRequestId())
+                        .requestDateTime(request.getRequestDateTime())
+                        .channel(request.getChannel())
+                        .data(responses)
+                        .message("Bulk feedback details created successfully")
                         .build());
     }
 
@@ -76,7 +93,7 @@ public class FeedbackDetailController {
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())
                 .channel("HACOF")
-                .message("Feedback Detail deleted successfully")
+                .message("Feedback detail deleted successfully")
                 .build();
     }
 
