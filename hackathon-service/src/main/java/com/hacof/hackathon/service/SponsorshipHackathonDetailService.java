@@ -6,9 +6,9 @@ import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
 import java.util.List;
 
 public interface SponsorshipHackathonDetailService {
-    SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
-
-    SponsorshipHackathonDetailDTO update(Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+//    SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+//
+//    SponsorshipHackathonDetailDTO update(Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
 
     void delete(Long id);
 
@@ -19,4 +19,10 @@ public interface SponsorshipHackathonDetailService {
     List<SponsorshipHackathonDetailDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId);
 
     List<FileUrlResponse> getFileUrlsBySponsorshipHackathonDetailId(Long sponsorshipHackathonDetailId);
+
+    SponsorshipHackathonDetailDTO createWithFiles(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+
+    SponsorshipHackathonDetailDTO updateInfo(Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+
+    SponsorshipHackathonDetailDTO updateFiles(Long id, List<String> fileUrls);
 }

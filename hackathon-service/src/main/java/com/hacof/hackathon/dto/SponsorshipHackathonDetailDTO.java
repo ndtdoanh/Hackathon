@@ -45,6 +45,5 @@ public class SponsorshipHackathonDetailDTO {
     String lastModifiedByUserName; // save username
     LocalDateTime updatedAt;
 
-    @JsonIgnore
-    List<FileUrl> fileUrls = new ArrayList<>();
+    List<String> fileUrls;
 }

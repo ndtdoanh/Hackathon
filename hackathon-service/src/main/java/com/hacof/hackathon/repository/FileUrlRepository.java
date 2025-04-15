@@ -16,4 +16,7 @@ public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {
     Optional<FileUrl> findByFileUrlAndHackathonIsNull(String fileUrl);
 
     List<FileUrl> findAllByHackathon(Hackathon hackathon);
+
+    List<FileUrl> findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(List<String> fileUrls);
+
 }
