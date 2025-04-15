@@ -29,5 +29,6 @@ public class DeviceRequest {
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     String description;
 
+    int quantity;
     DeviceStatus status;
 }

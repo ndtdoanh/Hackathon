@@ -64,6 +64,8 @@ public class Device extends AuditCreatedBase {
     @Column(name = "description")
     String description;
 
+    int quantity;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     DeviceStatus status;

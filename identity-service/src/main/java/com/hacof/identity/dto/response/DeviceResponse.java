@@ -25,6 +25,7 @@ public class DeviceResponse {
     String roundLocationId;
     String name;
     String description;
+    int quantity;
     DeviceStatus status;
     List<FileUrlResponse> fileUrls;
     LocalDateTime createdAt;
