@@ -1,13 +1,12 @@
 package com.hacof.hackathon.mapper;
 
-import java.util.List;
-
+import com.hacof.hackathon.dto.FileUrlResponse;
+import com.hacof.hackathon.entity.FileUrl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import com.hacof.hackathon.dto.FileUrlResponse;
-import com.hacof.hackathon.entity.FileUrl;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FileUrlMapper {

@@ -1,12 +1,5 @@
 package com.hacof.hackathon.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import jakarta.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.hacof.hackathon.dto.SponsorshipHackathonDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.Sponsorship;
@@ -17,10 +10,15 @@ import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.SponsorshipHackathonRepository;
 import com.hacof.hackathon.repository.SponsorshipRepository;
 import com.hacof.hackathon.service.SponsorshipHackathonService;
-
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +102,31 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(id))
                 .map(SponsorshipHackathonMapperManual::toDto)
                 .orElse(null);
+    }
+
+    @Override
+    public List<SponsorshipHackathonDTO> getAllByHackathonId(String hackathonId) {
+        return sponsorshipHackathonRepository.findAllByHackathonId(Long.parseLong(hackathonId)).stream()
+                .map(SponsorshipHackathonMapperManual::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SponsorshipHackathonDTO> getAllBySponsorshipId(String sponsorshipId) {
+        return sponsorshipHackathonRepository.findAllBySponsorshipId(Long.parseLong(sponsorshipId)).stream()
+                .map(SponsorshipHackathonMapperManual::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SponsorshipHackathonDTO getByHackathonAndSponsorshipId(String hackathonId, String sponsorshipId) {
+        SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonRepository
+                .findByHackathonIdAndSponsorshipId(Long.parseLong(hackathonId), Long.parseLong(sponsorshipId));
+
+        if (sponsorshipHackathon == null) {
+            throw new ResourceNotFoundException("SponsorshipHackathon not found");
+        }
+
+        return SponsorshipHackathonMapperManual.toDto(sponsorshipHackathon);
     }
 }

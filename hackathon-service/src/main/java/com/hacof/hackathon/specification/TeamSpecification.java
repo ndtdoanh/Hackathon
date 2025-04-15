@@ -1,14 +1,12 @@
 package com.hacof.hackathon.specification;
 
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
-
 import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.entity.TeamHackathon;
 import com.hacof.hackathon.entity.UserTeam;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 
 public class TeamSpecification {
     public static Specification<Team> searchTeam(String search) {

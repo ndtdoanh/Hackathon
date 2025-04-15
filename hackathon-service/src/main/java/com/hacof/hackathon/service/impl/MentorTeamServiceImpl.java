@@ -1,12 +1,5 @@
 package com.hacof.hackathon.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import jakarta.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.hacof.hackathon.dto.MentorTeamDTO;
 import com.hacof.hackathon.entity.MentorTeam;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
@@ -16,10 +9,14 @@ import com.hacof.hackathon.repository.MentorTeamRepository;
 import com.hacof.hackathon.repository.TeamRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.MentorTeamService;
-
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

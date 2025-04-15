@@ -1,16 +1,25 @@
 package com.hacof.communication.controller;
 
-import java.util.List;
-
+import com.hacof.communication.dto.request.ScheduleEventReminderRequestDTO;
+import com.hacof.communication.dto.response.ScheduleEventReminderResponseDTO;
+import com.hacof.communication.service.ScheduleEventReminderService;
+import com.hacof.communication.util.CommonRequest;
+import com.hacof.communication.util.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.hacof.communication.dto.request.ScheduleEventReminderRequestDTO;
-import com.hacof.communication.dto.response.ScheduleEventReminderResponseDTO;
-import com.hacof.communication.response.CommonResponse;
-import com.hacof.communication.service.ScheduleEventReminderService;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/schedule-event-reminders")
@@ -19,22 +28,41 @@ public class ScheduleEventReminderController {
     @Autowired
     private ScheduleEventReminderService scheduleEventReminderService;
 
+    private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
+        response.setRequestId(
+                request.getRequestId() != null
+                        ? request.getRequestId()
+                        : UUID.randomUUID().toString());
+        response.setRequestDateTime(
+                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
+        response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
+    }
+
+    private void setDefaultResponseFields(CommonResponse<?> response) {
+        response.setRequestId(UUID.randomUUID().toString());
+        response.setRequestDateTime(LocalDateTime.now());
+        response.setChannel("HACOF");
+    }
+
     @PostMapping
     public ResponseEntity<CommonResponse<ScheduleEventReminderResponseDTO>> createScheduleEventReminder(
-            @RequestBody ScheduleEventReminderRequestDTO scheduleEventReminderRequestDTO) {
+            @RequestBody CommonRequest<ScheduleEventReminderRequestDTO> request) {
         CommonResponse<ScheduleEventReminderResponseDTO> response = new CommonResponse<>();
         try {
             ScheduleEventReminderResponseDTO createdScheduleEventReminder =
-                    scheduleEventReminderService.createScheduleEventReminder(scheduleEventReminderRequestDTO);
+                    scheduleEventReminderService.createScheduleEventReminder(request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Schedule Event Reminder created successfully!");
             response.setData(createdScheduleEventReminder);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -43,20 +71,23 @@ public class ScheduleEventReminderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<ScheduleEventReminderResponseDTO>> updateScheduleEventReminder(
-            @PathVariable Long id, @RequestBody ScheduleEventReminderRequestDTO scheduleEventReminderRequestDTO) {
+            @PathVariable Long id, @RequestBody CommonRequest<ScheduleEventReminderRequestDTO> request) {
         CommonResponse<ScheduleEventReminderResponseDTO> response = new CommonResponse<>();
         try {
             ScheduleEventReminderResponseDTO updatedScheduleEventReminder =
-                    scheduleEventReminderService.updateScheduleEventReminder(id, scheduleEventReminderRequestDTO);
+                    scheduleEventReminderService.updateScheduleEventReminder(id, request.getData());
+            setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Reminder updated successfully!");
             response.setData(updatedScheduleEventReminder);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -68,14 +99,17 @@ public class ScheduleEventReminderController {
         CommonResponse<String> response = new CommonResponse<>();
         try {
             scheduleEventReminderService.deleteScheduleEventReminder(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NO_CONTENT.value());
             response.setMessage("Schedule Event Reminder deleted successfully!");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -89,15 +123,18 @@ public class ScheduleEventReminderController {
         try {
             ScheduleEventReminderResponseDTO scheduleEventReminder =
                     scheduleEventReminderService.getScheduleEventReminder(id);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Reminder fetched successfully!");
             response.setData(scheduleEventReminder);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -110,11 +147,13 @@ public class ScheduleEventReminderController {
         try {
             List<ScheduleEventReminderResponseDTO> scheduleEventReminders =
                     scheduleEventReminderService.getAllScheduleEventReminders();
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Reminders fetched successfully!");
             response.setData(scheduleEventReminders);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -128,15 +167,18 @@ public class ScheduleEventReminderController {
         try {
             List<ScheduleEventReminderResponseDTO> reminders =
                     scheduleEventReminderService.getScheduleEventRemindersByScheduleEventId(scheduleEventId);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule event reminders fetched successfully!");
             response.setData(reminders);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -150,15 +192,18 @@ public class ScheduleEventReminderController {
         try {
             List<ScheduleEventReminderResponseDTO> reminders =
                     scheduleEventReminderService.getScheduleEventRemindersByUserId(userId);
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule event reminders for the given user fetched successfully!");
             response.setData(reminders);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
+            setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

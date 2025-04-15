@@ -1,12 +1,11 @@
 package com.hacof.communication.mapper;
 
-import org.springframework.stereotype.Component;
-
 import com.hacof.communication.dto.request.TaskAssigneeRequestDTO;
 import com.hacof.communication.dto.response.TaskAssigneeResponseDTO;
 import com.hacof.communication.entity.Task;
 import com.hacof.communication.entity.TaskAssignee;
 import com.hacof.communication.entity.User;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TaskAssigneeMapper {

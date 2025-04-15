@@ -1,20 +1,18 @@
 package com.hacof.hackathon.exception;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import com.hacof.hackathon.constant.StatusCode;
+import com.hacof.hackathon.util.CommonResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.hacof.hackathon.constant.StatusCode;
-import com.hacof.hackathon.util.CommonResponse;
-
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @ControllerAdvice
 @Slf4j
@@ -24,7 +22,8 @@ public class GlobalExceptionHandler {
         GenericErrorException.class,
         ResourceNotFoundException.class,
         TimeoutException.class,
-        CustomException.class, NotificationException.class
+        CustomException.class,
+        NotificationException.class
     })
     public ResponseEntity<CommonResponse<Void>> handleException(Exception ex) {
         StatusCode statusCode = getStatusByException(ex);
@@ -44,10 +43,11 @@ public class GlobalExceptionHandler {
         });
 
         CommonResponse<Map<String, String>> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result(StatusCode.INVALID_INPUT.getCode(), "Invalid input"), errors);
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(StatusCode.INVALID_INPUT.getCode(), "Invalid input"),
+                errors);
 
         return ResponseEntity.badRequest().body(response);
     }
@@ -67,10 +67,11 @@ public class GlobalExceptionHandler {
 
     private <T> ResponseEntity<CommonResponse<T>> buildResponseEntity(StatusCode statusCode, String message, T data) {
         CommonResponse<T> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result(statusCode.getCode(), message), data);
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(statusCode.getCode(), message),
+                data);
         return ResponseEntity.ok(response);
     }
 

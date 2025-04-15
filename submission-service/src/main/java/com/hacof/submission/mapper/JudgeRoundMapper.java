@@ -1,17 +1,26 @@
 package com.hacof.submission.mapper;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
+import com.hacof.submission.dto.response.HackathonResponseDTO;
+import com.hacof.submission.dto.response.JudgeRoundResponseDTO;
+import com.hacof.submission.dto.response.PermissionResponse;
+import com.hacof.submission.dto.response.RoleResponse;
+import com.hacof.submission.dto.response.RoundResponseDTO;
+import com.hacof.submission.dto.response.UserResponse;
+import com.hacof.submission.entity.Hackathon;
+import com.hacof.submission.entity.JudgeRound;
+import com.hacof.submission.entity.Permission;
+import com.hacof.submission.entity.Round;
+import com.hacof.submission.entity.User;
+import com.hacof.submission.entity.UserRole;
+import com.hacof.submission.repository.RoundRepository;
+import com.hacof.submission.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
-import com.hacof.submission.dto.response.*;
-import com.hacof.submission.entity.*;
-import com.hacof.submission.repository.RoundRepository;
-import com.hacof.submission.repository.UserRepository;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class JudgeRoundMapper {

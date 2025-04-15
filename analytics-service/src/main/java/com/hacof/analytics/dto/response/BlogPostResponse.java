@@ -1,17 +1,18 @@
 package com.hacof.analytics.dto.response;
 
-import java.time.LocalDateTime;
-
 import com.hacof.analytics.constant.BlogPostStatus;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -20,6 +21,7 @@ public class BlogPostResponse {
     String id;
     String title;
     String slug;
+    String bannerImageUrl;
     String content;
     BlogPostStatus status;
     LocalDateTime createdAt;

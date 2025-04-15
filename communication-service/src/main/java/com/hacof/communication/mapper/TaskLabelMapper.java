@@ -1,12 +1,11 @@
 package com.hacof.communication.mapper;
 
-import org.springframework.stereotype.Component;
-
 import com.hacof.communication.dto.request.TaskLabelRequestDTO;
 import com.hacof.communication.dto.response.TaskLabelResponseDTO;
 import com.hacof.communication.entity.BoardLabel;
 import com.hacof.communication.entity.Task;
 import com.hacof.communication.entity.TaskLabel;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TaskLabelMapper {

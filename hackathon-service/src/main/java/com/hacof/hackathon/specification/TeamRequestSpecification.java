@@ -1,14 +1,12 @@
 package com.hacof.hackathon.specification;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.criteria.Join;
-
-import org.springframework.data.jpa.domain.Specification;
-
 import com.hacof.hackathon.constant.TeamRequestStatus;
 import com.hacof.hackathon.entity.TeamRequest;
 import com.hacof.hackathon.entity.TeamRequestMember;
+import jakarta.persistence.criteria.Join;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.time.LocalDateTime;
 
 public class TeamRequestSpecification {
 

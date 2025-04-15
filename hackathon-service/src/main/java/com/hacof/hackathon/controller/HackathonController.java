@@ -1,19 +1,7 @@
 package com.hacof.hackathon.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
-
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.dto.HackathonResultDTO;
@@ -24,10 +12,27 @@ import com.hacof.hackathon.service.HackathonService;
 import com.hacof.hackathon.specification.HackathonSpecification;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/hackathons")
@@ -38,7 +43,6 @@ public class HackathonController {
     HackathonService hackathonService;
     HackathonResultService hackathonResultService;
     static final ObjectMapper objectMapper = new ObjectMapper();
-
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<HackathonDTO>>> getByAllCriteria(
@@ -63,24 +67,23 @@ public class HackathonController {
         List<HackathonDTO> hackathons = hackathonService.getHackathons(spec);
 
         CommonResponse<List<HackathonDTO>> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result(
                         StatusCode.SUCCESS.getCode(), String.format("Found %d hackathons", hackathons.size())),
                 hackathons);
         return ResponseEntity.ok(response);
     }
 
-
     @PostMapping
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
             @Valid @RequestBody CommonRequest<HackathonDTO> request) {
         HackathonDTO createdHackathon = hackathonService.create(request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon created successfully"),
                 createdHackathon);
         log.info("Hackathon created response: {}", response);
@@ -102,9 +105,9 @@ public class HackathonController {
         HackathonDTO updatedHackathon =
                 hackathonService.update(request.getData().getId(), request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
                 new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon updated successfully"),
                 updatedHackathon);
         log.debug("Updated hackathon: {}", updatedHackathon);
@@ -122,7 +125,8 @@ public class HackathonController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon deleted successfully"), null);
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Hackathon deleted successfully"),
+                null);
         return ResponseEntity.ok(response);
     }
 
@@ -133,10 +137,11 @@ public class HackathonController {
         log.debug("Creating hackathon result: {}", request.getData());
         HackathonResultDTO created = hackathonResultService.create(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Hackathon result created successfully"), created));
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Hackathon result created successfully"),
+                created));
     }
 
     @PutMapping("/results")
@@ -145,10 +150,11 @@ public class HackathonController {
         String id = request.getData().getId();
         HackathonResultDTO updated = hackathonResultService.update(id, request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Hackathon result updated successfully"), updated));
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Hackathon result updated successfully"),
+                updated));
     }
 
     @DeleteMapping("/results/{id}")
@@ -156,10 +162,11 @@ public class HackathonController {
         hackathonResultService.delete(Long.parseLong(id));
 
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Hackathon result deleted successfully"), null));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Hackathon result deleted successfully"),
+                null));
     }
 
     @PostMapping("/results/bulk-create")
@@ -170,7 +177,8 @@ public class HackathonController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Bulk hackathon results created successfully"), created));
+                new CommonResponse.Result("0000", "Bulk hackathon results created successfully"),
+                created));
     }
 
     @PutMapping("/results/bulk-update")
@@ -181,7 +189,8 @@ public class HackathonController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Bulk hackathon results created successfully"), created));
+                new CommonResponse.Result("0000", "Bulk hackathon results created successfully"),
+                created));
     }
 
     @GetMapping("/results/filter-by-hackathonId")
@@ -189,29 +198,32 @@ public class HackathonController {
             @RequestParam("hackathonId") String hackathonId) {
         List<HackathonResultDTO> results = hackathonResultService.getAllByHackathonId(hackathonId);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched hackathon results successfully"), results));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched hackathon results successfully"),
+                results));
     }
 
     @GetMapping("/results")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> getAllHackathonResults() {
         List<HackathonResultDTO> results = hackathonResultService.getAll();
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched all hackathon results successfully"), results));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all hackathon results successfully"),
+                results));
     }
 
     @GetMapping("/results/{id}")
     public ResponseEntity<CommonResponse<HackathonResultDTO>> getHackathonResultById(@PathVariable Long id) {
         HackathonResultDTO result = hackathonResultService.getById(id);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched hackathon result successfully"), result));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched hackathon result successfully"),
+                result));
     }
 }

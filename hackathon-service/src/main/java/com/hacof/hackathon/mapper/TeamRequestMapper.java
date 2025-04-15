@@ -1,14 +1,13 @@
 package com.hacof.hackathon.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.hacof.hackathon.dto.TeamRequestDTO;
 import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.entity.TeamRequest;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface TeamRequestMapper {

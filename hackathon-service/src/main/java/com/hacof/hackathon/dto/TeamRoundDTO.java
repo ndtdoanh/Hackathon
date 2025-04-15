@@ -1,11 +1,12 @@
 package com.hacof.hackathon.dto;
 
-import java.time.LocalDateTime;
-
 import com.hacof.hackathon.constant.TeamRoundStatus;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter

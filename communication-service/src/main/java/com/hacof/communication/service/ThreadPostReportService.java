@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
-import java.util.List;
-
 import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
+
+import java.util.List;
 
 public interface ThreadPostReportService {
 

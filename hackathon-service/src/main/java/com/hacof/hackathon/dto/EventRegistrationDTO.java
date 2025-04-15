@@ -1,8 +1,10 @@
 package com.hacof.hackathon.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class EventRegistrationDTO {
     private Long id;
     private Long eventId;

@@ -1,13 +1,12 @@
 package com.hacof.submission.repository;
 
-import java.util.List;
-
+import com.hacof.submission.entity.Round;
+import com.hacof.submission.entity.RoundMarkCriterion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.hacof.submission.entity.Round;
-import com.hacof.submission.entity.RoundMarkCriterion;
+import java.util.List;
 
 @Repository
 public interface RoundMarkCriterionRepository extends JpaRepository<RoundMarkCriterion, Long> {

@@ -1,18 +1,19 @@
 package com.hacof.identity.dto.response;
 
-import java.time.LocalDateTime;
-
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.entity.ActivityLog;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

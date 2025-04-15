@@ -1,11 +1,10 @@
 package com.hacof.communication.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.hacof.communication.dto.request.MessageReactionRequest;
 import com.hacof.communication.dto.response.MessageReactionResponse;
 import com.hacof.communication.entity.MessageReaction;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MessageReactionMapper {

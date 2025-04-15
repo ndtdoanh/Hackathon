@@ -1,17 +1,12 @@
 package com.hacof.identity.service.impl;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hacof.identity.dto.request.DeviceRequest;
 import com.hacof.identity.dto.response.DeviceResponse;
 import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.entity.Device;
 import com.hacof.identity.entity.FileUrl;
+import com.hacof.identity.entity.Round;
+import com.hacof.identity.entity.RoundLocation;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.DeviceMapper;
@@ -22,10 +17,15 @@ import com.hacof.identity.repository.HackathonRepository;
 import com.hacof.identity.repository.RoundLocationRepository;
 import com.hacof.identity.repository.RoundRepository;
 import com.hacof.identity.service.DeviceService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,15 +47,36 @@ public class DeviceServiceImpl implements DeviceService {
                 .findById(Long.valueOf(request.getHackathonId()))
                 .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND));
 
-        roundRepository
-                .findById(Long.valueOf(request.getRoundId()))
-                .orElseThrow(() -> new AppException(ErrorCode.ROUND_NOT_FOUND));
+        Round round = null;
+        String roundIdStr = request.getRoundId();
+        if (roundIdStr != null && !roundIdStr.trim().isEmpty()) {
+            try {
+                Long roundId = Long.valueOf(roundIdStr.trim());
+                round = roundRepository
+                        .findById(roundId)
+                        .orElseThrow(() -> new AppException(ErrorCode.ROUND_NOT_FOUND));
+            } catch (NumberFormatException e) {
+                throw new AppException(ErrorCode.INVALID_INPUT);
+            }
+        }
 
-        roundLocationRepository
-                .findById(Long.valueOf(request.getRoundLocationId()))
-                .orElseThrow(() -> new AppException(ErrorCode.ROUND_LOCATION_NOT_FOUND));
+        RoundLocation roundLocation = null;
+        String roundLocationIdStr = request.getRoundLocationId();
+        if (roundLocationIdStr != null && !roundLocationIdStr.trim().isEmpty()) {
+            try {
+                Long roundLocationId = Long.valueOf(roundLocationIdStr.trim());
+                roundLocation = roundLocationRepository
+                        .findById(roundLocationId)
+                        .orElseThrow(() -> new AppException(ErrorCode.ROUND_LOCATION_NOT_FOUND));
+            } catch (NumberFormatException e) {
+                throw new AppException(ErrorCode.INVALID_INPUT);
+            }
+        }
 
         Device device = deviceMapper.toDevice(request);
+        if (round != null) device.setRound(round);
+        if (roundLocation != null) device.setRoundLocation(roundLocation);
+
         Device savedDevice = deviceRepository.save(device);
 
         if (files != null && !files.isEmpty()) {
@@ -97,6 +118,13 @@ public class DeviceServiceImpl implements DeviceService {
     public DeviceResponse getDevice(Long id) {
         return deviceMapper.toDeviceResponse(
                 deviceRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_EXISTED)));
+    }
+
+    @Override
+    public List<DeviceResponse> getDevicesByHackathonId(String hackathonId) {
+        return deviceRepository.findByHackathonId(Long.valueOf(hackathonId)).stream()
+                .map(deviceMapper::toDeviceResponse)
+                .toList();
     }
 
     @Override

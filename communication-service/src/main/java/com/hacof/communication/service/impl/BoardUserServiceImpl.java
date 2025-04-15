@@ -1,12 +1,5 @@
 package com.hacof.communication.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hacof.communication.constant.BoardUserRole;
 import com.hacof.communication.dto.request.BoardUserRequestDTO;
 import com.hacof.communication.dto.response.BoardUserResponseDTO;
@@ -18,6 +11,12 @@ import com.hacof.communication.repository.BoardRepository;
 import com.hacof.communication.repository.BoardUserRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.BoardUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardUserServiceImpl implements BoardUserService {

@@ -1,13 +1,5 @@
 package com.hacof.communication.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hacof.communication.dto.request.BoardListRequestDTO;
 import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import com.hacof.communication.dto.response.BoardListResponseDTO;
@@ -17,6 +9,13 @@ import com.hacof.communication.mapper.BoardListMapper;
 import com.hacof.communication.repository.BoardListRepository;
 import com.hacof.communication.repository.BoardRepository;
 import com.hacof.communication.service.BoardListService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardListServiceImpl implements BoardListService {
@@ -49,12 +48,12 @@ public class BoardListServiceImpl implements BoardListService {
             throw new IllegalArgumentException("Board List name cannot be null or empty.");
         }
 
-//        // Check for duplicate Board List name under the same Board
-//        Optional<BoardList> existingBoardList = boardListRepository.findByNameAndBoardId(
-//                boardListRequestDTO.getName(), Long.parseLong(boardListRequestDTO.getBoardId()));
-//        if (existingBoardList.isPresent()) {
-//            throw new IllegalArgumentException("Board List with the same name already exists in this Board.");
-//        }
+        //        // Check for duplicate Board List name under the same Board
+        //        Optional<BoardList> existingBoardList = boardListRepository.findByNameAndBoardId(
+        //                boardListRequestDTO.getName(), Long.parseLong(boardListRequestDTO.getBoardId()));
+        //        if (existingBoardList.isPresent()) {
+        //            throw new IllegalArgumentException("Board List with the same name already exists in this Board.");
+        //        }
 
         // Create BoardList from DTO and save
         BoardList boardList = boardListMapper.toEntity(boardListRequestDTO, boardOptional.get());
@@ -174,8 +173,6 @@ public class BoardListServiceImpl implements BoardListService {
     public List<BoardListResponseDTO> getBoardListByBoardId(Long boardId) {
         List<BoardList> boardLists = boardListRepository.findByBoardId(boardId);
 
-        return boardLists.stream()
-                .map(boardListMapper::toDto)
-                .collect(Collectors.toList());
+        return boardLists.stream().map(boardListMapper::toDto).collect(Collectors.toList());
     }
 }

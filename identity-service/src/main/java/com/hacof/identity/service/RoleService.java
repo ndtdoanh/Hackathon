@@ -1,10 +1,10 @@
 package com.hacof.identity.service;
 
-import java.util.List;
-
 import com.hacof.identity.dto.request.RoleCreateRequest;
 import com.hacof.identity.dto.request.RoleUpdateRequest;
 import com.hacof.identity.dto.response.RoleResponse;
+
+import java.util.List;
 
 public interface RoleService {
     RoleResponse createRole(RoleCreateRequest request);

@@ -1,10 +1,5 @@
 package com.hacof.communication.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
-
 import com.hacof.communication.dto.request.ScheduleRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 import com.hacof.communication.dto.response.ScheduleResponseDTO;
@@ -12,6 +7,10 @@ import com.hacof.communication.entity.Hackathon;
 import com.hacof.communication.entity.Schedule;
 import com.hacof.communication.entity.ScheduleEvent;
 import com.hacof.communication.entity.Team;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ScheduleMapper {

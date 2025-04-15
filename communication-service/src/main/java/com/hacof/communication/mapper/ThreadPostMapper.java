@@ -1,12 +1,15 @@
 package com.hacof.communication.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.hacof.communication.dto.request.ThreadPostRequestDTO;
-import com.hacof.communication.dto.response.*;
+import com.hacof.communication.dto.response.ForumThreadResponseDTO;
+import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
+import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
+import com.hacof.communication.dto.response.ThreadPostResponseDTO;
 import com.hacof.communication.entity.ForumThread;
 import com.hacof.communication.entity.ThreadPost;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ThreadPostMapper {
 

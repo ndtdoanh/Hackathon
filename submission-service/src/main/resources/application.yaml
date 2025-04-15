@@ -42,3 +42,7 @@ aws:
     secret-key: ${AWS_SECRET_ACCESS_KEY}
     region: ${AWS_REGION}
     bucket-name: ${AWS_S3_BUCKET_NAME}
+
+logging:
+  level:
+    com.hacof.submission: debug

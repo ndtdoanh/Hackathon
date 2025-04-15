@@ -1,14 +1,12 @@
 package com.hacof.hackathon.repository;
 
-import java.util.List;
-
+import com.hacof.hackathon.entity.HackathonResult;
+import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.hacof.hackathon.entity.HackathonResult;
-
-import feign.Param;
+import java.util.List;
 
 @Repository
 public interface HackathonResultRepository extends JpaRepository<HackathonResult, Long> {

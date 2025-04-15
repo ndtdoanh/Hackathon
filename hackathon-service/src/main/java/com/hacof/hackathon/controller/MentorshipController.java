@@ -1,25 +1,30 @@
 package com.hacof.hackathon.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import jakarta.validation.Valid;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.hacof.hackathon.dto.MentorshipRequestDTO;
 import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
 import com.hacof.hackathon.service.MentorshipRequestService;
 import com.hacof.hackathon.service.MentorshipSessionRequestService;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
-
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/mentorships")
@@ -36,10 +41,11 @@ public class MentorshipController {
             @RequestBody @Valid CommonRequest<MentorshipRequestDTO> request) {
         MentorshipRequestDTO mentorshipRequestDTO = mentorshipRequestService.create(request.getData());
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship request created successfully"), mentorshipRequestDTO);
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship request created successfully"),
+                mentorshipRequestDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -49,10 +55,11 @@ public class MentorshipController {
         MentorshipRequestDTO mentorshipRequestDTO = mentorshipRequestService.approveOrReject(
                 Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship request approved successfully"), mentorshipRequestDTO);
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship request approved successfully"),
+                mentorshipRequestDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -62,10 +69,11 @@ public class MentorshipController {
         MentorshipRequestDTO mentorshipRequestDTO = mentorshipRequestService.approveOrReject(
                 Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship request rejected successfully"), mentorshipRequestDTO);
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship request rejected successfully"),
+                mentorshipRequestDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -75,10 +83,11 @@ public class MentorshipController {
         MentorshipRequestDTO mentorshipRequestDTO = mentorshipRequestService.approveOrReject(
                 Long.parseLong(request.getData().getId()), request.getData());
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship request updated successfully"), mentorshipRequestDTO);
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship request updated successfully"),
+                mentorshipRequestDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -89,7 +98,8 @@ public class MentorshipController {
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Mentorship request deleted successfully"), null);
+                new CommonResponse.Result("0000", "Mentorship request deleted successfully"),
+                null);
         return ResponseEntity.ok(response);
     }
 
@@ -97,10 +107,11 @@ public class MentorshipController {
     public ResponseEntity<CommonResponse<List<MentorshipRequestDTO>>> getAllMentorshipRequests() {
         List<MentorshipRequestDTO> mentorshipRequests = mentorshipRequestService.getAll();
         CommonResponse<List<MentorshipRequestDTO>> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched all mentorship requests successfully"), mentorshipRequests);
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all mentorship requests successfully"),
+                mentorshipRequests);
         return ResponseEntity.ok(response);
     }
 
@@ -108,10 +119,11 @@ public class MentorshipController {
     public ResponseEntity<CommonResponse<MentorshipRequestDTO>> getMentorshipRequestById(@PathVariable Long id) {
         MentorshipRequestDTO mentorshipRequest = mentorshipRequestService.getById(id);
         CommonResponse<MentorshipRequestDTO> response = new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentorship request successfully"), mentorshipRequest);
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship request successfully"),
+                mentorshipRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -121,20 +133,22 @@ public class MentorshipController {
         List<MentorshipRequestDTO> requests =
                 mentorshipRequestService.getAllByTeamIdAndHackathonId(teamId, hackathonId);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentorship requests successfully"), requests));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship requests successfully"),
+                requests));
     }
 
     @GetMapping("/filter-by-mentor")
     public ResponseEntity<CommonResponse<List<MentorshipRequestDTO>>> getAllByMentorId(@RequestParam String mentorId) {
         List<MentorshipRequestDTO> requests = mentorshipRequestService.getAllByMentorId(mentorId);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentorship requests successfully"), requests));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship requests successfully"),
+                requests));
     }
 
     // --- ENDPOINTS FOR MENTORSHIP SESSION REQUESTS ---
@@ -145,10 +159,11 @@ public class MentorshipController {
         log.debug("Creating mentorship session request: {}", request.getData());
         MentorshipSessionRequestDTO created = mentorshipSessionRequestService.create(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship session request created successfully"), created));
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship session request created successfully"),
+                created));
     }
 
     @PutMapping("/sessions")
@@ -158,10 +173,11 @@ public class MentorshipController {
         MentorshipSessionRequestDTO updated =
                 mentorshipSessionRequestService.update(request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship session request updated successfully"), updated));
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship session request updated successfully"),
+                updated));
     }
 
     @PostMapping("/sessions/approve")
@@ -171,10 +187,11 @@ public class MentorshipController {
         MentorshipSessionRequestDTO updated = mentorshipSessionRequestService.approveOrReject(
                 request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship session request approved successfully"), updated));
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship session request approved successfully"),
+                updated));
     }
 
     @PostMapping("/sessions/reject")
@@ -184,10 +201,11 @@ public class MentorshipController {
         MentorshipSessionRequestDTO updated = mentorshipSessionRequestService.approveOrReject(
                 request.getData().getId(), request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
-                                request.getRequestId(),
-                                LocalDateTime.now(),
-                                request.getChannel(),
-                new CommonResponse.Result("0000", "Mentorship session request rejected successfully"), updated));
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Mentorship session request rejected successfully"),
+                updated));
     }
 
     @GetMapping("/sessions/filter-by-mentor-team")
@@ -195,30 +213,33 @@ public class MentorshipController {
             @RequestParam String mentorTeamId) {
         List<MentorshipSessionRequestDTO> requests = mentorshipSessionRequestService.getAllByMentorTeamId(mentorTeamId);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentorship session requests successfully"), requests));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship session requests successfully"),
+                requests));
     }
 
     @DeleteMapping("/sessions/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteMentorshipSessionRequest(@PathVariable String id) {
         mentorshipSessionRequestService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Mentorship session request deleted successfully"), null));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Mentorship session request deleted successfully"),
+                null));
     }
 
     @GetMapping("/sessions")
     public ResponseEntity<CommonResponse<List<MentorshipSessionRequestDTO>>> getAllMentorshipSessionRequests() {
         List<MentorshipSessionRequestDTO> requests = mentorshipSessionRequestService.getAll();
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched all mentorship session requests successfully"), requests));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched all mentorship session requests successfully"),
+                requests));
     }
 
     @GetMapping("/sessions/{id}")
@@ -226,10 +247,11 @@ public class MentorshipController {
             @PathVariable String id) {
         MentorshipSessionRequestDTO request = mentorshipSessionRequestService.getById(id);
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentorship session request successfully"), request));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship session request successfully"),
+                request));
     }
 
     @PostMapping("/sessions/filter-by-mentor-team")
@@ -238,9 +260,10 @@ public class MentorshipController {
         List<MentorshipSessionRequestDTO> requests = mentorshipSessionRequestService.getAllByMentorTeamId(
                 request.getData().getMentorTeamId());
         return ResponseEntity.ok(new CommonResponse<>(
-                                UUID.randomUUID().toString(),
-                                LocalDateTime.now(),
-                                "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentorship session requests successfully"), requests));
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched mentorship session requests successfully"),
+                requests));
     }
 }

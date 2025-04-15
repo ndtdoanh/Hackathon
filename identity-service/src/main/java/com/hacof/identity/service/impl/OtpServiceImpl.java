@@ -1,14 +1,12 @@
 package com.hacof.identity.service.impl;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
+import com.hacof.identity.service.OtpService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.hacof.identity.service.OtpService;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor

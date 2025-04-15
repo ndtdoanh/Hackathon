@@ -1,13 +1,12 @@
 package com.hacof.identity.service;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hacof.identity.dto.request.DeviceRequest;
 import com.hacof.identity.dto.response.DeviceResponse;
 import com.hacof.identity.dto.response.FileUrlResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 public interface DeviceService {
 
@@ -16,6 +15,8 @@ public interface DeviceService {
     List<DeviceResponse> getDevices();
 
     DeviceResponse getDevice(Long id);
+
+    List<DeviceResponse> getDevicesByHackathonId(String hackathonId);
 
     List<DeviceResponse> getDevicesByRoundId(String roundId);
 

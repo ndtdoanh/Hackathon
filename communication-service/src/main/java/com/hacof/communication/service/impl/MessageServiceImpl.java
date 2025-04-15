@@ -1,12 +1,5 @@
 package com.hacof.communication.service.impl;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hacof.communication.dto.request.MessageRequest;
 import com.hacof.communication.dto.response.MessageReactionResponse;
 import com.hacof.communication.dto.response.MessageResponse;
@@ -22,11 +15,16 @@ import com.hacof.communication.repository.MessageRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.MessageService;
 import com.hacof.communication.util.AuditContext;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -76,14 +74,6 @@ public class MessageServiceImpl implements MessageService {
         messageResponse.setFileUrls(fileUrlsResponse);
 
         return messageResponse;
-    }
-
-    private String extractFileName(String fileUrl) {
-        return fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-    }
-
-    private String extractFileType(String fileUrl) {
-        return fileUrl.contains(".") ? fileUrl.substring(fileUrl.lastIndexOf(".") + 1) : "unknown";
     }
 
     @Override

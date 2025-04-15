@@ -1,16 +1,5 @@
 package com.hacof.hackathon.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hacof.hackathon.dto.ApiResponse;
 import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.entity.FileUrl;
@@ -18,10 +7,23 @@ import com.hacof.hackathon.mapper.FileUrlMapper;
 import com.hacof.hackathon.repository.FileUrlRepository;
 import com.hacof.hackathon.service.impl.S3Service;
 import com.hacof.hackathon.util.CommonResponse;
-
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/files")
@@ -39,12 +41,12 @@ public class UploadController {
     public ResponseEntity<CommonResponse<String>> uploadImage(@RequestParam("file") MultipartFile file) {
         String imageUrl = s3Service.uploadFile(file);
         log.debug("Image uploaded to S3: {}", imageUrl);
-        CommonResponse<String> response =
-
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Image uploaded successfully"), imageUrl);
+        CommonResponse<String> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Image uploaded successfully"),
+                imageUrl);
         return ResponseEntity.ok(response);
     }
 
@@ -54,11 +56,12 @@ public class UploadController {
             @RequestParam("files") MultipartFile[] files) {
         List<String> fileUrls = s3Service.uploadFiles(files);
         log.debug("Files uploaded to S3: {}", fileUrls);
-        CommonResponse<List<String>> response =
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Files uploaded successfully"), fileUrls);
+        CommonResponse<List<String>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Files uploaded successfully"),
+                fileUrls);
         return ResponseEntity.ok(response);
     }
 
@@ -67,11 +70,12 @@ public class UploadController {
     public ResponseEntity<CommonResponse<List<String>>> getAllFiles() {
         List<String> fileUrls = s3Service.getAllFiles();
         log.debug("Retrieved all files from S3: {}", fileUrls);
-        CommonResponse<List<String>> response =
-                new CommonResponse<>(
-                        UUID.randomUUID().toString(),
-                        LocalDateTime.now(),
-                        "HACOF",new CommonResponse.Result("0000", "Files retrieved successfully"), fileUrls);
+        CommonResponse<List<String>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Files retrieved successfully"),
+                fileUrls);
         return ResponseEntity.ok(response);
     }
 

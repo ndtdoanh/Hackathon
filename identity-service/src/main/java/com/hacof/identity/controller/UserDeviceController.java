@@ -1,26 +1,32 @@
 package com.hacof.identity.controller;
 
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.UserDeviceRequest;
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.dto.response.UserDeviceResponse;
+import com.hacof.identity.service.UserDeviceService;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import jakarta.validation.Valid;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.UserDeviceRequest;
-import com.hacof.identity.dto.response.UserDeviceResponse;
-import com.hacof.identity.service.UserDeviceService;
-
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 @RestController
 @RequestMapping("/api/v1/user-devices")
@@ -90,6 +96,17 @@ public class UserDeviceController {
                 .channel("HACOF")
                 .data(userDeviceService.getUserDevicesByUserId(userId))
                 .message("Get UserDevices by userId")
+                .build();
+    }
+
+    @GetMapping("/{userDeviceId}/file-urls")
+    public ApiResponse<List<FileUrlResponse>> getFileUrlsByUserDeviceId(@PathVariable Long userDeviceId) {
+        return ApiResponse.<List<FileUrlResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(userDeviceService.getFileUrlsByUserDeviceId(userDeviceId))
+                .message("Get file URLs by userDeviceId")
                 .build();
     }
 

@@ -1,15 +1,14 @@
 package com.hacof.communication.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
-
 import com.hacof.communication.dto.request.TaskRequestDTO;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.entity.BoardList;
 import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Task;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TaskMapper {

@@ -1,10 +1,11 @@
 package com.hacof.hackathon.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
 public class MentorDTO {
     private Long id;
 

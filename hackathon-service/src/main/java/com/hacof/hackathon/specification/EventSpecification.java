@@ -1,10 +1,9 @@
 package com.hacof.hackathon.specification;
 
-import java.time.LocalDateTime;
-
+import com.hacof.hackathon.entity.Event;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.hacof.hackathon.entity.Event;
+import java.time.LocalDateTime;
 
 public class EventSpecification {
     public static Specification<Event> hasId(Long id) {

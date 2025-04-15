@@ -1,13 +1,27 @@
 package com.hacof.identity.entity;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.*;
-
 import com.hacof.identity.constant.BlogPostStatus;
-
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,6 +42,9 @@ public class BlogPost extends AuditCreatedBase {
 
     @Column(name = "slug", unique = true)
     String slug;
+
+    @Column(name = "banner_image_url")
+    String bannerImageUrl;
 
     @Lob
     @Column(name = "content")

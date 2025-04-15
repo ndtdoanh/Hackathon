@@ -1,12 +1,5 @@
 package com.hacof.communication.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hacof.communication.dto.request.BoardLabelRequestDTO;
 import com.hacof.communication.dto.response.BoardLabelResponseDTO;
 import com.hacof.communication.entity.Board;
@@ -15,6 +8,12 @@ import com.hacof.communication.mapper.BoardLabelMapper;
 import com.hacof.communication.repository.BoardLabelRepository;
 import com.hacof.communication.repository.BoardRepository;
 import com.hacof.communication.service.BoardLabelService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardLabelServiceImpl implements BoardLabelService {
@@ -126,6 +125,17 @@ public class BoardLabelServiceImpl implements BoardLabelService {
     @Override
     public List<BoardLabelResponseDTO> getAllBoardLabels() {
         List<BoardLabel> boardLabels = boardLabelRepository.findAll();
+        return boardLabels.stream().map(boardLabelMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BoardLabelResponseDTO> getBoardLabelsByBoardId(Long boardId) {
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (!boardOptional.isPresent()) {
+            throw new IllegalArgumentException("Board with ID " + boardId + " not found!");
+        }
+
+        List<BoardLabel> boardLabels = boardLabelRepository.findByBoardId(boardId);
         return boardLabels.stream().map(boardLabelMapper::toDto).collect(Collectors.toList());
     }
 }

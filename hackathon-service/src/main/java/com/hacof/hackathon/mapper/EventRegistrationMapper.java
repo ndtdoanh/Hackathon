@@ -1,11 +1,10 @@
 package com.hacof.hackathon.mapper;
 
+import com.hacof.hackathon.dto.EventRegistrationDTO;
+import com.hacof.hackathon.entity.EventRegistration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-
-import com.hacof.hackathon.dto.EventRegistrationDTO;
-import com.hacof.hackathon.entity.EventRegistration;
 
 @Mapper(componentModel = "spring")
 public interface EventRegistrationMapper {

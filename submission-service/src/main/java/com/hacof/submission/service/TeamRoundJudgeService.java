@@ -1,9 +1,9 @@
 package com.hacof.submission.service;
 
-import java.util.List;
-
 import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
 import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
+
+import java.util.List;
 
 public interface TeamRoundJudgeService {
 

@@ -1,8 +1,5 @@
 package com.hacof.communication.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.hacof.communication.constant.ThreadPostReportStatus;
 import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
 import com.hacof.communication.dto.response.ForumCategoryResponseDTO;
@@ -12,6 +9,9 @@ import com.hacof.communication.dto.response.ThreadPostResponseDTO;
 import com.hacof.communication.entity.ThreadPost;
 import com.hacof.communication.entity.ThreadPostReport;
 import com.hacof.communication.entity.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ThreadPostReportMapper {
 

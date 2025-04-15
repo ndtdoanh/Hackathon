@@ -1,11 +1,10 @@
 package com.hacof.communication.repository;
 
-import java.util.List;
-
+import com.hacof.communication.entity.ScheduleEventAttendee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.hacof.communication.entity.ScheduleEventAttendee;
+import java.util.List;
 
 @Repository
 public interface ScheduleEventAttendeeRepository extends JpaRepository<ScheduleEventAttendee, Long> {

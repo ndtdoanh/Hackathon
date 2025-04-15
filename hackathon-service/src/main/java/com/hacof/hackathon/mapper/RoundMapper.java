@@ -1,7 +1,5 @@
 package com.hacof.hackathon.mapper;
 
-import org.mapstruct.*;
-
 // @Mapper(
 //        componentModel = "spring",
 //        uses = {RoundLocationMapper.class})

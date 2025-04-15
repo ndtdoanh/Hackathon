@@ -1,28 +1,28 @@
 package com.hacof.identity.service.impl;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hacof.identity.dto.request.UserDeviceRequest;
+import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.dto.response.UserDeviceResponse;
 import com.hacof.identity.entity.FileUrl;
 import com.hacof.identity.entity.UserDevice;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
+import com.hacof.identity.mapper.FileUrlMapper;
 import com.hacof.identity.mapper.UserDeviceMapper;
 import com.hacof.identity.repository.DeviceRepository;
 import com.hacof.identity.repository.FileUrlRepository;
 import com.hacof.identity.repository.UserDeviceRepository;
 import com.hacof.identity.repository.UserRepository;
 import com.hacof.identity.service.UserDeviceService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +34,7 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     UserDeviceMapper userDeviceMapper;
     S3Service s3Service;
     FileUrlRepository fileUrlRepository;
+    FileUrlMapper fileUrlMapper;
 
     @Override
     public UserDeviceResponse createUserDevice(UserDeviceRequest request, List<MultipartFile> files)
@@ -105,6 +106,13 @@ public class UserDeviceServiceImpl implements UserDeviceService {
         return userDeviceRepository.findByUserId(Long.valueOf(userId)).stream()
                 .map(userDeviceMapper::toUserDeviceResponse)
                 .toList();
+    }
+
+    @Override
+    public List<FileUrlResponse> getFileUrlsByUserDeviceId(Long userDeviceId) {
+        UserDevice userDevice =
+                userDeviceRepository.findById(userDeviceId).orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED));
+        return fileUrlMapper.toResponseList(userDevice.getFileUrls());
     }
 
     @Override

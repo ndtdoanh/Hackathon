@@ -1,22 +1,19 @@
 package com.hacof.hackathon.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import jakarta.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.hacof.hackathon.dto.EventRegistrationDTO;
 import com.hacof.hackathon.entity.EventRegistration;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.EventRegistrationMapper;
 import com.hacof.hackathon.repository.EventRegistrationRepository;
 import com.hacof.hackathon.service.EventRegistrationService;
-
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
