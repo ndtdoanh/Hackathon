@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,5 +102,31 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(id))
                 .map(SponsorshipHackathonMapperManual::toDto)
                 .orElse(null);
+    }
+
+    @Override
+    public List<SponsorshipHackathonDTO> getAllByHackathonId(String hackathonId) {
+        return sponsorshipHackathonRepository.findAllByHackathonId(Long.parseLong(hackathonId)).stream()
+                .map(SponsorshipHackathonMapperManual::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SponsorshipHackathonDTO> getAllBySponsorshipId(String sponsorshipId) {
+        return sponsorshipHackathonRepository.findAllBySponsorshipId(Long.parseLong(sponsorshipId)).stream()
+                .map(SponsorshipHackathonMapperManual::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SponsorshipHackathonDTO getByHackathonAndSponsorshipId(String hackathonId, String sponsorshipId) {
+        SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonRepository
+                .findByHackathonIdAndSponsorshipId(Long.parseLong(hackathonId), Long.parseLong(sponsorshipId));
+
+        if (sponsorshipHackathon == null) {
+            throw new ResourceNotFoundException("SponsorshipHackathon not found");
+        }
+
+        return SponsorshipHackathonMapperManual.toDto(sponsorshipHackathon);
     }
 }

@@ -14,4 +14,10 @@ public interface SponsorshipHackathonService {
     List<SponsorshipHackathonDTO> getAll();
 
     SponsorshipHackathonDTO getById(String id);
+
+    List<SponsorshipHackathonDTO> getAllByHackathonId(String hackathonId);
+
+    List<SponsorshipHackathonDTO> getAllBySponsorshipId(String sponsorshipId);
+
+    SponsorshipHackathonDTO getByHackathonAndSponsorshipId(String hackathonId, String sponsorshipId);
 }
