@@ -1,7 +1,8 @@
 package com.hacof.hackathon.util;
 
-import com.hacof.hackathon.entity.User;
 import org.springframework.stereotype.Component;
+
+import com.hacof.hackathon.entity.User;
 
 @Component
 public class AuditContext {

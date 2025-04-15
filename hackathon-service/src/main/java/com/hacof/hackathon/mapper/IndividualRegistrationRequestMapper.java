@@ -1,5 +1,12 @@
 package com.hacof.hackathon.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+
 import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
 import com.hacof.hackathon.dto.UserDTO;
@@ -7,12 +14,6 @@ import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.IndividualRegistrationRequest;
 import com.hacof.hackathon.entity.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface IndividualRegistrationRequestMapper {

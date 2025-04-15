@@ -1,21 +1,11 @@
 package com.hacof.hackathon.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hacof.hackathon.constant.StatusCode;
-import com.hacof.hackathon.dto.HackathonDTO;
-import com.hacof.hackathon.dto.HackathonResultDTO;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.exception.InvalidInputException;
-import com.hacof.hackathon.service.HackathonResultService;
-import com.hacof.hackathon.service.HackathonService;
-import com.hacof.hackathon.specification.HackathonSpecification;
-import com.hacof.hackathon.util.CommonRequest;
-import com.hacof.hackathon.util.CommonResponse;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -30,9 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hacof.hackathon.constant.StatusCode;
+import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.dto.HackathonResultDTO;
+import com.hacof.hackathon.entity.Hackathon;
+import com.hacof.hackathon.exception.InvalidInputException;
+import com.hacof.hackathon.service.HackathonResultService;
+import com.hacof.hackathon.service.HackathonService;
+import com.hacof.hackathon.specification.HackathonSpecification;
+import com.hacof.hackathon.util.CommonRequest;
+import com.hacof.hackathon.util.CommonResponse;
+
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/hackathons")

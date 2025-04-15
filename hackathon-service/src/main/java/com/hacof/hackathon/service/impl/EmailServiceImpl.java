@@ -1,18 +1,21 @@
 package com.hacof.hackathon.service.impl;
 
-import com.hacof.hackathon.exception.InvalidInputException;
-import com.hacof.hackathon.exception.NotificationException;
-import com.hacof.hackathon.service.EmailService;
+import java.util.List;
+
 import jakarta.mail.internet.MimeMessage;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.hacof.hackathon.exception.InvalidInputException;
+import com.hacof.hackathon.exception.NotificationException;
+import com.hacof.hackathon.service.EmailService;
+
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

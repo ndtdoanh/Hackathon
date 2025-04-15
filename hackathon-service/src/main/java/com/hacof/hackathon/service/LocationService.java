@@ -1,10 +1,11 @@
 package com.hacof.hackathon.service;
 
-import com.hacof.hackathon.dto.LocationDTO;
-import com.hacof.hackathon.entity.Location;
+import java.util.List;
+
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
+import com.hacof.hackathon.dto.LocationDTO;
+import com.hacof.hackathon.entity.Location;
 
 public interface LocationService {
     LocationDTO create(LocationDTO locationDTO);

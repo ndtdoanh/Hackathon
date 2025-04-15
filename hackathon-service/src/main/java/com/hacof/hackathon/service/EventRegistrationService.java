@@ -1,8 +1,8 @@
 package com.hacof.hackathon.service;
 
-import com.hacof.hackathon.dto.EventRegistrationDTO;
-
 import java.util.List;
+
+import com.hacof.hackathon.dto.EventRegistrationDTO;
 
 public interface EventRegistrationService {
     EventRegistrationDTO create(EventRegistrationDTO eventRegistrationDTO);

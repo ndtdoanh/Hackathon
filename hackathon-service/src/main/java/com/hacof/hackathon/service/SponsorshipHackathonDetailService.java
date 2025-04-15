@@ -1,14 +1,14 @@
 package com.hacof.hackathon.service;
 
+import java.util.List;
+
 import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
 
-import java.util.List;
-
 public interface SponsorshipHackathonDetailService {
-//    SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
-//
-//    SponsorshipHackathonDetailDTO update(Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+    //    SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+    //
+    //    SponsorshipHackathonDetailDTO update(Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
 
     void delete(Long id);
 

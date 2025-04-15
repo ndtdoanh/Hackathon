@@ -1,7 +1,8 @@
 package com.hacof.hackathon.specification;
 
-import com.hacof.hackathon.entity.Location;
 import org.springframework.data.jpa.domain.Specification;
+
+import com.hacof.hackathon.entity.Location;
 
 public class LocationSpecification {
     public static Specification<Location> hasId(String id) {

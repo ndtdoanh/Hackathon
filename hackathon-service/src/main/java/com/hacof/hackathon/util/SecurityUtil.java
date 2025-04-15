@@ -1,9 +1,7 @@
 package com.hacof.hackathon.util;
 
-import com.hacof.hackathon.constant.StatusCode;
-import com.hacof.hackathon.entity.User;
-import com.hacof.hackathon.exception.CustomException;
-import com.hacof.hackathon.repository.UserRepository;
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import com.hacof.hackathon.constant.StatusCode;
+import com.hacof.hackathon.entity.User;
+import com.hacof.hackathon.exception.CustomException;
+import com.hacof.hackathon.repository.UserRepository;
 
 @Component
 public class SecurityUtil {

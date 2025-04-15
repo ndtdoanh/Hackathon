@@ -1,10 +1,11 @@
 package com.hacof.hackathon.service;
 
-import com.hacof.hackathon.dto.SponsorshipDTO;
-import com.hacof.hackathon.entity.Sponsorship;
+import java.util.List;
+
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
+import com.hacof.hackathon.dto.SponsorshipDTO;
+import com.hacof.hackathon.entity.Sponsorship;
 
 public interface SponsorshipService {
     SponsorshipDTO create(SponsorshipDTO sponsorshipDTO);

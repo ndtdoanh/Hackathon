@@ -1,8 +1,8 @@
 package com.hacof.hackathon.service;
 
-import com.hacof.hackathon.dto.SponsorshipHackathonDTO;
-
 import java.util.List;
+
+import com.hacof.hackathon.dto.SponsorshipHackathonDTO;
 
 public interface SponsorshipHackathonService {
     SponsorshipHackathonDTO create(SponsorshipHackathonDTO sponsorshipHackathonDTO);

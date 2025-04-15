@@ -1,10 +1,11 @@
 package com.hacof.hackathon.service;
 
-import com.hacof.hackathon.dto.HackathonDTO;
-import com.hacof.hackathon.entity.Hackathon;
+import java.util.List;
+
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
+import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.entity.Hackathon;
 
 public interface HackathonService {
     HackathonDTO create(HackathonDTO hackathonDTO);

@@ -1,10 +1,11 @@
 package com.hacof.hackathon.mapper;
 
-import com.hacof.hackathon.dto.MentorshipRequestDTO;
-import com.hacof.hackathon.entity.MentorshipRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
+import com.hacof.hackathon.dto.MentorshipRequestDTO;
+import com.hacof.hackathon.entity.MentorshipRequest;
 
 @Mapper(componentModel = "spring", uses = HackathonMapper.class)
 public interface MentorshipRequestMapper {

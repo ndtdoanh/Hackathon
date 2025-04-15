@@ -1,16 +1,17 @@
 package com.hacof.hackathon.mapper;
 
-import com.hacof.hackathon.dto.HackathonDTO;
-import com.hacof.hackathon.entity.FileUrl;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.User;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.entity.FileUrl;
+import com.hacof.hackathon.entity.Hackathon;
+import com.hacof.hackathon.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface HackathonMapper {

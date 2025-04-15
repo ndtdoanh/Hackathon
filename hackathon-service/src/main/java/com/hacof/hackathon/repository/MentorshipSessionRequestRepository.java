@@ -1,10 +1,11 @@
 package com.hacof.hackathon.repository;
 
-import com.hacof.hackathon.entity.MentorshipSessionRequest;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hacof.hackathon.entity.MentorshipSessionRequest;
 
 @Repository
 public interface MentorshipSessionRequestRepository extends JpaRepository<MentorshipSessionRequest, Long> {

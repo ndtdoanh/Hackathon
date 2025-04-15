@@ -1,11 +1,11 @@
 package com.hacof.hackathon.mapper.manual;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.hacof.hackathon.dto.TeamRequestDTO;
 import com.hacof.hackathon.dto.TeamRequestMemberDTO;
 import com.hacof.hackathon.entity.TeamRequest;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TeamRequestMapperManual {
     public static TeamRequestDTO toDto(TeamRequest teamRequest) {

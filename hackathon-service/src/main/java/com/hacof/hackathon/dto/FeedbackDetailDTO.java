@@ -1,6 +1,7 @@
 package com.hacof.hackathon.dto;
 
 import com.hacof.hackathon.entity.AuditBase;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

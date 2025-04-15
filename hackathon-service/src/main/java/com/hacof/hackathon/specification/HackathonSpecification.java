@@ -1,13 +1,16 @@
 package com.hacof.hackathon.specification;
 
-import com.hacof.hackathon.entity.Hackathon;
-import io.micrometer.common.util.StringUtils;
-import jakarta.persistence.criteria.Predicate;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.criteria.Predicate;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import com.hacof.hackathon.entity.Hackathon;
+
+import io.micrometer.common.util.StringUtils;
 
 public class HackathonSpecification {
     public static Specification<Hackathon> hasId(String id) {

@@ -1,9 +1,10 @@
 package com.hacof.hackathon.mapper;
 
-import com.hacof.hackathon.dto.TeamDTO;
-import com.hacof.hackathon.entity.Team;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import com.hacof.hackathon.dto.TeamDTO;
+import com.hacof.hackathon.entity.Team;
 
 @Mapper(
         componentModel = "spring",

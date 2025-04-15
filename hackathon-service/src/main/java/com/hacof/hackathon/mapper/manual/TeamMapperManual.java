@@ -1,12 +1,12 @@
 package com.hacof.hackathon.mapper.manual;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.hacof.hackathon.dto.TeamDTO;
 import com.hacof.hackathon.dto.UserTeamDTO;
 import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.entity.User;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TeamMapperManual {
 

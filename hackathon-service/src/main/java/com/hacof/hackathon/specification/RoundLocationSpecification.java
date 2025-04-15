@@ -1,7 +1,8 @@
 package com.hacof.hackathon.specification;
 
-import com.hacof.hackathon.entity.RoundLocation;
 import org.springframework.data.jpa.domain.Specification;
+
+import com.hacof.hackathon.entity.RoundLocation;
 
 public class RoundLocationSpecification {
 

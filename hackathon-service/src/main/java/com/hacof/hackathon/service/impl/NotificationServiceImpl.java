@@ -1,5 +1,13 @@
 package com.hacof.hackathon.service.impl;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.springframework.stereotype.Service;
+
 import com.hacof.hackathon.constant.TeamRequestMemberStatus;
 import com.hacof.hackathon.constant.TeamRequestStatus;
 import com.hacof.hackathon.entity.TeamRequest;
@@ -8,15 +16,9 @@ import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.service.EmailService;
 import com.hacof.hackathon.service.NotificationService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor

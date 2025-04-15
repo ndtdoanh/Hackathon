@@ -1,9 +1,10 @@
 package com.hacof.hackathon.repository;
 
-import com.hacof.hackathon.entity.MentorshipRequest;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.hacof.hackathon.entity.MentorshipRequest;
 
 public interface MentorshipRequestRepository extends JpaRepository<MentorshipRequest, Long> {
     List<MentorshipRequest> findAllByTeamIdAndHackathonId(Long teamId, Long hackathonId);

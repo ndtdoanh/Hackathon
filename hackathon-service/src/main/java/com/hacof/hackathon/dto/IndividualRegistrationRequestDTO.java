@@ -1,13 +1,15 @@
 package com.hacof.hackathon.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

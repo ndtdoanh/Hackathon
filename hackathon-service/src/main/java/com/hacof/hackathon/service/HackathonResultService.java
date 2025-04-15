@@ -1,8 +1,8 @@
 package com.hacof.hackathon.service;
 
-import com.hacof.hackathon.dto.HackathonResultDTO;
-
 import java.util.List;
+
+import com.hacof.hackathon.dto.HackathonResultDTO;
 
 public interface HackathonResultService {
     HackathonResultDTO create(HackathonResultDTO hackathonResultDTO);

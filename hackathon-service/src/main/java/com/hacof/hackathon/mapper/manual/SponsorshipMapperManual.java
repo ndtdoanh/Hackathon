@@ -1,10 +1,10 @@
 package com.hacof.hackathon.mapper.manual;
 
+import java.util.stream.Collectors;
+
 import com.hacof.hackathon.constant.SponsorshipStatus;
 import com.hacof.hackathon.dto.SponsorshipDTO;
 import com.hacof.hackathon.entity.Sponsorship;
-
-import java.util.stream.Collectors;
 
 public class SponsorshipMapperManual {
 

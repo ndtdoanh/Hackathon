@@ -1,8 +1,9 @@
 package com.hacof.hackathon.mapper;
 
+import org.mapstruct.Mapper;
+
 import com.hacof.hackathon.dto.UserDTO;
 import com.hacof.hackathon.entity.User;
-import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

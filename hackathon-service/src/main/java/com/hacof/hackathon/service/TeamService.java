@@ -1,9 +1,9 @@
 package com.hacof.hackathon.service;
 
+import java.util.List;
+
 import com.hacof.hackathon.dto.TeamBulkRequestDTO;
 import com.hacof.hackathon.dto.TeamDTO;
-
-import java.util.List;
 
 public interface TeamService {
     TeamDTO updateTeam(long id, TeamDTO teamDTO);
