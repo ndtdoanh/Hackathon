@@ -65,23 +65,6 @@ public class TeamRoundServiceImpl implements TeamRoundService {
                 .teamRoundJudges(new ArrayList<>())
                 .build();
 
-        // Handle teamRoundJudges nếu có
-        //        if (teamRoundDTO.getTeamRoundJudges() != null && !teamRoundDTO.getTeamRoundJudges().isEmpty()) {
-        //            for (TeamRoundJudgeDTO judgeDTO : teamRoundDTO.getTeamRoundJudges()) {
-        //                User judge = validateJudge(judgeDTO.getJudgeId());
-        //
-        //                TeamRoundJudge judgeEntity = TeamRoundJudge.builder()
-        //                        .teamRound(teamRound)
-        //                        .judge(judge)
-        //                        .createdByUserName(currentUser)
-        //                        .createdAt(now)
-        //                        .lastModifiedByUserName(currentUser)
-        //                        .updatedAt(now)
-        //                        .build();
-        //
-        //                teamRound.getTeamRoundJudges().add(judgeEntity);
-        //            }
-        //        }
         return TeamRoundMapperManual.toDto(teamRoundRepository.save(teamRound));
     }
 

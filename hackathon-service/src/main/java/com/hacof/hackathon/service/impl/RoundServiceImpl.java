@@ -178,7 +178,6 @@ public class RoundServiceImpl implements RoundService {
             validateUniqueRoundNumber(existingRound.getId(), roundDTO.getRoundNumber(), hackathon.getId());
         }
 
-        // Kiểm tra thời gian round nằm trong thời gian của hackathon
         validateRoundDates(roundDTO.getStartTime(), roundDTO.getEndTime(), hackathon);
 
         Authentication authentication = getAuthenticatedUser();
@@ -189,7 +188,6 @@ public class RoundServiceImpl implements RoundService {
 
         User createdBy = existingRound.getCreatedBy();
 
-        // Cập nhật thông tin round
         existingRound.setRoundTitle(roundDTO.getRoundTitle());
         existingRound.setRoundNumber(roundDTO.getRoundNumber());
         existingRound.setStartTime(roundDTO.getStartTime());
