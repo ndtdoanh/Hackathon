@@ -34,7 +34,7 @@ public abstract class AuditUserBase {
     LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_modified_by_user_name")
+    @JoinColumn(name = "last_modified_by_user_id")
     User lastModifiedBy;
 
     @LastModifiedDate
