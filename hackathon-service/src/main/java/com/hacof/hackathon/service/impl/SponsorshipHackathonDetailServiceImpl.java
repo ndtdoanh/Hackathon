@@ -128,4 +128,13 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
         SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailOptional.orElse(null);
         return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
     }
+
+    @Override
+    public List<SponsorshipHackathonDetailDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId) {
+        return sponsorshipHackathonDetailRepository
+                .findAllBySponsorshipHackathonId(Long.parseLong(sponsorshipHackathonId)).stream()
+                .map(SponsorshipHackathonDetailMapperManual::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

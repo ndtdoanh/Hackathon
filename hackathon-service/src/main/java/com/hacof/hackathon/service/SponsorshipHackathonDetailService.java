@@ -14,4 +14,6 @@ public interface SponsorshipHackathonDetailService {
     List<SponsorshipHackathonDetailDTO> getAll();
 
     SponsorshipHackathonDetailDTO getById(Long id);
+
+    List<SponsorshipHackathonDetailDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId);
 }

@@ -154,6 +154,64 @@ public class SponsorshipController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/hackathons/{id}")
+    public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> getSponsorshipHackathonById(@PathVariable String id) {
+        SponsorshipHackathonDTO sponsorshipHackathonDTO = sponsorshipHackathonService.getById(id);
+        CommonResponse<SponsorshipHackathonDTO> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched Sponsorship Hackathon successfully"),
+                sponsorshipHackathonDTO
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/hackathons/by-hackathon/{hackathonId}")
+    public ResponseEntity<CommonResponse<List<SponsorshipHackathonDTO>>> getSponsorshipHackathonsByHackathonId(@PathVariable String hackathonId) {
+        List<SponsorshipHackathonDTO> sponsorshipHackathons = sponsorshipHackathonService.getAllByHackathonId(hackathonId);
+        CommonResponse<List<SponsorshipHackathonDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched Sponsorship Hackathons by Hackathon ID successfully"),
+                sponsorshipHackathons
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/hackathons/by-sponsorship/{sponsorshipId}")
+    public ResponseEntity<CommonResponse<List<SponsorshipHackathonDTO>>> getSponsorshipHackathonsBySponsorshipId(@PathVariable String sponsorshipId) {
+        List<SponsorshipHackathonDTO> sponsorshipHackathons = sponsorshipHackathonService.getAllBySponsorshipId(sponsorshipId);
+        CommonResponse<List<SponsorshipHackathonDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched Sponsorship Hackathons by Sponsorship ID successfully"),
+                sponsorshipHackathons
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/hackathons/by-hackathon-sponsorship")
+    public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> getSponsorshipHackathonByHackathonAndSponsorshipId(
+            @RequestParam String hackathonId,
+            @RequestParam String sponsorshipId) {
+
+        SponsorshipHackathonDTO sponsorshipHackathonDTO = sponsorshipHackathonService.getByHackathonAndSponsorshipId(hackathonId, sponsorshipId);
+
+        CommonResponse<SponsorshipHackathonDTO> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched Sponsorship Hackathon by Hackathon and Sponsorship IDs successfully"),
+                sponsorshipHackathonDTO
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+
     @PostMapping("/details")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailDTO>> createSponsorshipHackathonDetail(
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailDTO> request) {
@@ -219,4 +277,18 @@ public class SponsorshipController {
                 sponsorshipHackathonDetailDTO);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/details/by-sponsorship-hackathon/{sponsorshipHackathonId}")
+    public ResponseEntity<CommonResponse<List<SponsorshipHackathonDetailDTO>>> getSponsorshipHackathonDetailsBySponsorshipHackathonId(
+            @PathVariable String sponsorshipHackathonId) {
+        List<SponsorshipHackathonDetailDTO> sponsorshipHackathonDetails = sponsorshipHackathonDetailService.getAllBySponsorshipHackathonId(sponsorshipHackathonId);
+        CommonResponse<List<SponsorshipHackathonDetailDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched Sponsorship Hackathon Details by SponsorshipHackathonId successfully"),
+                sponsorshipHackathonDetails
+        );
+        return ResponseEntity.ok(response);
+    }
+
 }
