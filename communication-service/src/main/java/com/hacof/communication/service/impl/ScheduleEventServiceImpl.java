@@ -99,7 +99,7 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
     }
 
     @Override
-    public ScheduleEventResponseDTO updateScheduleEvent(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO) {
+    public ScheduleEventResponseDTO updateScheduleEventWithoutFiles(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO) {
         Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(id);
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
@@ -138,23 +138,55 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         scheduleEvent.setRecurring(scheduleEventRequestDTO.isRecurring());
         scheduleEvent.setRecurrenceRule(scheduleEventRequestDTO.getRecurrenceRule());
 
-        // Nếu có fileUrls trong request, tìm kiếm các file và gán cho scheduleEvent
-        if (scheduleEventRequestDTO.getFileUrls() != null
-                && !scheduleEventRequestDTO.getFileUrls().isEmpty()) {
-            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndScheduleEventIsNull(
-                    scheduleEventRequestDTO.getFileUrls()); // Tìm các file chưa được gán vào bất kỳ event nào
-
-            for (FileUrl file : fileUrls) {
-                file.setScheduleEvent(scheduleEvent); // Gán scheduleEvent cho file
-            }
-            fileUrlRepository.saveAll(fileUrls); // Lưu lại các file đã cập nhật
-        }
-
-        // Lưu lại sự kiện đã được cập nhật
         scheduleEvent = scheduleEventRepository.save(scheduleEvent);
 
-        return scheduleEventMapper.toDto(scheduleEvent); // Trả về DTO của scheduleEvent
+        return scheduleEventMapper.toDto(scheduleEvent);
     }
+
+    @Override
+    public ScheduleEventResponseDTO updateScheduleEventFiles(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO) {
+        Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(id);
+        if (!scheduleEventOptional.isPresent()) {
+            throw new IllegalArgumentException("ScheduleEvent with ID " + id + " not found!");
+        }
+
+        ScheduleEvent scheduleEvent = scheduleEventOptional.get();
+
+        // If fileUrls are provided, process them
+        if (scheduleEventRequestDTO.getFileUrls() != null && !scheduleEventRequestDTO.getFileUrls().isEmpty()) {
+            // Fetch the fileUrls that exist in the DB and are not already linked to another scheduleEvent
+            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndScheduleEventIsNull(scheduleEventRequestDTO.getFileUrls());
+
+            // Validate that all the file URLs provided are valid
+            if (fileUrls.size() != scheduleEventRequestDTO.getFileUrls().size()) {
+                throw new IllegalArgumentException("Some file URLs are invalid or already associated with other schedule events.");
+            }
+
+            // Optionally remove old fileUrls if they should be replaced, or merge
+            // For example, remove old fileUrls or clear and add only new ones
+            // scheduleEvent.getFileUrls().clear();  // If you want to completely replace the fileUrls
+
+            // Add new fileUrls to the scheduleEvent
+            for (FileUrl file : fileUrls) {
+                if (!scheduleEvent.getFileUrls().contains(file)) {
+                    scheduleEvent.getFileUrls().add(file); // Add only new fileUrls
+                    file.setScheduleEvent(scheduleEvent);
+                }
+            }
+
+            // Save the updated file URLs
+            fileUrlRepository.saveAll(fileUrls);
+
+            // Save the updated scheduleEvent with the new fileUrls
+            scheduleEvent = scheduleEventRepository.save(scheduleEvent);
+
+            return scheduleEventMapper.toDto(scheduleEvent);
+        }
+
+        throw new IllegalArgumentException("No file URLs provided for update");
+    }
+
+
 
     @Override
     public void deleteScheduleEvent(Long id) {

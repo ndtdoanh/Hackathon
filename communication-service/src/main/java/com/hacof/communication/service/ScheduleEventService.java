@@ -10,7 +10,9 @@ public interface ScheduleEventService {
 
     ScheduleEventResponseDTO createScheduleEvent(ScheduleEventRequestDTO scheduleEventRequestDTO);
 
-    ScheduleEventResponseDTO updateScheduleEvent(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO);
+    ScheduleEventResponseDTO updateScheduleEventWithoutFiles(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO);
+
+    ScheduleEventResponseDTO updateScheduleEventFiles(Long id, ScheduleEventRequestDTO scheduleEventRequestDTO);
 
     void deleteScheduleEvent(Long id);
 

@@ -69,16 +69,41 @@ public class ScheduleEventController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<ScheduleEventResponseDTO>> updateScheduleEvent(
+    @PutMapping("/update-info/{id}")
+    public ResponseEntity<CommonResponse<ScheduleEventResponseDTO>> updateScheduleEventWithoutFiles(
             @PathVariable Long id, @RequestBody CommonRequest<ScheduleEventRequestDTO> request) {
         CommonResponse<ScheduleEventResponseDTO> response = new CommonResponse<>();
         try {
             ScheduleEventResponseDTO updatedScheduleEvent =
-                    scheduleEventService.updateScheduleEvent(id, request.getData());
+                    scheduleEventService.updateScheduleEventWithoutFiles(id, request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event updated successfully!");
+            response.setData(updatedScheduleEvent);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/update-files/{id}")
+    public ResponseEntity<CommonResponse<ScheduleEventResponseDTO>> updateScheduleEventFiles(
+            @PathVariable Long id, @RequestBody CommonRequest<ScheduleEventRequestDTO> request) {
+        CommonResponse<ScheduleEventResponseDTO> response = new CommonResponse<>();
+        try {
+            ScheduleEventResponseDTO updatedScheduleEvent =
+                    scheduleEventService.updateScheduleEventFiles(id, request.getData());
+            setCommonResponseFields(response, request);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Schedule Event files updated successfully!");
             response.setData(updatedScheduleEvent);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
