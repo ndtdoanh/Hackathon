@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
-import java.util.List;
-
 import com.hacof.communication.dto.request.MessageReactionRequest;
 import com.hacof.communication.dto.response.MessageReactionResponse;
+
+import java.util.List;
 
 public interface MessageReactionService {
     MessageReactionResponse reactToMessage(Long messageId, MessageReactionRequest request);

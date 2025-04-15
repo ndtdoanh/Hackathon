@@ -1,10 +1,9 @@
 package com.hacof.hackathon.repository;
 
-import java.util.List;
-
+import com.hacof.hackathon.entity.RoundLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.hacof.hackathon.entity.RoundLocation;
+import java.util.List;
 
 public interface RoundLocationRepository extends JpaRepository<RoundLocation, Long> {
     List<RoundLocation> findByLocationId(Long locationId);

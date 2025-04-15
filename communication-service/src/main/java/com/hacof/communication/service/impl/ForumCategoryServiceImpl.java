@@ -1,18 +1,17 @@
 package com.hacof.communication.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hacof.communication.dto.request.ForumCategoryRequestDTO;
 import com.hacof.communication.dto.response.ForumCategoryResponseDTO;
 import com.hacof.communication.entity.ForumCategory;
 import com.hacof.communication.mapper.ForumCategoryMapper;
 import com.hacof.communication.repository.ForumCategoryRepository;
 import com.hacof.communication.service.ForumCategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ForumCategoryServiceImpl implements ForumCategoryService {

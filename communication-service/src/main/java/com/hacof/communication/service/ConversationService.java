@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
-import java.util.List;
-
 import com.hacof.communication.dto.request.ConversationRequest;
 import com.hacof.communication.dto.response.ConversationResponse;
+
+import java.util.List;
 
 public interface ConversationService {
 

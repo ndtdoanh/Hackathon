@@ -1,11 +1,5 @@
 package com.hacof.identity.service;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
 import com.hacof.identity.dto.request.OrganizerUpdateForJudgeMentor;
@@ -15,6 +9,11 @@ import com.hacof.identity.dto.request.UserCreateRequest;
 import com.hacof.identity.dto.request.UserUpdateRequest;
 import com.hacof.identity.dto.response.AvatarResponse;
 import com.hacof.identity.dto.response.UserResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 public interface UserService {
     UserResponse createUser(String token, UserCreateRequest request);

@@ -1,8 +1,7 @@
 package com.hacof.communication.util;
 
-import org.springframework.stereotype.Component;
-
 import com.hacof.communication.entity.User;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AuditContext {

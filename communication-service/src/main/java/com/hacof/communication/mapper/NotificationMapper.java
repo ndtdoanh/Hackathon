@@ -1,13 +1,5 @@
 package com.hacof.communication.mapper;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.hacof.communication.constant.NotificationStatus;
 import com.hacof.communication.dto.request.NotificationDeliveryRequest;
 import com.hacof.communication.dto.request.NotificationRequest;
@@ -17,6 +9,13 @@ import com.hacof.communication.dto.response.UserResponse;
 import com.hacof.communication.entity.Notification;
 import com.hacof.communication.entity.NotificationDelivery;
 import com.hacof.communication.entity.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {

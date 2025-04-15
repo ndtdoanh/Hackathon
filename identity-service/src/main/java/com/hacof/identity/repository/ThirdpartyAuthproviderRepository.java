@@ -1,13 +1,12 @@
 package com.hacof.identity.repository;
 
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import com.hacof.identity.constant.ProviderName;
 import com.hacof.identity.entity.ThirdpartyAuthprovider;
 import com.hacof.identity.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface ThirdpartyAuthproviderRepository extends JpaRepository<ThirdpartyAuthprovider, Long> {

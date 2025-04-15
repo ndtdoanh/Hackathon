@@ -1,18 +1,19 @@
 package com.hacof.communication.dto.request;
 
-import java.util.Set;
-
 import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.constant.RoleType;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+import java.util.Set;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

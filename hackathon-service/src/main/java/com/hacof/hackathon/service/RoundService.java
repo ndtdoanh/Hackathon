@@ -1,11 +1,10 @@
 package com.hacof.hackathon.service;
 
-import java.util.List;
-
-import org.springframework.data.jpa.domain.Specification;
-
 import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.entity.Round;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.List;
 
 public interface RoundService {
     RoundDTO create(RoundDTO roundDTO);

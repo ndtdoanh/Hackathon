@@ -1,15 +1,13 @@
 package com.hacof.submission.util;
 
-import java.time.LocalDateTime;
-
-import jakarta.validation.constraints.Size;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter

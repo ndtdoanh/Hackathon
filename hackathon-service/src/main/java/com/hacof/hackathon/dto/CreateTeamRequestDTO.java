@@ -1,10 +1,12 @@
 package com.hacof.hackathon.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
 public class CreateTeamRequestDTO {
     private String teamName;
     private List<Long> requestIds;

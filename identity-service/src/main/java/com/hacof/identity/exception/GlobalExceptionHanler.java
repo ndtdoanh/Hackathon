@@ -1,11 +1,10 @@
 package com.hacof.identity.exception;
 
+import com.hacof.identity.dto.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import com.hacof.identity.dto.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHanler {

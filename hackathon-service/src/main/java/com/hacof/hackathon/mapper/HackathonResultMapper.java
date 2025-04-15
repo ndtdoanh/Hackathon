@@ -1,11 +1,14 @@
 package com.hacof.hackathon.mapper;
 
-import org.mapstruct.*;
-
 import com.hacof.hackathon.dto.HackathonResultDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.HackathonResult;
 import com.hacof.hackathon.entity.Team;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 @Mapper(
         componentModel = "spring",

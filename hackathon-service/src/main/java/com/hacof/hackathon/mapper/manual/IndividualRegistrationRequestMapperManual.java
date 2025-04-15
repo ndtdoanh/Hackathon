@@ -1,12 +1,12 @@
 package com.hacof.hackathon.mapper.manual;
 
-import java.time.LocalDateTime;
-
 import com.hacof.hackathon.constant.IndividualRegistrationRequestStatus;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.IndividualRegistrationRequest;
 import com.hacof.hackathon.entity.User;
+
+import java.time.LocalDateTime;
 
 public class IndividualRegistrationRequestMapperManual {
 

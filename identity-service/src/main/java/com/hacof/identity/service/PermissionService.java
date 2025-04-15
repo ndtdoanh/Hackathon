@@ -1,10 +1,10 @@
 package com.hacof.identity.service;
 
-import java.util.List;
-
 import com.hacof.identity.dto.request.PermissionCreateRequest;
 import com.hacof.identity.dto.request.PermissionUpdateRequest;
 import com.hacof.identity.dto.response.PermissionResponse;
+
+import java.util.List;
 
 public interface PermissionService {
     PermissionResponse createPermission(PermissionCreateRequest request);

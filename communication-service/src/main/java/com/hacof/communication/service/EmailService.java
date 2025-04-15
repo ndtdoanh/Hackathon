@@ -1,8 +1,8 @@
 package com.hacof.communication.service;
 
-import java.util.concurrent.CompletableFuture;
-
 import jakarta.mail.MessagingException;
+
+import java.util.concurrent.CompletableFuture;
 
 public interface EmailService {
     void sendEmail(String to, String subject, String content) throws MessagingException;

@@ -1,8 +1,7 @@
 package com.hacof.submission.util;
 
-import org.springframework.stereotype.Component;
-
 import com.hacof.submission.entity.User;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AuditContext {
