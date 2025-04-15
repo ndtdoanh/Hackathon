@@ -50,6 +50,8 @@ public class Round extends AuditBase {
 
     int roundNumber;
 
+    int totalTeam;
+
     String roundTitle;
 
     @Enumerated(EnumType.STRING)

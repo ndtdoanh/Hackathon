@@ -52,6 +52,8 @@ public class Round extends AuditBase {
 
     String roundTitle;
 
+    int totalTeam;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     RoundStatus status;

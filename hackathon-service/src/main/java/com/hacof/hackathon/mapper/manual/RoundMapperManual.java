@@ -22,6 +22,7 @@ public class RoundMapperManual {
         dto.setEndTime(entity.getEndTime());
         dto.setRoundNumber(entity.getRoundNumber());
         dto.setRoundTitle(entity.getRoundTitle());
+        dto.setTotalTeam(entity.getTotalTeam());
         dto.setStatus(entity.getStatus().name());
 
         dto.setCreatedByUserName(
@@ -54,13 +55,8 @@ public class RoundMapperManual {
         entity.setEndTime(dto.getEndTime());
         entity.setRoundNumber(dto.getRoundNumber());
         entity.setRoundTitle(dto.getRoundTitle());
+        entity.setTotalTeam(dto.getTotalTeam());
         entity.setStatus(RoundStatus.valueOf(dto.getStatus()));
-
-        //        entity.setCreatedByUserName(dto.getCreatedByUserName());
-        //        entity.setCreatedAt(dto.getCreatedAt());
-        //        entity.setLastModifiedByUserName(dto.getLastModifiedByUserName());
-        //        entity.setUpdatedAt(dto.getUpdatedAt());
-
         return entity;
     }
 }

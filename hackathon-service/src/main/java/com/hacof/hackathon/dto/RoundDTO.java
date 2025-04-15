@@ -38,6 +38,9 @@ public class RoundDTO {
     @NotBlank(message = "Round Title is required")
     String roundTitle;
 
+    @NotNull(message = "Total Team is required")
+    int totalTeam;
+
     @NotNull(message = "Round Status is required")
     String status; // Enum RoundStatus
 

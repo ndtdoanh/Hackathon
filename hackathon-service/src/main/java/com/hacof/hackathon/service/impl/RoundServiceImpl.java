@@ -75,6 +75,7 @@ public class RoundServiceImpl implements RoundService {
         round.setEndTime(roundDTO.getEndTime());
         round.setRoundNumber(roundDTO.getRoundNumber());
         round.setRoundTitle(roundDTO.getRoundTitle());
+        round.setTotalTeam(roundDTO.getTotalTeam());
         round.setStatus(RoundStatus.valueOf(roundDTO.getStatus()));
         round.setCreatedBy(user);
         round.setLastModifiedBy(user);
@@ -115,6 +116,7 @@ public class RoundServiceImpl implements RoundService {
         responseDTO.setEndTime(round.getEndTime());
         responseDTO.setRoundNumber(round.getRoundNumber());
         responseDTO.setRoundTitle(round.getRoundTitle());
+        responseDTO.setTotalTeam(round.getTotalTeam());
         responseDTO.setStatus(round.getStatus().name());
         responseDTO.setCreatedByUserName(round.getCreatedBy().getUsername());
         responseDTO.setLastModifiedByUserName(round.getLastModifiedBy().getUsername());
@@ -194,6 +196,7 @@ public class RoundServiceImpl implements RoundService {
         User createdBy = existingRound.getCreatedBy();
 
         existingRound.setRoundTitle(roundDTO.getRoundTitle());
+        existingRound.setTotalTeam(roundDTO.getTotalTeam());
         existingRound.setRoundNumber(roundDTO.getRoundNumber());
         existingRound.setStartTime(roundDTO.getStartTime());
         existingRound.setEndTime(roundDTO.getEndTime());
