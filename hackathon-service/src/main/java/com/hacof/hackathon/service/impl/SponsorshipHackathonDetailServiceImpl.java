@@ -1,9 +1,11 @@
 package com.hacof.hackathon.service.impl;
 
+import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
 import com.hacof.hackathon.entity.SponsorshipHackathon;
 import com.hacof.hackathon.entity.SponsorshipHackathonDetail;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
+import com.hacof.hackathon.mapper.FileUrlMapper;
 import com.hacof.hackathon.mapper.manual.SponsorshipHackathonDetailMapperManual;
 import com.hacof.hackathon.repository.SponsorshipHackathonDetailRepository;
 import com.hacof.hackathon.repository.SponsorshipHackathonRepository;
@@ -12,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +30,9 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     SponsorshipHackathonDetailRepository sponsorshipHackathonDetailRepository;
     SponsorshipHackathonRepository sponsorshipHackathonRepository;
     // SponsorshipHackathonDetailMapper sponsorshipHackathonDetailMapper;
+
+    @Autowired
+    private FileUrlMapper fileUrlMapper;
 
     //    @Override
     //    public SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO) {
@@ -135,6 +141,14 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
                 .findAllBySponsorshipHackathonId(Long.parseLong(sponsorshipHackathonId)).stream()
                 .map(SponsorshipHackathonDetailMapperManual::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FileUrlResponse> getFileUrlsBySponsorshipHackathonDetailId(Long sponsorshipHackathonDetailId) {
+        SponsorshipHackathonDetail scheduleEvent = sponsorshipHackathonDetailRepository
+                .findById(sponsorshipHackathonDetailId)
+                .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
+        return fileUrlMapper.toResponseList(scheduleEvent.getFileUrls());
     }
 
 }

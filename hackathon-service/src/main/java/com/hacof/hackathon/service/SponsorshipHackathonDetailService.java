@@ -1,5 +1,6 @@
 package com.hacof.hackathon.service;
 
+import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface SponsorshipHackathonDetailService {
     SponsorshipHackathonDetailDTO getById(Long id);
 
     List<SponsorshipHackathonDetailDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId);
+
+    List<FileUrlResponse> getFileUrlsBySponsorshipHackathonDetailId(Long sponsorshipHackathonDetailId);
 }

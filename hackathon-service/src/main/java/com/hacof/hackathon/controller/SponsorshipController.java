@@ -1,5 +1,6 @@
 package com.hacof.hackathon.controller;
 
+import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipDTO;
 import com.hacof.hackathon.dto.SponsorshipHackathonDTO;
 import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
@@ -288,6 +289,23 @@ public class SponsorshipController {
                 new CommonResponse.Result("0000", "Fetched Sponsorship Hackathon Details by SponsorshipHackathonId successfully"),
                 sponsorshipHackathonDetails
         );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{sponsorshipHackathonDetailId}/file-urls")
+    public ResponseEntity<CommonResponse<List<FileUrlResponse>>> getFileUrlsBysponsorshipHackathonDetailId(
+            @PathVariable Long sponsorshipHackathonDetailId) {
+
+        List<FileUrlResponse> fileUrls = sponsorshipHackathonDetailService.getFileUrlsBySponsorshipHackathonDetailId(sponsorshipHackathonDetailId);
+
+        CommonResponse<List<FileUrlResponse>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "File URLs fetched successfully"),
+                fileUrls
+        );
+
         return ResponseEntity.ok(response);
     }
 
