@@ -12,10 +12,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface DeviceMapper {
 
     @Mapping(target = "hackathon.id", source = "hackathonId")
-    @Mapping(target = "round.id", source = "roundId")
-    @Mapping(target = "roundLocation.id", source = "roundLocationId")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "description", source = "description")
+    @Mapping(target = "quantity", source = "quantity")
     @Mapping(target = "status", source = "status")
     Device toDevice(DeviceRequest request);
 
@@ -25,6 +24,7 @@ public interface DeviceMapper {
     @Mapping(target = "roundLocationId", source = "roundLocation.id")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "description", source = "description")
+    @Mapping(target = "quantity", source = "quantity")
     @Mapping(target = "status", source = "status")
     @Mapping(target = "fileUrls", source = "fileUrls")
     @Mapping(
@@ -54,6 +54,10 @@ public interface DeviceMapper {
     @Mapping(
             target = "description",
             source = "description",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(
+            target = "quantity",
+            source = "quantity",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(
             target = "status",

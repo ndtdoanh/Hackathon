@@ -5,6 +5,8 @@ import com.hacof.identity.dto.response.DeviceResponse;
 import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.entity.Device;
 import com.hacof.identity.entity.FileUrl;
+import com.hacof.identity.entity.Round;
+import com.hacof.identity.entity.RoundLocation;
 import com.hacof.identity.exception.AppException;
 import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.mapper.DeviceMapper;
@@ -45,15 +47,36 @@ public class DeviceServiceImpl implements DeviceService {
                 .findById(Long.valueOf(request.getHackathonId()))
                 .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND));
 
-        roundRepository
-                .findById(Long.valueOf(request.getRoundId()))
-                .orElseThrow(() -> new AppException(ErrorCode.ROUND_NOT_FOUND));
+        Round round = null;
+        String roundIdStr = request.getRoundId();
+        if (roundIdStr != null && !roundIdStr.trim().isEmpty()) {
+            try {
+                Long roundId = Long.valueOf(roundIdStr.trim());
+                round = roundRepository
+                        .findById(roundId)
+                        .orElseThrow(() -> new AppException(ErrorCode.ROUND_NOT_FOUND));
+            } catch (NumberFormatException e) {
+                throw new AppException(ErrorCode.INVALID_INPUT);
+            }
+        }
 
-        roundLocationRepository
-                .findById(Long.valueOf(request.getRoundLocationId()))
-                .orElseThrow(() -> new AppException(ErrorCode.ROUND_LOCATION_NOT_FOUND));
+        RoundLocation roundLocation = null;
+        String roundLocationIdStr = request.getRoundLocationId();
+        if (roundLocationIdStr != null && !roundLocationIdStr.trim().isEmpty()) {
+            try {
+                Long roundLocationId = Long.valueOf(roundLocationIdStr.trim());
+                roundLocation = roundLocationRepository
+                        .findById(roundLocationId)
+                        .orElseThrow(() -> new AppException(ErrorCode.ROUND_LOCATION_NOT_FOUND));
+            } catch (NumberFormatException e) {
+                throw new AppException(ErrorCode.INVALID_INPUT);
+            }
+        }
 
         Device device = deviceMapper.toDevice(request);
+        if (round != null) device.setRound(round);
+        if (roundLocation != null) device.setRoundLocation(roundLocation);
+
         Device savedDevice = deviceRepository.save(device);
 
         if (files != null && !files.isEmpty()) {
