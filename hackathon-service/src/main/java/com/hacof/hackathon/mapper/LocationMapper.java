@@ -1,10 +1,9 @@
 package com.hacof.hackathon.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.hacof.hackathon.dto.LocationDTO;
 import com.hacof.hackathon.entity.Location;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface LocationMapper {

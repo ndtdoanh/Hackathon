@@ -1,11 +1,17 @@
 package com.hacof.hackathon.dto;
 
-import java.time.LocalDateTime;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

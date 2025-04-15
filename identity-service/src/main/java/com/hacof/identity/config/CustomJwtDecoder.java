@@ -1,9 +1,8 @@
 package com.hacof.identity.config;
 
-import java.text.ParseException;
-import java.util.Objects;
-import javax.crypto.spec.SecretKeySpec;
-
+import com.hacof.identity.dto.request.IntrospectRequest;
+import com.hacof.identity.service.AuthenticationService;
+import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -13,9 +12,9 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
-import com.hacof.identity.dto.request.IntrospectRequest;
-import com.hacof.identity.service.AuthenticationService;
-import com.nimbusds.jose.JOSEException;
+import javax.crypto.spec.SecretKeySpec;
+import java.text.ParseException;
+import java.util.Objects;
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {

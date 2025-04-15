@@ -1,12 +1,13 @@
 package com.hacof.hackathon.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter

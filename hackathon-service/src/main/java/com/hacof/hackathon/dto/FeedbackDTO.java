@@ -1,13 +1,18 @@
 package com.hacof.hackathon.dto;
 
-import java.util.List;
-
 import com.hacof.hackathon.entity.AuditCreatedBase;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+import java.util.List;
+
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,29 +1,55 @@
 package com.hacof.hackathon.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.hacof.hackathon.constant.ConversationType;
+import com.hacof.hackathon.constant.TeamHackathonStatus;
+import com.hacof.hackathon.constant.TeamRoundStatus;
+import com.hacof.hackathon.dto.TeamBulkRequestDTO;
+import com.hacof.hackathon.dto.TeamDTO;
+import com.hacof.hackathon.dto.TeamHackathonBulkDTO;
+import com.hacof.hackathon.dto.TeamMemberBulkDTO;
+import com.hacof.hackathon.entity.Board;
+import com.hacof.hackathon.entity.Conversation;
+import com.hacof.hackathon.entity.ConversationUser;
+import com.hacof.hackathon.entity.Hackathon;
+import com.hacof.hackathon.entity.Round;
+import com.hacof.hackathon.entity.Schedule;
+import com.hacof.hackathon.entity.Team;
+import com.hacof.hackathon.entity.TeamHackathon;
+import com.hacof.hackathon.entity.TeamRound;
+import com.hacof.hackathon.entity.User;
+import com.hacof.hackathon.entity.UserTeam;
+import com.hacof.hackathon.exception.InvalidInputException;
+import com.hacof.hackathon.exception.ResourceNotFoundException;
+import com.hacof.hackathon.mapper.TeamMapper;
+import com.hacof.hackathon.mapper.manual.TeamMapperManual;
+import com.hacof.hackathon.repository.BoardRepository;
+import com.hacof.hackathon.repository.BoardUserRepository;
+import com.hacof.hackathon.repository.ConversationRepository;
+import com.hacof.hackathon.repository.ConversationUserRepository;
+import com.hacof.hackathon.repository.HackathonRepository;
+import com.hacof.hackathon.repository.IndividualRegistrationRequestRepository;
+import com.hacof.hackathon.repository.RoundRepository;
+import com.hacof.hackathon.repository.ScheduleRepository;
+import com.hacof.hackathon.repository.TeamHackathonRepository;
+import com.hacof.hackathon.repository.TeamRepository;
+import com.hacof.hackathon.repository.TeamRoundRepository;
+import com.hacof.hackathon.repository.UserRepository;
+import com.hacof.hackathon.repository.UserTeamRepository;
+import com.hacof.hackathon.service.TeamService;
+import com.hacof.hackathon.specification.TeamSpecification;
 import jakarta.transaction.Transactional;
-
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.hacof.hackathon.constant.*;
-import com.hacof.hackathon.dto.*;
-import com.hacof.hackathon.entity.*;
-import com.hacof.hackathon.exception.InvalidInputException;
-import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.TeamMapper;
-import com.hacof.hackathon.mapper.manual.TeamMapperManual;
-import com.hacof.hackathon.repository.*;
-import com.hacof.hackathon.service.TeamService;
-import com.hacof.hackathon.specification.TeamSpecification;
-
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

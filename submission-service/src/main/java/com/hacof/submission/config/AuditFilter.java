@@ -1,17 +1,15 @@
 package com.hacof.submission.config;
 
-import java.io.IOException;
-
+import com.hacof.submission.util.AuditContext;
+import com.hacof.submission.util.SecurityUtil;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-
 import org.springframework.stereotype.Component;
 
-import com.hacof.submission.util.AuditContext;
-import com.hacof.submission.util.SecurityUtil;
+import java.io.IOException;
 
 @Component
 public class AuditFilter implements Filter {

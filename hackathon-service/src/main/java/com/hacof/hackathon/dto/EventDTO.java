@@ -1,15 +1,16 @@
 package com.hacof.hackathon.dto;
 
-import java.time.LocalDateTime;
-
 import com.hacof.hackathon.constant.EventType;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

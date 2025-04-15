@@ -1,18 +1,19 @@
 package com.hacof.communication.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.hacof.communication.constant.NotificationType;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

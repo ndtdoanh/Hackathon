@@ -1,20 +1,32 @@
 package com.hacof.hackathon.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.validation.constraints.*;
-
-import org.hibernate.validator.constraints.URL;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hacof.hackathon.entity.*;
-
+import com.hacof.hackathon.entity.Device;
+import com.hacof.hackathon.entity.Feedback;
+import com.hacof.hackathon.entity.HackathonResult;
+import com.hacof.hackathon.entity.IndividualRegistrationRequest;
+import com.hacof.hackathon.entity.MentorshipRequest;
+import com.hacof.hackathon.entity.MentorshipSessionRequest;
+import com.hacof.hackathon.entity.SponsorshipHackathon;
+import com.hacof.hackathon.entity.TeamHackathon;
+import com.hacof.hackathon.entity.TeamRequest;
+import com.hacof.hackathon.entity.UserHackathon;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.URL;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter

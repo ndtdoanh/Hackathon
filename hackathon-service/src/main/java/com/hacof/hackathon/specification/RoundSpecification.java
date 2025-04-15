@@ -1,8 +1,7 @@
 package com.hacof.hackathon.specification;
 
-import org.springframework.data.jpa.domain.Specification;
-
 import com.hacof.hackathon.entity.Round;
+import org.springframework.data.jpa.domain.Specification;
 
 public class RoundSpecification {
     public static Specification<Round> hasId(String id) {

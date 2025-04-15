@@ -1,8 +1,8 @@
 package com.hacof.hackathon.service;
 
-import java.util.List;
-
 import com.hacof.hackathon.dto.MentorTeamDTO;
+
+import java.util.List;
 
 public interface MentorTeamService {
     MentorTeamDTO create(MentorTeamDTO mentorTeamDTO);

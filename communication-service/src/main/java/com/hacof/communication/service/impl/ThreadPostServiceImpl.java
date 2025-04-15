@@ -1,11 +1,5 @@
 package com.hacof.communication.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hacof.communication.dto.request.ThreadPostRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostResponseDTO;
 import com.hacof.communication.entity.ForumThread;
@@ -14,6 +8,11 @@ import com.hacof.communication.mapper.ThreadPostMapper;
 import com.hacof.communication.repository.ForumThreadRepository;
 import com.hacof.communication.repository.ThreadPostRepository;
 import com.hacof.communication.service.ThreadPostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ThreadPostServiceImpl implements ThreadPostService {

@@ -1,10 +1,13 @@
 package com.hacof.hackathon.mapper;
 
-import org.mapstruct.*;
-
 import com.hacof.hackathon.dto.RoundLocationDTO;
 import com.hacof.hackathon.entity.RoundLocation;
 import com.hacof.hackathon.service.LocationService;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",

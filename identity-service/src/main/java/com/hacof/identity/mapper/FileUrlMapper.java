@@ -1,14 +1,13 @@
 package com.hacof.identity.mapper;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.hacof.identity.dto.response.DeviceResponse;
 import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.entity.Device;
 import com.hacof.identity.entity.FileUrl;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FileUrlMapper {

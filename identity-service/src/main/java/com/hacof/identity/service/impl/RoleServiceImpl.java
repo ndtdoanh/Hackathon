@@ -1,10 +1,5 @@
 package com.hacof.identity.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import com.hacof.identity.dto.request.RoleCreateRequest;
 import com.hacof.identity.dto.request.RoleUpdateRequest;
 import com.hacof.identity.dto.response.PermissionResponse;
@@ -21,10 +16,13 @@ import com.hacof.identity.repository.RoleRepository;
 import com.hacof.identity.service.RoleService;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jwt.JWTClaimsSet;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

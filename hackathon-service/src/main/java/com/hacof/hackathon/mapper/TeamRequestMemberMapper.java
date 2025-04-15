@@ -1,10 +1,9 @@
 package com.hacof.hackathon.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.hacof.hackathon.dto.TeamRequestMemberDTO;
 import com.hacof.hackathon.entity.TeamRequestMember;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface TeamRequestMemberMapper {

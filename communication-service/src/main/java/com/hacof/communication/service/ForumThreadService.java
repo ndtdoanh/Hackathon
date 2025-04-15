@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
-import java.util.List;
-
 import com.hacof.communication.dto.request.ForumThreadRequestDTO;
 import com.hacof.communication.dto.response.ForumThreadResponseDTO;
+
+import java.util.List;
 
 public interface ForumThreadService {
 

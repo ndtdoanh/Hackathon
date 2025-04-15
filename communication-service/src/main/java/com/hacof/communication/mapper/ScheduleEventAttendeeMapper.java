@@ -1,17 +1,25 @@
 package com.hacof.communication.mapper;
 
+import com.hacof.communication.constant.ScheduleEventStatus;
+import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
+import com.hacof.communication.dto.response.PermissionResponse;
+import com.hacof.communication.dto.response.RoleResponse;
+import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
+import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
+import com.hacof.communication.dto.response.ScheduleResponseDTO;
+import com.hacof.communication.dto.response.UserResponse;
+import com.hacof.communication.entity.Permission;
+import com.hacof.communication.entity.Schedule;
+import com.hacof.communication.entity.ScheduleEvent;
+import com.hacof.communication.entity.ScheduleEventAttendee;
+import com.hacof.communication.entity.User;
+import com.hacof.communication.entity.UserRole;
+import org.springframework.stereotype.Component;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
-
-import com.hacof.communication.constant.ScheduleEventStatus;
-import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
-import com.hacof.communication.dto.response.*;
-import com.hacof.communication.dto.response.RoleResponse;
-import com.hacof.communication.entity.*;
 
 @Component
 public class ScheduleEventAttendeeMapper {

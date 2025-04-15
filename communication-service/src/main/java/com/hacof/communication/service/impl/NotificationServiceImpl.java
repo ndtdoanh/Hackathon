@@ -1,19 +1,5 @@
 package com.hacof.communication.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
-import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.constant.NotificationStatus;
 import com.hacof.communication.constant.RoleType;
@@ -37,11 +23,22 @@ import com.hacof.communication.repository.UserRoleRepository;
 import com.hacof.communication.service.EmailService;
 import com.hacof.communication.service.NotificationService;
 import com.hacof.communication.util.SecurityUtil;
-
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

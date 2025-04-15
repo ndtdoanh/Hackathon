@@ -1,17 +1,15 @@
 package com.hacof.hackathon.configs;
 
-import java.io.IOException;
-
+import com.hacof.hackathon.util.AuditContext;
+import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-
 import org.springframework.stereotype.Component;
 
-import com.hacof.hackathon.util.AuditContext;
-import com.hacof.hackathon.util.SecurityUtil;
+import java.io.IOException;
 
 @Component
 public class AuditFilter implements Filter {
