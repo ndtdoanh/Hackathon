@@ -160,7 +160,7 @@ public class UserController {
     }
 
     @PutMapping("/my-info")
-    public ApiResponse<UserResponse> updateUser(@Valid @RequestBody ApiRequest<UserUpdateRequest> request) {
+    public ApiResponse<UserResponse> updateMyInfo(@Valid @RequestBody ApiRequest<UserUpdateRequest> request) {
         return ApiResponse.<UserResponse>builder()
                 .requestId(request.getRequestId())
                 .requestDateTime(request.getRequestDateTime())
