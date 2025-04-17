@@ -1,5 +1,11 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.ThreadPostLikeRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
 import com.hacof.communication.entity.ThreadPost;
@@ -10,11 +16,6 @@ import com.hacof.communication.repository.ThreadPostLikeRepository;
 import com.hacof.communication.repository.ThreadPostRepository;
 import com.hacof.communication.service.ThreadPostLikeService;
 import com.hacof.communication.util.AuditContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ThreadPostLikeServiceImpl implements ThreadPostLikeService {

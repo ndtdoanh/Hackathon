@@ -1,10 +1,15 @@
 package com.hacof.hackathon.test;
 
-import com.hacof.hackathon.controller.HackathonController;
-import com.hacof.hackathon.dto.HackathonDTO;
-import com.hacof.hackathon.service.HackathonService;
-import com.hacof.hackathon.util.CommonRequest;
-import com.hacof.hackathon.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,16 +18,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-
+import com.hacof.hackathon.controller.HackathonController;
+import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.service.HackathonService;
+import com.hacof.hackathon.util.CommonRequest;
+import com.hacof.hackathon.util.CommonResponse;
 
 class HackathonControllerTest {
 
@@ -45,8 +45,8 @@ class HackathonControllerTest {
 
         when(hackathonService.getHackathons(any())).thenReturn(Collections.singletonList(hackathonDTO));
 
-        ResponseEntity<CommonResponse<List<HackathonDTO>>> response = hackathonController.getByAllCriteria(
-                "1", "Test Hackathon", null, null, null, null, null, null, null);
+        ResponseEntity<CommonResponse<List<HackathonDTO>>> response =
+                hackathonController.getByAllCriteria("1", "Test Hackathon", null, null, null, null, null, null, null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().getData().size());

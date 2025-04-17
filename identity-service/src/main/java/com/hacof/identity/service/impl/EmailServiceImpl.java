@@ -1,13 +1,16 @@
 package com.hacof.identity.service.impl;
 
-import com.hacof.identity.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import com.hacof.identity.service.EmailService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -29,22 +32,17 @@ public class EmailServiceImpl implements EmailService {
                             + "<div style='background-color: #2f4050; padding: 20px 30px; text-align: center;'>"
                             + "<h1 style='color: #ffffff; font-size: 24px; margin: 0;'>HACOF</h1>"
                             + "</div>"
-
                             + "<div style='background-color: #ffffff; padding: 30px;'>"
                             + "<p style='font-size: 16px; color: #333;'>Hello,</p>"
                             + "<p style='font-size: 16px; color: #333;'>You (or someone else) have requested an OTP code to verify your email. Here is your code:</p>"
-
                             + "<div style='text-align: center; margin: 30px 0;'>"
                             + "<span style='display: inline-block; font-size: 26px; color: #e74c3c; font-weight: bold; letter-spacing: 4px; padding: 12px 24px; border: 2px dashed #e74c3c; border-radius: 6px;'>"
                             + otp + "</span>"
                             + "</div>"
-
                             + "<p style='font-size: 14px; color: #555;'>This code will expire in <strong>5 minutes</strong>. If you did not request this, please ignore this email or contact support if you're concerned.</p>"
-
                             + "<p style='font-size: 14px; color: #999; margin-top: 30px;'>Best regards,</p>"
                             + "<p style='font-size: 14px; color: #2f4050; font-weight: bold;'>HACOF Support Team</p>"
                             + "</div>"
-
                             + "<div style='background-color: #f4f4f4; padding: 15px 30px; text-align: center;'>"
                             + "<p style='font-size: 12px; color: #999; margin: 0;'>This is an automated email. Please do not reply.</p>"
                             + "</div>"
@@ -74,23 +72,18 @@ public class EmailServiceImpl implements EmailService {
                             + "<div style='background-color: #2f4050; padding: 20px 30px; text-align: center;'>"
                             + "<h1 style='color: #ffffff; font-size: 24px; margin: 0;'>HACOF</h1>"
                             + "</div>"
-
                             + "<div style='background-color: #ffffff; padding: 30px;'>"
                             + "<h2 style='color: #333; font-size: 20px; margin-bottom: 20px;'>Password Reset Request</h2>"
                             + "<p style='font-size: 16px; color: #333;'>Hello,</p>"
                             + "<p style='font-size: 16px; color: #333;'>You (or someone else) have requested a password reset OTP code. Here is your code:</p>"
-
                             + "<div style='text-align: center; margin: 30px 0;'>"
                             + "<span style='display: inline-block; font-size: 26px; color: #e74c3c; font-weight: bold; letter-spacing: 4px; padding: 12px 24px; border: 2px dashed #e74c3c; border-radius: 6px;'>"
                             + otp + "</span>"
                             + "</div>"
-
                             + "<p style='font-size: 14px; color: #555;'>This code will expire in <strong>5 minutes</strong>. If you did not request a password reset, please ignore this email.</p>"
-
                             + "<p style='font-size: 14px; color: #999; margin-top: 30px;'>Best regards,</p>"
                             + "<p style='font-size: 14px; color: #2f4050; font-weight: bold;'>HACOF Support Team</p>"
                             + "</div>"
-
                             + "<div style='background-color: #f4f4f4; padding: 15px 30px; text-align: center;'>"
                             + "<p style='font-size: 12px; color: #999; margin: 0;'>This is an automated email. Please do not reply.</p>"
                             + "</div>"

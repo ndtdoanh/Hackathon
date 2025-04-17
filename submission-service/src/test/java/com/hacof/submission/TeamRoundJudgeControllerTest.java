@@ -1,11 +1,12 @@
 package com.hacof.submission;
 
-import com.hacof.submission.controller.TeamRoundJudgeController;
-import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
-import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
-import com.hacof.submission.service.TeamRoundJudgeService;
-import com.hacof.submission.util.CommonRequest;
-import com.hacof.submission.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,13 +14,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.hacof.submission.controller.TeamRoundJudgeController;
+import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
+import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
+import com.hacof.submission.service.TeamRoundJudgeService;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
 
 class TeamRoundJudgeControllerTest {
 
@@ -156,7 +156,8 @@ class TeamRoundJudgeControllerTest {
     void testUpdate_Success() {
         when(service.updateTeamRoundJudge(eq(1L), any())).thenReturn(new TeamRoundJudgeResponseDTO());
 
-        ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> response = controller.update(1L, buildRequestWithData());
+        ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> response =
+                controller.update(1L, buildRequestWithData());
 
         assertEquals(200, response.getStatusCodeValue());
     }
@@ -165,7 +166,8 @@ class TeamRoundJudgeControllerTest {
     void testUpdate_IllegalArgument() {
         when(service.updateTeamRoundJudge(eq(1L), any())).thenThrow(new IllegalArgumentException("Invalid"));
 
-        ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> response = controller.update(1L, buildRequestWithData());
+        ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> response =
+                controller.update(1L, buildRequestWithData());
 
         assertEquals(404, response.getStatusCodeValue());
     }
@@ -174,7 +176,8 @@ class TeamRoundJudgeControllerTest {
     void testUpdate_Exception() {
         when(service.updateTeamRoundJudge(eq(1L), any())).thenThrow(new RuntimeException("Error"));
 
-        ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> response = controller.update(1L, buildRequestWithData());
+        ResponseEntity<CommonResponse<TeamRoundJudgeResponseDTO>> response =
+                controller.update(1L, buildRequestWithData());
 
         assertEquals(500, response.getStatusCodeValue());
     }
@@ -244,7 +247,9 @@ class TeamRoundJudgeControllerTest {
 
     @Test
     void testDeleteByTeamRoundAndJudge_IllegalArgument() {
-        doThrow(new IllegalArgumentException("Invalid")).when(service).deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(10L, 20L);
+        doThrow(new IllegalArgumentException("Invalid"))
+                .when(service)
+                .deleteTeamRoundJudgeByTeamRoundIdAndJudgeId(10L, 20L);
 
         ResponseEntity<CommonResponse<Void>> response = controller.deleteByTeamRoundAndJudge(10L, 20L);
 

@@ -1,5 +1,7 @@
 package com.hacof.submission.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
 import com.hacof.submission.dto.response.HackathonResponseDTO;
 import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
@@ -7,7 +9,6 @@ import com.hacof.submission.dto.response.RoundResponseDTO;
 import com.hacof.submission.entity.Hackathon;
 import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.RoundMarkCriterion;
-import org.springframework.stereotype.Component;
 
 @Component
 public class RoundMarkCriterionMapper {

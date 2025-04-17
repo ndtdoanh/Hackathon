@@ -1,9 +1,9 @@
 package com.hacof.submission.service;
 
+import java.util.List;
+
 import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
 import com.hacof.submission.dto.response.JudgeRoundResponseDTO;
-
-import java.util.List;
 
 public interface JudgeRoundService {
     JudgeRoundResponseDTO createJudgeRound(JudgeRoundRequestDTO dto);

@@ -1,5 +1,19 @@
 package com.hacof.identity.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.text.ParseException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AuthenticationRequest;
 import com.hacof.identity.dto.request.IntrospectRequest;
@@ -9,21 +23,9 @@ import com.hacof.identity.dto.response.AuthenticationResponse;
 import com.hacof.identity.dto.response.IntrospectResponse;
 import com.hacof.identity.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.text.ParseException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class AuthenticationControllerTest {

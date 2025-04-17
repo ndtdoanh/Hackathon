@@ -1,14 +1,15 @@
 package com.hacof.communication.mapper;
 
-import com.hacof.communication.dto.response.ConversationResponse;
-import com.hacof.communication.entity.Conversation;
-import com.hacof.communication.entity.FileUrl;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import com.hacof.communication.dto.response.ConversationResponse;
+import com.hacof.communication.entity.Conversation;
+import com.hacof.communication.entity.FileUrl;
 
 @Mapper(componentModel = "spring")
 public interface ConversationMapper {

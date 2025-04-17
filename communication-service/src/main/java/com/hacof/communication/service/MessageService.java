@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.MessageRequest;
 import com.hacof.communication.dto.response.MessageResponse;
-
-import java.util.List;
 
 public interface MessageService {
     MessageResponse createMessage(Long conversationId, MessageRequest request);

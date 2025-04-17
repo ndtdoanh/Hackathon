@@ -1,5 +1,12 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.TaskLabelRequestDTO;
 import com.hacof.communication.dto.response.TaskLabelResponseDTO;
 import com.hacof.communication.entity.BoardLabel;
@@ -10,12 +17,6 @@ import com.hacof.communication.repository.BoardLabelRepository;
 import com.hacof.communication.repository.TaskLabelRepository;
 import com.hacof.communication.repository.TaskRepository;
 import com.hacof.communication.service.TaskLabelService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskLabelServiceImpl implements TaskLabelService {

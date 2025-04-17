@@ -1,6 +1,7 @@
 package com.hacof.identity.dto.request;
 
 import com.hacof.identity.constant.DeviceQualityStatus;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

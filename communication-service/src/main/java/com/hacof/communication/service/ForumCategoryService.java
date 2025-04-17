@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.ForumCategoryRequestDTO;
 import com.hacof.communication.dto.response.ForumCategoryResponseDTO;
-
-import java.util.List;
 
 public interface ForumCategoryService {
     ForumCategoryResponseDTO createForumCategory(ForumCategoryRequestDTO requestDTO);

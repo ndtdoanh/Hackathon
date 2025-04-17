@@ -1,5 +1,13 @@
 package com.hacof.communication.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.BoardListRequestDTO;
 import com.hacof.communication.dto.request.BulkBoardListUpdateRequestDTO;
 import com.hacof.communication.dto.response.BoardListResponseDTO;
@@ -9,13 +17,6 @@ import com.hacof.communication.mapper.BoardListMapper;
 import com.hacof.communication.repository.BoardListRepository;
 import com.hacof.communication.repository.BoardRepository;
 import com.hacof.communication.service.BoardListService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BoardListServiceImpl implements BoardListService {

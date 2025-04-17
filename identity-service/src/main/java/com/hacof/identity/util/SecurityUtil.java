@@ -1,7 +1,7 @@
 package com.hacof.identity.util;
 
-import com.hacof.identity.entity.User;
-import com.hacof.identity.repository.UserRepository;
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import com.hacof.identity.entity.User;
+import com.hacof.identity.repository.UserRepository;
 
 @Component
 public class SecurityUtil {

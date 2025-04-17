@@ -1,24 +1,12 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiRequest;
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.AddEmailRequest;
-import com.hacof.identity.dto.request.ChangePasswordRequest;
-import com.hacof.identity.dto.request.ForgotPasswordRequest;
-import com.hacof.identity.dto.request.OrganizerUpdateForJudgeMentor;
-import com.hacof.identity.dto.request.PasswordCreateRequest;
-import com.hacof.identity.dto.request.ResetPasswordRequest;
-import com.hacof.identity.dto.request.UserCreateRequest;
-import com.hacof.identity.dto.request.UserUpdateRequest;
-import com.hacof.identity.dto.request.VerifyEmailRequest;
-import com.hacof.identity.dto.response.AvatarResponse;
-import com.hacof.identity.dto.response.UserResponse;
-import com.hacof.identity.service.UserService;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,10 +25,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.hacof.identity.dto.ApiRequest;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.AddEmailRequest;
+import com.hacof.identity.dto.request.ChangePasswordRequest;
+import com.hacof.identity.dto.request.ForgotPasswordRequest;
+import com.hacof.identity.dto.request.OrganizerUpdateForJudgeMentor;
+import com.hacof.identity.dto.request.PasswordCreateRequest;
+import com.hacof.identity.dto.request.ResetPasswordRequest;
+import com.hacof.identity.dto.request.UserCreateRequest;
+import com.hacof.identity.dto.request.UserUpdateRequest;
+import com.hacof.identity.dto.request.VerifyEmailRequest;
+import com.hacof.identity.dto.response.AvatarResponse;
+import com.hacof.identity.dto.response.UserResponse;
+import com.hacof.identity.service.UserService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -52,7 +55,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createUser(
-            @RequestHeader("Authorization") String authorizationToken, @Valid @RequestBody ApiRequest<UserCreateRequest> request) {
+            @RequestHeader("Authorization") String authorizationToken,
+            @Valid @RequestBody ApiRequest<UserCreateRequest> request) {
 
         String token = authorizationToken.replace("Bearer ", "");
 
@@ -69,7 +73,8 @@ public class UserController {
     }
 
     @PostMapping("/create-password")
-    public ResponseEntity<ApiResponse<Void>> createPassword(@RequestBody @Valid ApiRequest<PasswordCreateRequest> request) {
+    public ResponseEntity<ApiResponse<Void>> createPassword(
+            @RequestBody @Valid ApiRequest<PasswordCreateRequest> request) {
         userService.createPassword(request.getData());
 
         ApiResponse<Void> response = ApiResponse.<Void>builder()

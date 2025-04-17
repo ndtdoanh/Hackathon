@@ -1,7 +1,8 @@
 package com.hacof.identity.util;
 
-import com.hacof.identity.entity.User;
 import org.springframework.stereotype.Component;
+
+import com.hacof.identity.entity.User;
 
 @Component
 public class AuditContext {

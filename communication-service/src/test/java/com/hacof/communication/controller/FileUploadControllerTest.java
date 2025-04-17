@@ -1,23 +1,5 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.ApiResponse;
-import com.hacof.communication.dto.response.FileUrlResponse;
-import com.hacof.communication.entity.FileUrl;
-import com.hacof.communication.mapper.FileUrlMapper;
-import com.hacof.communication.repository.FileUrlRepository;
-import com.hacof.communication.service.impl.S3Service;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.any;
@@ -26,6 +8,25 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.hacof.communication.dto.ApiResponse;
+import com.hacof.communication.dto.response.FileUrlResponse;
+import com.hacof.communication.entity.FileUrl;
+import com.hacof.communication.mapper.FileUrlMapper;
+import com.hacof.communication.repository.FileUrlRepository;
+import com.hacof.communication.service.impl.S3Service;
 
 class FileUploadControllerTest {
 

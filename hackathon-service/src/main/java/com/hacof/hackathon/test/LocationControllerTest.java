@@ -1,10 +1,13 @@
 package com.hacof.hackathon.test;
 
-import com.hacof.hackathon.controller.LocationController;
-import com.hacof.hackathon.dto.LocationDTO;
-import com.hacof.hackathon.service.LocationService;
-import com.hacof.hackathon.util.CommonRequest;
-import com.hacof.hackathon.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,13 +17,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import com.hacof.hackathon.controller.LocationController;
+import com.hacof.hackathon.dto.LocationDTO;
+import com.hacof.hackathon.service.LocationService;
+import com.hacof.hackathon.util.CommonRequest;
+import com.hacof.hackathon.util.CommonResponse;
 
 class LocationControllerTest {
 
@@ -41,11 +42,10 @@ class LocationControllerTest {
         locationDTO.setId("1");
         locationDTO.setName("Test Location");
 
-        when(locationService.getLocations(any(Specification.class)))
-                .thenReturn(Collections.singletonList(locationDTO));
+        when(locationService.getLocations(any(Specification.class))).thenReturn(Collections.singletonList(locationDTO));
 
-        ResponseEntity<CommonResponse<List<LocationDTO>>> response = locationController.getLocations(
-                "1", "Test Location", null, null, null, null, null);
+        ResponseEntity<CommonResponse<List<LocationDTO>>> response =
+                locationController.getLocations("1", "Test Location", null, null, null, null, null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().getData().size());

@@ -1,26 +1,5 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.DeviceRequest;
-import com.hacof.identity.dto.response.DeviceResponse;
-import com.hacof.identity.dto.response.FileUrlResponse;
-import com.hacof.identity.service.DeviceService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.any;
@@ -30,6 +9,29 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.DeviceRequest;
+import com.hacof.identity.dto.response.DeviceResponse;
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.service.DeviceService;
+
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class DeviceControllerTest {
@@ -52,7 +54,8 @@ class DeviceControllerTest {
 
         when(deviceService.createDevice(any(DeviceRequest.class), anyList())).thenReturn(mockResponse);
 
-        ResponseEntity<ApiResponse<DeviceResponse>> response = deviceController.createDevice(deviceRequest, new ArrayList<>());
+        ResponseEntity<ApiResponse<DeviceResponse>> response =
+                deviceController.createDevice(deviceRequest, new ArrayList<>());
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -153,7 +156,8 @@ class DeviceControllerTest {
         when(deviceService.updateDevice(eq(deviceId), eq(deviceRequest), anyList()))
                 .thenReturn(mockResponse);
 
-        ResponseEntity<ApiResponse<DeviceResponse>> response = deviceController.updateDevice(deviceId, deviceRequest, mockFiles);
+        ResponseEntity<ApiResponse<DeviceResponse>> response =
+                deviceController.updateDevice(deviceId, deviceRequest, mockFiles);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

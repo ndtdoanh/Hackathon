@@ -1,11 +1,11 @@
 package com.hacof.identity.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.request.ActivityLogRequest;
 import com.hacof.identity.dto.response.ActivityLogResponse;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 public interface ActivityLogService {
 

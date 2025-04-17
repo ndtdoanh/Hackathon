@@ -1,11 +1,12 @@
 package com.hacof.identity.repository;
 
-import com.hacof.identity.entity.Permission;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Set;
+import com.hacof.identity.entity.Permission;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long> {

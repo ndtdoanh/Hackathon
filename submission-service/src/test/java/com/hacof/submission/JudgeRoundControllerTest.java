@@ -1,11 +1,11 @@
 package com.hacof.submission;
 
-import com.hacof.submission.controller.JudgeRoundController;
-import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
-import com.hacof.submission.dto.response.JudgeRoundResponseDTO;
-import com.hacof.submission.service.JudgeRoundService;
-import com.hacof.submission.util.CommonRequest;
-import com.hacof.submission.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,11 +13,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.hacof.submission.controller.JudgeRoundController;
+import com.hacof.submission.dto.request.JudgeRoundRequestDTO;
+import com.hacof.submission.dto.response.JudgeRoundResponseDTO;
+import com.hacof.submission.service.JudgeRoundService;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
 
 class JudgeRoundControllerTest {
 
@@ -91,7 +92,6 @@ class JudgeRoundControllerTest {
         assertNotNull(response.getBody().getRequestDateTime());
         assertEquals("HACOF", response.getBody().getChannel());
     }
-
 
     @Test
     void testUpdateJudgeRound_Success() {
@@ -237,7 +237,8 @@ class JudgeRoundControllerTest {
         JudgeRoundResponseDTO dto = new JudgeRoundResponseDTO();
         when(service.updateJudgeRoundByJudgeId(eq(2L), any())).thenReturn(dto);
 
-        ResponseEntity<CommonResponse<JudgeRoundResponseDTO>> response = controller.updateJudgeRoundByJudgeId(2L, request);
+        ResponseEntity<CommonResponse<JudgeRoundResponseDTO>> response =
+                controller.updateJudgeRoundByJudgeId(2L, request);
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody().getData());
@@ -259,8 +260,7 @@ class JudgeRoundControllerTest {
     @Test
     void testUpdateByJudgeId_GenericException() {
         CommonRequest<JudgeRoundRequestDTO> request = buildRequest();
-        when(service.updateJudgeRoundByJudgeId(eq(5L), any()))
-                .thenThrow(new RuntimeException("DB failure"));
+        when(service.updateJudgeRoundByJudgeId(eq(5L), any())).thenThrow(new RuntimeException("DB failure"));
 
         ResponseEntity<CommonResponse<JudgeRoundResponseDTO>> response =
                 controller.updateJudgeRoundByJudgeId(5L, request);
@@ -293,8 +293,7 @@ class JudgeRoundControllerTest {
     void testGetByRoundId_GenericException() {
         when(service.getJudgeRoundsByRoundId(8L)).thenThrow(new RuntimeException("Service error"));
 
-        ResponseEntity<CommonResponse<List<JudgeRoundResponseDTO>>> response =
-                controller.getJudgeRoundsByRoundId(8L);
+        ResponseEntity<CommonResponse<List<JudgeRoundResponseDTO>>> response = controller.getJudgeRoundsByRoundId(8L);
 
         assertEquals(500, response.getStatusCodeValue());
         assertTrue(response.getBody().getMessage().contains("Service error"));
@@ -309,13 +308,14 @@ class JudgeRoundControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("JudgeRound deleted successfully!", response.getBody().getMessage());
     }
+
     @Test
     void testDeleteByJudgeIdAndRoundId_IllegalArgumentException() {
         doThrow(new IllegalArgumentException("Invalid IDs"))
-                .when(service).deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
+                .when(service)
+                .deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
 
-        ResponseEntity<CommonResponse<Void>> response =
-                controller.deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
+        ResponseEntity<CommonResponse<Void>> response = controller.deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
 
         assertEquals(404, response.getStatusCodeValue());
         assertEquals("Invalid IDs", response.getBody().getMessage());
@@ -323,15 +323,11 @@ class JudgeRoundControllerTest {
 
     @Test
     void testDeleteByJudgeIdAndRoundId_GenericException() {
-        doThrow(new RuntimeException("Unexpected error"))
-                .when(service).deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
+        doThrow(new RuntimeException("Unexpected error")).when(service).deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
 
-        ResponseEntity<CommonResponse<Void>> response =
-                controller.deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
+        ResponseEntity<CommonResponse<Void>> response = controller.deleteJudgeRoundByJudgeIdAndRoundId(10L, 20L);
 
         assertEquals(500, response.getStatusCodeValue());
         assertTrue(response.getBody().getMessage().contains("Unexpected error"));
     }
-
 }
-

@@ -1,5 +1,12 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.ForumThreadRequestDTO;
 import com.hacof.communication.dto.response.ForumThreadResponseDTO;
 import com.hacof.communication.entity.ForumCategory;
@@ -9,12 +16,6 @@ import com.hacof.communication.repository.ForumCategoryRepository;
 import com.hacof.communication.repository.ForumThreadRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ForumThreadService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ForumThreadServiceImpl implements ForumThreadService {

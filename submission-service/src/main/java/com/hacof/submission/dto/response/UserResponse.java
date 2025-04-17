@@ -1,6 +1,7 @@
 package com.hacof.submission.dto.response;
 
 import com.hacof.submission.constant.Status;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

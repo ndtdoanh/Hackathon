@@ -1,11 +1,11 @@
 package com.hacof.submission;
 
-import com.hacof.submission.controller.RoundMarkCriterionController;
-import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
-import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
-import com.hacof.submission.service.RoundMarkCriterionService;
-import com.hacof.submission.util.CommonRequest;
-import com.hacof.submission.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,11 +13,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.hacof.submission.controller.RoundMarkCriterionController;
+import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
+import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
+import com.hacof.submission.service.RoundMarkCriterionService;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
 
 class RoundMarkCriterionControllerTest {
 
@@ -179,7 +180,8 @@ class RoundMarkCriterionControllerTest {
         ResponseEntity<CommonResponse<Void>> response = controller.delete(1L);
 
         assertEquals(200, response.getStatusCodeValue());
-        assertEquals("Round mark criterion deleted successfully!", response.getBody().getMessage());
+        assertEquals(
+                "Round mark criterion deleted successfully!", response.getBody().getMessage());
     }
 
     @Test
@@ -204,8 +206,7 @@ class RoundMarkCriterionControllerTest {
     void testGetByRoundId_Success() {
         when(service.getByRoundId(99L)).thenReturn(List.of(new RoundMarkCriterionResponseDTO()));
 
-        ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> response =
-                controller.getByRoundId(99L);
+        ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> response = controller.getByRoundId(99L);
 
         assertEquals(200, response.getStatusCodeValue());
         assertFalse(response.getBody().getData().isEmpty());
@@ -215,8 +216,7 @@ class RoundMarkCriterionControllerTest {
     void testGetByRoundId_IllegalArgumentException() {
         when(service.getByRoundId(99L)).thenThrow(new IllegalArgumentException("Invalid"));
 
-        ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> response =
-                controller.getByRoundId(99L);
+        ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> response = controller.getByRoundId(99L);
 
         assertEquals(404, response.getStatusCodeValue());
     }
@@ -225,10 +225,8 @@ class RoundMarkCriterionControllerTest {
     void testGetByRoundId_Exception() {
         when(service.getByRoundId(99L)).thenThrow(new RuntimeException("Service Down"));
 
-        ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> response =
-                controller.getByRoundId(99L);
+        ResponseEntity<CommonResponse<List<RoundMarkCriterionResponseDTO>>> response = controller.getByRoundId(99L);
 
         assertEquals(500, response.getStatusCodeValue());
     }
 }
-

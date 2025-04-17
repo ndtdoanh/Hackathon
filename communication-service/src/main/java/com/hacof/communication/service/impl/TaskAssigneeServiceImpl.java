@@ -1,5 +1,12 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.TaskAssigneeRequestDTO;
 import com.hacof.communication.dto.response.TaskAssigneeResponseDTO;
 import com.hacof.communication.entity.Task;
@@ -10,12 +17,6 @@ import com.hacof.communication.repository.TaskAssigneeRepository;
 import com.hacof.communication.repository.TaskRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.TaskAssigneeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskAssigneeServiceImpl implements TaskAssigneeService {

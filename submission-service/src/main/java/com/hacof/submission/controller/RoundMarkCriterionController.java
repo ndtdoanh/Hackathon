@@ -1,11 +1,9 @@
 package com.hacof.submission.controller;
 
-import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
-import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
-import com.hacof.submission.service.RoundMarkCriterionService;
-import com.hacof.submission.util.CommonRequest;
-import com.hacof.submission.util.CommonResponse;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
+import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
+import com.hacof.submission.service.RoundMarkCriterionService;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j

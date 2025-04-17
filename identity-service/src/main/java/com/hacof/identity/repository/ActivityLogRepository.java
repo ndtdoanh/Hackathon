@@ -1,14 +1,15 @@
 package com.hacof.identity.repository;
 
-import com.hacof.identity.constant.Status;
-import com.hacof.identity.entity.ActivityLog;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.hacof.identity.constant.Status;
+import com.hacof.identity.entity.ActivityLog;
 
 @Repository
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, Long> {

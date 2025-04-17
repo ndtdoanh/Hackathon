@@ -1,13 +1,15 @@
 package com.hacof.submission.repository;
 
-import com.hacof.submission.entity.JudgeSubmission;
-import com.hacof.submission.entity.User;
-import feign.Param;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hacof.submission.entity.JudgeSubmission;
+import com.hacof.submission.entity.User;
+
+import feign.Param;
 
 @Repository
 public interface JudgeSubmissionRepository extends JpaRepository<JudgeSubmission, Long> {

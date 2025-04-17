@@ -1,11 +1,12 @@
 package com.hacof.submission.service;
 
-import com.hacof.submission.dto.request.SubmissionRequestDTO;
-import com.hacof.submission.dto.response.SubmissionResponseDTO;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.hacof.submission.dto.request.SubmissionRequestDTO;
+import com.hacof.submission.dto.response.SubmissionResponseDTO;
 
 public interface SubmissionService {
 

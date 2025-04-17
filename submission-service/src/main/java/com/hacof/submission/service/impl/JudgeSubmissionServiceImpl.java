@@ -1,5 +1,14 @@
 package com.hacof.submission.service.impl;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
 import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
@@ -15,14 +24,6 @@ import com.hacof.submission.repository.SubmissionRepository;
 import com.hacof.submission.repository.TeamRoundJudgeRepository;
 import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.service.JudgeSubmissionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {

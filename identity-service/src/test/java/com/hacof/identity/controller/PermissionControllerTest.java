@@ -1,12 +1,16 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiRequest;
-import com.hacof.identity.dto.request.PermissionCreateRequest;
-import com.hacof.identity.dto.request.PermissionUpdateRequest;
-import com.hacof.identity.dto.response.PermissionResponse;
-import com.hacof.identity.service.PermissionService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,16 +19,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.hacof.identity.dto.ApiRequest;
+import com.hacof.identity.dto.request.PermissionCreateRequest;
+import com.hacof.identity.dto.request.PermissionUpdateRequest;
+import com.hacof.identity.dto.response.PermissionResponse;
+import com.hacof.identity.service.PermissionService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class PermissionControllerTest {

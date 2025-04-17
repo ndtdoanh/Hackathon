@@ -1,12 +1,12 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.UserDeviceTrackRequest;
-import com.hacof.identity.dto.response.FileUrlResponse;
-import com.hacof.identity.dto.response.UserDeviceTrackResponse;
-import com.hacof.identity.service.UserDeviceTrackService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,12 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.UserDeviceTrackRequest;
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.dto.response.UserDeviceTrackResponse;
+import com.hacof.identity.service.UserDeviceTrackService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UserDeviceTrackControllerTest {
@@ -46,7 +48,8 @@ class UserDeviceTrackControllerTest {
 
         when(userDeviceTrackService.createUserDeviceTrack(request, files)).thenReturn(mockResponse);
 
-        ResponseEntity<ApiResponse<UserDeviceTrackResponse>> response = userDeviceTrackController.createUserDeviceTrack(request, files);
+        ResponseEntity<ApiResponse<UserDeviceTrackResponse>> response =
+                userDeviceTrackController.createUserDeviceTrack(request, files);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(mockResponse, response.getBody().getData());
@@ -80,9 +83,11 @@ class UserDeviceTrackControllerTest {
     void testGetUserDeviceTracksByUserDeviceId() {
         Long userDeviceId = 1L;
         List<UserDeviceTrackResponse> mockList = List.of(new UserDeviceTrackResponse());
-        when(userDeviceTrackService.getUserDeviceTracksByUserDeviceId(userDeviceId)).thenReturn(mockList);
+        when(userDeviceTrackService.getUserDeviceTracksByUserDeviceId(userDeviceId))
+                .thenReturn(mockList);
 
-        ApiResponse<List<UserDeviceTrackResponse>> response = userDeviceTrackController.getUserDeviceTracksByUserDeviceId(userDeviceId);
+        ApiResponse<List<UserDeviceTrackResponse>> response =
+                userDeviceTrackController.getUserDeviceTracksByUserDeviceId(userDeviceId);
 
         assertEquals(mockList, response.getData());
         verify(userDeviceTrackService, times(1)).getUserDeviceTracksByUserDeviceId(userDeviceId);
@@ -92,9 +97,11 @@ class UserDeviceTrackControllerTest {
     void testGetFileUrlsByUserDeviceTrackId() {
         Long userDeviceTrackId = 1L;
         List<FileUrlResponse> mockFiles = List.of(new FileUrlResponse());
-        when(userDeviceTrackService.getFileUrlsByUserDeviceTrackId(userDeviceTrackId)).thenReturn(mockFiles);
+        when(userDeviceTrackService.getFileUrlsByUserDeviceTrackId(userDeviceTrackId))
+                .thenReturn(mockFiles);
 
-        ApiResponse<List<FileUrlResponse>> response = userDeviceTrackController.getFileUrlsByUserDeviceTrackId(userDeviceTrackId);
+        ApiResponse<List<FileUrlResponse>> response =
+                userDeviceTrackController.getFileUrlsByUserDeviceTrackId(userDeviceTrackId);
 
         assertEquals(mockFiles, response.getData());
         verify(userDeviceTrackService, times(1)).getFileUrlsByUserDeviceTrackId(userDeviceTrackId);
@@ -109,7 +116,8 @@ class UserDeviceTrackControllerTest {
 
         when(userDeviceTrackService.updateUserDeviceTrack(id, request, files)).thenReturn(updatedResponse);
 
-        ResponseEntity<ApiResponse<UserDeviceTrackResponse>> response = userDeviceTrackController.updateUserDeviceTrack(id, request, files);
+        ResponseEntity<ApiResponse<UserDeviceTrackResponse>> response =
+                userDeviceTrackController.updateUserDeviceTrack(id, request, files);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(updatedResponse, response.getBody().getData());

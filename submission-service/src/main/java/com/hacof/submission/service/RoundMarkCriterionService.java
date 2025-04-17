@@ -1,10 +1,10 @@
 package com.hacof.submission.service;
 
-import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
-import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.hacof.submission.dto.request.RoundMarkCriterionRequestDTO;
+import com.hacof.submission.dto.response.RoundMarkCriterionResponseDTO;
 
 public interface RoundMarkCriterionService {
 

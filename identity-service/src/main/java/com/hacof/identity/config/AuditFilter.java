@@ -1,15 +1,17 @@
 package com.hacof.identity.config;
 
-import com.hacof.identity.util.AuditContext;
-import com.hacof.identity.util.SecurityUtil;
+import java.io.IOException;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import com.hacof.identity.util.AuditContext;
+import com.hacof.identity.util.SecurityUtil;
 
 @Component
 public class AuditFilter implements Filter {

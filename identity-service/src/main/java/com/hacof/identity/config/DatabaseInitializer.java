@@ -1,5 +1,14 @@
 package com.hacof.identity.config;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.hacof.identity.constant.CategoryStatus;
 import com.hacof.identity.constant.OrganizationStatus;
 import com.hacof.identity.constant.Status;
@@ -14,18 +23,11 @@ import com.hacof.identity.repository.HackathonRepository;
 import com.hacof.identity.repository.PermissionRepository;
 import com.hacof.identity.repository.RoleRepository;
 import com.hacof.identity.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor

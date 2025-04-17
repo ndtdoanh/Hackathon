@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.BoardUserRequestDTO;
 import com.hacof.communication.dto.response.BoardUserResponseDTO;
-
-import java.util.List;
 
 public interface BoardUserService {
 

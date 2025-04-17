@@ -1,12 +1,13 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.UserDeviceRequest;
-import com.hacof.identity.dto.response.FileUrlResponse;
-import com.hacof.identity.dto.response.UserDeviceResponse;
-import com.hacof.identity.service.UserDeviceService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,13 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.UserDeviceRequest;
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.dto.response.UserDeviceResponse;
+import com.hacof.identity.service.UserDeviceService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UserDeviceControllerTest {
@@ -47,7 +49,8 @@ class UserDeviceControllerTest {
 
         when(userDeviceService.createUserDevice(request, files)).thenReturn(mockResponse);
 
-        ResponseEntity<ApiResponse<UserDeviceResponse>> response = userDeviceController.createUserDevice(request, files);
+        ResponseEntity<ApiResponse<UserDeviceResponse>> response =
+                userDeviceController.createUserDevice(request, files);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(mockResponse, response.getBody().getData());
@@ -122,7 +125,8 @@ class UserDeviceControllerTest {
 
         when(userDeviceService.updateUserDevice(id, request, files)).thenReturn(updatedResponse);
 
-        ResponseEntity<ApiResponse<UserDeviceResponse>> response = userDeviceController.updateUserDevice(id, request, files);
+        ResponseEntity<ApiResponse<UserDeviceResponse>> response =
+                userDeviceController.updateUserDevice(id, request, files);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(updatedResponse, response.getBody().getData());

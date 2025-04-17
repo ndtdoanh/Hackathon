@@ -1,5 +1,19 @@
 package com.hacof.identity.service.impl;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
@@ -25,23 +39,11 @@ import com.hacof.identity.service.OtpService;
 import com.hacof.identity.service.RoleService;
 import com.hacof.identity.service.UserService;
 import com.hacof.identity.util.AuditContext;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service

@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.BoardRequestDTO;
 import com.hacof.communication.dto.response.BoardResponseDTO;
-
-import java.util.List;
 
 public interface BoardService {
     BoardResponseDTO createBoard(BoardRequestDTO boardRequestDTO);
