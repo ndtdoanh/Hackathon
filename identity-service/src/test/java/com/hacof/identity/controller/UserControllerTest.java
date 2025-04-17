@@ -35,6 +35,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -201,7 +202,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testAddEmail() {
+    void testAddEmailSuccess() {
         ApiRequest<AddEmailRequest> request = new ApiRequest<>();
         request.setData(new AddEmailRequest("test@example.com"));
 
@@ -210,11 +211,40 @@ class UserControllerTest {
         ResponseEntity<ApiResponse<String>> response = userController.addEmail(request, null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Email added", response.getBody().getMessage());
         verify(userService).addEmail(any());
     }
 
     @Test
-    void testVerifyEmail() {
+    void testAddEmailInvalidEmail() {
+        ApiRequest<AddEmailRequest> request = new ApiRequest<>();
+        request.setData(new AddEmailRequest("invalid"));
+
+        when(userService.addEmail(any())).thenThrow(new IllegalArgumentException("Invalid email format"));
+
+        ResponseEntity<ApiResponse<String>> response = userController.addEmail(request, null);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Invalid email format", response.getBody().getMessage());
+        verify(userService).addEmail(any());
+    }
+
+    @Test
+    void testAddEmailUnexpectedError() {
+        ApiRequest<AddEmailRequest> request = new ApiRequest<>();
+        request.setData(new AddEmailRequest("test@example.com"));
+
+        when(userService.addEmail(any())).thenThrow(new RuntimeException("Database error"));
+
+        ResponseEntity<ApiResponse<String>> response = userController.addEmail(request, null);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Error occurred when processing requests", response.getBody().getMessage());
+        verify(userService).addEmail(any());
+    }
+
+    @Test
+    void testVerifyEmailSuccess() {
         ApiRequest<VerifyEmailRequest> request = new ApiRequest<>();
         request.setData(new VerifyEmailRequest("123456"));
         request.setRequestId("test-request-id");
@@ -224,17 +254,73 @@ class UserControllerTest {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaim("user_id")).thenReturn(1L);
 
-        String verifyResult = "Email test@example.com has been verified successfully";
-        when(userService.verifyEmail(eq(1L), eq("123456"))).thenReturn(verifyResult);
+        String result = "Email verified";
+        when(userService.verifyEmail(1L, "123456")).thenReturn(result);
 
         ResponseEntity<ApiResponse<String>> response = userController.verifyEmail(request, jwt);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(result, response.getBody().getMessage());
+    }
 
-        assertNotNull(response.getBody());
-        assertEquals(verifyResult, response.getBody().getMessage());
+    @Test
+    void testVerifyEmailIllegalArgumentException() {
+        ApiRequest<VerifyEmailRequest> request = new ApiRequest<>();
+        request.setData(new VerifyEmailRequest("invalid"));
+        request.setRequestId("id-1");
+        request.setRequestDateTime(LocalDateTime.now());
+        request.setChannel("channel");
 
-        verify(userService).verifyEmail(eq(1L), eq("123456"));
+        Jwt jwt = mock(Jwt.class);
+        when(jwt.getClaim("user_id")).thenReturn(2L);
+
+        when(userService.verifyEmail(2L, "invalid"))
+                .thenThrow(new IllegalArgumentException("OTP format invalid"));
+
+        ResponseEntity<ApiResponse<String>> response = userController.verifyEmail(request, jwt);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("OTP format invalid", response.getBody().getMessage());
+    }
+
+    @Test
+    void testVerifyEmailIllegalStateException() {
+        ApiRequest<VerifyEmailRequest> request = new ApiRequest<>();
+        request.setData(new VerifyEmailRequest("654321"));
+        request.setRequestId("id-2");
+        request.setRequestDateTime(LocalDateTime.now());
+        request.setChannel("mobile");
+
+        Jwt jwt = mock(Jwt.class);
+        when(jwt.getClaim("user_id")).thenReturn(3L);
+
+        when(userService.verifyEmail(3L, "654321"))
+                .thenThrow(new IllegalStateException("OTP expired"));
+
+        ResponseEntity<ApiResponse<String>> response = userController.verifyEmail(request, jwt);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("OTP expired", response.getBody().getMessage());
+    }
+
+    @Test
+    void testVerifyEmailUnexpectedException() {
+        ApiRequest<VerifyEmailRequest> request = new ApiRequest<>();
+        request.setData(new VerifyEmailRequest("000000"));
+        request.setRequestId("id-3");
+        request.setRequestDateTime(LocalDateTime.now());
+        request.setChannel("web");
+
+        Jwt jwt = mock(Jwt.class);
+        when(jwt.getClaim("user_id")).thenReturn(4L);
+
+        when(userService.verifyEmail(4L, "000000"))
+                .thenThrow(new RuntimeException("Unexpected error"));
+
+        ResponseEntity<ApiResponse<String>> response = userController.verifyEmail(request, jwt);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Error occurred when processing requests", response.getBody().getMessage());
     }
 
     @Test
@@ -277,7 +363,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testUploadAvatar() throws IOException {
+    void testUploadAvatar_Success() throws IOException {
         MultipartFile file = mock(MultipartFile.class);
         Authentication authentication = mock(Authentication.class);
         AvatarResponse avatarResponse = new AvatarResponse("1", "http://example.com/avatar.jpg", LocalDateTime.now());
@@ -287,6 +373,40 @@ class UserControllerTest {
         ResponseEntity<ApiResponse<AvatarResponse>> response = userController.uploadAvatar(file, authentication);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(userService).uploadAvatar(any(), any());
+        assertNotNull(response.getBody());
+        assertEquals("Avatar uploaded successfully", response.getBody().getMessage());
+        verify(userService).uploadAvatar(file, authentication);
+    }
+
+    @Test
+    void testUploadAvatar_IllegalArgumentException() throws IOException {
+        MultipartFile file = mock(MultipartFile.class);
+        Authentication authentication = mock(Authentication.class);
+
+        when(userService.uploadAvatar(any(), any()))
+                .thenThrow(new IllegalArgumentException("Invalid file format"));
+
+        ResponseEntity<ApiResponse<AvatarResponse>> response = userController.uploadAvatar(file, authentication);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Invalid file format", response.getBody().getMessage());
+        verify(userService).uploadAvatar(file, authentication);
+    }
+
+    @Test
+    void testUploadAvatar_IOException() throws IOException {
+        MultipartFile file = mock(MultipartFile.class);
+        Authentication authentication = mock(Authentication.class);
+
+        when(userService.uploadAvatar(any(), any()))
+                .thenThrow(new IOException("Disk full"));
+
+        ResponseEntity<ApiResponse<AvatarResponse>> response = userController.uploadAvatar(file, authentication);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().getMessage().contains("Upload failed: Disk full"));
+        verify(userService).uploadAvatar(file, authentication);
     }
 }
