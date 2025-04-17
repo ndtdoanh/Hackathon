@@ -1,12 +1,13 @@
 package com.hacof.identity.mapper;
 
-import com.hacof.identity.dto.request.DeviceRequest;
-import com.hacof.identity.dto.response.DeviceResponse;
-import com.hacof.identity.entity.Device;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+
+import com.hacof.identity.dto.request.DeviceRequest;
+import com.hacof.identity.dto.response.DeviceResponse;
+import com.hacof.identity.entity.Device;
 
 @Mapper(componentModel = "spring")
 public interface DeviceMapper {

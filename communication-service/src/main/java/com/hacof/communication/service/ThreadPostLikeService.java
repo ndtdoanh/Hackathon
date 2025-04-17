@@ -1,9 +1,9 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.ThreadPostLikeRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
-
-import java.util.List;
 
 public interface ThreadPostLikeService {
     ThreadPostLikeResponseDTO createThreadPostLike(ThreadPostLikeRequestDTO requestDTO);

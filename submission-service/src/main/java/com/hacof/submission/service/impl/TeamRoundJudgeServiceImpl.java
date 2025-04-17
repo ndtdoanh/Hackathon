@@ -1,5 +1,12 @@
 package com.hacof.submission.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
 import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
 import com.hacof.submission.entity.TeamRound;
@@ -10,12 +17,6 @@ import com.hacof.submission.repository.TeamRoundJudgeRepository;
 import com.hacof.submission.repository.TeamRoundRepository;
 import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.service.TeamRoundJudgeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {

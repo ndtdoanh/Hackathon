@@ -1,10 +1,11 @@
 package com.hacof.identity.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
 import com.hacof.identity.dto.request.RoleCreateRequest;
 import com.hacof.identity.dto.response.RoleResponse;
 import com.hacof.identity.entity.Role;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper {

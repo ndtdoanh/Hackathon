@@ -1,5 +1,12 @@
 package com.hacof.communication.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hacof.communication.dto.request.ScheduleEventReminderRequestDTO;
 import com.hacof.communication.dto.response.ScheduleEventReminderResponseDTO;
 import com.hacof.communication.entity.ScheduleEvent;
@@ -10,12 +17,6 @@ import com.hacof.communication.repository.ScheduleEventReminderRepository;
 import com.hacof.communication.repository.ScheduleEventRepository;
 import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ScheduleEventReminderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderService {

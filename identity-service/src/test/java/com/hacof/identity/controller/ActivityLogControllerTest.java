@@ -1,25 +1,27 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.constant.Status;
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.response.ActivityLogResponse;
-import com.hacof.identity.service.ActivityLogService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
+import com.hacof.identity.constant.Status;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.response.ActivityLogResponse;
+import com.hacof.identity.service.ActivityLogService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class ActivityLogControllerTest {
@@ -71,9 +73,11 @@ class ActivityLogControllerTest {
         Status status = Status.SUCCESS;
 
         List<ActivityLogResponse> mockLogs = Collections.singletonList(new ActivityLogResponse());
-        when(activityLogService.searchLogs(action, target, username, fromDate, toDate, ipAddress, status)).thenReturn(mockLogs);
+        when(activityLogService.searchLogs(action, target, username, fromDate, toDate, ipAddress, status))
+                .thenReturn(mockLogs);
 
-        ApiResponse<List<ActivityLogResponse>> response = activityLogController.searchLogs(action, target, username, fromDate, toDate, ipAddress, status);
+        ApiResponse<List<ActivityLogResponse>> response =
+                activityLogController.searchLogs(action, target, username, fromDate, toDate, ipAddress, status);
 
         assertEquals(mockLogs, response.getData());
         assertEquals("Search logs successfully", response.getMessage());

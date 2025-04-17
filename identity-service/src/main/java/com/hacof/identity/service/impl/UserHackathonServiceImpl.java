@@ -1,5 +1,12 @@
 package com.hacof.identity.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.hacof.identity.dto.request.UserHackathonBulkRequestDTO;
 import com.hacof.identity.dto.request.UserHackathonRequestDTO;
 import com.hacof.identity.dto.response.HackathonSimpleResponse;
@@ -14,15 +21,10 @@ import com.hacof.identity.repository.HackathonRepository;
 import com.hacof.identity.repository.UserHackathonRepository;
 import com.hacof.identity.repository.UserRepository;
 import com.hacof.identity.service.UserHackathonService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

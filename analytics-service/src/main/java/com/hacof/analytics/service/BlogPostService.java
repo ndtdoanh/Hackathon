@@ -1,9 +1,9 @@
 package com.hacof.analytics.service;
 
+import java.util.List;
+
 import com.hacof.analytics.dto.request.BlogPostRequest;
 import com.hacof.analytics.dto.response.BlogPostResponse;
-
-import java.util.List;
 
 public interface BlogPostService {
 

@@ -1,6 +1,7 @@
 package com.hacof.communication.dto.request;
 
 import com.hacof.communication.constant.ReactionType;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

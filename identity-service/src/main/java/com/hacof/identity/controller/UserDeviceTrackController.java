@@ -1,14 +1,11 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.UserDeviceTrackRequest;
-import com.hacof.identity.dto.response.FileUrlResponse;
-import com.hacof.identity.dto.response.UserDeviceTrackResponse;
-import com.hacof.identity.service.UserDeviceTrackService;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,9 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.UserDeviceTrackRequest;
+import com.hacof.identity.dto.response.FileUrlResponse;
+import com.hacof.identity.dto.response.UserDeviceTrackResponse;
+import com.hacof.identity.service.UserDeviceTrackService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RestController
 @RequestMapping("/api/v1/user-device-tracks")
@@ -77,7 +80,8 @@ public class UserDeviceTrackController {
     }
 
     @GetMapping("/user-device/{userDeviceId}")
-    public ApiResponse<List<UserDeviceTrackResponse>> getUserDeviceTracksByUserDeviceId(@PathVariable Long userDeviceId) {
+    public ApiResponse<List<UserDeviceTrackResponse>> getUserDeviceTracksByUserDeviceId(
+            @PathVariable Long userDeviceId) {
         return ApiResponse.<List<UserDeviceTrackResponse>>builder()
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())

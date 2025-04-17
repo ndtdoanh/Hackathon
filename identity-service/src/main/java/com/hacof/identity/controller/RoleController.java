@@ -1,15 +1,11 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiRequest;
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.RoleCreateRequest;
-import com.hacof.identity.dto.request.RoleUpdateRequest;
-import com.hacof.identity.dto.response.RoleResponse;
-import com.hacof.identity.service.RoleService;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,9 +19,16 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.hacof.identity.dto.ApiRequest;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.RoleCreateRequest;
+import com.hacof.identity.dto.request.RoleUpdateRequest;
+import com.hacof.identity.dto.response.RoleResponse;
+import com.hacof.identity.service.RoleService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RestController
 @RequestMapping("/api/v1/roles")
@@ -36,7 +39,8 @@ public class RoleController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_ROLE')")
-    public ResponseEntity<ApiResponse<RoleResponse>> createRole(@RequestBody @Valid ApiRequest<RoleCreateRequest> request) {
+    public ResponseEntity<ApiResponse<RoleResponse>> createRole(
+            @RequestBody @Valid ApiRequest<RoleCreateRequest> request) {
         RoleResponse roleResponse = roleService.createRole(request.getData());
         ApiResponse<RoleResponse> response = ApiResponse.<RoleResponse>builder()
                 .requestId(request.getRequestId())
@@ -86,7 +90,8 @@ public class RoleController {
 
     @PutMapping("/{Id}")
     @PreAuthorize("hasAuthority('UPDATE_ROLE')")
-    public ApiResponse<RoleResponse> updateRole(@PathVariable("Id") Long Id, @RequestBody ApiRequest<RoleUpdateRequest> request) {
+    public ApiResponse<RoleResponse> updateRole(
+            @PathVariable("Id") Long Id, @RequestBody ApiRequest<RoleUpdateRequest> request) {
         RoleResponse roleResponse = roleService.updateRole(Id, request.getData());
         return ApiResponse.<RoleResponse>builder()
                 .requestId(request.getRequestId())

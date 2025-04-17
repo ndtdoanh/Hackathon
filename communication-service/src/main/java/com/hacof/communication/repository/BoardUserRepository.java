@@ -1,11 +1,12 @@
 package com.hacof.communication.repository;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.hacof.communication.entity.Board;
 import com.hacof.communication.entity.BoardUser;
 import com.hacof.communication.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface BoardUserRepository extends JpaRepository<BoardUser, Long> {
 

@@ -1,11 +1,12 @@
 package com.hacof.analytics.repository;
 
-import com.hacof.analytics.entity.FeedbackDetail;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.hacof.analytics.entity.FeedbackDetail;
 
 @Repository
 public interface FeedbackDetailRepository extends JpaRepository<FeedbackDetail, Long> {

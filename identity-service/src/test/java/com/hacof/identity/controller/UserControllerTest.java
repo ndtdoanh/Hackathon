@@ -1,5 +1,32 @@
 package com.hacof.identity.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hacof.identity.dto.ApiRequest;
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
@@ -14,34 +41,9 @@ import com.hacof.identity.dto.request.VerifyEmailRequest;
 import com.hacof.identity.dto.response.AvatarResponse;
 import com.hacof.identity.dto.response.UserResponse;
 import com.hacof.identity.service.UserService;
+
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UserControllerTest {
@@ -63,7 +65,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testCreateUser(){
+    void testCreateUser() {
         ApiRequest<UserCreateRequest> request = new ApiRequest<>();
         request.setData(new UserCreateRequest("username", "password", "firstName", "lastName", null));
 
@@ -239,7 +241,8 @@ class UserControllerTest {
         ResponseEntity<ApiResponse<String>> response = userController.addEmail(request, null);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("Error occurred when processing requests", response.getBody().getMessage());
+        assertEquals(
+                "Error occurred when processing requests", response.getBody().getMessage());
         verify(userService).addEmail(any());
     }
 
@@ -274,8 +277,7 @@ class UserControllerTest {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaim("user_id")).thenReturn(2L);
 
-        when(userService.verifyEmail(2L, "invalid"))
-                .thenThrow(new IllegalArgumentException("OTP format invalid"));
+        when(userService.verifyEmail(2L, "invalid")).thenThrow(new IllegalArgumentException("OTP format invalid"));
 
         ResponseEntity<ApiResponse<String>> response = userController.verifyEmail(request, jwt);
 
@@ -294,8 +296,7 @@ class UserControllerTest {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaim("user_id")).thenReturn(3L);
 
-        when(userService.verifyEmail(3L, "654321"))
-                .thenThrow(new IllegalStateException("OTP expired"));
+        when(userService.verifyEmail(3L, "654321")).thenThrow(new IllegalStateException("OTP expired"));
 
         ResponseEntity<ApiResponse<String>> response = userController.verifyEmail(request, jwt);
 
@@ -314,13 +315,13 @@ class UserControllerTest {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaim("user_id")).thenReturn(4L);
 
-        when(userService.verifyEmail(4L, "000000"))
-                .thenThrow(new RuntimeException("Unexpected error"));
+        when(userService.verifyEmail(4L, "000000")).thenThrow(new RuntimeException("Unexpected error"));
 
         ResponseEntity<ApiResponse<String>> response = userController.verifyEmail(request, jwt);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("Error occurred when processing requests", response.getBody().getMessage());
+        assertEquals(
+                "Error occurred when processing requests", response.getBody().getMessage());
     }
 
     @Test
@@ -383,8 +384,7 @@ class UserControllerTest {
         MultipartFile file = mock(MultipartFile.class);
         Authentication authentication = mock(Authentication.class);
 
-        when(userService.uploadAvatar(any(), any()))
-                .thenThrow(new IllegalArgumentException("Invalid file format"));
+        when(userService.uploadAvatar(any(), any())).thenThrow(new IllegalArgumentException("Invalid file format"));
 
         ResponseEntity<ApiResponse<AvatarResponse>> response = userController.uploadAvatar(file, authentication);
 
@@ -399,8 +399,7 @@ class UserControllerTest {
         MultipartFile file = mock(MultipartFile.class);
         Authentication authentication = mock(Authentication.class);
 
-        when(userService.uploadAvatar(any(), any()))
-                .thenThrow(new IOException("Disk full"));
+        when(userService.uploadAvatar(any(), any())).thenThrow(new IOException("Disk full"));
 
         ResponseEntity<ApiResponse<AvatarResponse>> response = userController.uploadAvatar(file, authentication);
 

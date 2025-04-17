@@ -1,5 +1,11 @@
 package com.hacof.submission.mapper;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
 import com.hacof.submission.dto.response.FileUrlResponseDTO;
@@ -23,11 +29,6 @@ import com.hacof.submission.entity.Submission;
 import com.hacof.submission.entity.Team;
 import com.hacof.submission.entity.User;
 import com.hacof.submission.entity.UserRole;
-import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class JudgeSubmissionMapper {

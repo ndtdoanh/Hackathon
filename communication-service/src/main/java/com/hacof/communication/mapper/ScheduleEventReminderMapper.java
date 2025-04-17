@@ -1,5 +1,12 @@
 package com.hacof.communication.mapper;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.hacof.communication.dto.request.ScheduleEventReminderRequestDTO;
 import com.hacof.communication.dto.response.PermissionResponse;
 import com.hacof.communication.dto.response.RoleResponse;
@@ -13,12 +20,6 @@ import com.hacof.communication.entity.ScheduleEvent;
 import com.hacof.communication.entity.ScheduleEventReminder;
 import com.hacof.communication.entity.User;
 import com.hacof.communication.entity.UserRole;
-import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class ScheduleEventReminderMapper {

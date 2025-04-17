@@ -1,12 +1,9 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.constant.Status;
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.response.ActivityLogResponse;
-import com.hacof.identity.service.ActivityLogService;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.hacof.identity.constant.Status;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.response.ActivityLogResponse;
+import com.hacof.identity.service.ActivityLogService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RestController
 @RequestMapping("/api/v1/logs")

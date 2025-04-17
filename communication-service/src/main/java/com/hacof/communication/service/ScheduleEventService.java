@@ -1,10 +1,10 @@
 package com.hacof.communication.service;
 
+import java.util.List;
+
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
 import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
-
-import java.util.List;
 
 public interface ScheduleEventService {
 

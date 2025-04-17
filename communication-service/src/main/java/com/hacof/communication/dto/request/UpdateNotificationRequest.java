@@ -2,6 +2,7 @@ package com.hacof.communication.dto.request;
 
 import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.constant.NotificationStatus;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

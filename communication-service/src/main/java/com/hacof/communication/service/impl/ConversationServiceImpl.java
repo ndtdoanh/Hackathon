@@ -1,5 +1,16 @@
 package com.hacof.communication.service.impl;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hacof.communication.constant.ConversationType;
 import com.hacof.communication.dto.request.ConversationRequest;
 import com.hacof.communication.dto.response.ConversationResponse;
@@ -18,19 +29,10 @@ import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ConversationService;
 import com.hacof.communication.util.AuditContext;
 import com.hacof.communication.util.SecurityUtil;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

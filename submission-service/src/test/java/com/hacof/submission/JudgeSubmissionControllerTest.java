@@ -1,11 +1,13 @@
 package com.hacof.submission;
 
-import com.hacof.submission.controller.JudgeSubmissionController;
-import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
-import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
-import com.hacof.submission.service.JudgeSubmissionService;
-import com.hacof.submission.util.CommonRequest;
-import com.hacof.submission.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,13 +15,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.hacof.submission.controller.JudgeSubmissionController;
+import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
+import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
+import com.hacof.submission.service.JudgeSubmissionService;
+import com.hacof.submission.util.CommonRequest;
+import com.hacof.submission.util.CommonResponse;
 
 class JudgeSubmissionControllerTest {
 
@@ -131,7 +132,8 @@ class JudgeSubmissionControllerTest {
         JudgeSubmissionResponseDTO dto = new JudgeSubmissionResponseDTO();
         when(service.updateJudgeSubmission(eq(1L), any())).thenReturn(dto);
 
-        ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> response = controller.updateJudgeSubmission(1L, request);
+        ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> response =
+                controller.updateJudgeSubmission(1L, request);
         assertEquals(200, response.getStatusCodeValue());
     }
 
@@ -140,7 +142,8 @@ class JudgeSubmissionControllerTest {
         CommonRequest<JudgeSubmissionRequestDTO> request = buildRequestWithData();
         when(service.updateJudgeSubmission(eq(1L), any())).thenThrow(new IllegalArgumentException("Not found"));
 
-        ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> response = controller.updateJudgeSubmission(1L, request);
+        ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> response =
+                controller.updateJudgeSubmission(1L, request);
         assertEquals(404, response.getStatusCodeValue());
     }
 
@@ -149,7 +152,8 @@ class JudgeSubmissionControllerTest {
         CommonRequest<JudgeSubmissionRequestDTO> request = buildRequestWithData();
         when(service.updateJudgeSubmission(eq(1L), any())).thenThrow(new RuntimeException("Error"));
 
-        ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> response = controller.updateJudgeSubmission(1L, request);
+        ResponseEntity<CommonResponse<JudgeSubmissionResponseDTO>> response =
+                controller.updateJudgeSubmission(1L, request);
         assertEquals(500, response.getStatusCodeValue());
     }
 
@@ -180,9 +184,11 @@ class JudgeSubmissionControllerTest {
 
     @Test
     void testGetByJudgeId_Success() {
-        when(service.getSubmissionsByJudgeId(10L)).thenReturn(Collections.singletonList(new JudgeSubmissionResponseDTO()));
+        when(service.getSubmissionsByJudgeId(10L))
+                .thenReturn(Collections.singletonList(new JudgeSubmissionResponseDTO()));
 
-        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response = controller.getSubmissionsByJudgeId(10L);
+        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response =
+                controller.getSubmissionsByJudgeId(10L);
         assertEquals(200, response.getStatusCodeValue());
     }
 
@@ -190,7 +196,8 @@ class JudgeSubmissionControllerTest {
     void testGetByJudgeId_IllegalArgumentException() {
         when(service.getSubmissionsByJudgeId(10L)).thenThrow(new IllegalArgumentException("Invalid"));
 
-        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response = controller.getSubmissionsByJudgeId(10L);
+        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response =
+                controller.getSubmissionsByJudgeId(10L);
         assertEquals(404, response.getStatusCodeValue());
     }
 
@@ -198,15 +205,18 @@ class JudgeSubmissionControllerTest {
     void testGetByJudgeId_Exception() {
         when(service.getSubmissionsByJudgeId(10L)).thenThrow(new RuntimeException("Fail"));
 
-        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response = controller.getSubmissionsByJudgeId(10L);
+        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response =
+                controller.getSubmissionsByJudgeId(10L);
         assertEquals(500, response.getStatusCodeValue());
     }
 
     @Test
     void testGetByRoundId_Success() {
-        when(service.getSubmissionsByRoundId(100L)).thenReturn(Collections.singletonList(new JudgeSubmissionResponseDTO()));
+        when(service.getSubmissionsByRoundId(100L))
+                .thenReturn(Collections.singletonList(new JudgeSubmissionResponseDTO()));
 
-        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response = controller.getSubmissionsByRoundId(100L);
+        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response =
+                controller.getSubmissionsByRoundId(100L);
         assertEquals(200, response.getStatusCodeValue());
     }
 
@@ -214,7 +224,8 @@ class JudgeSubmissionControllerTest {
     void testGetByRoundId_IllegalArgumentException() {
         when(service.getSubmissionsByRoundId(100L)).thenThrow(new IllegalArgumentException("Invalid"));
 
-        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response = controller.getSubmissionsByRoundId(100L);
+        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response =
+                controller.getSubmissionsByRoundId(100L);
         assertEquals(404, response.getStatusCodeValue());
     }
 
@@ -222,7 +233,8 @@ class JudgeSubmissionControllerTest {
     void testGetByRoundId_Exception() {
         when(service.getSubmissionsByRoundId(100L)).thenThrow(new RuntimeException("Crash"));
 
-        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response = controller.getSubmissionsByRoundId(100L);
+        ResponseEntity<CommonResponse<List<JudgeSubmissionResponseDTO>>> response =
+                controller.getSubmissionsByRoundId(100L);
         assertEquals(500, response.getStatusCodeValue());
     }
 }

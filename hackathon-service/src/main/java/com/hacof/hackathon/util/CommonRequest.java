@@ -27,6 +27,7 @@ public class CommonRequest<T> {
     // @Valid
     //    @JsonUnwrapped
     private T data;
+
     public CommonRequest(T data) {
         this.data = data;
     }

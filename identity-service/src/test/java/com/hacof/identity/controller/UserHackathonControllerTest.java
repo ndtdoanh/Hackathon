@@ -1,13 +1,14 @@
 package com.hacof.identity.controller;
 
-import com.hacof.identity.dto.ApiRequest;
-import com.hacof.identity.dto.ApiResponse;
-import com.hacof.identity.dto.request.UserHackathonBulkRequestDTO;
-import com.hacof.identity.dto.request.UserHackathonRequestDTO;
-import com.hacof.identity.dto.response.UserHackathonResponseDTO;
-import com.hacof.identity.service.UserHackathonService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,14 +17,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.hacof.identity.dto.ApiRequest;
+import com.hacof.identity.dto.ApiResponse;
+import com.hacof.identity.dto.request.UserHackathonBulkRequestDTO;
+import com.hacof.identity.dto.request.UserHackathonRequestDTO;
+import com.hacof.identity.dto.response.UserHackathonResponseDTO;
+import com.hacof.identity.service.UserHackathonService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UserHackathonControllerTest {
@@ -51,7 +53,8 @@ class UserHackathonControllerTest {
         UserHackathonResponseDTO mockResponse = new UserHackathonResponseDTO();
         when(userHackathonService.createUserHackathon(requestDTO)).thenReturn(mockResponse);
 
-        ResponseEntity<ApiResponse<UserHackathonResponseDTO>> response = userHackathonController.createUserHackathon(request);
+        ResponseEntity<ApiResponse<UserHackathonResponseDTO>> response =
+                userHackathonController.createUserHackathon(request);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(mockResponse, response.getBody().getData());
@@ -60,7 +63,8 @@ class UserHackathonControllerTest {
 
     @Test
     void testGetUserHackathons() {
-        List<UserHackathonResponseDTO> mockList = List.of(new UserHackathonResponseDTO(), new UserHackathonResponseDTO());
+        List<UserHackathonResponseDTO> mockList =
+                List.of(new UserHackathonResponseDTO(), new UserHackathonResponseDTO());
         when(userHackathonService.getUserHackathons()).thenReturn(mockList);
 
         ApiResponse<List<UserHackathonResponseDTO>> response = userHackathonController.getUserHackathons();
@@ -87,7 +91,8 @@ class UserHackathonControllerTest {
         List<UserHackathonResponseDTO> mockList = List.of(new UserHackathonResponseDTO());
         when(userHackathonService.getUserHackathonsByHackathonId(hackathonId)).thenReturn(mockList);
 
-        ApiResponse<List<UserHackathonResponseDTO>> response = userHackathonController.getUserHackathonsByHackathonId(hackathonId);
+        ApiResponse<List<UserHackathonResponseDTO>> response =
+                userHackathonController.getUserHackathonsByHackathonId(hackathonId);
 
         assertEquals(mockList, response.getData());
         verify(userHackathonService, times(1)).getUserHackathonsByHackathonId(hackathonId);
@@ -98,9 +103,11 @@ class UserHackathonControllerTest {
         Long hackathonId = 1L;
         List<String> roles = List.of("MENTOR", "JUDGE");
         List<UserHackathonResponseDTO> mockList = List.of(new UserHackathonResponseDTO());
-        when(userHackathonService.getUserHackathonsByHackathonIdAndRoles(hackathonId, roles)).thenReturn(mockList);
+        when(userHackathonService.getUserHackathonsByHackathonIdAndRoles(hackathonId, roles))
+                .thenReturn(mockList);
 
-        ApiResponse<List<UserHackathonResponseDTO>> response = userHackathonController.getUserHackathonsByHackathonIdAndRoles(hackathonId, roles);
+        ApiResponse<List<UserHackathonResponseDTO>> response =
+                userHackathonController.getUserHackathonsByHackathonIdAndRoles(hackathonId, roles);
 
         assertEquals(mockList, response.getData());
         verify(userHackathonService, times(1)).getUserHackathonsByHackathonIdAndRoles(hackathonId, roles);
@@ -125,10 +132,12 @@ class UserHackathonControllerTest {
         request.setRequestDateTime(LocalDateTime.now());
         request.setChannel("HACOF");
 
-        List<UserHackathonResponseDTO> mockList = List.of(new UserHackathonResponseDTO(), new UserHackathonResponseDTO());
+        List<UserHackathonResponseDTO> mockList =
+                List.of(new UserHackathonResponseDTO(), new UserHackathonResponseDTO());
         when(userHackathonService.createBulkUserHackathon(bulkRequestDTO)).thenReturn(mockList);
 
-        ResponseEntity<ApiResponse<List<UserHackathonResponseDTO>>> response = userHackathonController.createBulkUserHackathon(request);
+        ResponseEntity<ApiResponse<List<UserHackathonResponseDTO>>> response =
+                userHackathonController.createBulkUserHackathon(request);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(mockList, response.getBody().getData());

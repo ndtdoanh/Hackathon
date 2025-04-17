@@ -1,5 +1,11 @@
 package com.hacof.identity.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.request.ActivityLogRequest;
 import com.hacof.identity.dto.response.ActivityLogResponse;
@@ -10,14 +16,10 @@ import com.hacof.identity.exception.ErrorCode;
 import com.hacof.identity.repository.ActivityLogRepository;
 import com.hacof.identity.repository.UserRepository;
 import com.hacof.identity.service.ActivityLogService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

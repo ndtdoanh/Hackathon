@@ -1,5 +1,12 @@
 package com.hacof.identity.service.impl;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hacof.identity.dto.request.UserDeviceTrackRequest;
 import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.dto.response.UserDeviceTrackResponse;
@@ -13,15 +20,10 @@ import com.hacof.identity.repository.FileUrlRepository;
 import com.hacof.identity.repository.UserDeviceRepository;
 import com.hacof.identity.repository.UserDeviceTrackRepository;
 import com.hacof.identity.service.UserDeviceTrackService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -96,8 +98,9 @@ public class UserDeviceTrackServiceImpl implements UserDeviceTrackService {
 
     @Override
     public List<FileUrlResponse> getFileUrlsByUserDeviceTrackId(Long userDeviceTrackId) {
-        UserDeviceTrack userDeviceTrack =
-                userDeviceTrackRepository.findById(userDeviceTrackId).orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_TRACK_NOT_EXISTED));
+        UserDeviceTrack userDeviceTrack = userDeviceTrackRepository
+                .findById(userDeviceTrackId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_TRACK_NOT_EXISTED));
         return fileUrlMapper.toResponseList(userDeviceTrack.getFileUrls());
     }
 

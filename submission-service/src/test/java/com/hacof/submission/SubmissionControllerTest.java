@@ -1,10 +1,12 @@
 package com.hacof.submission;
 
-import com.hacof.submission.controller.SubmissionController;
-import com.hacof.submission.dto.request.SubmissionRequestDTO;
-import com.hacof.submission.dto.response.SubmissionResponseDTO;
-import com.hacof.submission.service.SubmissionService;
-import com.hacof.submission.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,14 +14,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.hacof.submission.controller.SubmissionController;
+import com.hacof.submission.dto.response.SubmissionResponseDTO;
+import com.hacof.submission.service.SubmissionService;
+import com.hacof.submission.util.CommonResponse;
 
 class SubmissionControllerTest {
 
@@ -41,8 +40,8 @@ class SubmissionControllerTest {
 
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "content".getBytes());
 
-        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response = controller.createSubmission(
-                List.of(mockFile), "1", "2", "SUBMITTED");
+        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response =
+                controller.createSubmission(List.of(mockFile), "1", "2", "SUBMITTED");
 
         assertEquals(201, response.getStatusCodeValue());
         assertNotNull(response.getBody().getData());
@@ -50,19 +49,21 @@ class SubmissionControllerTest {
 
     @Test
     void testCreateSubmission_MissingIds() {
-        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response = controller.createSubmission(
-                null, "", "", "SUBMITTED");
+        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response =
+                controller.createSubmission(null, "", "", "SUBMITTED");
 
         assertEquals(404, response.getStatusCodeValue());
-        assertEquals("Round ID and Team ID must not be null or empty.", response.getBody().getMessage());
+        assertEquals(
+                "Round ID and Team ID must not be null or empty.",
+                response.getBody().getMessage());
     }
 
     @Test
     void testCreateSubmission_IOException() throws IOException {
         when(service.createSubmission(any(), any())).thenThrow(new IOException("Disk full"));
 
-        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response = controller.createSubmission(
-                null, "1", "2", "SUBMITTED");
+        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response =
+                controller.createSubmission(null, "1", "2", "SUBMITTED");
 
         assertEquals(400, response.getStatusCodeValue());
         assertTrue(response.getBody().getMessage().contains("Disk full"));
@@ -72,8 +73,8 @@ class SubmissionControllerTest {
     void testCreateSubmission_Exception() throws IOException {
         when(service.createSubmission(any(), any())).thenThrow(new RuntimeException("Server crash"));
 
-        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response = controller.createSubmission(
-                null, "1", "2", "SUBMITTED");
+        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response =
+                controller.createSubmission(null, "1", "2", "SUBMITTED");
 
         assertEquals(500, response.getStatusCodeValue());
     }
@@ -118,8 +119,8 @@ class SubmissionControllerTest {
     void testUpdateSubmission_Success() throws Exception {
         when(service.updateSubmission(eq(1L), any(), any())).thenReturn(new SubmissionResponseDTO());
 
-        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response = controller.updateSubmission(
-                1L, null, 2L, 3L, "UPDATED");
+        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response =
+                controller.updateSubmission(1L, null, 2L, 3L, "UPDATED");
 
         assertEquals(200, response.getStatusCodeValue());
     }
@@ -128,8 +129,8 @@ class SubmissionControllerTest {
     void testUpdateSubmission_IllegalArgument() throws Exception {
         when(service.updateSubmission(eq(1L), any(), any())).thenThrow(new IllegalArgumentException("Invalid"));
 
-        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response = controller.updateSubmission(
-                1L, null, 2L, 3L, "ERROR");
+        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response =
+                controller.updateSubmission(1L, null, 2L, 3L, "ERROR");
 
         assertEquals(404, response.getStatusCodeValue());
     }
@@ -138,8 +139,8 @@ class SubmissionControllerTest {
     void testUpdateSubmission_Exception() throws Exception {
         when(service.updateSubmission(eq(1L), any(), any())).thenThrow(new RuntimeException("System crash"));
 
-        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response = controller.updateSubmission(
-                1L, null, 2L, 3L, "CRASH");
+        ResponseEntity<CommonResponse<SubmissionResponseDTO>> response =
+                controller.updateSubmission(1L, null, 2L, 3L, "CRASH");
 
         assertEquals(500, response.getStatusCodeValue());
     }
@@ -198,7 +199,8 @@ class SubmissionControllerTest {
 
     @Test
     void testGetSubmissionsByTeamAndRound_Success() {
-        when(service.getSubmissionsByTeamAndRound(1L, 2L)).thenReturn(Collections.singletonList(new SubmissionResponseDTO()));
+        when(service.getSubmissionsByTeamAndRound(1L, 2L))
+                .thenReturn(Collections.singletonList(new SubmissionResponseDTO()));
 
         ResponseEntity<CommonResponse<List<SubmissionResponseDTO>>> response =
                 controller.getSubmissionsByTeamAndRound(1L, 2L);

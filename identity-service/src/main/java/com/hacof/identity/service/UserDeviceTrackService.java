@@ -1,11 +1,12 @@
 package com.hacof.identity.service;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hacof.identity.dto.request.UserDeviceTrackRequest;
 import com.hacof.identity.dto.response.FileUrlResponse;
 import com.hacof.identity.dto.response.UserDeviceTrackResponse;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public interface UserDeviceTrackService {
 

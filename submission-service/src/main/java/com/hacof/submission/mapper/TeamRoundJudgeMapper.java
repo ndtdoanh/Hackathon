@@ -1,5 +1,8 @@
 package com.hacof.submission.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hacof.submission.dto.request.TeamRoundJudgeRequestDTO;
 import com.hacof.submission.dto.response.TeamRoundJudgeResponseDTO;
 import com.hacof.submission.dto.response.TeamRoundResponseDTO;
@@ -9,8 +12,6 @@ import com.hacof.submission.entity.TeamRoundJudge;
 import com.hacof.submission.entity.User;
 import com.hacof.submission.repository.TeamRoundRepository;
 import com.hacof.submission.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 public class TeamRoundJudgeMapper {

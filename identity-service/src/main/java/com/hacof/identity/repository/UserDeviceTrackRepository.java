@@ -1,10 +1,11 @@
 package com.hacof.identity.repository;
 
-import com.hacof.identity.entity.UserDeviceTrack;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hacof.identity.entity.UserDeviceTrack;
 
 @Repository
 public interface UserDeviceTrackRepository extends JpaRepository<UserDeviceTrack, Long> {

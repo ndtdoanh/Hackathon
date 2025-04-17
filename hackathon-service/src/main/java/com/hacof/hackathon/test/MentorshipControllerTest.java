@@ -1,12 +1,13 @@
 package com.hacof.hackathon.test;
 
-import com.hacof.hackathon.controller.MentorshipController;
-import com.hacof.hackathon.dto.MentorshipRequestDTO;
-import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
-import com.hacof.hackathon.service.MentorshipRequestService;
-import com.hacof.hackathon.service.MentorshipSessionRequestService;
-import com.hacof.hackathon.util.CommonRequest;
-import com.hacof.hackathon.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,13 +16,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import com.hacof.hackathon.controller.MentorshipController;
+import com.hacof.hackathon.dto.MentorshipRequestDTO;
+import com.hacof.hackathon.dto.MentorshipSessionRequestDTO;
+import com.hacof.hackathon.service.MentorshipRequestService;
+import com.hacof.hackathon.service.MentorshipSessionRequestService;
+import com.hacof.hackathon.util.CommonRequest;
+import com.hacof.hackathon.util.CommonResponse;
 
 class MentorshipControllerTest {
 
@@ -46,8 +47,7 @@ class MentorshipControllerTest {
 
         CommonRequest<MentorshipRequestDTO> request = new CommonRequest<>();
         request.setRequestId(UUID.randomUUID().toString());
-        request.setRequestDateTime(LocalDateTime
-                .now());
+        request.setRequestDateTime(LocalDateTime.now());
         request.setChannel("HACOF");
         request.setData(dto);
 
@@ -72,7 +72,8 @@ class MentorshipControllerTest {
         request.setChannel("HACOF");
         request.setData(dto);
 
-        when(mentorshipRequestService.approveOrReject(Long.parseLong(dto.getId()), dto)).thenReturn(dto);
+        when(mentorshipRequestService.approveOrReject(Long.parseLong(dto.getId()), dto))
+                .thenReturn(dto);
 
         ResponseEntity<CommonResponse<MentorshipRequestDTO>> response =
                 mentorshipController.approveMentorshipRequest(request);
@@ -93,7 +94,8 @@ class MentorshipControllerTest {
         request.setChannel("HACOF");
         request.setData(dto);
 
-        when(mentorshipRequestService.approveOrReject(Long.parseLong(dto.getId()), dto)).thenReturn(dto);
+        when(mentorshipRequestService.approveOrReject(Long.parseLong(dto.getId()), dto))
+                .thenReturn(dto);
 
         ResponseEntity<CommonResponse<MentorshipRequestDTO>> response =
                 mentorshipController.rejectMentorshipRequest(request);
@@ -143,8 +145,7 @@ class MentorshipControllerTest {
     void testDeleteMentorshipSessionRequest() {
         doNothing().when(mentorshipSessionRequestService).delete("1");
 
-        ResponseEntity<CommonResponse<Void>> response =
-                mentorshipController.deleteMentorshipSessionRequest("1");
+        ResponseEntity<CommonResponse<Void>> response = mentorshipController.deleteMentorshipSessionRequest("1");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(mentorshipSessionRequestService, times(1)).delete("1");
