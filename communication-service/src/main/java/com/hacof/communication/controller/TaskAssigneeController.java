@@ -99,9 +99,9 @@ public class TaskAssigneeController {
         try {
             taskAssigneeService.deleteTaskAssignee(id);
             setDefaultResponseFields(response);
-            response.setStatus(HttpStatus.NO_CONTENT.value());
+            response.setStatus(HttpStatus.OK.value());
             response.setMessage("Task Assignee deleted successfully!");
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.NOT_FOUND.value());
