@@ -21,7 +21,7 @@ public class BoardResponseDTO {
     String id;
     String name;
     String description;
-    String ownerName;
+    String ownerId;
     String teamId;
     String hackathonId;
     String createdBy;

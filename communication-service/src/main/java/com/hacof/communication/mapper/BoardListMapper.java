@@ -51,7 +51,7 @@ public class BoardListMapper {
                 .id(String.valueOf(board.getId()))
                 .name(board.getName())
                 .description(board.getDescription()) // Lấy mô tả Board
-                .ownerName(board.getOwner() != null ? board.getOwner().getUsername() : null) // Lấy tên chủ sở hữu
+                .ownerId(String.valueOf(board.getOwner().getId()))
                 .teamId(String.valueOf(board.getTeam().getId()))
                 .hackathonId(String.valueOf(board.getHackathon().getId())) // Lấy tên team (nếu có)
                 .createdBy(board.getCreatedBy() != null ? board.getCreatedBy().getUsername() : null) // Người tạo

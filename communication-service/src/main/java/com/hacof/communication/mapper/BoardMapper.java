@@ -28,7 +28,7 @@ public class BoardMapper {
                 .id(String.valueOf(board.getId()))
                 .name(board.getName())
                 .description(board.getDescription())
-                .ownerName(board.getOwner().getUsername())
+                .ownerId(String.valueOf(board.getOwner().getId()))
                 .teamId(String.valueOf(board.getTeam().getId()))
                 .hackathonId(
                         board.getHackathon() != null
