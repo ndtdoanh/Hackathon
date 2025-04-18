@@ -27,6 +27,7 @@ public class ScheduleEventMapper {
                 .endTime(requestDTO.getEndTime())
                 .isRecurring(requestDTO.isRecurring())
                 .recurrenceRule(requestDTO.getRecurrenceRule())
+                .eventLabel(requestDTO.getEventLabel())
                 .build();
 
         scheduleEvent.setFileUrls(fileUrls);
@@ -55,6 +56,7 @@ public class ScheduleEventMapper {
                 .endTime(scheduleEvent.getEndTime())
                 .isRecurring(scheduleEvent.isRecurring())
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
+                .eventLabel(scheduleEvent.getEventLabel())
                 .createdDate(scheduleEvent.getCreatedDate())
                 .lastModifiedDate(scheduleEvent.getLastModifiedDate())
                 .createdBy(

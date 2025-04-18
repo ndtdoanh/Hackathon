@@ -3,6 +3,7 @@ package com.hacof.communication.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hacof.communication.constant.EventLabel;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +33,5 @@ public class ScheduleEventResponseDTO {
     LocalDateTime lastModifiedDate;
     String createdBy;
     List<String> fileUrls;
+    EventLabel eventLabel;
 }

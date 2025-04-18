@@ -62,6 +62,7 @@ public class ScheduleEventReminderMapper {
                 .endTime(scheduleEvent.getEndTime())
                 .isRecurring(scheduleEvent.isRecurring())
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
+                .eventLabel(scheduleEvent.getEventLabel())
                 .createdDate(scheduleEvent.getCreatedDate())
                 .lastModifiedDate(scheduleEvent.getLastModifiedDate())
                 .createdBy(
