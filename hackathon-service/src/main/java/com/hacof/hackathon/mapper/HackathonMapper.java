@@ -11,7 +11,6 @@ import org.mapstruct.Named;
 import com.hacof.hackathon.dto.HackathonDTO;
 import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface HackathonMapper {
@@ -47,15 +46,6 @@ public interface HackathonMapper {
         } else {
             return "CLOSED";
         }
-    }
-
-    default User mapStringToUser(String username) {
-        if (username == null) {
-            return null;
-        }
-        User user = new User();
-        user.setUsername(username);
-        return user;
     }
 
     @Named("fileUrlListToStringList")

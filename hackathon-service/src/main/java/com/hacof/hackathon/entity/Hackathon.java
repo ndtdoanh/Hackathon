@@ -113,10 +113,8 @@ public class Hackathon extends AuditUserBase {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<UserHackathon> userHackathons = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "hackathon",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    List<TeamRequest> teamRequests = new ArrayList<>();
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TeamRequest> teamRequests;
 
     @OneToMany(
             mappedBy = "hackathon",

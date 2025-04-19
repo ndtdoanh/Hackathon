@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.SponsorshipDetailStatus;
@@ -31,15 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-@FieldDefaults(makeFinal = true)
+@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackathonDetailService {
     SponsorshipHackathonDetailRepository sponsorshipHackathonDetailRepository;
     SponsorshipHackathonRepository sponsorshipHackathonRepository;
     FileUrlRepository fileUrlRepository;
-    // SponsorshipHackathonDetailMapper sponsorshipHackathonDetailMapper;
-
-    @Autowired
-    private FileUrlMapper fileUrlMapper;
+    FileUrlMapper fileUrlMapper;
 
     //    @Override
     //    public SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO) {
@@ -204,9 +200,6 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     @Override
     public List<SponsorshipHackathonDetailDTO> getAll() {
         log.info("Fetching all sponsorship hackathon details");
-        //        if (sponsorshipHackathonDetailRepository.findAll().isEmpty()) {
-        //            throw new ResourceNotFoundException("No sponsorship hackathon details found");
-        //        }
         return sponsorshipHackathonDetailRepository.findAll().stream()
                 .map(SponsorshipHackathonDetailMapperManual::toDto)
                 .collect(Collectors.toList());

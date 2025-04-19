@@ -41,18 +41,6 @@ public interface HackathonResultMapper {
         return id != null ? String.valueOf(id) : null;
     }
 
-    @Named("mapStringToId")
-    default Long mapStringToId(String id) {
-        if (id == null || id.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid ID: " + id);
-        }
-    }
-
     @AfterMapping
     default void updateEntityFromDto(HackathonResultDTO dto, @MappingTarget HackathonResult entity) {
         if (dto.getHackathonId() != null) {

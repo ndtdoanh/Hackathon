@@ -6,10 +6,6 @@ import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
 
 public interface SponsorshipHackathonDetailService {
-    //    SponsorshipHackathonDetailDTO create(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
-    //
-    //    SponsorshipHackathonDetailDTO update(Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
-
     void delete(Long id);
 
     List<SponsorshipHackathonDetailDTO> getAll();
