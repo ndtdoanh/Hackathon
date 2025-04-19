@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.analytics.dto.ApiRequest;
@@ -48,6 +49,19 @@ public class FeedbackController {
                         .build());
     }
 
+    @PostMapping("/bulk")
+    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> createBulkFeedback(
+            @RequestBody @Valid ApiRequest<List<FeedbackRequest>> request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.<List<FeedbackResponse>>builder()
+                        .requestId(request.getRequestId())
+                        .requestDateTime(request.getRequestDateTime())
+                        .channel(request.getChannel())
+                        .data(feedbackService.createBulkFeedback(request.getData()))
+                        .message("Bulk feedback created successfully")
+                        .build());
+    }
+
     @GetMapping
     //    @PreAuthorize("hasAuthority('GET_FEEDBACKS')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacks() {
@@ -72,6 +86,31 @@ public class FeedbackController {
                 .build();
     }
 
+    @GetMapping("/by-creator/{username}")
+    public ApiResponse<List<FeedbackResponse>> getFeedbacksByCreatedByUserName(
+            @PathVariable String username) {
+        return ApiResponse.<List<FeedbackResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(feedbackService.getFeedbacksByCreatedByUserName(username))
+                .message("Get feedbacks by created by username")
+                .build();
+    }
+
+    @GetMapping("/by-creator/{username}/hackathon/{hackathonId}")
+    public ApiResponse<List<FeedbackResponse>> getFeedbacksByCreatedByUserNameAndHackathon(
+            @PathVariable String username,
+            @PathVariable Long hackathonId) {
+        return ApiResponse.<List<FeedbackResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(feedbackService.getFeedbacksByCreatedByUserNameAndHackathon(username, hackathonId))
+                .message("Get feedbacks by created by username and hackathon")
+                .build();
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('DELETE_FEEDBACK')")
     public ApiResponse<Void> deleteFeedback(@PathVariable Long id) {
@@ -93,14 +132,17 @@ public class FeedbackController {
     //                .build();
     //    }
 
-    //    @GetMapping("/by-hackathon")
-    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_HACKATHON')")
-    //    public ApiResponse<List<FeedbackResponse>> getFeedbacksByHackathon(@RequestParam Long hackathonId) {
-    //        return ApiResponse.<List<FeedbackResponse>>builder()
-    //                .data(feedbackService.getFeedbacksByHackathon(hackathonId))
-    //                .message("Get feedbacks by hackathon")
-    //                .build();
-    //    }
+    @GetMapping("/hackathon/{hackathonId}")
+    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_HACKATHON')")
+    public ApiResponse<List<FeedbackResponse>> getFeedbacksByHackathon(@PathVariable Long hackathonId) {
+        return ApiResponse.<List<FeedbackResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(feedbackService.getFeedbacksByHackathon(hackathonId))
+                .message("Get feedbacks by hackathon")
+                .build();
+    }
 
     //    @GetMapping("/by-mentor")
     //    //    @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")

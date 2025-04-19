@@ -17,4 +17,8 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByHackathonId(Long hackathonId);
 
     List<Feedback> findByMentorId(Long mentorId);
+
+    List<Feedback> findByCreatedByUsername(String username);
+
+    List<Feedback> findByCreatedByUsernameAndHackathonId(String username, Long hackathonId);
 }

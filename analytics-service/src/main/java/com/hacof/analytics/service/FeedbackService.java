@@ -8,9 +8,15 @@ import com.hacof.analytics.dto.response.FeedbackResponse;
 public interface FeedbackService {
     FeedbackResponse createFeedback(FeedbackRequest request);
 
+    List<FeedbackResponse> createBulkFeedback(List<FeedbackRequest> requests);
+
     List<FeedbackResponse> getFeedbacks();
 
     FeedbackResponse getFeedback(Long id);
+
+    List<FeedbackResponse> getFeedbacksByCreatedByUserName(String username);
+
+    List<FeedbackResponse> getFeedbacksByCreatedByUserNameAndHackathon(String username, Long hackathonId);
 
     void deleteFeedback(Long id);
 
