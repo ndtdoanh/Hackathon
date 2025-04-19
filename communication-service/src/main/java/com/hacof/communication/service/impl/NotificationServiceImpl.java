@@ -190,11 +190,27 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private String buildNotificationEmailContent(String content, String metadata) {
-        return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;'>"
-                + "<h2 style='color: #333;'>System notice</h2>"
-                + "<p><strong>Content:</strong> " + (content != null ? content : "Do not have") + "</p>"
-                + "<p><strong>Metadata:</strong> " + (metadata != null ? metadata : "Do not have") + "</p>"
-                + "<p style='margin-top: 20px;'>Best regards,<br/>Support team</p>"
+        return "<div style='font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 40px auto; border: 1px solid #dcdcdc; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);'>"
+                + "<div style='background-color: #2f4050; padding: 20px 30px; text-align: center;'>"
+                + "<h1 style='color: #ffffff; font-size: 24px; margin: 0;'>HACOF - System Notification</h1>"
+                + "</div>"
+                + "<div style='background-color: #ffffff; padding: 30px;'>"
+                + "<p style='font-size: 16px; color: #333;'>Hello,</p>"
+                + "<p style='font-size: 16px; color: #333;'>You have received a new system notification. Please review the details below:</p>"
+
+                + "<div style='margin: 25px 0; padding: 20px; border: 1px dashed #e67e22; border-radius: 6px; background-color: #fef9f4;'>"
+                + "<p style='margin: 0; font-size: 15px;'><strong>Content:</strong> " + (content != null ? content : "Do not have") + "</p>"
+                + "<p style='margin: 10px 0 0; font-size: 15px;'><strong>Metadata:</strong> " + (metadata != null ? metadata : "Do not have") + "</p>"
+                + "</div>"
+
+                + "<p style='font-size: 14px; color: #555;'>If you have any questions, please contact our support team.</p>"
+                + "<p style='font-size: 14px; color: #999; margin-top: 30px;'>Best regards,</p>"
+                + "<p style='font-size: 14px; color: #2f4050; font-weight: bold;'>HACOF Support Team</p>"
+                + "</div>"
+
+                + "<div style='background-color: #f4f4f4; padding: 15px 30px; text-align: center;'>"
+                + "<p style='font-size: 12px; color: #999; margin: 0;'>This is an automated email. Please do not reply.</p>"
+                + "</div>"
                 + "</div>";
     }
 
