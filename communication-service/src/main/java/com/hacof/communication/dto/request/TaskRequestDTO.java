@@ -3,6 +3,7 @@ package com.hacof.communication.dto.request;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,7 @@ public class TaskRequestDTO {
     int position;
     String boardListId;
     LocalDateTime dueDate;
+
+    @JsonIgnore
     List<String> fileUrls;
 }

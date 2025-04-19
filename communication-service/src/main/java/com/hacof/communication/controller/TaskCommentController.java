@@ -155,4 +155,30 @@ public class TaskCommentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/task/{taskId}")
+    public ResponseEntity<CommonResponse<List<TaskCommentResponseDTO>>> getTaskCommentsByTaskId(
+            @PathVariable String taskId) {
+
+        CommonResponse<List<TaskCommentResponseDTO>> response = new CommonResponse<>();
+
+        try {
+            List<TaskCommentResponseDTO> taskComments = taskCommentService.getTaskCommentsByTaskId(taskId);
+
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Comments fetched successfully!");
+            response.setData(taskComments);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error fetching task comments: " + e.getMessage());
+            response.setData(List.of());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

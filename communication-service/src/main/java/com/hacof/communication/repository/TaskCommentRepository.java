@@ -5,5 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.hacof.communication.entity.TaskComment;
 
+import java.util.List;
+
 @Repository
-public interface TaskCommentRepository extends JpaRepository<TaskComment, Long> {}
+public interface TaskCommentRepository extends JpaRepository<TaskComment, Long> {
+    List<TaskComment> findByTaskId(Long taskId);
+
+}

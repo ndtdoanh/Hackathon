@@ -37,10 +37,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
-        if (taskRequestDTO.getBoardListId() == null
-                || taskRequestDTO.getBoardListId().isEmpty()) {
+        if (taskRequestDTO.getBoardListId() == null || taskRequestDTO.getBoardListId().isEmpty()) {
             throw new IllegalArgumentException("BoardList ID cannot be null or empty");
         }
+
         Long boardListId = Long.parseLong(taskRequestDTO.getBoardListId());
         Optional<BoardList> boardListOptional = boardListRepository.findById(boardListId);
         if (!boardListOptional.isPresent()) {
@@ -51,8 +51,7 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
 
-        if (taskRequestDTO.getDescription() == null
-                || taskRequestDTO.getDescription().isEmpty()) {
+        if (taskRequestDTO.getDescription() == null || taskRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Task description cannot be empty");
         }
 
@@ -60,22 +59,12 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Position must be a non-negative integer");
         }
 
-        List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndTaskIsNull(taskRequestDTO.getFileUrls());
-        if (fileUrls.size() != taskRequestDTO.getFileUrls().size()) {
-            throw new IllegalArgumentException("Some file URLs are invalid or already associated with other tasks.");
-        }
-
         if (taskRequestDTO.getDueDate() == null) {
             throw new IllegalArgumentException("Due date must be a future date");
         }
 
-        Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get(), fileUrls);
+        Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get(), null); // Không truyền fileUrls
         task = taskRepository.save(task);
-
-        for (FileUrl file : fileUrls) {
-            file.setTask(task);
-        }
-        fileUrlRepository.saveAll(fileUrls);
 
         return taskMapper.toDto(task);
     }

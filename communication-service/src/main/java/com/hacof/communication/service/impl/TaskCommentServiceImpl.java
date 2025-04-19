@@ -108,4 +108,18 @@ public class TaskCommentServiceImpl implements TaskCommentService {
         List<TaskComment> taskComments = taskCommentRepository.findAll();
         return taskComments.stream().map(taskCommentMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<TaskCommentResponseDTO> getTaskCommentsByTaskId(String taskId) {
+        Long taskIdLong = Long.parseLong(taskId);
+
+        Optional<Task> taskOptional = taskRepository.findById(taskIdLong);
+        if (!taskOptional.isPresent()) {
+            throw new IllegalArgumentException("Task with ID " + taskId + " not found!");
+        }
+
+        List<TaskComment> taskComments = taskCommentRepository.findByTaskId(taskIdLong);
+        return taskComments.stream().map(taskCommentMapper::toDto).collect(Collectors.toList());
+    }
+
 }
