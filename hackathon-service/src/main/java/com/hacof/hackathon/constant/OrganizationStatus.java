@@ -1,5 +1,8 @@
 package com.hacof.hackathon.constant;
 
+import lombok.Getter;
+
+@Getter
 public enum OrganizationStatus {
     FPTU("FPTU"),
     NASA("NASA"),
@@ -11,9 +14,5 @@ public enum OrganizationStatus {
 
     OrganizationStatus(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

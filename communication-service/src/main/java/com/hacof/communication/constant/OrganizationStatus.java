@@ -1,4 +1,4 @@
-package com.hacof.identity.constant;
+package com.hacof.communication.constant;
 
 import lombok.Getter;
 
