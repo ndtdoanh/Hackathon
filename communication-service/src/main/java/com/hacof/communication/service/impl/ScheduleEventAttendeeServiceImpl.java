@@ -99,13 +99,14 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
     }
 
     @Override
-    public ScheduleEventAttendeeResponseDTO getScheduleEventAttendee(Long id) {
+    public List<ScheduleEventAttendeeResponseDTO> getScheduleEventAttendee(Long id) {
         Optional<ScheduleEventAttendee> scheduleEventAttendeeOptional = scheduleEventAttendeeRepository.findById(id);
-        if (!scheduleEventAttendeeOptional.isPresent()) {
-            throw new IllegalArgumentException("ScheduleEventAttendee not found!");
-        }
-        return scheduleEventAttendeeMapper.toDto(scheduleEventAttendeeOptional.get());
+
+        return scheduleEventAttendeeOptional
+                .map(attendee -> List.of(scheduleEventAttendeeMapper.toDto(attendee)))
+                .orElse(List.of());
     }
+
 
     @Override
     public List<ScheduleEventAttendeeResponseDTO> getAllScheduleEventAttendees() {
@@ -132,9 +133,8 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
     @Override
     public List<ScheduleEventAttendeeResponseDTO> getScheduleEventAttendeesByEventId(Long scheduleEventId) {
         List<ScheduleEventAttendee> attendees = scheduleEventAttendeeRepository.findByScheduleEventId(scheduleEventId);
-        if (attendees.isEmpty()) {
-            throw new IllegalArgumentException("No attendees found for the given scheduleEventId: " + scheduleEventId);
-        }
-        return attendees.stream().map(scheduleEventAttendeeMapper::toDto).collect(Collectors.toList());
+        return attendees.isEmpty() ? List.of() : attendees.stream()
+                .map(scheduleEventAttendeeMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

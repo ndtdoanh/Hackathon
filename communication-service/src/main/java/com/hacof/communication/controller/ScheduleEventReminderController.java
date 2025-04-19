@@ -118,22 +118,24 @@ public class ScheduleEventReminderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<ScheduleEventReminderResponseDTO>> getScheduleEventReminder(
-            @PathVariable Long id) {
-        CommonResponse<ScheduleEventReminderResponseDTO> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>> getScheduleEventReminder(@PathVariable Long id) {
+        CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
         try {
-            ScheduleEventReminderResponseDTO scheduleEventReminder =
-                    scheduleEventReminderService.getScheduleEventReminder(id);
+            List<ScheduleEventReminderResponseDTO> scheduleEventReminders = scheduleEventReminderService.getScheduleEventReminder(id);
+
             setDefaultResponseFields(response);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Schedule Event Reminder fetched successfully!");
-            response.setData(scheduleEventReminder);
+
+            if (scheduleEventReminders.isEmpty()) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                response.setMessage("ScheduleEventReminder not found!");
+                response.setData(scheduleEventReminders);
+            } else {
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Schedule Event Reminder fetched successfully!");
+                response.setData(scheduleEventReminders);
+            }
+
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            setDefaultResponseFields(response);
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

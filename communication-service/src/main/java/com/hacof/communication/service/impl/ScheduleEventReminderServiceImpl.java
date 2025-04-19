@@ -1,5 +1,6 @@
 package com.hacof.communication.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -114,13 +115,15 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     }
 
     @Override
-    public ScheduleEventReminderResponseDTO getScheduleEventReminder(Long id) {
+    public List<ScheduleEventReminderResponseDTO> getScheduleEventReminder(Long id) {
         Optional<ScheduleEventReminder> scheduleEventReminderOptional = scheduleEventReminderRepository.findById(id);
-        if (!scheduleEventReminderOptional.isPresent()) {
-            throw new IllegalArgumentException("ScheduleEventReminder not found!");
-        }
-        return scheduleEventReminderMapper.toDto(scheduleEventReminderOptional.get());
+
+        // Return empty list if not found
+        return scheduleEventReminderOptional
+                .map(scheduleEventReminder -> List.of(scheduleEventReminderMapper.toDto(scheduleEventReminder))) // Wrap in a list
+                .orElse(List.of()); // Return empty list if not found
     }
+
 
     @Override
     public List<ScheduleEventReminderResponseDTO> getAllScheduleEventReminders() {
@@ -134,8 +137,7 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     public List<ScheduleEventReminderResponseDTO> getScheduleEventRemindersByScheduleEventId(Long scheduleEventId) {
         List<ScheduleEventReminder> reminders = scheduleEventReminderRepository.findByScheduleEventId(scheduleEventId);
         if (reminders.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "No schedule event reminders found for the given scheduleEventId: " + scheduleEventId);
+            return new ArrayList<>(); // Return an empty list if no reminders found for the given scheduleEventId
         }
         return reminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
     }
@@ -144,7 +146,7 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     public List<ScheduleEventReminderResponseDTO> getScheduleEventRemindersByUserId(Long userId) {
         List<ScheduleEventReminder> reminders = scheduleEventReminderRepository.findByUserId(userId);
         if (reminders.isEmpty()) {
-            throw new IllegalArgumentException("No schedule event reminders found for the given userId: " + userId);
+            return new ArrayList<>(); // Return an empty list if no reminders found for the given userId
         }
         return reminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
     }

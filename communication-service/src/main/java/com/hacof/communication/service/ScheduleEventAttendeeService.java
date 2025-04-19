@@ -14,7 +14,7 @@ public interface ScheduleEventAttendeeService {
 
     void deleteScheduleEventAttendee(Long id);
 
-    ScheduleEventAttendeeResponseDTO getScheduleEventAttendee(Long id);
+    List<ScheduleEventAttendeeResponseDTO> getScheduleEventAttendee(Long id);
 
     List<ScheduleEventAttendeeResponseDTO> getAllScheduleEventAttendees();
 

@@ -87,24 +87,20 @@ public class ThreadPostLikeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<ThreadPostLikeResponseDTO>> getThreadPostLikeById(@PathVariable Long id) {
-        CommonResponse<ThreadPostLikeResponseDTO> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<List<ThreadPostLikeResponseDTO>>> getThreadPostLike(
+            @PathVariable Long id) {
+        CommonResponse<List<ThreadPostLikeResponseDTO>> response = new CommonResponse<>();
         try {
-            ThreadPostLikeResponseDTO like = threadPostLikeService.getThreadPostLike(id);
+            List<ThreadPostLikeResponseDTO> threadPostLikes = threadPostLikeService.getThreadPostLike(id);
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Thread post like fetched successfully!");
-            response.setData(like);
+            response.setMessage("Thread Post Likes fetched successfully!");
+            response.setData(threadPostLikes);
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            setDefaultResponseFields(response);
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            response.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (Exception e) {
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage(e.getMessage());
+            response.setMessage("Error fetching Thread Post Likes: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

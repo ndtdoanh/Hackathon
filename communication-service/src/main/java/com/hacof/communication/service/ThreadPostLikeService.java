@@ -10,7 +10,7 @@ public interface ThreadPostLikeService {
 
     List<ThreadPostLikeResponseDTO> getAllThreadPostLikes();
 
-    ThreadPostLikeResponseDTO getThreadPostLike(Long id);
+    List<ThreadPostLikeResponseDTO> getThreadPostLike(Long id);
 
     List<ThreadPostLikeResponseDTO> getLikesByThreadPostId(Long threadPostId);
 

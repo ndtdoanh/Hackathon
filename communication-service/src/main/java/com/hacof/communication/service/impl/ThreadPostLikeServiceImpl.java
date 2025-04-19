@@ -1,5 +1,6 @@
 package com.hacof.communication.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,18 +49,22 @@ public class ThreadPostLikeServiceImpl implements ThreadPostLikeService {
     }
 
     @Override
-    public ThreadPostLikeResponseDTO getThreadPostLike(Long id) {
-        ThreadPostLike threadPostLike = threadPostLikeRepository
-                .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ThreadPostLike not found with id " + id));
-        return ThreadPostLikeMapper.toResponseDTO(threadPostLike);
+    public List<ThreadPostLikeResponseDTO> getThreadPostLike(Long id) {
+        List<ThreadPostLike> threadPostLikes = threadPostLikeRepository.findByThreadPostId(id);
+        if (threadPostLikes.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return threadPostLikes.stream()
+                .map(ThreadPostLikeMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ThreadPostLikeResponseDTO> getLikesByThreadPostId(Long threadPostId) {
         List<ThreadPostLike> likes = threadPostLikeRepository.findByThreadPostId(threadPostId);
         if (likes.isEmpty()) {
-            throw new IllegalArgumentException("No likes found for the given thread post with id " + threadPostId);
+            return new ArrayList<>();
         }
         return likes.stream().map(ThreadPostLikeMapper::toResponseDTO).collect(Collectors.toList());
     }
