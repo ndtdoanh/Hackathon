@@ -23,9 +23,9 @@ public class TaskCommentMapper {
                                 : null)
                 .taskTitle(taskComment.getTask().getTitle()) // Giả sử Task có trường `title`
                 .content(taskComment.getContent())
-                .createdDate(taskComment.getCreatedDate())
-                .lastModifiedDate(taskComment.getLastModifiedDate())
-                .createdBy(
+                .createdAt(taskComment.getCreatedDate())
+                .updatedAt(taskComment.getLastModifiedDate())
+                .createdByUserName(
                         taskComment.getCreatedBy() != null
                                 ? taskComment.getCreatedBy().getUsername()
                                 : null) // Lấy tên người tạo

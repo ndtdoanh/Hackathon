@@ -19,7 +19,7 @@ public class TaskCommentResponseDTO {
     String taskId; // ID của Task mà TaskComment này thuộc về
     String taskTitle; // Tiêu đề của Task mà TaskComment này thuộc về
     String content; // Nội dung của TaskComment
-    String createdBy; // Tên của người đã tạo TaskComment
-    LocalDateTime createdDate; // Thời gian tạo TaskComment
-    LocalDateTime lastModifiedDate; // Thời gian sửa đổi TaskComment
+    String createdByUserName; // Tên của người đã tạo TaskComment
+    LocalDateTime createdAt; // Thời gian tạo TaskComment
+    LocalDateTime updatedAt; // Thời gian sửa đổi TaskComment
 }
