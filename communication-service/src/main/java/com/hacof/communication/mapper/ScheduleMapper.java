@@ -66,8 +66,8 @@ public class ScheduleMapper {
                 .endTime(scheduleEvent.getEndTime())
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
                 .eventLabel(scheduleEvent.getEventLabel())
-                .createdDate(scheduleEvent.getCreatedDate())
-                .lastModifiedDate(scheduleEvent.getLastModifiedDate())
+                .createdAt(scheduleEvent.getCreatedDate())
+                .updatedAt(scheduleEvent.getLastModifiedDate())
                 .createdBy(
                         scheduleEvent.getCreatedBy() != null
                                 ? scheduleEvent.getCreatedBy().getUsername()

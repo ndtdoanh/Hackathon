@@ -1,8 +1,10 @@
 package com.hacof.communication.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.dto.response.FileUrlResponse;
 import org.springframework.stereotype.Component;
 
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
@@ -39,16 +41,17 @@ public class ScheduleEventMapper {
     public ScheduleEventResponseDTO toDto(ScheduleEvent scheduleEvent) {
         if (scheduleEvent == null) return null;
 
-        // Map file URLs from the scheduleEvent entity (assuming the file URLs are stored as FileUrl objects)
-        List<String> fileUrls = scheduleEvent.getFileUrls() != null
+        // Ensure fileUrls is not null, if it is, initialize it as an empty list.
+        List<FileUrlResponse> fileUrls = (scheduleEvent.getFileUrls() != null)
                 ? scheduleEvent.getFileUrls().stream()
-                        .map(FileUrl::getFileUrl) // Assuming FileUrl entity has a method to get the URL string
-                        .collect(Collectors.toList())
-                : null;
+                .map(fileUrl -> new FileUrlResponse(String.valueOf(fileUrl.getId()), fileUrl.getFileName(), fileUrl.getFileUrl(), fileUrl.getFileType(), fileUrl.getFileSize()))
+                .collect(Collectors.toList())
+                : new ArrayList<>();
 
         return ScheduleEventResponseDTO.builder()
                 .id(String.valueOf(scheduleEvent.getId()))
-                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false)) // Mapping the schedule
+//                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false))
+                .scheduleId(String.valueOf(scheduleEvent.getSchedule().getId()))
                 .name(scheduleEvent.getName())
                 .description(scheduleEvent.getDescription())
                 .location(scheduleEvent.getLocation())
@@ -57,13 +60,12 @@ public class ScheduleEventMapper {
                 .isRecurring(scheduleEvent.isRecurring())
                 .recurrenceRule(scheduleEvent.getRecurrenceRule())
                 .eventLabel(scheduleEvent.getEventLabel())
-                .createdDate(scheduleEvent.getCreatedDate())
-                .lastModifiedDate(scheduleEvent.getLastModifiedDate())
-                .createdBy(
-                        scheduleEvent.getCreatedBy() != null
-                                ? scheduleEvent.getCreatedBy().getUsername()
-                                : null)
-                .fileUrls(fileUrls) // Adding the file URLs
+                .createdAt(scheduleEvent.getCreatedDate())
+                .updatedAt(scheduleEvent.getLastModifiedDate())
+                .createdBy(scheduleEvent.getCreatedBy() != null
+                        ? scheduleEvent.getCreatedBy().getUsername()
+                        : null)
+                .fileUrls(fileUrls) // Directly adding List<FileUrl>
                 .build();
     }
 

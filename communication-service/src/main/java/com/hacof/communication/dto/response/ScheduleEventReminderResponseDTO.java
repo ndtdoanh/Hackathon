@@ -19,9 +19,11 @@ import lombok.experimental.FieldDefaults;
 public class ScheduleEventReminderResponseDTO {
 
     String id;
-    ScheduleEventResponseDTO scheduleEvent;
-    UserResponse user;
+//    ScheduleEventResponseDTO scheduleEvent;
+//    UserResponse user;
+    String scheduleEventId;
+    String userId;
     LocalDateTime remindAt;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

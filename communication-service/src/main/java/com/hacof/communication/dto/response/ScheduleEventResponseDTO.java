@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.hacof.communication.constant.EventLabel;
+import com.hacof.communication.entity.FileUrl;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,8 @@ import lombok.experimental.FieldDefaults;
 public class ScheduleEventResponseDTO {
 
     String id;
-    ScheduleResponseDTO schedule;
+//    ScheduleResponseDTO schedule;
+    String scheduleId;
     String name;
     String description;
     String location;
@@ -29,9 +31,9 @@ public class ScheduleEventResponseDTO {
     LocalDateTime endTime;
     boolean isRecurring;
     String recurrenceRule;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
     String createdBy;
-    List<String> fileUrls;
+    List<FileUrlResponse> fileUrls;
     EventLabel eventLabel;
 }

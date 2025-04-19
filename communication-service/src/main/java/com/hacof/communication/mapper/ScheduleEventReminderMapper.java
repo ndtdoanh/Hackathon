@@ -43,35 +43,35 @@ public class ScheduleEventReminderMapper {
 
         return ScheduleEventReminderResponseDTO.builder()
                 .id(String.valueOf(scheduleEventReminder.getId()))
-                .scheduleEvent(scheduleEvent != null ? mapScheduleEventToDto(scheduleEvent) : null)
-                .user(user != null ? mapUserToDto(user) : null)
+                .scheduleEventId(String.valueOf(scheduleEventReminder.getScheduleEvent().getId()))
+                .userId(String.valueOf(scheduleEventReminder.getUser().getId()))
                 .remindAt(scheduleEventReminder.getRemindAt())
-                .createdDate(scheduleEventReminder.getCreatedDate())
-                .lastModifiedDate(scheduleEventReminder.getLastModifiedDate())
+                .createdAt(scheduleEventReminder.getCreatedDate())
+                .updatedAt(scheduleEventReminder.getLastModifiedDate())
                 .build();
     }
 
-    private ScheduleEventResponseDTO mapScheduleEventToDto(ScheduleEvent scheduleEvent) {
-        return ScheduleEventResponseDTO.builder()
-                .id(String.valueOf(scheduleEvent.getId()))
-                .schedule(scheduleEvent.getSchedule() != null ? mapScheduleToDto(scheduleEvent.getSchedule()) : null)
-                .name(scheduleEvent.getName())
-                .description(scheduleEvent.getDescription())
-                .location(scheduleEvent.getLocation())
-                .startTime(scheduleEvent.getStartTime())
-                .endTime(scheduleEvent.getEndTime())
-                .isRecurring(scheduleEvent.isRecurring())
-                .recurrenceRule(scheduleEvent.getRecurrenceRule())
-                .eventLabel(scheduleEvent.getEventLabel())
-                .createdDate(scheduleEvent.getCreatedDate())
-                .lastModifiedDate(scheduleEvent.getLastModifiedDate())
-                .createdBy(
-                        scheduleEvent.getCreatedBy() != null
-                                ? scheduleEvent.getCreatedBy().getUsername()
-                                : null)
-                .fileUrls(mapFileUrls(scheduleEvent))
-                .build();
-    }
+//    private ScheduleEventResponseDTO mapScheduleEventToDto(ScheduleEvent scheduleEvent) {
+//        return ScheduleEventResponseDTO.builder()
+//                .id(String.valueOf(scheduleEvent.getId()))
+//                .schedule(scheduleEvent.getSchedule() != null ? mapScheduleToDto(scheduleEvent.getSchedule()) : null)
+//                .name(scheduleEvent.getName())
+//                .description(scheduleEvent.getDescription())
+//                .location(scheduleEvent.getLocation())
+//                .startTime(scheduleEvent.getStartTime())
+//                .endTime(scheduleEvent.getEndTime())
+//                .isRecurring(scheduleEvent.isRecurring())
+//                .recurrenceRule(scheduleEvent.getRecurrenceRule())
+//                .eventLabel(scheduleEvent.getEventLabel())
+//                .createdDate(scheduleEvent.getCreatedDate())
+//                .lastModifiedDate(scheduleEvent.getLastModifiedDate())
+//                .createdBy(
+//                        scheduleEvent.getCreatedBy() != null
+//                                ? scheduleEvent.getCreatedBy().getUsername()
+//                                : null)
+//                .fileUrls(mapFileUrls(scheduleEvent))
+//                .build();
+//    }
 
     private ScheduleResponseDTO mapScheduleToDto(Schedule schedule) {
         return ScheduleResponseDTO.builder()

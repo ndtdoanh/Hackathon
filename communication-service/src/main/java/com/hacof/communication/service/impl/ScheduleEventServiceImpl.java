@@ -139,7 +139,7 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         scheduleEvent.setEndTime(scheduleEventRequestDTO.getEndTime());
         scheduleEvent.setRecurring(scheduleEventRequestDTO.isRecurring());
         scheduleEvent.setRecurrenceRule(scheduleEventRequestDTO.getRecurrenceRule());
-
+        scheduleEvent.setEventLabel(scheduleEventRequestDTO.getEventLabel());
         scheduleEvent = scheduleEventRepository.save(scheduleEvent);
 
         return scheduleEventMapper.toDto(scheduleEvent);
