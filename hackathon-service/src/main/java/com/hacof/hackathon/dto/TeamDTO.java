@@ -19,7 +19,7 @@ public class TeamDTO {
     String name;
     String teamLeaderId;
     UserDTO teamLeader;
-    private Set<UserTeamDTO> teamMembers;
+    Set<UserTeamDTO> teamMembers;
 
     String bio;
 

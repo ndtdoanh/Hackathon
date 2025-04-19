@@ -16,10 +16,7 @@ public interface TeamService {
 
     List<TeamDTO> getTeamsByUserIdAndHackathonId(Long userId, Long hackathonId);
 
-    // TeamDTO createTeamWithParticipants(String teamName, List<Long> requestIds);
     List<TeamDTO> createBulkTeams(String teamLeaderId, List<Long> userIds);
 
     List<TeamDTO> createBulkTeams(List<TeamBulkRequestDTO> bulkRequest);
-
-    //    List<TeamDTO> updateBulkTeams(List<TeamBulkRequestDTO> bulkRequest);
 }

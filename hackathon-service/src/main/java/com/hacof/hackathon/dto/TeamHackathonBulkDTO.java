@@ -18,8 +18,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamHackathonBulkDTO {
     @NotNull(message = "Hackathon ID cannot be null")
-    private String hackathonId;
+    String hackathonId;
 
     @NotNull(message = "Status cannot be null")
-    private String status; // "ACTIVE" or "INACTIVE"
+    String status; // "ACTIVE" or "INACTIVE"
 }

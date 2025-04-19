@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,42 +24,13 @@ import com.hacof.hackathon.constant.TeamRequestStatus;
 import com.hacof.hackathon.constant.TeamRoundStatus;
 import com.hacof.hackathon.dto.TeamRequestDTO;
 import com.hacof.hackathon.dto.TeamRequestMemberDTO;
-import com.hacof.hackathon.dto.TeamRequestSearchDTO;
-import com.hacof.hackathon.entity.Board;
-import com.hacof.hackathon.entity.BoardUser;
-import com.hacof.hackathon.entity.Conversation;
-import com.hacof.hackathon.entity.ConversationUser;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.Round;
-import com.hacof.hackathon.entity.Schedule;
-import com.hacof.hackathon.entity.Team;
-import com.hacof.hackathon.entity.TeamHackathon;
-import com.hacof.hackathon.entity.TeamRequest;
-import com.hacof.hackathon.entity.TeamRequestMember;
-import com.hacof.hackathon.entity.TeamRound;
-import com.hacof.hackathon.entity.User;
-import com.hacof.hackathon.entity.UserTeam;
+import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.TeamRequestMapper;
 import com.hacof.hackathon.mapper.manual.TeamRequestMapperManual;
-import com.hacof.hackathon.repository.BoardRepository;
-import com.hacof.hackathon.repository.BoardUserRepository;
-import com.hacof.hackathon.repository.ConversationRepository;
-import com.hacof.hackathon.repository.ConversationUserRepository;
-import com.hacof.hackathon.repository.HackathonRepository;
-import com.hacof.hackathon.repository.RoundRepository;
-import com.hacof.hackathon.repository.ScheduleRepository;
-import com.hacof.hackathon.repository.TeamHackathonRepository;
-import com.hacof.hackathon.repository.TeamRepository;
-import com.hacof.hackathon.repository.TeamRequestMemberRepository;
-import com.hacof.hackathon.repository.TeamRequestRepository;
-import com.hacof.hackathon.repository.TeamRoundRepository;
-import com.hacof.hackathon.repository.UserRepository;
-import com.hacof.hackathon.repository.UserTeamRepository;
+import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.NotificationService;
 import com.hacof.hackathon.service.TeamRequestService;
-import com.hacof.hackathon.specification.TeamRequestSpecification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -73,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class TeamRequestServiceImpl implements TeamRequestService {
     TeamRequestRepository teamRequestRepository;
+    RoleRepository roleRepository;
     TeamRepository teamRepository;
     TeamRequestMemberRepository teamRequestMemberRepository;
     HackathonRepository hackathonRepository;
@@ -86,9 +57,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     ScheduleRepository scheduleRepository;
     TeamRoundRepository teamRoundRepository;
     RoundRepository roundRepository;
-    EmailServiceImpl emailService;
     NotificationService notificationService;
-    TeamRequestMapper teamRequestMapper;
 
     @Override
     public List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId) {
@@ -97,39 +66,8 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .collect(Collectors.toList());
     }
 
-    // use later - pending to use Paging
-    @Override
-    public List<TeamRequestDTO> searchTeamRequests(TeamRequestSearchDTO searchDTO) {
-        Specification<TeamRequest> spec = Specification.where(null);
-
-        if (searchDTO.getHackathonId() != null) {
-            spec = spec.and(TeamRequestSpecification.hasHackathonId(searchDTO.getHackathonId()));
-        }
-        if (searchDTO.getTeamName() != null) {
-            spec = spec.and(TeamRequestSpecification.hasTeamName(searchDTO.getTeamName()));
-        }
-        if (searchDTO.getStatus() != null) {
-            spec = spec.and(TeamRequestSpecification.hasStatus(searchDTO.getStatus()));
-        }
-        if (searchDTO.getMemberId() != null) {
-            spec = spec.and(TeamRequestSpecification.hasMemberId(searchDTO.getMemberId()));
-        }
-        if (searchDTO.getFromDate() != null || searchDTO.getToDate() != null) {
-            spec = spec.and(
-                    TeamRequestSpecification.createdDateBetween(searchDTO.getFromDate(), searchDTO.getToDate()));
-        }
-
-        // Fetch all results without pagination
-        return teamRequestRepository.findAll(spec).stream()
-                .map(teamRequestMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
     @Override
     public List<TeamRequestDTO> getAllTeamRequests() {
-        //        if (teamRequestRepository.findAll().isEmpty()) {
-        //            throw new ResourceNotFoundException("No team requests found");
-        //        }
         List<TeamRequest> teamRequests = teamRequestRepository.findAll();
         return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
@@ -141,29 +79,11 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         User currentUser = getCurrentUser();
 
-        // validate userIds
-        Set<String> userIds = new HashSet<>();
-        for (TeamRequestMemberDTO member : request.getTeamRequestMembers()) {
-            if (member.getUserId() == null || member.getUserId().trim().isEmpty()) {
-                throw new InvalidInputException("UserId cannot be null or empty");
-            }
-            if (!userIds.add(member.getUserId())) {
-                throw new InvalidInputException("Duplicate userId: " + member.getUserId());
-            }
-        }
+        // Extract and validate userIds
+        Set<String> userIds = extractAndValidateUserIds(request, currentUser);
 
-        userIds.add(String.valueOf(currentUser.getId()));
-
-        // Check if any users already belong to an APPROVED team
-        for (String userId : userIds) {
-            boolean exists = teamRequestRepository.existsApprovedTeamRequestByUserIdAndHackathonId(
-                    Long.parseLong(userId), hackathon.getId());
-
-            if (exists) {
-                throw new InvalidInputException(
-                        "User with ID " + userId + " already belongs to an approved team in this hackathon.");
-            }
-        }
+        // Validate users are not in an approved team
+        validateUsersNotInApprovedTeam(userIds, hackathon);
 
         TeamRequest teamRequest = TeamRequest.builder()
                 .hackathon(hackathon)
@@ -182,12 +102,18 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             TeamRequestMember memberEntity = TeamRequestMember.builder()
                     .teamRequest(teamRequest)
                     .user(user)
-                    .status(TeamRequestMemberStatus.PENDING)
+                    .status(
+                            user.getId() == currentUser.getId()
+                                    ? TeamRequestMemberStatus.APPROVED // Assign APPROVED for the creator
+                                    : TeamRequestMemberStatus.PENDING) // Assign PENDING for others
                     .build();
             teamRequest.getTeamRequestMembers().add(memberEntity);
         });
 
         TeamRequest saved = teamRequestRepository.save(teamRequest);
+
+        // Update the current user's role to TEAM_LEADER
+        updateUserRoleToTeamLeader(currentUser);
 
         // Send notifications (will use bulk email)
         notificationService.notifyTeamRequestCreated(saved);
@@ -276,10 +202,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         request.setNote(note);
         request.setReviewedAt(LocalDateTime.now());
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new InvalidInputException("No authenticated user found");
-        }
+        Authentication authentication = getAuthenticatedUser();
 
         String username = authentication.getName();
         User currentUser = userRepository
@@ -463,9 +386,6 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         if (userId == null) {
             throw new IllegalArgumentException("User ID must not be null");
         }
-        //        if (teamRequestRepository.findAllByUserId(Long.parseLong(userId)).isEmpty()) {
-        //            throw new ResourceNotFoundException("No team requests found for the given User ID");
-        //        }
         List<TeamRequest> teamRequests = teamRequestRepository.findAllByUserId(Long.parseLong(userId));
         return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
@@ -476,7 +396,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             throw new IllegalArgumentException("Hackathon ID must not be null or blank");
         }
 
-        Long id;
+        long id;
         try {
             id = Long.parseLong(hackathonId);
         } catch (NumberFormatException ex) {
@@ -554,7 +474,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .findById(Long.parseLong(hackathonId))
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found Hackathon"));
 
-        if (hackathon.getStatus() != Status.ACTIVE) {
+        if (hackathon.getStatus() != Status.ACTIVE && hackathon.getStatus() != Status.ONGOING) {
             throw new InvalidInputException("Hackathon is not active");
         }
 
@@ -566,5 +486,58 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         return userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Current user not found"));
+    }
+
+    private void updateUserRoleToTeamLeader(User user) {
+        // Fetch the "TEAM_LEADER" role
+        Role teamLeaderRole = roleRepository
+                .findByName("TEAM_LEADER")
+                .orElseThrow(() -> new ResourceNotFoundException("Role 'TEAM_LEADER' not found"));
+
+        // Remove the "TEAM_MEMBER" role if it exists
+        user.getUserRoles()
+                .removeIf(userRole -> "TEAM_MEMBER".equals(userRole.getRole().getName()));
+
+        // Add the "TEAM_LEADER" role
+        UserRole teamLeaderUserRole =
+                UserRole.builder().user(user).role(teamLeaderRole).build();
+        user.getUserRoles().add(teamLeaderUserRole);
+
+        // Save the updated user
+        userRepository.save(user);
+    }
+
+    private Set<String> extractAndValidateUserIds(TeamRequestDTO request, User currentUser) {
+        Set<String> userIds = new HashSet<>();
+        for (TeamRequestMemberDTO member : request.getTeamRequestMembers()) {
+            if (member.getUserId() == null || member.getUserId().trim().isEmpty()) {
+                throw new InvalidInputException("UserId cannot be null or empty");
+            }
+            if (!userIds.add(member.getUserId())) {
+                throw new InvalidInputException("Duplicate userId: " + member.getUserId());
+            }
+        }
+        userIds.add(String.valueOf(currentUser.getId()));
+        return userIds;
+    }
+
+    private void validateUsersNotInApprovedTeam(Set<String> userIds, Hackathon hackathon) {
+        for (String userId : userIds) {
+            boolean exists = teamRequestRepository.existsApprovedTeamRequestByUserIdAndHackathonId(
+                    Long.parseLong(userId), hackathon.getId());
+
+            if (exists) {
+                throw new InvalidInputException(
+                        "User with ID " + userId + " already belongs to an approved team in this hackathon.");
+            }
+        }
+    }
+
+    private Authentication getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new InvalidInputException("No authenticated user found");
+        }
+        return authentication;
     }
 }

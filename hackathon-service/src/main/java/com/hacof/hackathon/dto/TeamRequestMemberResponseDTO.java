@@ -2,20 +2,18 @@ package com.hacof.hackathon.dto;
 
 import com.hacof.hackathon.constant.TeamRequestMemberStatus;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamRequestMemberResponseDTO {
-    private String requestId;
-    private String userId;
-    private TeamRequestMemberStatus status;
-    private String note;
+    String requestId;
+    String userId;
+    TeamRequestMemberStatus status;
+    String note;
 }
