@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.dto.response.FileUrlResponse;
+import com.hacof.communication.entity.ScheduleEvent;
+import com.hacof.communication.mapper.FileUrlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    @Autowired
+    private FileUrlMapper fileUrlMapper;
 
     @Override
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
@@ -262,5 +268,13 @@ public class TaskServiceImpl implements TaskService {
         }
         List<Task> tasks = taskRepository.findByBoardListId(boardListId);
         return tasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FileUrlResponse> getFileUrlsByTaskId(Long taskId) {
+        Task task = taskRepository
+                .findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("TaskId not found!"));
+        return fileUrlMapper.toResponseList(task.getFileUrls());
     }
 }

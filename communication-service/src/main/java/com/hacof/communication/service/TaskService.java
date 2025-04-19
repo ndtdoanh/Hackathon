@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.dto.request.TaskRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 
 public interface TaskService {
@@ -25,4 +26,6 @@ public interface TaskService {
     TaskResponseDTO updateTaskInfo(Long id, TaskRequestDTO taskRequestDTO);
 
     TaskResponseDTO updateTaskFiles(Long id, TaskRequestDTO taskRequestDTO);
+
+    List<FileUrlResponse> getFileUrlsByTaskId(Long taskId);
 }
