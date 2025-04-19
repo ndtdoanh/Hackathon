@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.entity.ScheduleEventAttendee;
+import com.hacof.communication.repository.ScheduleEventAttendeeRepository;
+import com.hacof.communication.repository.ScheduleEventReminderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +35,12 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
 
     @Autowired
     private FileUrlRepository fileUrlRepository;
+
+    @Autowired
+    private ScheduleEventReminderRepository scheduleEventReminderRepository;
+
+    @Autowired
+    private ScheduleEventAttendeeRepository scheduleEventAttendeeRepository;
 
     @Autowired
     private ScheduleEventMapper scheduleEventMapper;
@@ -191,12 +201,19 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
         throw new IllegalArgumentException("No file URLs provided for update");
     }
 
+    @Transactional
     @Override
     public void deleteScheduleEvent(Long id) {
         Optional<ScheduleEvent> scheduleEventOptional = scheduleEventRepository.findById(id);
         if (!scheduleEventOptional.isPresent()) {
             throw new IllegalArgumentException("ScheduleEvent not found!");
         }
+
+        ScheduleEvent scheduleEvent = scheduleEventOptional.get();
+
+        scheduleEventAttendeeRepository.deleteByScheduleEvent(scheduleEvent);
+        scheduleEventReminderRepository.deleteByScheduleEvent(scheduleEvent);
+
         scheduleEventRepository.deleteById(id);
     }
 
