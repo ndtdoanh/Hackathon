@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import com.hacof.hackathon.entity.HackathonResult;
 
 import feign.Param;
 
-@Repository
 public interface HackathonResultRepository extends JpaRepository<HackathonResult, Long> {
     @Query("SELECT r FROM HackathonResult r " + "JOIN FETCH r.team t "
             + "LEFT JOIN FETCH t.teamLeader "

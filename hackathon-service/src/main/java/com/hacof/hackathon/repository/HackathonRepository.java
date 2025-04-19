@@ -8,5 +8,5 @@ import com.hacof.hackathon.entity.Hackathon;
 public interface HackathonRepository extends JpaRepository<Hackathon, Long>, JpaSpecificationExecutor<Hackathon> {
     boolean existsByTitle(String title);
 
-    boolean existsByTitleAndIdNot(String title, Long id);
+    boolean existsByTitleIgnoreCaseAndIdNot(String title, Long id);
 }
