@@ -1,5 +1,6 @@
 package com.hacof.analytics.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -60,6 +61,35 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    public List<FeedbackResponse> createBulkFeedback(List<FeedbackRequest> requests) {
+        List<Feedback> feedbacksToSave = new ArrayList<>();
+
+        for (FeedbackRequest request : requests) {
+            if (!StringUtils.hasText(request.getHackathonId())) {
+                throw new AppException(ErrorCode.HACKATHON_REQUIRED);
+            }
+
+            Long hackathonId = Long.parseLong(request.getHackathonId());
+
+            if (feedbackRepository.existsByHackathonId(hackathonId)) {
+                throw new AppException(ErrorCode.FEEDBACK_EXISTED);
+            }
+
+            Hackathon hackathon = hackathonRepository
+                    .findById(hackathonId)
+                    .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND));
+
+            Feedback feedback = new Feedback();
+            feedback.setHackathon(hackathon);
+
+            feedbacksToSave.add(feedback);
+        }
+
+        List<Feedback> saved = feedbackRepository.saveAll(feedbacksToSave);
+        return feedbackMapper.toFeedbackResponses(saved);
+    }
+
+    @Override
     public List<FeedbackResponse> getFeedbacks() {
         return feedbackMapper.toFeedbackResponses(feedbackRepository.findAll());
     }
@@ -78,6 +108,19 @@ public class FeedbackServiceImpl implements FeedbackService {
                 feedbackRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
 
         feedbackRepository.delete(feedback);
+    }
+
+    @Override
+    public List<FeedbackResponse> getFeedbacksByCreatedByUserName(String username) {
+        List<Feedback> feedbacks = feedbackRepository.findByCreatedByUsername(username);
+        return feedbackMapper.toFeedbackResponses(feedbacks);
+    }
+
+    @Override
+    public List<FeedbackResponse> getFeedbacksByCreatedByUserNameAndHackathon(String username, Long hackathonId) {
+        List<Feedback> feedbacks = feedbackRepository
+                .findByCreatedByUsernameAndHackathonId(username, hackathonId);
+        return feedbackMapper.toFeedbackResponses(feedbacks);
     }
 
     @Override
