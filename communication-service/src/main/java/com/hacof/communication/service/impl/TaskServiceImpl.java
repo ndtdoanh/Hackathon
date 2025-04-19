@@ -59,9 +59,9 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Position must be a non-negative integer");
         }
 
-        if (taskRequestDTO.getDueDate() == null) {
-            throw new IllegalArgumentException("Due date must be a future date");
-        }
+//        if (taskRequestDTO.getDueDate() == null) {
+//            throw new IllegalArgumentException("Due date must be a future date");
+//        }
 
         Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get(), null); // Không truyền fileUrls
         task = taskRepository.save(task);
