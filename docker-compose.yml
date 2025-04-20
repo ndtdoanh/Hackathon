@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.14
@@ -34,6 +36,18 @@ services:
     networks:
       - elk
 
+  eureka-server:
+    build:
+      context: .
+      dockerfile: eureka-server/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+        - microservice-networks
+
 networks:
+  microservice-networks:
+    driver: bridge
   elk:
     driver: bridge
