@@ -30,8 +30,8 @@ public class TaskLabelMapper {
                                 ? String.valueOf(taskLabel.getBoardLabel().getId())
                                 : null)
                 .boardLabelName(taskLabel.getBoardLabel().getName()) // Giả sử BoardLabel có trường `name`
-                .createdDate(taskLabel.getCreatedDate()) // Trường từ AuditBase
-                .lastModifiedDate(taskLabel.getLastModifiedDate()) // Trường từ AuditBase
+                .createdAt(taskLabel.getCreatedDate()) // Trường từ AuditBase
+                .updatedAt(taskLabel.getLastModifiedDate()) // Trường từ AuditBase
                 .build();
     }
 }

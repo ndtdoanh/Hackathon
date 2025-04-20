@@ -1,5 +1,6 @@
 package com.hacof.communication.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -124,4 +125,16 @@ public class TaskLabelServiceImpl implements TaskLabelService {
         List<TaskLabel> taskLabels = taskLabelRepository.findAll();
         return taskLabels.stream().map(taskLabelMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<TaskLabelResponseDTO> getTaskLabelsByTaskId(Long taskId) {
+        List<TaskLabel> taskLabels = taskLabelRepository.findByTaskId(taskId);
+        if (taskLabels.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return taskLabels.stream()
+                .map(taskLabelMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

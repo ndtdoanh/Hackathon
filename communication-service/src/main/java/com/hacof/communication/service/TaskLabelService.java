@@ -16,4 +16,6 @@ public interface TaskLabelService {
     TaskLabelResponseDTO getTaskLabel(Long id);
 
     List<TaskLabelResponseDTO> getAllTaskLabels();
+
+    List<TaskLabelResponseDTO> getTaskLabelsByTaskId(Long taskId);
 }

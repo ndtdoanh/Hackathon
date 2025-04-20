@@ -23,6 +23,6 @@ public class TaskAssigneeResponseDTO {
     String taskTitle; // Tiêu đề của Task mà TaskAssignee này thuộc về
     String userId; // ID của User mà TaskAssignee này liên kết
     String userUsername; // Username của User mà TaskAssignee này liên kết
-    LocalDateTime createdDate; // Thời gian tạo TaskAssignee
-    LocalDateTime lastModifiedDate; // Thời gian sửa đổi TaskAssignee
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

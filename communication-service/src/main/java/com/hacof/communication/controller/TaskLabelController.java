@@ -155,4 +155,30 @@ public class TaskLabelController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/by-task/{taskId}")
+    public ResponseEntity<CommonResponse<List<TaskLabelResponseDTO>>> getTaskLabelsByTaskId(
+            @PathVariable Long taskId) {
+        CommonResponse<List<TaskLabelResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<TaskLabelResponseDTO> taskLabels = taskLabelService.getTaskLabelsByTaskId(taskId);
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Task Labels fetched successfully!");
+            response.setData(taskLabels);
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

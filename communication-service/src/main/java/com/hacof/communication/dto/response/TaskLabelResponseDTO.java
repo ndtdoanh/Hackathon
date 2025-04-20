@@ -23,6 +23,6 @@ public class TaskLabelResponseDTO {
     String taskTitle;
     String boardLabelId;
     String boardLabelName;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

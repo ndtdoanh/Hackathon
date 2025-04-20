@@ -30,8 +30,8 @@ public class TaskAssigneeMapper {
                                 ? String.valueOf(taskAssignee.getUser().getId())
                                 : null)
                 .userUsername(taskAssignee.getUser().getUsername()) // Giả sử User có trường `username`
-                .createdDate(taskAssignee.getCreatedDate())
-                .lastModifiedDate(taskAssignee.getLastModifiedDate())
+                .createdAt(taskAssignee.getCreatedDate())
+                .updatedAt(taskAssignee.getLastModifiedDate())
                 .build();
     }
 }
