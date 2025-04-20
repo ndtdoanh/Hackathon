@@ -19,4 +19,5 @@ import lombok.experimental.FieldDefaults;
 public class MessageRequest {
     String content;
     List<String> fileUrls;
+    Long id;
 }

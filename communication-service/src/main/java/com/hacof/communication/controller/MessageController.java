@@ -40,26 +40,16 @@ public class MessageController {
     MessageService messageService;
     SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/chat/{conversationId}")
-    public void handleWebSocketMessage(@Payload MessageRequest request, @DestinationVariable Long conversationId) {
+    @MessageMapping("/chat/{conversationId}/{username}")
+    public void handleWebSocketMessage(
+            @Payload MessageRequest request,
+            @DestinationVariable Long conversationId,
+            @DestinationVariable String username) {
         log.info("Received WebSocket message for conversation: {}", conversationId);
         log.info("Message content: {}", request.getContent());
-        //        log.info("Sender info: {}", request.getCreatedByUserName());
 
-        //        MessageResponse messageResponse = messageService.createMessage(conversationId, request);
-        //        log.info("Created message response: {}", messageResponse);
-
-        MessageResponse messageResponse = MessageResponse.builder()
-                .id(UUID.randomUUID().toString())
-                .conversationId(String.valueOf(conversationId))
-                .content(request.getContent())
-                .isDeleted(false)
-                .fileUrls(new ArrayList<>())
-                .reactions(new ArrayList<>())
-                //                .createdAt(LocalDateTime.now())
-                //                .updatedAt(LocalDateTime.now())
-                //                .createdByUserName(request.getCreatedByUserName())
-                .build();
+        MessageResponse messageResponse = messageService.getMessageById(request.getId());
+        messageResponse.setCreatedByUserName(username);
 
         String destination = "/topic/conversations/" + conversationId;
         log.info("Sending to destination: {}", destination);
@@ -67,7 +57,6 @@ public class MessageController {
     }
 
     @PostMapping("/{conversationId}")
-    //    @PreAuthorize("hasAuthority('CREATE_MESSAGE')")
     public ResponseEntity<ApiResponse<MessageResponse>> createMessage(
             @PathVariable Long conversationId, @RequestBody @Valid ApiRequest<MessageRequest> request) {
         MessageResponse messageResponse = messageService.createMessage(conversationId, request.getData());
@@ -78,9 +67,6 @@ public class MessageController {
                 .data(messageResponse)
                 .message("Message created successfully")
                 .build();
-
-        //        messagingTemplate.convertAndSend("/topic/conversations/" + conversationId, messageResponse);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
