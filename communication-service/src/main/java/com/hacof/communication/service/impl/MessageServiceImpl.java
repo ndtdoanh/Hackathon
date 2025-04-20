@@ -78,6 +78,7 @@ public class MessageServiceImpl implements MessageService {
         return messageResponse;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MessageResponse getMessageById(Long messageId) {
         Message message = messageRepository

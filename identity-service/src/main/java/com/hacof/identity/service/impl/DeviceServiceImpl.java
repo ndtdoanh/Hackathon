@@ -1,6 +1,7 @@
 package com.hacof.identity.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,8 +103,11 @@ public class DeviceServiceImpl implements DeviceService {
                         }
                     })
                     .collect(Collectors.toList());
+
             fileUrlRepository.saveAll(fileUrlList);
+
             savedDevice.setFileUrls(fileUrlList);
+            deviceRepository.save(savedDevice);
         }
 
         return deviceMapper.toDeviceResponse(savedDevice);
@@ -160,54 +164,99 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceResponse updateDevice(Long id, DeviceRequest request, List<MultipartFile> files) throws IOException {
-        Device existingDevice =
-                deviceRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
+        Device existingDevice = deviceRepository
+                .findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
 
-        deviceMapper.updateDeviceFromRequest(request, existingDevice);
-
-        if (request.getHackathonId() != null) {
-            existingDevice.setHackathon(hackathonRepository
-                    .findById(Long.valueOf(request.getHackathonId()))
-                    .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND)));
-        }
-        if (request.getRoundId() != null) {
-            existingDevice.setRound(roundRepository
-                    .findById(Long.valueOf(request.getRoundId()))
-                    .orElseThrow(() -> new AppException(ErrorCode.ROUND_NOT_FOUND)));
-        }
-        if (request.getRoundLocationId() != null) {
-            existingDevice.setRoundLocation(roundLocationRepository
-                    .findById(Long.valueOf(request.getRoundLocationId()))
-                    .orElseThrow(() -> new AppException(ErrorCode.ROUND_LOCATION_NOT_FOUND)));
+        if (request.getName() != null) {
+            existingDevice.setName(request.getName());
         }
 
-        if (files != null && !files.isEmpty()) {
-            List<FileUrl> fileUrlList = files.stream()
-                    .map(file -> {
-                        try {
-                            String fileUrl = s3Service.uploadFile(
-                                    file.getInputStream(),
-                                    file.getOriginalFilename(),
-                                    file.getSize(),
-                                    file.getContentType());
+        if (request.getDescription() != null) {
+            existingDevice.setDescription(request.getDescription());
+        }
 
-                            return new FileUrl(
-                                    file.getOriginalFilename(),
-                                    fileUrl,
-                                    file.getContentType(),
-                                    (int) file.getSize(),
-                                    existingDevice);
-                        } catch (IOException e) {
-                            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
-                        }
-                    })
-                    .collect(Collectors.toList());
+        Integer quantity = request.getQuantity();
+        if (quantity != null) {
+            existingDevice.setQuantity(quantity);
+        }
 
-            fileUrlRepository.saveAll(fileUrlList);
-            existingDevice.setFileUrls(fileUrlList);
+        if (request.getStatus() != null) {
+            existingDevice.setStatus(request.getStatus());
+        }
+
+        String hackathonIdStr = request.getHackathonId();
+        if (hackathonIdStr != null && !hackathonIdStr.trim().isEmpty()) {
+            try {
+                Long hackathonId = Long.valueOf(hackathonIdStr.trim());
+                existingDevice.setHackathon(
+                        hackathonRepository.findById(hackathonId)
+                                .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND)));
+            } catch (NumberFormatException e) {
+                throw new AppException(ErrorCode.INVALID_INPUT);
+            }
+        }
+
+        String roundIdStr = request.getRoundId();
+        if (roundIdStr != null) {
+            if (!roundIdStr.trim().isEmpty()) {
+                try {
+                    Long roundId = Long.valueOf(roundIdStr.trim());
+                    Round round = roundRepository.findById(roundId)
+                            .orElseThrow(() -> new AppException(ErrorCode.ROUND_NOT_FOUND));
+                    existingDevice.setRound(round);
+                } catch (NumberFormatException e) {
+                    throw new AppException(ErrorCode.INVALID_INPUT);
+                }
+            } else {
+                existingDevice.setRound(null);
+            }
+        }
+
+        String roundLocationIdStr = request.getRoundLocationId();
+        if (roundLocationIdStr != null) {
+            if (!roundLocationIdStr.trim().isEmpty()) {
+                try {
+                    Long roundLocationId = Long.valueOf(roundLocationIdStr.trim());
+                    RoundLocation roundLocation = roundLocationRepository.findById(roundLocationId)
+                            .orElseThrow(() -> new AppException(ErrorCode.ROUND_LOCATION_NOT_FOUND));
+                    existingDevice.setRoundLocation(roundLocation);
+                } catch (NumberFormatException e) {
+                    throw new AppException(ErrorCode.INVALID_INPUT);
+                }
+            } else {
+                existingDevice.setRoundLocation(null);
+            }
         }
 
         Device updatedDevice = deviceRepository.save(existingDevice);
+
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                try {
+                    String fileUrl = s3Service.uploadFile(
+                            file.getInputStream(),
+                            file.getOriginalFilename(),
+                            file.getSize(),
+                            file.getContentType());
+
+                    FileUrl newFileUrl = new FileUrl(
+                            file.getOriginalFilename(),
+                            fileUrl,
+                            file.getContentType(),
+                            (int) file.getSize(),
+                            updatedDevice);
+
+                    fileUrlRepository.save(newFileUrl);
+                } catch (IOException e) {
+                    throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                }
+            }
+
+            updatedDevice = deviceRepository.findById(id)
+                    .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
+        }
+
         return deviceMapper.toDeviceResponse(updatedDevice);
     }
 
