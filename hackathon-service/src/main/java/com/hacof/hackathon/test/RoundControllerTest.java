@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,9 +31,16 @@ class RoundControllerTest {
     @InjectMocks
     private RoundController roundController;
 
+    private AutoCloseable closeable;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test

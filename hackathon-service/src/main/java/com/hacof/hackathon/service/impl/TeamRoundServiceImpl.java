@@ -8,15 +8,10 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.TeamRoundStatus;
 import com.hacof.hackathon.dto.TeamRoundDTO;
-import com.hacof.hackathon.dto.TeamRoundSearchDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.entity.Team;
@@ -30,7 +25,6 @@ import com.hacof.hackathon.repository.TeamRepository;
 import com.hacof.hackathon.repository.TeamRoundRepository;
 import com.hacof.hackathon.service.TeamRoundService;
 
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -143,33 +137,6 @@ public class TeamRoundServiceImpl implements TeamRoundService {
             throw new ResourceNotFoundException("Không tìm thấy team round");
         }
         teamRoundRepository.deleteById(Long.parseLong(id));
-    }
-
-    @Override
-    public Page<TeamRoundDTO> searchTeamRounds(TeamRoundSearchDTO searchDTO) {
-        Specification<TeamRound> spec = Specification.where(null);
-
-        if (StringUtils.isNotBlank(searchDTO.getTeamId())) {
-            spec = spec.and(
-                    (root, query, cb) -> cb.equal(root.get("team").get("id"), Long.parseLong(searchDTO.getTeamId())));
-        }
-
-        if (StringUtils.isNotBlank(searchDTO.getRoundId())) {
-            spec = spec.and(
-                    (root, query, cb) -> cb.equal(root.get("round").get("id"), Long.parseLong(searchDTO.getRoundId())));
-        }
-
-        if (searchDTO.getStatus() != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), searchDTO.getStatus()));
-        }
-
-        Sort sort = Sort.by(
-                searchDTO.getSortDirection().equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC,
-                searchDTO.getSortBy());
-
-        PageRequest pageRequest = PageRequest.of(searchDTO.getPage(), searchDTO.getSize(), sort);
-
-        return teamRoundRepository.findAll(spec, pageRequest).map(TeamRoundMapperManual::toDto);
     }
 
     private Team validateTeam(String teamId) {

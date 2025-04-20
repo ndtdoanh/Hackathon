@@ -1,5 +1,8 @@
 package com.hacof.hackathon.constant;
 
+import lombok.Getter;
+
+@Getter
 public enum CategoryStatus {
     CODING("Coding Hackathons"),
     EXTERNAL("External Hackathons"),
@@ -11,9 +14,5 @@ public enum CategoryStatus {
 
     CategoryStatus(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

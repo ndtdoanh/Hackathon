@@ -1,6 +1,7 @@
 package com.hacof.hackathon.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,9 +32,16 @@ class TeamRoundControllerTest {
     @InjectMocks
     private TeamRoundController teamRoundController;
 
+    private AutoCloseable closeable;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test
@@ -51,7 +60,9 @@ class TeamRoundControllerTest {
         ResponseEntity<CommonResponse<TeamRoundDTO>> response = teamRoundController.createTeamRound(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("1", response.getBody().getData().getId());
+        assertNotNull(response.getBody(), "Response body should not be null");
+        assertNotNull(response.getBody().getData(), "Response body data should not be null");
+        assertEquals("Test Team Round", response.getBody().getData().getTeamId());
         verify(teamRoundService, times(1)).create(dto);
     }
 
@@ -65,8 +76,10 @@ class TeamRoundControllerTest {
         ResponseEntity<CommonResponse<List<TeamRoundDTO>>> response = teamRoundController.getAllByRoundId("round1");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().getData().size());
-        verify(teamRoundService, times(1)).getAllByRoundId("round1");
+        assertNotNull(response.getBody(), "Response body should not be null");
+        assertNotNull(response.getBody().getData(), "Response body data should not be null");
+        assertEquals("Updated Team Round", response.getBody().getData().getFirst().getId());
+        verify(teamRoundService, times(1)).update("1", dto);
     }
 
     @Test
@@ -77,5 +90,19 @@ class TeamRoundControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(teamRoundService, times(1)).delete("1");
+    }
+
+    @Test
+    void testCreateTeamRoundWithNullInput() {
+        CommonRequest<TeamRoundDTO> request = new CommonRequest<>();
+        request.setRequestId(UUID.randomUUID().toString());
+        request.setRequestDateTime(LocalDateTime.now());
+        request.setChannel("HACOF");
+        request.setData(null);
+
+        ResponseEntity<CommonResponse<TeamRoundDTO>> response = teamRoundController.createTeamRound(request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        verify(teamRoundService, never()).create(any(TeamRoundDTO.class));
     }
 }

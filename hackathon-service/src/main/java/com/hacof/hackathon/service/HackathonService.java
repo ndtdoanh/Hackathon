@@ -17,6 +17,4 @@ public interface HackathonService {
     List<HackathonDTO> getHackathons(Specification<Hackathon> spec);
 
     boolean existsByTitle(String title);
-
-    boolean existsByTitleAndIdNot(String title, Long id);
 }

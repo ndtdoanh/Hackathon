@@ -2,6 +2,7 @@ package com.hacof.hackathon.util;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -24,7 +25,8 @@ public class CommonRequest<T> {
 
     @Size(max = 30)
     private String channel;
-    // @Valid
+
+    @Valid
     //    @JsonUnwrapped
     private T data;
 

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.HackathonMapper;
 import com.hacof.hackathon.repository.FileUrlRepository;
 import com.hacof.hackathon.repository.HackathonRepository;
+import com.hacof.hackathon.repository.TeamRequestRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.HackathonService;
 
@@ -41,6 +43,7 @@ public class HackathonServiceImpl implements HackathonService {
     HackathonMapper hackathonMapper;
     UserRepository userRepository;
     FileUrlRepository fileUrlRepository;
+    TeamRequestRepository teamRequestRepository;
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
@@ -83,13 +86,10 @@ public class HackathonServiceImpl implements HackathonService {
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + id));
 
-        validateEnumValues(hackathonDTO);
         validateUniqueTitleForUpdate(id, hackathonDTO.getTitle());
+        validateEnumValues(hackathonDTO);
         // get current user's information from SecurityContext
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
+        Authentication authentication = getAuthenticatedUser();
 
         String username = authentication.getName();
         User currentUser = userRepository
@@ -112,8 +112,7 @@ public class HackathonServiceImpl implements HackathonService {
         existingHackathon.setOrganization(OrganizationStatus.valueOf(hackathonDTO.getOrganization()));
         existingHackathon.setMaxTeams(hackathonDTO.getEnrollmentCount());
         existingHackathon.setStatus(Status.valueOf(hackathonDTO.getStatus()));
-        // existingHackathon.setDocumentation(hackathonMapper.mapToFileUrlList(hackathonDTO.getDocumentation()));
-        /** about update documentation:
+        /* about update documentation:
          * Step 1: Set null current documentations
          * Step 2: Set new documentations
          */
@@ -151,7 +150,20 @@ public class HackathonServiceImpl implements HackathonService {
             throw new ResourceNotFoundException("Hackathon not found with id: " + id);
         }
 
-        hackathonRepository.deleteById(id);
+        // Check for dependent records
+        if (teamRequestRepository.existsByHackathonId(id)) {
+            throw new DataIntegrityViolationException(
+                    "Cannot delete hackathon with id: " + id + " because it has dependent team requests.");
+        }
+
+        try {
+            hackathonRepository.deleteById(id);
+            log.info("Hackathon with id: {} deleted successfully.", id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException(
+                    "Failed to delete hackathon with id: " + id + ". Ensure all dependent records are removed first.",
+                    e);
+        }
     }
 
     @Override
@@ -168,28 +180,24 @@ public class HackathonServiceImpl implements HackathonService {
         return hackathonRepository.existsByTitle(title);
     }
 
-    @Override
-    public boolean existsByTitleAndIdNot(String title, Long id) {
-        return hackathonRepository.existsByTitleAndIdNot(title, id);
-    }
-
     private void validateEnumValues(HackathonDTO hackathonDTO) {
         try {
             CategoryStatus.valueOf(hackathonDTO.getCategory());
         } catch (IllegalArgumentException e) {
-            throw new InvalidInputException("Invalid category value: " + hackathonDTO.getCategory());
+            throw new InvalidInputException(
+                    "Invalid category value (CODING/EXTERNAL/INTERNAL/DESIGN/OTHERS): " + hackathonDTO.getCategory());
         }
-
         try {
             Status.valueOf(hackathonDTO.getStatus());
         } catch (IllegalArgumentException e) {
-            throw new InvalidInputException("Invalid status value: " + hackathonDTO.getStatus());
+            throw new InvalidInputException(
+                    "Invalid status value (DRAFT/OPEN/ON_GOING/CLOSED): " + hackathonDTO.getStatus());
         }
-
         try {
             OrganizationStatus.valueOf(hackathonDTO.getOrganization());
         } catch (IllegalArgumentException e) {
-            throw new InvalidInputException("Invalid organization value: " + hackathonDTO.getOrganization());
+            throw new InvalidInputException("Invalid organization value (FPU/NASA/IAI HACKATHON/CE HACKATHON/OTHERS): "
+                    + hackathonDTO.getOrganization());
         }
     }
 
@@ -200,8 +208,18 @@ public class HackathonServiceImpl implements HackathonService {
     }
 
     private void validateUniqueTitleForUpdate(String id, String title) {
-        if (existsByTitleAndIdNot(title, Long.parseLong(id))) {
+        boolean exists = hackathonRepository.existsByTitleIgnoreCaseAndIdNot(title, Long.parseLong(id));
+        log.debug("Checking if title '{}' exists for another hackathon: {}", title, exists);
+        if (exists) {
             throw new InvalidInputException("Hackathon with title '" + title + "' already exists.");
         }
+    }
+
+    private Authentication getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        return authentication;
     }
 }

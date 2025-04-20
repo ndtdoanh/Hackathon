@@ -15,7 +15,5 @@ public interface RoundLocationService {
 
     RoundLocationDTO getById(Long id);
 
-    void deleteByLocationId(Long locationId);
-
     void deleteByRoundId(Long roundId);
 }

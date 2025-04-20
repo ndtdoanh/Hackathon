@@ -1,5 +1,8 @@
 package com.hacof.submission.constant;
 
+import lombok.Getter;
+
+@Getter
 public enum OrganizationStatus {
     FPTU("FPTU"),
     NASA("NASA"),
@@ -13,7 +16,4 @@ public enum OrganizationStatus {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }

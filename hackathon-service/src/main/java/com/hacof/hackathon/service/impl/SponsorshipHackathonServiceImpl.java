@@ -31,7 +31,6 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
     SponsorshipHackathonRepository sponsorshipHackathonRepository;
     SponsorshipRepository sponsorshipRepository;
     HackathonRepository hackathonRepository;
-    // SponsorshipHackathonMapper sponsorshipHackathonMapper;
 
     @Override
     public SponsorshipHackathonDTO create(SponsorshipHackathonDTO sponsorshipHackathonDTO) {
@@ -90,9 +89,6 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
 
     @Override
     public List<SponsorshipHackathonDTO> getAll() {
-        //        if (sponsorshipHackathonRepository.findAll().isEmpty()) {
-        //            throw new ResourceNotFoundException("No sponsorship hackathon found");
-        //        }
         return sponsorshipHackathonRepository.findAll().stream()
                 .map(SponsorshipHackathonMapperManual::toDto)
                 .collect(Collectors.toList());

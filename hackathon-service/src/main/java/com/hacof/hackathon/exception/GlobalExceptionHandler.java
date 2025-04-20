@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,6 +51,21 @@ public class GlobalExceptionHandler {
                 "HACOF",
                 new CommonResponse.Result(StatusCode.INVALID_INPUT.getCode(), "Invalid input"),
                 errors);
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<CommonResponse<Void>> handleDataIntegrityViolationException(
+            DataIntegrityViolationException ex) {
+        log.error("Data integrity violation: {}", ex.getMessage(), ex);
+
+        CommonResponse<Void> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0601", "Cannot delete resource due to dependent records."),
+                null);
 
         return ResponseEntity.badRequest().body(response);
     }

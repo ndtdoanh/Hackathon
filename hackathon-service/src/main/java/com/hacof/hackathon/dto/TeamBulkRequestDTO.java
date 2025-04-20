@@ -22,11 +22,11 @@ import lombok.experimental.FieldDefaults;
 public class TeamBulkRequestDTO {
 
     @NotNull(message = "Team Leader ID cannot be null")
-    private String teamLeaderId;
+    String teamLeaderId;
 
     @NotEmpty(message = "Team Members cannot be empty")
-    private List<TeamMemberBulkDTO> teamMembers;
+    List<TeamMemberBulkDTO> teamMembers;
 
     @NotEmpty(message = "Team Hackathons cannot be empty")
-    private List<TeamHackathonBulkDTO> teamHackathons;
+    List<TeamHackathonBulkDTO> teamHackathons;
 }

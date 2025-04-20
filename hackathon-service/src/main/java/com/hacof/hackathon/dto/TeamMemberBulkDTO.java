@@ -18,5 +18,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamMemberBulkDTO {
     @NotNull(message = "User ID cannot be null")
-    private String userId;
+    String userId;
 }

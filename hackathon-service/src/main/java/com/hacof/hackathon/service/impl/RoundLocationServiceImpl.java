@@ -11,7 +11,6 @@ import com.hacof.hackathon.entity.Round;
 import com.hacof.hackathon.entity.RoundLocation;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.RoundLocationMapper;
-import com.hacof.hackathon.repository.LocationRepository;
 import com.hacof.hackathon.repository.RoundLocationRepository;
 import com.hacof.hackathon.repository.RoundRepository;
 import com.hacof.hackathon.service.RoundLocationService;
@@ -26,7 +25,6 @@ import lombok.experimental.FieldDefaults;
 public class RoundLocationServiceImpl implements RoundLocationService {
     RoundLocationRepository roundLocationRepository;
     RoundRepository roundRepository;
-    LocationRepository locationRepository;
     RoundLocationMapper roundLocationMapper;
 
     @Override
@@ -96,15 +94,6 @@ public class RoundLocationServiceImpl implements RoundLocationService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Round location not found"));
         return roundLocationMapper.toDto(roundLocation);
-    }
-
-    @Override
-    public void deleteByLocationId(Long locationId) {
-        List<RoundLocation> roundLocations = roundLocationRepository.findByLocationId(locationId);
-        if (roundLocations.isEmpty()) {
-            throw new ResourceNotFoundException("Round locations not found for locationId: " + locationId);
-        }
-        roundLocationRepository.deleteAll(roundLocations);
     }
 
     @Override

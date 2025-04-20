@@ -47,9 +47,8 @@ public class S3Service {
         this.amazonS3 = amazonS3;
     }
 
-    public String uplFile(InputStream inputStream, String originalFileName, long fileSize, String contentType)
-            throws IOException {
-        String fileName = "hacofpt/" + UUID.randomUUID().toString() + "_" + originalFileName;
+    public String uplFile(InputStream inputStream, String originalFileName, long fileSize, String contentType) {
+        String fileName = "hacofpt/" + UUID.randomUUID() + "_" + originalFileName;
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(fileSize);
@@ -64,7 +63,8 @@ public class S3Service {
     }
 
     public String uploadFile(MultipartFile file) {
-        String key = Paths.get(file.getOriginalFilename()).getFileName().toString();
+        String originalFilename = file.getOriginalFilename() != null ? file.getOriginalFilename() : "default-file-name";
+        String key = Paths.get(originalFilename).getFileName().toString();
         try {
             s3Client.putObject(
                     PutObjectRequest.builder().bucket(bucketName).key(key).build(),

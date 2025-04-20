@@ -35,4 +35,6 @@ public interface TeamRequestRepository extends JpaRepository<TeamRequest, Long>,
             + "AND trm.teamRequest.status = 'APPROVED'")
     boolean existsApprovedTeamRequestByUserIdAndHackathonId(
             @Param("userId") Long userId, @Param("hackathonId") Long hackathonId);
+
+    boolean existsByHackathonId(Long hackathonId);
 }
