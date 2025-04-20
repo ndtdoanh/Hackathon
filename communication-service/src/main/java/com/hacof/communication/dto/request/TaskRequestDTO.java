@@ -24,10 +24,6 @@ public class TaskRequestDTO {
     String description;
     int position;
     String boardListId;
-
-    @JsonIgnore
     LocalDateTime dueDate;
-
-    @JsonIgnore
     List<String> fileUrls;
 }

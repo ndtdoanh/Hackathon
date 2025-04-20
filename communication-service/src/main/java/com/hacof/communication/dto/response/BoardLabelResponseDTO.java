@@ -22,6 +22,6 @@ public class BoardLabelResponseDTO {
     String name;
     String color;
     BoardResponseDTO board;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

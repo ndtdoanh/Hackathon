@@ -27,8 +27,8 @@ public class BoardLabelMapper {
                 .name(boardLabel.getName())
                 .color(boardLabel.getColor())
                 .board(boardLabel.getBoard() != null ? mapBoardToDto(boardLabel.getBoard()) : null) // Map toàn bộ Board
-                .createdDate(boardLabel.getCreatedDate()) // Truyền thời gian tạo
-                .lastModifiedDate(boardLabel.getLastModifiedDate()) // Truyền thời gian sửa đổi
+                .createdAt(boardLabel.getCreatedDate()) // Truyền thời gian tạo
+                .updatedAt(boardLabel.getLastModifiedDate()) // Truyền thời gian sửa đổi
                 .build();
     }
 
