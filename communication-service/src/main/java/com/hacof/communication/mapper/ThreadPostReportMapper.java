@@ -88,7 +88,7 @@ public class ThreadPostReportMapper {
                 .getLastModifiedDate());
 
         // Set ForumCategory into ForumThreadResponseDTO
-        forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
+        forumThreadResponseDTO.setForumCategoryId(String.valueOf(threadPostReport.getThreadPost().getForumThread().getId()));
 
         // Map ThreadPosts (List) in ForumThread
         List<ThreadPostResponseDTO> threadPostList =

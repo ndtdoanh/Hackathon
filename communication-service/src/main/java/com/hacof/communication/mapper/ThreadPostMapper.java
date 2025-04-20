@@ -63,11 +63,11 @@ public class ThreadPostMapper {
         forumThreadDTO.setId(String.valueOf(threadPost.getForumThread().getId()));
         forumThreadDTO.setTitle(threadPost.getForumThread().getTitle());
 
-        if (threadPost.getForumThread().getForumCategory() != null) {
-            forumThreadDTO.setForumCategory(ForumCategoryMapper.toResponseDTO(
-                    threadPost.getForumThread().getForumCategory()));
-        }
-
+//        if (threadPost.getForumThread().getForumCategory() != null) {
+//            forumThreadDTO.setForumCategory(ForumCategoryMapper.toResponseDTO(
+//                    threadPost.getForumThread().getForumCategory()));
+//        }
+        forumThreadDTO.setForumCategoryId(String.valueOf(threadPost.getForumThread().getId()));
         forumThreadDTO.setCreatedAt(threadPost.getForumThread().getCreatedDate().toString());
         forumThreadDTO.setUpdatedAt(
                 threadPost.getForumThread().getLastModifiedDate().toString());
