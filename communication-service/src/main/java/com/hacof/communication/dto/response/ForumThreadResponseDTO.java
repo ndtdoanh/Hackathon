@@ -22,4 +22,20 @@ public class ForumThreadResponseDTO {
     String createdAt;
     String updatedAt;
     List<ThreadPostResponseDTO> threadPosts; // Include List of ThreadPost DTOs
+
+    public void setIsLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public void setIsPinned(boolean pinned) {
+        isPinned = pinned;
+    }
+
+    public boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public boolean getIsPinned() {
+        return isPinned;
+    }
 }

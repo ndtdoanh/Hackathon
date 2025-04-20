@@ -10,6 +10,6 @@ import com.hacof.communication.entity.ForumThread;
 @Repository
 public interface ForumThreadRepository extends JpaRepository<ForumThread, Long> {
     boolean existsByTitleAndForumCategoryId(String title, Long forumCategoryId);
-
+    boolean existsByTitleAndForumCategoryIdAndIdNot(String title, Long categoryId, Long id);
     List<ForumThread> findByForumCategoryId(Long forumCategoryId);
 }

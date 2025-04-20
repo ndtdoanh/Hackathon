@@ -18,8 +18,8 @@ public class ForumThreadMapper {
         return ForumThread.builder()
                 .title(dto.getTitle())
                 .forumCategory(forumCategory)
-                .isLocked(dto.getLocked())  // Use getLocked() to access the 'locked' field
-                .isPinned(dto.getPinned())  // directly access the primitive value
+                .isLocked(dto.getIsLocked())  // Use getLocked() to access the 'locked' field
+                .isPinned(dto.getIsPinned())  // directly access the primitive value
                 .build();
     }
 
@@ -32,8 +32,8 @@ public class ForumThreadMapper {
         ForumCategoryResponseDTO forumCategoryResponseDTO = mapForumCategoryToResponseDTO(entity.getForumCategory());
         responseDTO.setForumCategoryId(String.valueOf(entity.getForumCategory().getId()));
 
-        responseDTO.setLocked(entity.isLocked());
-        responseDTO.setPinned(entity.isPinned());
+        responseDTO.setIsLocked(entity.isLocked());
+        responseDTO.setIsPinned(entity.isPinned());
         responseDTO.setCreatedByUserName(entity.getCreatedBy().getUsername()); // Assuming createdBy is a User entity
         responseDTO.setCreatedAt(entity.getCreatedDate().toString());
         responseDTO.setUpdatedAt(entity.getLastModifiedDate().toString());

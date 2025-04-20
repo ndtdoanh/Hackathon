@@ -12,14 +12,14 @@ public class ForumThreadRequestDTO {
 
     String title;
     String forumCategoryId;
-    boolean locked;
-    boolean pinned;
+    boolean isLocked;
+    boolean isPinned;
 
-    public boolean getLocked() {
-        return locked;
+    public boolean getIsLocked() {
+        return isLocked;
     }
 
-    public boolean getPinned() {
-        return pinned;
+    public boolean getIsPinned() {
+        return isPinned;
     }
 }

@@ -85,15 +85,15 @@ public class ForumThreadServiceImpl implements ForumThreadService {
         }
         ForumCategory forumCategory = forumCategoryOptional.get();
 
-        if (forumThreadRepository.existsByTitleAndForumCategoryId(
-                forumThreadRequestDTO.getTitle(), forumCategory.getId())) {
+        if (forumThreadRepository.existsByTitleAndForumCategoryIdAndIdNot(
+                forumThreadRequestDTO.getTitle(), forumCategory.getId(), id)) {
             throw new IllegalArgumentException("A thread with the same title already exists in this category.");
         }
 
         forumThread.setTitle(forumThreadRequestDTO.getTitle());
         forumThread.setForumCategory(forumCategory);
-        forumThread.setLocked(forumThreadRequestDTO.getLocked());
-        forumThread.setPinned(forumThreadRequestDTO.getPinned());
+        forumThread.setLocked(forumThreadRequestDTO.getIsLocked());
+        forumThread.setPinned(forumThreadRequestDTO.getIsPinned());
 
         forumThread = forumThreadRepository.save(forumThread);
 
