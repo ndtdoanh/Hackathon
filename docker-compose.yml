@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.14
     container_name: elasticsearch
@@ -10,7 +11,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - elk
+      - microservice-networks
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.17.14
@@ -22,7 +23,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - microservice-networks
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.14
@@ -34,7 +35,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - microservice-networks
 
   eureka-server:
     build:
@@ -46,8 +47,29 @@ services:
     networks:
         - microservice-networks
 
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "9191:9191"
+    networks:
+      - microservice-networks
+    depends_on:
+      - eureka-server
+      - redis
+
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - microservice-networks
+
 networks:
   microservice-networks:
-    driver: bridge
-  elk:
     driver: bridge
