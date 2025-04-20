@@ -18,8 +18,8 @@ public class ForumThreadMapper {
         return ForumThread.builder()
                 .title(dto.getTitle())
                 .forumCategory(forumCategory)
-                .isLocked(dto.isLocked())
-                .isPinned(dto.isPinned())
+                .isLocked(dto.getLocked())  // Use getLocked() to access the 'locked' field
+                .isPinned(dto.getPinned())  // directly access the primitive value
                 .build();
     }
 
@@ -30,7 +30,7 @@ public class ForumThreadMapper {
 
         // Map ForumCategory entity to ForumCategoryResponseDTO
         ForumCategoryResponseDTO forumCategoryResponseDTO = mapForumCategoryToResponseDTO(entity.getForumCategory());
-        responseDTO.setForumCategory(forumCategoryResponseDTO);
+        responseDTO.setForumCategoryId(String.valueOf(entity.getForumCategory().getId()));
 
         responseDTO.setLocked(entity.isLocked());
         responseDTO.setPinned(entity.isPinned());

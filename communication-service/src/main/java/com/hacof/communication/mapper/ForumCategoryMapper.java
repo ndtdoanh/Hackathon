@@ -62,7 +62,7 @@ public class ForumCategoryMapper {
         forumCategoryResponseDTO.setCreatedAt(forumThread.getForumCategory().getCreatedDate());
         forumCategoryResponseDTO.setUpdatedAt(forumThread.getForumCategory().getLastModifiedDate());
 
-        forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
+        forumThreadResponseDTO.setForumCategoryId(String.valueOf(forumThread.getForumCategory().getId()));
 
         return forumThreadResponseDTO;
     }

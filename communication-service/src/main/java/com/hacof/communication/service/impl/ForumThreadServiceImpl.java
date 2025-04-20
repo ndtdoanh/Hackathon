@@ -92,8 +92,8 @@ public class ForumThreadServiceImpl implements ForumThreadService {
 
         forumThread.setTitle(forumThreadRequestDTO.getTitle());
         forumThread.setForumCategory(forumCategory);
-        forumThread.setLocked(forumThreadRequestDTO.isLocked());
-        forumThread.setPinned(forumThreadRequestDTO.isPinned());
+        forumThread.setLocked(forumThreadRequestDTO.getLocked());
+        forumThread.setPinned(forumThreadRequestDTO.getPinned());
 
         forumThread = forumThreadRepository.save(forumThread);
 

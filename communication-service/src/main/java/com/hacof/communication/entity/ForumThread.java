@@ -48,10 +48,10 @@ public class ForumThread extends AuditCreatedBase {
     ForumCategory forumCategory;
 
     @Column(name = "is_locked")
-    boolean isLocked = false;
+    boolean isLocked;
 
     @Column(name = "is_pinned")
-    boolean isPinned = false;
+    boolean isPinned;
 
     @OneToMany(mappedBy = "forumThread", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ThreadPost> threadPosts;

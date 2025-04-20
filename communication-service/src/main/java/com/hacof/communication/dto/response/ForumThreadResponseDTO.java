@@ -14,7 +14,8 @@ public class ForumThreadResponseDTO {
 
     String id;
     String title;
-    ForumCategoryResponseDTO forumCategory; // Include ForumCategory DTO
+//    ForumCategoryResponseDTO forumCategory; // Include ForumCategory DTO
+    String forumCategoryId;
     boolean isLocked;
     boolean isPinned;
     String createdByUserName;
