@@ -3,7 +3,10 @@ package com.hacof.communication.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.entity.User;
+import com.hacof.communication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.dto.request.ThreadPostRequestDTO;
@@ -23,6 +26,9 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
     @Autowired
     private ForumThreadRepository forumThreadRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public ThreadPostResponseDTO createThreadPost(ThreadPostRequestDTO requestDTO) {
@@ -68,7 +74,17 @@ public class ThreadPostServiceImpl implements ThreadPostService {
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + id));
 
+        if (threadPost.isDeleted()) {
+            throw new IllegalArgumentException("ThreadPost with id " + id + " has already been deleted.");
+        }
+
         threadPost.setDeleted(true);
+
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new RuntimeException("User not found: " + currentUsername));
+
+        threadPost.setDeletedBy(currentUser);
         threadPostRepository.save(threadPost);
     }
 }
