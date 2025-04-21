@@ -1,5 +1,6 @@
 package com.hacof.submission.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,13 +44,28 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("TeamRound not found with ID " + requestDTO.getTeamRoundId()));
 
+        if ("CANCELLED".equalsIgnoreCase(String.valueOf(teamRound.getStatus()))) {
+            throw new IllegalArgumentException("Cannot assign judge to inactive team");
+        }
+
+        if (teamRound.getRound().getHackathon().getEndDate() != null &&
+                teamRound.getRound().getHackathon().getEndDate().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Cannot assign after round ended");
+        }
+
         boolean isJudgeInRound = judgeRoundRepository.existsByJudgeIdAndRoundId(
                 requestDTO.getJudgeId(), teamRound.getRound().getId());
-
         if (!isJudgeInRound) {
-            throw new IllegalArgumentException(
-                    "Judge is not assigned to this round and cannot be added to TeamRoundJudge.");
+            throw new IllegalArgumentException("Judge is not assigned to this round and cannot be added to TeamRoundJudge.");
         }
+
+        boolean alreadyAssigned = teamRoundJudgeRepository.existsByTeamRoundIdAndJudgeId(
+                requestDTO.getTeamRoundId(), requestDTO.getJudgeId());
+        if (alreadyAssigned) {
+            throw new IllegalArgumentException("Judge already assigned to this team");
+        }
+
+        // Proceed to create
         TeamRoundJudge entity = teamRoundJudgeMapper.toEntity(requestDTO, teamRoundRepository, userRepository);
         TeamRoundJudge savedEntity = teamRoundJudgeRepository.save(entity);
         return teamRoundJudgeMapper.toResponseDTO(savedEntity);

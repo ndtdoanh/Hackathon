@@ -15,4 +15,6 @@ public interface RoundMarkCriterionRepository extends JpaRepository<RoundMarkCri
     List<Long> findCriterionIdsByRound(Long roundId);
 
     List<RoundMarkCriterion> findByRound(Round round);
+
+    boolean existsByRoundAndName(Round round, String name);
 }

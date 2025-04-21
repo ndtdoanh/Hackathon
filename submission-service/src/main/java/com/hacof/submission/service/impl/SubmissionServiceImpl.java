@@ -77,6 +77,9 @@ public class SubmissionServiceImpl implements SubmissionService {
         submission = submissionRepository.save(submission);
 
         if (files != null && !files.isEmpty()) {
+            if (files.size() > 10) {
+                throw new IllegalArgumentException("Maximum 10 files allowed");
+            }
             for (MultipartFile file : files) {
                 processAndSaveFile(file, submission);
             }
@@ -121,6 +124,10 @@ public class SubmissionServiceImpl implements SubmissionService {
         submission.setSubmittedAt(LocalDateTime.now());
 
         if (files != null && !files.isEmpty()) {
+            if (files.size() > 10) {
+                throw new IllegalArgumentException("Maximum 10 files allowed");
+            }
+
             for (MultipartFile file : files) {
                 processAndSaveFile(file, submission);
             }

@@ -35,7 +35,22 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
 
     @Override
     public JudgeRoundResponseDTO createJudgeRound(JudgeRoundRequestDTO dto) {
-        JudgeRound judgeRound = judgeRoundMapper.toEntity(dto);
+        Round round = roundRepository
+                .findById(dto.getRoundId())
+                .orElseThrow(() -> new IllegalArgumentException("Round not found"));
+
+        User judge = userRepository
+                .findById(dto.getJudgeId())
+                .orElseThrow(() -> new IllegalArgumentException("No judges available. Please add judges to the hackathon first."));
+
+        boolean exists = judgeRoundRepository.existsByJudgeIdAndRoundId(judge.getId(), round.getId());
+        if (exists) {
+            throw new IllegalArgumentException("Judge already assigned to this round");
+        }
+
+        JudgeRound judgeRound = new JudgeRound();
+        judgeRound.setJudge(judge);
+        judgeRound.setRound(round);
 
         judgeRound = judgeRoundRepository.save(judgeRound);
         return judgeRoundMapper.toResponseDTO(judgeRound);
@@ -88,14 +103,32 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
     }
 
     @Override
-    public JudgeRoundResponseDTO updateJudgeRoundByJudgeId(Long judgeId, JudgeRoundRequestDTO dto) {
+    public JudgeRoundResponseDTO updateJudgeRoundByJudgeId(Long id, JudgeRoundRequestDTO dto) {
         JudgeRound judgeRound = judgeRoundRepository
-                .findByJudgeId(judgeId)
-                .orElseThrow(() -> new IllegalArgumentException("JudgeRound with judgeId " + judgeId + " not found"));
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("JudgeRound not found"));
 
         Round round = roundRepository
                 .findById(dto.getRoundId())
                 .orElseThrow(() -> new IllegalArgumentException("Round not found"));
+
+        User judge = userRepository
+                .findById(dto.getJudgeId())
+                .orElseThrow(() -> new IllegalArgumentException("No judges available. Please add judges to the hackathon first."));
+
+        // Check nếu đổi sang 1 cặp judge-round đã tồn tại
+        boolean isDuplicate = judgeRoundRepository.existsByJudgeIdAndRoundId(judge.getId(), round.getId())
+                && !(
+                Long.valueOf(judgeRound.getJudge().getId()).equals(judge.getId()) &&
+                        Long.valueOf(judgeRound.getRound().getId()).equals(round.getId())
+        );
+
+        if (isDuplicate) {
+            throw new IllegalArgumentException("Judge already assigned to this round");
+        }
+
+        // Update thông tin
+        judgeRound.setJudge(judge);
         judgeRound.setRound(round);
 
         judgeRound = judgeRoundRepository.save(judgeRound);

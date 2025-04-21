@@ -52,8 +52,21 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
     public RoundMarkCriterionResponseDTO create(RoundMarkCriterionRequestDTO criterionDTO) {
         Round round = roundRepository
                 .findById(criterionDTO.getRoundId())
-                .orElseThrow(
-                        () -> new IllegalArgumentException("Round not found with ID " + criterionDTO.getRoundId()));
+                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + criterionDTO.getRoundId()));
+
+        // Validate input
+        if (criterionDTO.getName() == null || criterionDTO.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Criterion name is required");
+        }
+
+        if (criterionDTO.getMaxScore() == null || criterionDTO.getMaxScore() <= 0) {
+            throw new IllegalArgumentException("Maximum score must be greater than 0");
+        }
+
+        // Check duplicate name in the same round
+        if (repository.existsByRoundAndName(round, criterionDTO.getName().trim())) {
+            throw new IllegalArgumentException("Criterion name already exists in this round");
+        }
 
         RoundMarkCriterion criterion = mapper.toEntity(criterionDTO, round);
 
@@ -76,10 +89,24 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
         Round round = roundRepository
                 .findById(updatedCriterionDTO.getRoundId())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Round not found with ID " + updatedCriterionDTO.getRoundId()));
+                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + updatedCriterionDTO.getRoundId()));
 
-        criterion.setName(updatedCriterionDTO.getName());
+        if (updatedCriterionDTO.getName() == null || updatedCriterionDTO.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Criterion name is required");
+        }
+
+        if (updatedCriterionDTO.getMaxScore() == null || updatedCriterionDTO.getMaxScore() <= 0) {
+            throw new IllegalArgumentException("Maximum score must be greater than 0");
+        }
+
+        boolean isDuplicate = repository.existsByRoundAndName(round, updatedCriterionDTO.getName().trim())
+                && !criterion.getName().equalsIgnoreCase(updatedCriterionDTO.getName().trim());
+
+        if (isDuplicate) {
+            throw new IllegalArgumentException("Criterion name already exists in this round");
+        }
+
+        criterion.setName(updatedCriterionDTO.getName().trim());
         criterion.setMaxScore(updatedCriterionDTO.getMaxScore());
         criterion.setNote(updatedCriterionDTO.getNote());
         criterion.setRound(round);
