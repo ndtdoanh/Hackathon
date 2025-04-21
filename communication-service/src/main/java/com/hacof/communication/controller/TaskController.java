@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.communication.dto.response.FileUrlResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.dto.request.TaskRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.service.TaskService;
 import com.hacof.communication.util.CommonRequest;
@@ -232,8 +232,7 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}/file-urls")
-    public ResponseEntity<CommonResponse<List<FileUrlResponse>>> getFileUrlsByTaskId(
-            @PathVariable Long taskId) {
+    public ResponseEntity<CommonResponse<List<FileUrlResponse>>> getFileUrlsByTaskId(@PathVariable Long taskId) {
 
         List<FileUrlResponse> fileUrls = taskService.getFileUrlsByTaskId(taskId);
 

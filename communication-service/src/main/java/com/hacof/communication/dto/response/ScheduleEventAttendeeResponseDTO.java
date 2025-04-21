@@ -21,8 +21,8 @@ import lombok.experimental.FieldDefaults;
 public class ScheduleEventAttendeeResponseDTO {
 
     String id;
-//    ScheduleEventResponseDTO scheduleEvent;
-//    UserResponse user;
+    //    ScheduleEventResponseDTO scheduleEvent;
+    //    UserResponse user;
     String scheduleEventId;
     String userId;
     ScheduleEventStatus status;

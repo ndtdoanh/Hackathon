@@ -78,7 +78,8 @@ class TeamRoundControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response body should not be null");
         assertNotNull(response.getBody().getData(), "Response body data should not be null");
-        assertEquals("Updated Team Round", response.getBody().getData().getFirst().getId());
+        assertEquals(
+                "Updated Team Round", response.getBody().getData().getFirst().getId());
         verify(teamRoundService, times(1)).update("1", dto);
     }
 

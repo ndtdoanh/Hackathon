@@ -66,6 +66,10 @@ class MessageControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(mockResponse, response.getBody().getData());
+        assertEquals("Message created successfully", response.getBody().getMessage());
+        assertEquals(apiRequest.getRequestId(), response.getBody().getRequestId());
+        assertEquals(apiRequest.getRequestDateTime(), response.getBody().getRequestDateTime());
+        assertEquals(apiRequest.getChannel(), response.getBody().getChannel());
         verify(messageService, times(1)).createMessage(conversationId, messageRequest);
     }
 
@@ -79,6 +83,10 @@ class MessageControllerTest {
 
         assertNotNull(response);
         assertEquals(mockResponse, response.getData());
+        assertEquals("Message retrieved successfully", response.getMessage());
+        assertEquals("HACOF", response.getChannel());
+        assertNotNull(response.getRequestId());
+        assertNotNull(response.getRequestDateTime());
         verify(messageService, times(1)).getMessageById(messageId);
     }
 
@@ -92,18 +100,28 @@ class MessageControllerTest {
 
         assertNotNull(response);
         assertEquals(mockList, response.getData());
-        verify(messageService, times(2)).getMessagesByConversation(conversationId);
+        assertEquals("Get all messages in conversation", response.getMessage());
+        assertEquals("HACOF", response.getChannel());
+        assertNotNull(response.getRequestId());
+        assertNotNull(response.getRequestDateTime());
+        verify(messageService, times(1)).getMessagesByConversation(conversationId);
     }
 
     @Test
     void testHandleWebSocketMessage() {
         Long conversationId = 1L;
+        String username = "testUser";
         MessageRequest messageRequest = new MessageRequest();
+        messageRequest.setId(1L);
         messageRequest.setContent("Test content");
 
-        messageController.handleWebSocketMessage(messageRequest, conversationId);
+        MessageResponse mockResponse = new MessageResponse();
+        when(messageService.getMessageById(messageRequest.getId())).thenReturn(mockResponse);
+
+        messageController.handleWebSocketMessage(messageRequest, conversationId, username);
 
         String expectedDestination = "/topic/conversations/" + conversationId;
+        verify(messageService, times(1)).getMessageById(messageRequest.getId());
         verify(messagingTemplate, times(1)).convertAndSend(eq(expectedDestination), any(MessageResponse.class));
     }
 }

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.dto.response.FileUrlResponse;
 import org.springframework.stereotype.Component;
 
 import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 import com.hacof.communication.dto.response.ScheduleResponseDTO;
 import com.hacof.communication.entity.FileUrl;
@@ -44,13 +44,18 @@ public class ScheduleEventMapper {
         // Ensure fileUrls is not null, if it is, initialize it as an empty list.
         List<FileUrlResponse> fileUrls = (scheduleEvent.getFileUrls() != null)
                 ? scheduleEvent.getFileUrls().stream()
-                .map(fileUrl -> new FileUrlResponse(String.valueOf(fileUrl.getId()), fileUrl.getFileName(), fileUrl.getFileUrl(), fileUrl.getFileType(), fileUrl.getFileSize()))
-                .collect(Collectors.toList())
+                        .map(fileUrl -> new FileUrlResponse(
+                                String.valueOf(fileUrl.getId()),
+                                fileUrl.getFileName(),
+                                fileUrl.getFileUrl(),
+                                fileUrl.getFileType(),
+                                fileUrl.getFileSize()))
+                        .collect(Collectors.toList())
                 : new ArrayList<>();
 
         return ScheduleEventResponseDTO.builder()
                 .id(String.valueOf(scheduleEvent.getId()))
-//                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false))
+                //                .schedule(mapScheduleToResponseDTO(scheduleEvent.getSchedule(), false))
                 .scheduleId(String.valueOf(scheduleEvent.getSchedule().getId()))
                 .name(scheduleEvent.getName())
                 .description(scheduleEvent.getDescription())
@@ -62,9 +67,10 @@ public class ScheduleEventMapper {
                 .eventLabel(scheduleEvent.getEventLabel())
                 .createdAt(scheduleEvent.getCreatedDate())
                 .updatedAt(scheduleEvent.getLastModifiedDate())
-                .createdBy(scheduleEvent.getCreatedBy() != null
-                        ? scheduleEvent.getCreatedBy().getUsername()
-                        : null)
+                .createdBy(
+                        scheduleEvent.getCreatedBy() != null
+                                ? scheduleEvent.getCreatedBy().getUsername()
+                                : null)
                 .fileUrls(fileUrls) // Directly adding List<FileUrl>
                 .build();
     }

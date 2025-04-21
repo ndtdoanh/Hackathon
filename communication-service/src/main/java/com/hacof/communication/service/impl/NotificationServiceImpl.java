@@ -197,17 +197,16 @@ public class NotificationServiceImpl implements NotificationService {
                 + "<div style='background-color: #ffffff; padding: 30px;'>"
                 + "<p style='font-size: 16px; color: #333;'>Hello,</p>"
                 + "<p style='font-size: 16px; color: #333;'>You have received a new system notification. Please review the details below:</p>"
-
                 + "<div style='margin: 25px 0; padding: 20px; border: 1px dashed #e67e22; border-radius: 6px; background-color: #fef9f4;'>"
-                + "<p style='margin: 0; font-size: 15px;'><strong>Content:</strong> " + (content != null ? content : "Do not have") + "</p>"
-                + "<p style='margin: 10px 0 0; font-size: 15px;'><strong>Metadata:</strong> " + (metadata != null ? metadata : "Do not have") + "</p>"
+                + "<p style='margin: 0; font-size: 15px;'><strong>Content:</strong> "
+                + (content != null ? content : "Do not have") + "</p>"
+                + "<p style='margin: 10px 0 0; font-size: 15px;'><strong>Metadata:</strong> "
+                + (metadata != null ? metadata : "Do not have") + "</p>"
                 + "</div>"
-
                 + "<p style='font-size: 14px; color: #555;'>If you have any questions, please contact our support team.</p>"
                 + "<p style='font-size: 14px; color: #999; margin-top: 30px;'>Best regards,</p>"
                 + "<p style='font-size: 14px; color: #2f4050; font-weight: bold;'>HACOF Support Team</p>"
                 + "</div>"
-
                 + "<div style='background-color: #f4f4f4; padding: 15px 30px; text-align: center;'>"
                 + "<p style='font-size: 12px; color: #999; margin: 0;'>This is an automated email. Please do not reply.</p>"
                 + "</div>"

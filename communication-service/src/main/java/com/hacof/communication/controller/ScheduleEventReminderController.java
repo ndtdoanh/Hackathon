@@ -118,10 +118,12 @@ public class ScheduleEventReminderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>> getScheduleEventReminder(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>> getScheduleEventReminder(
+            @PathVariable Long id) {
         CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventReminderResponseDTO> scheduleEventReminders = scheduleEventReminderService.getScheduleEventReminder(id);
+            List<ScheduleEventReminderResponseDTO> scheduleEventReminders =
+                    scheduleEventReminderService.getScheduleEventReminder(id);
 
             setDefaultResponseFields(response);
 

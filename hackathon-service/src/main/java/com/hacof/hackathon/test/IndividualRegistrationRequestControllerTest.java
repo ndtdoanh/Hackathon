@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.hackathon.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.hacof.hackathon.controller.IndividualRegistrationRequestController;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
+import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.service.IndividualRegistrationRequestService;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
@@ -33,6 +33,7 @@ class IndividualRegistrationRequestControllerTest {
     private IndividualRegistrationRequestController individualRegistrationRequestController;
 
     private AutoCloseable closeable;
+
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
@@ -61,7 +62,11 @@ class IndividualRegistrationRequestControllerTest {
                 individualRegistrationRequestController.createIndividualRegistration(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("1", response.getBody() != null && response.getBody().getData() != null ? response.getBody().getData().getId() : null);
+        assertEquals(
+                "1",
+                response.getBody() != null && response.getBody().getData() != null
+                        ? response.getBody().getData().getId()
+                        : null);
         verify(individualRegistrationRequestService, times(1)).create(dto);
     }
 
@@ -83,7 +88,11 @@ class IndividualRegistrationRequestControllerTest {
                 individualRegistrationRequestController.updateIndividualRegistration(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("1", response.getBody() != null && response.getBody().getData() != null ? response.getBody().getData().getId() : null);
+        assertEquals(
+                "1",
+                response.getBody() != null && response.getBody().getData() != null
+                        ? response.getBody().getData().getId()
+                        : null);
         verify(individualRegistrationRequestService, times(1)).update(1L, dto);
     }
 
@@ -213,7 +222,8 @@ class IndividualRegistrationRequestControllerTest {
         dto.setId("999");
 
         doThrow(new ResourceNotFoundException("Individual registration request not found"))
-                .when(individualRegistrationRequestService).delete(999L);
+                .when(individualRegistrationRequestService)
+                .delete(999L);
 
         ResponseEntity<CommonResponse<Void>> response =
                 individualRegistrationRequestController.deleteIndividualRegistration(dto);
@@ -227,8 +237,7 @@ class IndividualRegistrationRequestControllerTest {
         IndividualRegistrationRequestDTO dto = new IndividualRegistrationRequestDTO();
         dto.setHackathonId("1");
 
-        when(individualRegistrationRequestService.getAllByHackathonId("1"))
-                .thenReturn(Collections.singletonList(dto));
+        when(individualRegistrationRequestService.getAllByHackathonId("1")).thenReturn(Collections.singletonList(dto));
 
         ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> response =
                 individualRegistrationRequestController.getAllByHackathonId("1");
