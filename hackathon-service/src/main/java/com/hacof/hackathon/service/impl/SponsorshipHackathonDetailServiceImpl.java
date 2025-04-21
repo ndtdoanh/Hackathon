@@ -1,5 +1,6 @@
 package com.hacof.hackathon.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -227,6 +228,11 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
         SponsorshipHackathonDetail scheduleEvent = sponsorshipHackathonDetailRepository
                 .findById(sponsorshipHackathonDetailId)
                 .orElseThrow(() -> new IllegalArgumentException("ScheduleEvent not found!"));
-        return fileUrlMapper.toResponseList(scheduleEvent.getFileUrls());
+
+        List<FileUrl> fileUrls = scheduleEvent.getFileUrls();
+
+        return fileUrlMapper.toResponseList(
+                fileUrls != null ? fileUrls : Collections.emptyList()
+        );
     }
 }
