@@ -12,7 +12,6 @@ import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
 import com.hacof.communication.dto.response.PermissionResponse;
 import com.hacof.communication.dto.response.RoleResponse;
 import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
-import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
 import com.hacof.communication.dto.response.ScheduleResponseDTO;
 import com.hacof.communication.dto.response.UserResponse;
 import com.hacof.communication.entity.Permission;
@@ -44,7 +43,8 @@ public class ScheduleEventAttendeeMapper {
 
         return ScheduleEventAttendeeResponseDTO.builder()
                 .id(String.valueOf(scheduleEventAttendee.getId()))
-                .scheduleEventId(String.valueOf(scheduleEventAttendee.getScheduleEvent().getId()))
+                .scheduleEventId(
+                        String.valueOf(scheduleEventAttendee.getScheduleEvent().getId()))
                 .userId(String.valueOf(scheduleEventAttendee.getUser().getId()))
                 .status(scheduleEventAttendee.getStatus())
                 .createdAt(scheduleEventAttendee.getCreatedDate())
@@ -52,30 +52,30 @@ public class ScheduleEventAttendeeMapper {
                 .build();
     }
 
-//    private ScheduleEventResponseDTO mapScheduleEventToDto(ScheduleEvent scheduleEvent) {
-//        return ScheduleEventResponseDTO.builder()
-//                .id(String.valueOf(scheduleEvent.getId()))
-//                .schedule(
-//                        scheduleEvent.getSchedule() != null
-//                                ? mapScheduleToDto(scheduleEvent.getSchedule())
-//                                : null) // Fix Schedule null
-//                .name(scheduleEvent.getName())
-//                .description(scheduleEvent.getDescription())
-//                .location(scheduleEvent.getLocation())
-//                .startTime(scheduleEvent.getStartTime())
-//                .endTime(scheduleEvent.getEndTime())
-//                .isRecurring(scheduleEvent.isRecurring())
-//                .recurrenceRule(scheduleEvent.getRecurrenceRule())
-//                .eventLabel(scheduleEvent.getEventLabel())
-//                .createdDate(scheduleEvent.getCreatedDate())
-//                .lastModifiedDate(scheduleEvent.getLastModifiedDate())
-//                .createdBy(
-//                        scheduleEvent.getCreatedBy() != null
-//                                ? scheduleEvent.getCreatedBy().getUsername()
-//                                : null)
-//                .fileUrls(mapFileUrls(scheduleEvent))
-//                .build();
-//    }
+    //    private ScheduleEventResponseDTO mapScheduleEventToDto(ScheduleEvent scheduleEvent) {
+    //        return ScheduleEventResponseDTO.builder()
+    //                .id(String.valueOf(scheduleEvent.getId()))
+    //                .schedule(
+    //                        scheduleEvent.getSchedule() != null
+    //                                ? mapScheduleToDto(scheduleEvent.getSchedule())
+    //                                : null) // Fix Schedule null
+    //                .name(scheduleEvent.getName())
+    //                .description(scheduleEvent.getDescription())
+    //                .location(scheduleEvent.getLocation())
+    //                .startTime(scheduleEvent.getStartTime())
+    //                .endTime(scheduleEvent.getEndTime())
+    //                .isRecurring(scheduleEvent.isRecurring())
+    //                .recurrenceRule(scheduleEvent.getRecurrenceRule())
+    //                .eventLabel(scheduleEvent.getEventLabel())
+    //                .createdDate(scheduleEvent.getCreatedDate())
+    //                .lastModifiedDate(scheduleEvent.getLastModifiedDate())
+    //                .createdBy(
+    //                        scheduleEvent.getCreatedBy() != null
+    //                                ? scheduleEvent.getCreatedBy().getUsername()
+    //                                : null)
+    //                .fileUrls(mapFileUrls(scheduleEvent))
+    //                .build();
+    //    }
 
     private ScheduleResponseDTO mapScheduleToDto(Schedule schedule) {
         return ScheduleResponseDTO.builder()

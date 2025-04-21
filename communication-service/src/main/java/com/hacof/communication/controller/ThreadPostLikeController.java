@@ -87,8 +87,7 @@ public class ThreadPostLikeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<List<ThreadPostLikeResponseDTO>>> getThreadPostLike(
-            @PathVariable Long id) {
+    public ResponseEntity<CommonResponse<List<ThreadPostLikeResponseDTO>>> getThreadPostLike(@PathVariable Long id) {
         CommonResponse<List<ThreadPostLikeResponseDTO>> response = new CommonResponse<>();
         try {
             List<ThreadPostLikeResponseDTO> threadPostLikes = threadPostLikeService.getThreadPostLike(id);

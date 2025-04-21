@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.analytics.dto.ApiRequest;
@@ -87,8 +86,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/by-creator/{username}")
-    public ApiResponse<List<FeedbackResponse>> getFeedbacksByCreatedByUserName(
-            @PathVariable String username) {
+    public ApiResponse<List<FeedbackResponse>> getFeedbacksByCreatedByUserName(@PathVariable String username) {
         return ApiResponse.<List<FeedbackResponse>>builder()
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())
@@ -100,8 +98,7 @@ public class FeedbackController {
 
     @GetMapping("/by-creator/{username}/hackathon/{hackathonId}")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByCreatedByUserNameAndHackathon(
-            @PathVariable String username,
-            @PathVariable Long hackathonId) {
+            @PathVariable String username, @PathVariable Long hackathonId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())

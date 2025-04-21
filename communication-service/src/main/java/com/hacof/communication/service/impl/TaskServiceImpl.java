@@ -5,18 +5,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.dto.response.FileUrlResponse;
-import com.hacof.communication.entity.ScheduleEvent;
-import com.hacof.communication.mapper.FileUrlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.dto.request.TaskRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.entity.BoardList;
 import com.hacof.communication.entity.FileUrl;
 import com.hacof.communication.entity.Task;
+import com.hacof.communication.mapper.FileUrlMapper;
 import com.hacof.communication.mapper.TaskMapper;
 import com.hacof.communication.repository.BoardListRepository;
 import com.hacof.communication.repository.FileUrlRepository;
@@ -43,7 +42,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
-        if (taskRequestDTO.getBoardListId() == null || taskRequestDTO.getBoardListId().isEmpty()) {
+        if (taskRequestDTO.getBoardListId() == null
+                || taskRequestDTO.getBoardListId().isEmpty()) {
             throw new IllegalArgumentException("BoardList ID cannot be null or empty");
         }
 
@@ -57,7 +57,8 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
 
-        if (taskRequestDTO.getDescription() == null || taskRequestDTO.getDescription().isEmpty()) {
+        if (taskRequestDTO.getDescription() == null
+                || taskRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Task description cannot be empty");
         }
 
@@ -65,9 +66,9 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Position must be a non-negative integer");
         }
 
-//        if (taskRequestDTO.getDueDate() == null) {
-//            throw new IllegalArgumentException("Due date must be a future date");
-//        }
+        //        if (taskRequestDTO.getDueDate() == null) {
+        //            throw new IllegalArgumentException("Due date must be a future date");
+        //        }
 
         Task task = taskMapper.toEntity(taskRequestDTO, boardListOptional.get(), null); // Không truyền fileUrls
         task = taskRepository.save(task);
@@ -272,9 +273,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<FileUrlResponse> getFileUrlsByTaskId(Long taskId) {
-        Task task = taskRepository
-                .findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("TaskId not found!"));
+        Task task =
+                taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("TaskId not found!"));
         return fileUrlMapper.toResponseList(task.getFileUrls());
     }
 }

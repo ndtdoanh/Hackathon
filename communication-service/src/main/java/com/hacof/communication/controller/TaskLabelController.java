@@ -157,8 +157,7 @@ public class TaskLabelController {
     }
 
     @GetMapping("/by-task/{taskId}")
-    public ResponseEntity<CommonResponse<List<TaskLabelResponseDTO>>> getTaskLabelsByTaskId(
-            @PathVariable Long taskId) {
+    public ResponseEntity<CommonResponse<List<TaskLabelResponseDTO>>> getTaskLabelsByTaskId(@PathVariable Long taskId) {
         CommonResponse<List<TaskLabelResponseDTO>> response = new CommonResponse<>();
         try {
             List<TaskLabelResponseDTO> taskLabels = taskLabelService.getTaskLabelsByTaskId(taskId);
@@ -180,5 +179,4 @@ public class TaskLabelController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

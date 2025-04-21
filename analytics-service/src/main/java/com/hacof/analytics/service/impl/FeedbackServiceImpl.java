@@ -118,8 +118,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public List<FeedbackResponse> getFeedbacksByCreatedByUserNameAndHackathon(String username, Long hackathonId) {
-        List<Feedback> feedbacks = feedbackRepository
-                .findByCreatedByUsernameAndHackathonId(username, hackathonId);
+        List<Feedback> feedbacks = feedbackRepository.findByCreatedByUsernameAndHackathonId(username, hackathonId);
         return feedbackMapper.toFeedbackResponses(feedbacks);
     }
 

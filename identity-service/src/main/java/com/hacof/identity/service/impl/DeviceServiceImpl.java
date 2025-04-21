@@ -1,7 +1,6 @@
 package com.hacof.identity.service.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,9 +163,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceResponse updateDevice(Long id, DeviceRequest request, List<MultipartFile> files) throws IOException {
-        Device existingDevice = deviceRepository
-                .findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
+        Device existingDevice =
+                deviceRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
 
         if (request.getName() != null) {
             existingDevice.setName(request.getName());
@@ -189,9 +187,9 @@ public class DeviceServiceImpl implements DeviceService {
         if (hackathonIdStr != null && !hackathonIdStr.trim().isEmpty()) {
             try {
                 Long hackathonId = Long.valueOf(hackathonIdStr.trim());
-                existingDevice.setHackathon(
-                        hackathonRepository.findById(hackathonId)
-                                .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND)));
+                existingDevice.setHackathon(hackathonRepository
+                        .findById(hackathonId)
+                        .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND)));
             } catch (NumberFormatException e) {
                 throw new AppException(ErrorCode.INVALID_INPUT);
             }
@@ -202,7 +200,8 @@ public class DeviceServiceImpl implements DeviceService {
             if (!roundIdStr.trim().isEmpty()) {
                 try {
                     Long roundId = Long.valueOf(roundIdStr.trim());
-                    Round round = roundRepository.findById(roundId)
+                    Round round = roundRepository
+                            .findById(roundId)
                             .orElseThrow(() -> new AppException(ErrorCode.ROUND_NOT_FOUND));
                     existingDevice.setRound(round);
                 } catch (NumberFormatException e) {
@@ -218,7 +217,8 @@ public class DeviceServiceImpl implements DeviceService {
             if (!roundLocationIdStr.trim().isEmpty()) {
                 try {
                     Long roundLocationId = Long.valueOf(roundLocationIdStr.trim());
-                    RoundLocation roundLocation = roundLocationRepository.findById(roundLocationId)
+                    RoundLocation roundLocation = roundLocationRepository
+                            .findById(roundLocationId)
                             .orElseThrow(() -> new AppException(ErrorCode.ROUND_LOCATION_NOT_FOUND));
                     existingDevice.setRoundLocation(roundLocation);
                 } catch (NumberFormatException e) {
@@ -235,10 +235,7 @@ public class DeviceServiceImpl implements DeviceService {
             for (MultipartFile file : files) {
                 try {
                     String fileUrl = s3Service.uploadFile(
-                            file.getInputStream(),
-                            file.getOriginalFilename(),
-                            file.getSize(),
-                            file.getContentType());
+                            file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
 
                     FileUrl newFileUrl = new FileUrl(
                             file.getOriginalFilename(),
@@ -253,8 +250,8 @@ public class DeviceServiceImpl implements DeviceService {
                 }
             }
 
-            updatedDevice = deviceRepository.findById(id)
-                    .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
+            updatedDevice =
+                    deviceRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND));
         }
 
         return deviceMapper.toDeviceResponse(updatedDevice);

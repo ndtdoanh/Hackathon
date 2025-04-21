@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.hackathon.exception.InvalidInputException;
-import com.hacof.hackathon.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.hacof.hackathon.controller.HackathonController;
 import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.exception.InvalidInputException;
+import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.service.HackathonService;
 import com.hacof.hackathon.util.CommonRequest;
 import com.hacof.hackathon.util.CommonResponse;
@@ -35,6 +35,7 @@ class HackathonControllerTest {
 
     @InjectMocks
     private HackathonController hackathonController;
+
     private AutoCloseable closeable;
 
     @BeforeEach
@@ -127,8 +128,7 @@ class HackathonControllerTest {
         request.setChannel("HACOF");
         request.setData(null);
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response =
-                hackathonController.createHackathon(request);
+        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.createHackathon(request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         verify(hackathonService, never()).create(any(HackathonDTO.class));
@@ -146,11 +146,9 @@ class HackathonControllerTest {
         request.setChannel("HACOF");
         request.setData(dto);
 
-        when(hackathonService.update("999", dto))
-                .thenThrow(new ResourceNotFoundException("Hackathon not found"));
+        when(hackathonService.update("999", dto)).thenThrow(new ResourceNotFoundException("Hackathon not found"));
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response =
-                hackathonController.updateHackathon(request);
+        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.updateHackathon(request);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(hackathonService, times(1)).update("999", dto);
@@ -170,8 +168,7 @@ class HackathonControllerTest {
         when(hackathonService.create(dto))
                 .thenThrow(new InvalidInputException("Hackathon with title 'Duplicate Title' already exists."));
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response =
-                hackathonController.createHackathon(request);
+        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.createHackathon(request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         verify(hackathonService, times(1)).create(dto);
@@ -189,21 +186,19 @@ class HackathonControllerTest {
         request.setChannel("HACOF");
         request.setData(dto);
 
-        when(hackathonService.update("1", dto))
-                .thenThrow(new InvalidInputException("Title cannot be empty"));
+        when(hackathonService.update("1", dto)).thenThrow(new InvalidInputException("Title cannot be empty"));
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response =
-                hackathonController.updateHackathon(request);
+        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.updateHackathon(request);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         verify(hackathonService, times(1)).update("1", dto);
     }
 
-
     @Test
     void testDeleteNonExistentHackathon() {
         doThrow(new ResourceNotFoundException("Hackathon not found"))
-                .when(hackathonService).deleteHackathon(1L);
+                .when(hackathonService)
+                .deleteHackathon(1L);
 
         ResponseEntity<CommonResponse<Void>> response = hackathonController.deleteHackathon("1");
 

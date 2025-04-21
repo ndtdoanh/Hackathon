@@ -120,10 +120,10 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
 
         // Return empty list if not found
         return scheduleEventReminderOptional
-                .map(scheduleEventReminder -> List.of(scheduleEventReminderMapper.toDto(scheduleEventReminder))) // Wrap in a list
+                .map(scheduleEventReminder ->
+                        List.of(scheduleEventReminderMapper.toDto(scheduleEventReminder))) // Wrap in a list
                 .orElse(List.of()); // Return empty list if not found
     }
-
 
     @Override
     public List<ScheduleEventReminderResponseDTO> getAllScheduleEventReminders() {

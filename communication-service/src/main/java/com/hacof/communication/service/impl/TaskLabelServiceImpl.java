@@ -132,9 +132,6 @@ public class TaskLabelServiceImpl implements TaskLabelService {
         if (taskLabels.isEmpty()) {
             return new ArrayList<>();
         }
-        return taskLabels.stream()
-                .map(taskLabelMapper::toDto)
-                .collect(Collectors.toList());
+        return taskLabels.stream().map(taskLabelMapper::toDto).collect(Collectors.toList());
     }
-
 }

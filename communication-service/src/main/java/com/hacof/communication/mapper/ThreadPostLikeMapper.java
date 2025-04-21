@@ -82,7 +82,7 @@ public class ThreadPostLikeMapper {
                 .getLastModifiedDate());
 
         // Set ForumCategory into ForumThreadResponseDTO
-//        forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
+        //        forumThreadResponseDTO.setForumCategory(forumCategoryResponseDTO);
         forumThreadResponseDTO.setForumCategoryId(
                 String.valueOf(threadPostLike.getThreadPost().getForumThread().getId()));
 
