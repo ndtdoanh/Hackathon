@@ -121,5 +121,4 @@ public class TaskCommentServiceImpl implements TaskCommentService {
         List<TaskComment> taskComments = taskCommentRepository.findByTaskId(taskIdLong);
         return taskComments.stream().map(taskCommentMapper::toDto).collect(Collectors.toList());
     }
-
 }

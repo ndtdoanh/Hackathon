@@ -47,18 +47,14 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "GET_LOGS",
                             "GET_LOG",
                             "SEARCH_LOGS",
-
                             "CREATE_PERMISSION",
                             "UPDATE_PERMISSION",
                             "DELETE_PERMISSION",
                             "DELETE_PERMISSION_FROM_ROLE",
-
                             "CREATE_ROLE",
                             "UPDATE_ROLE",
                             "DELETE_ROLE",
-
                             "DELETE_USER",
-
                             "APPROVE_BLOG_POST",
                             "REJECT_BLOG_POST",
                             "DELETE_BLOG_POST"),
@@ -67,66 +63,39 @@ public class DatabaseInitializer implements CommandLineRunner {
                             "CREATE_DEVICE",
                             "UPDATE_DEVICE",
                             "DELETE_DEVICE",
-
                             "UPDATE_JUDGE_MENTOR_BY_ORGANIZER",
-
                             "CREATE_USER_DEVICE",
                             "UPDATE_USER_DEVICE",
                             "DELETE_USER_DEVICE",
-
                             "CREATE_USER_DEVICE_TRACK",
                             "UPDATE_USER_DEVICE_TRACK",
                             "DELETE_USER_DEVICE_TRACK",
-
                             "CREATE_USER_HACKATHON",
                             "DELETE_USER_HACKATHON",
-
                             "CREATE_NOTIFICATION",
                             "DELETE_NOTIFICATION",
                             "UPDATE_READ_STATUS",
-
                             "CREATE_BLOG_POST",
                             "SUBMIT_BLOG_POST",
-
                             "CREATE_JUDGE_ROUND",
                             "UPDATE_JUDGE_ROUND",
                             "DELETE_JUDGE_ROUND",
                             "UPDATE_JUDGE_ROUND_BY_JUDGE_ID",
                             "DELETE_JUDGE_ROUND_BY_JUDGE_ID_AND_ROUND_ID",
-
                             "CREATE_ROUND_MARK_CRITERIA",
                             "UPDATE_ROUND_MARK_CRITERIA",
                             "DELETE_ROUND_MARK_CRITERIA",
-
                             "CREATE_TEAM_ROUND_JUDGE",
                             "UPDATE_TEAM_ROUND_JUDGE",
                             "DELETE_TEAM_ROUND_JUDGE",
                             "DELETE_BY_TEAM_ROUND_AND_JUDGE",
-
                             "CREATE_FEEDBACK",
                             "DELETE_FEEDBACK",
-
-                            "DELETE_FEEDBACK_DETAIL"
-                    ),
-            "JUDGE",
-                    Set.of(
-                            "CREATE_JUDGE_SUBMISSION",
-                            "UPDATE_JUDGE_SUBMISSION",
-                            "DELETE_JUDGE_SUBMISSION"
-                    ),
-            "MENTOR",
-                    Set.of(),
-            "TEAM_MEMBER",
-                    Set.of(
-                            "CREATE_SUBMISSION",
-                            "UPDATE_SUBMISSION",
-                            "DELETE_SUBMISSION"
-                    ),
-            "TEAM_LEADER",
-                    Set.of("CREATE_SUBMISSION",
-                            "UPDATE_SUBMISSION",
-                            "DELETE_SUBMISSION"
-                    ));
+                            "DELETE_FEEDBACK_DETAIL"),
+            "JUDGE", Set.of("CREATE_JUDGE_SUBMISSION", "UPDATE_JUDGE_SUBMISSION", "DELETE_JUDGE_SUBMISSION"),
+            "MENTOR", Set.of(),
+            "TEAM_MEMBER", Set.of("CREATE_SUBMISSION", "UPDATE_SUBMISSION", "DELETE_SUBMISSION"),
+            "TEAM_LEADER", Set.of("CREATE_SUBMISSION", "UPDATE_SUBMISSION", "DELETE_SUBMISSION"));
 
     @Override
     public void run(String... args) throws Exception {
@@ -165,72 +134,85 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("GET_LOGS", "/api/v1/logs", "GET", "ACTIVITY_LOGS"),
                 new Permission("GET_LOG", "/api/v1/logs/{Id}", "GET", "ACTIVITY_LOGS"),
                 new Permission("SEARCH_LOGS", "/api/v1/logs/search", "GET", "ACTIVITY_LOGS"),
-
                 new Permission("CREATE_DEVICE", "/api/v1/devices", "POST", "DEVICES"),
                 new Permission("UPDATE_DEVICE", "/api/v1/devices/{Id}", "PUT", "DEVICES"),
                 new Permission("DELETE_DEVICE", "/api/v1/devices/{Id}", "DELETE", "DEVICES"),
-
                 new Permission("CREATE_PERMISSION", "/api/v1/permissions", "POST", "PERMISSIONS"),
                 new Permission("UPDATE_PERMISSION", "/api/v1/permissions/{Id}", "PUT", "PERMISSIONS"),
                 new Permission("DELETE_PERMISSION", "/api/v1/permissions/{Id}", "DELETE", "PERMISSIONS"),
-                new Permission("DELETE_PERMISSION_FROM_ROLE", "/api/v1/permissions/{roleId}/permissions/{permissionId}", "DELETE", "PERMISSIONS"),
-
+                new Permission(
+                        "DELETE_PERMISSION_FROM_ROLE",
+                        "/api/v1/permissions/{roleId}/permissions/{permissionId}",
+                        "DELETE",
+                        "PERMISSIONS"),
                 new Permission("CREATE_ROLE", "/api/v1/roles", "POST", "ROLES"),
                 new Permission("UPDATE_ROLE", "/api/v1/roles/{Id}", "PUT", "ROLES"),
                 new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"),
-
                 new Permission("UPDATE_JUDGE_MENTOR_BY_ORGANIZER", "/api/v1/users/organizer", "PUT", "USERS"),
                 new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"),
-
                 new Permission("CREATE_USER_DEVICE", "/api/v1/user-devices", "POST", "USER_DEVICES"),
                 new Permission("UPDATE_USER_DEVICE", "/api/v1/user-devices/{Id}", "PUT", "USER_DEVICES"),
                 new Permission("DELETE_USER_DEVICE", "/api/v1/user-devices/{Id}", "DELETE", "USER_DEVICES"),
-
                 new Permission("CREATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks", "POST", "USER_DEVICE_TRACKS"),
-                new Permission("UPDATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "PUT", "USER_DEVICE_TRACKS"),
-                new Permission("DELETE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "DELETE", "USER_DEVICE_TRACKS"),
-
+                new Permission(
+                        "UPDATE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "PUT", "USER_DEVICE_TRACKS"),
+                new Permission(
+                        "DELETE_USER_DEVICE_TRACK", "/api/v1/user-device-tracks/{Id}", "DELETE", "USER_DEVICE_TRACKS"),
                 new Permission("CREATE_USER_HACKATHON", "/api/v1/user-hackathons", "POST", "USER_HACKATHONS"),
                 new Permission("DELETE_USER_HACKATHON", "/api/v1/user-hackathons/{Id}", "DELETE", "USER_HACKATHONS"),
-
                 new Permission("CREATE_NOTIFICATION", "/api/v1/notifications", "POST", "NOTIFICATIONS"),
                 new Permission("DELETE_NOTIFICATION", "/api/v1/notifications/{Id}", "DELETE", "NOTIFICATIONS"),
-                new Permission("UPDATE_READ_STATUS", "/api/v1/notifications/notification-deliveries/read-status", "PUT", "NOTIFICATIONS"),
-
+                new Permission(
+                        "UPDATE_READ_STATUS",
+                        "/api/v1/notifications/notification-deliveries/read-status",
+                        "PUT",
+                        "NOTIFICATIONS"),
                 new Permission("CREATE_BLOG_POST", "/api/v1/blog-posts", "POST", "BLOG_POSTS"),
                 new Permission("SUBMIT_BLOG_POST", "/api/v1/blog-posts/{id}/submit", "PUT", "BLOG_POSTS"),
                 new Permission("APPROVE_BLOG_POST", "/api/v1/blog-posts/{id}/approve", "PUT", "BLOG_POSTS"),
                 new Permission("REJECT_BLOG_POST", "/api/v1/blog-posts/{id}/reject", "PUT", "BLOG_POSTS"),
                 new Permission("DELETE_BLOG_POST", "/api/v1/blog-posts/{id}", "DELETE", "BLOG_POSTS"),
-
                 new Permission("CREATE_JUDGE_ROUND", "/api/v1/judge-rounds", "POST", "JUDGE_ROUNDS"),
                 new Permission("UPDATE_JUDGE_ROUND", "/api/v1/judge-rounds/{id}", "PUT", "JUDGE_ROUNDS"),
                 new Permission("DELETE_JUDGE_ROUND", "/api/v1/judge-rounds/{id}", "DELETE", "JUDGE_ROUNDS"),
-                new Permission("UPDATE_JUDGE_ROUND_BY_JUDGE_ID", "/api/v1/judge-rounds/judge/{judgeId}", "PUT", "JUDGE_ROUNDS"),
-                new Permission("DELETE_JUDGE_ROUND_BY_JUDGE_ID_AND_ROUND_ID", "/api/v1/judge-rounds/by-judge-round", "DELETE", "JUDGE_ROUNDS"),
-
-                new Permission("CREATE_ROUND_MARK_CRITERIA", "/api/v1/roundmarkcriteria", "POST", "ROUND_MARK_CRITERIA"),
-                new Permission("UPDATE_ROUND_MARK_CRITERIA", "/api/v1/roundmarkcriteria/{id}", "PUT", "ROUND_MARK_CRITERIA"),
-                new Permission("DELETE_ROUND_MARK_CRITERIA", "/api/v1/roundmarkcriteria/{id}", "DELETE", "ROUND_MARK_CRITERIA"),
-
+                new Permission(
+                        "UPDATE_JUDGE_ROUND_BY_JUDGE_ID",
+                        "/api/v1/judge-rounds/judge/{judgeId}",
+                        "PUT",
+                        "JUDGE_ROUNDS"),
+                new Permission(
+                        "DELETE_JUDGE_ROUND_BY_JUDGE_ID_AND_ROUND_ID",
+                        "/api/v1/judge-rounds/by-judge-round",
+                        "DELETE",
+                        "JUDGE_ROUNDS"),
+                new Permission(
+                        "CREATE_ROUND_MARK_CRITERIA", "/api/v1/roundmarkcriteria", "POST", "ROUND_MARK_CRITERIA"),
+                new Permission(
+                        "UPDATE_ROUND_MARK_CRITERIA", "/api/v1/roundmarkcriteria/{id}", "PUT", "ROUND_MARK_CRITERIA"),
+                new Permission(
+                        "DELETE_ROUND_MARK_CRITERIA",
+                        "/api/v1/roundmarkcriteria/{id}",
+                        "DELETE",
+                        "ROUND_MARK_CRITERIA"),
                 new Permission("CREATE_TEAM_ROUND_JUDGE", "/api/v1/teamroundjudges", "POST", "TEAM_ROUND_JUDGE"),
                 new Permission("UPDATE_TEAM_ROUND_JUDGE", "/api/v1/teamroundjudges/{id}", "PUT", "TEAM_ROUND_JUDGE"),
                 new Permission("DELETE_TEAM_ROUND_JUDGE", "/api/v1/teamroundjudges/{id}", "DELETE", "TEAM_ROUND_JUDGE"),
-                new Permission("DELETE_BY_TEAM_ROUND_AND_JUDGE", "/api/v1/teamroundjudges/by-team-round-judge", "DELETE", "TEAM_ROUND_JUDGE"),
-
+                new Permission(
+                        "DELETE_BY_TEAM_ROUND_AND_JUDGE",
+                        "/api/v1/teamroundjudges/by-team-round-judge",
+                        "DELETE",
+                        "TEAM_ROUND_JUDGE"),
                 new Permission("CREATE_JUDGE_SUBMISSION", "/api/v1/judge-submissions", "POST", "JUDGE_SUBMISSIONS"),
                 new Permission("UPDATE_JUDGE_SUBMISSION", "/api/v1/judge-submissions/{id}", "PUT", "JUDGE_SUBMISSIONS"),
-                new Permission("DELETE_JUDGE_SUBMISSION", "/api/v1/judge-submissions/{id}", "DELETE", "JUDGE_SUBMISSIONS"),
-
+                new Permission(
+                        "DELETE_JUDGE_SUBMISSION", "/api/v1/judge-submissions/{id}", "DELETE", "JUDGE_SUBMISSIONS"),
                 new Permission("CREATE_SUBMISSION", "/api/v1/submissions", "POST", "SUBMISSIONS"),
                 new Permission("UPDATE_SUBMISSION", "/api/v1/submissions/{id}", "PUT", "SUBMISSIONS"),
                 new Permission("DELETE_SUBMISSION", "/api/v1/submissions/{id}", "DELETE", "SUBMISSIONS"),
-
                 new Permission("CREATE_FEEDBACK", "/api/v1/feedbacks", "POST", "FEEDBACKS"),
                 new Permission("DELETE_FEEDBACK", "/api/v1/feedbacks/{id}", "DELETE", "FEEDBACKS"),
-
-                new Permission("DELETE_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "DELETE", "FEEDBACK_DETAILS")
-        );
+                new Permission(
+                        "DELETE_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "DELETE", "FEEDBACK_DETAILS"));
 
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
@@ -492,7 +474,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 Hackathon.builder()
                         .title("HealthTech Hackathon")
                         .subTitle("Innovating Healthcare Solutions")
-                        .bannerImageUrl("https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=328,h=410,fit=crop/YKb3LN2zOWc05D7L/poster4-mnlW25JWQJu732Gj.jpg")
+                        .bannerImageUrl(
+                                "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=328,h=410,fit=crop/YKb3LN2zOWc05D7L/poster4-mnlW25JWQJu732Gj.jpg")
                         .enrollStartDate(LocalDateTime.of(2025, 1, 1, 8, 0))
                         .enrollEndDate(LocalDateTime.of(2025, 12, 1, 23, 59))
                         .description("A hackathon to develop digital health solutions.")
@@ -510,7 +493,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                 Hackathon.builder()
                         .title("Cybersecurity Challenge")
                         .subTitle("Defending the Digital World")
-                        .bannerImageUrl("https://uet.vnu.edu.vn/wp-content/uploads/2024/08/B%C3%A0i-gi%E1%BB%9Bi-thi%E1%BB%87u-3-1024x1024.png")
+                        .bannerImageUrl(
+                                "https://uet.vnu.edu.vn/wp-content/uploads/2024/08/B%C3%A0i-gi%E1%BB%9Bi-thi%E1%BB%87u-3-1024x1024.png")
                         .enrollStartDate(LocalDateTime.of(2025, 1, 1, 8, 0))
                         .enrollEndDate(LocalDateTime.of(2025, 12, 1, 23, 59))
                         .description("A hackathon for ethical hackers and security researchers.")

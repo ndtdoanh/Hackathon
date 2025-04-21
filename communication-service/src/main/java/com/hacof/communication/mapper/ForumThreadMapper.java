@@ -18,8 +18,8 @@ public class ForumThreadMapper {
         return ForumThread.builder()
                 .title(dto.getTitle())
                 .forumCategory(forumCategory)
-                .isLocked(dto.getIsLocked())  // Use getLocked() to access the 'locked' field
-                .isPinned(dto.getIsPinned())  // directly access the primitive value
+                .isLocked(dto.getIsLocked()) // Use getLocked() to access the 'locked' field
+                .isPinned(dto.getIsPinned()) // directly access the primitive value
                 .build();
     }
 

@@ -55,9 +55,7 @@ public class ThreadPostLikeServiceImpl implements ThreadPostLikeService {
             return new ArrayList<>();
         }
 
-        return threadPostLikes.stream()
-                .map(ThreadPostLikeMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return threadPostLikes.stream().map(ThreadPostLikeMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     @Override

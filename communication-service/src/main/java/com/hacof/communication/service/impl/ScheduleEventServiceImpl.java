@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.entity.ScheduleEventAttendee;
-import com.hacof.communication.repository.ScheduleEventAttendeeRepository;
-import com.hacof.communication.repository.ScheduleEventReminderRepository;
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +18,8 @@ import com.hacof.communication.entity.ScheduleEvent;
 import com.hacof.communication.mapper.FileUrlMapper;
 import com.hacof.communication.mapper.ScheduleEventMapper;
 import com.hacof.communication.repository.FileUrlRepository;
+import com.hacof.communication.repository.ScheduleEventAttendeeRepository;
+import com.hacof.communication.repository.ScheduleEventReminderRepository;
 import com.hacof.communication.repository.ScheduleEventRepository;
 import com.hacof.communication.repository.ScheduleRepository;
 import com.hacof.communication.service.ScheduleEventService;

@@ -15,5 +15,4 @@ public enum CategoryStatus {
     CategoryStatus(String displayName) {
         this.displayName = displayName;
     }
-
 }

@@ -15,5 +15,4 @@ public enum OrganizationStatus {
     OrganizationStatus(String displayName) {
         this.displayName = displayName;
     }
-
 }

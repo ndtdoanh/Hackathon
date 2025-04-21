@@ -107,7 +107,6 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
                 .orElse(List.of());
     }
 
-
     @Override
     public List<ScheduleEventAttendeeResponseDTO> getAllScheduleEventAttendees() {
         List<ScheduleEventAttendee> scheduleEventAttendees = scheduleEventAttendeeRepository.findAll();
@@ -133,8 +132,8 @@ public class ScheduleEventAttendeeServiceImpl implements ScheduleEventAttendeeSe
     @Override
     public List<ScheduleEventAttendeeResponseDTO> getScheduleEventAttendeesByEventId(Long scheduleEventId) {
         List<ScheduleEventAttendee> attendees = scheduleEventAttendeeRepository.findByScheduleEventId(scheduleEventId);
-        return attendees.isEmpty() ? List.of() : attendees.stream()
-                .map(scheduleEventAttendeeMapper::toDto)
-                .collect(Collectors.toList());
+        return attendees.isEmpty()
+                ? List.of()
+                : attendees.stream().map(scheduleEventAttendeeMapper::toDto).collect(Collectors.toList());
     }
 }
