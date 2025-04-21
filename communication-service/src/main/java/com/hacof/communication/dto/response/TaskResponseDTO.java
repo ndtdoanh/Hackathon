@@ -25,7 +25,7 @@ public class TaskResponseDTO {
     int position;
     String boardListId;
     LocalDateTime dueDate;
-    List<String> fileUrls;
+    List<FileUrlResponse> fileUrls;
     String createdBy;
     LocalDateTime createdDate;
     LocalDateTime lastModifiedDate;

@@ -3,6 +3,7 @@ package com.hacof.communication.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.dto.response.FileUrlResponse;
 import org.springframework.stereotype.Component;
 
 import com.hacof.communication.dto.request.TaskRequestDTO;
@@ -30,21 +31,34 @@ public class TaskMapper {
 
     // Chuyển từ Task entity sang TaskResponseDTO
     public TaskResponseDTO toDto(Task task) {
-        List<String> fileUrls = task.getFileUrls() != null
-                ? task.getFileUrls().stream().map(FileUrl::getFileUrl).collect(Collectors.toList())
+        List<FileUrlResponse> fileUrls = task.getFileUrls() != null
+                ? task.getFileUrls().stream()
+                .map(fileUrl -> FileUrlResponse.builder()
+                        .id(String.valueOf(fileUrl.getId()))
+                        .fileUrl(fileUrl.getFileUrl())
+                        .fileName(fileUrl.getFileName())
+                        .fileType(fileUrl.getFileType())
+                        .fileSize(fileUrl.getFileSize())
+                        .build())
+                .collect(Collectors.toList())
                 : null;
+
         return TaskResponseDTO.builder()
-                .id(String.valueOf(task.getId())) // Chuyển đổi long -> String
+                .id(String.valueOf(task.getId()))
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .position(task.getPosition())
                 .dueDate(task.getDueDate())
-                .boardListId(String.valueOf(
-                        task.getBoardList() != null ? task.getBoardList().getId() : null))
-                .createdBy(task.getCreatedBy() != null ? task.getCreatedBy().getUsername() : null)
+                .boardListId(task.getBoardList() != null
+                        ? String.valueOf(task.getBoardList().getId())
+                        : null)
+                .createdBy(task.getCreatedBy() != null
+                        ? task.getCreatedBy().getUsername()
+                        : null)
                 .createdDate(task.getCreatedDate())
                 .lastModifiedDate(task.getLastModifiedDate())
                 .fileUrls(fileUrls)
                 .build();
     }
+
 }
