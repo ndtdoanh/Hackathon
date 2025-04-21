@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.15.xsd">
+
+    <changeSet id="insert-roles" author="ndtdoanh">
+        <sql>
+            <![CDATA[
+            INSERT INTO roles (id, role_name, description)
+            VALUES (1, 'ADMIN', 'Admin role'),
+                   (2, 'ORGANIZER', 'Organizer role'),
+                   (3, 'MENTOR', 'Mentor role'),
+                   (4, 'JUDGE', 'Judge role'),
+                   (5, 'TEAM_MEMBER', 'Team member role'),
+                   (6, 'TEAM_LEADER', 'Team leader role');
+            ]]>
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

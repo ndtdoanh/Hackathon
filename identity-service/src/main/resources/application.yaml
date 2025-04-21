@@ -26,6 +26,10 @@ spring:
     username: root
     password: 12345
 
+  liquibase:
+    change-log: classpath:db/changelog.xml
+    enabled: false
+
   jpa:
     hibernate:
       ddl-auto: update
