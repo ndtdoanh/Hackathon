@@ -94,4 +94,67 @@ class FeedbackControllerTest {
         assertEquals("Feedback deleted", response.getMessage());
         verify(feedbackService, times(1)).deleteFeedback(id);
     }
+
+    @Test
+    void testCreateBulkFeedback() {
+        List<FeedbackRequest> feedbackRequests = Collections.singletonList(new FeedbackRequest());
+        List<FeedbackResponse> feedbackResponses = Collections.singletonList(new FeedbackResponse());
+
+        ApiRequest<List<FeedbackRequest>> apiRequest = new ApiRequest<>();
+        apiRequest.setRequestId(UUID.randomUUID().toString());
+        apiRequest.setRequestDateTime(LocalDateTime.now());
+        apiRequest.setChannel("HACOF");
+        apiRequest.setData(feedbackRequests);
+
+        when(feedbackService.createBulkFeedback(feedbackRequests)).thenReturn(feedbackResponses);
+
+        ResponseEntity<ApiResponse<List<FeedbackResponse>>> response =
+                feedbackController.createBulkFeedback(apiRequest);
+
+        assertEquals(feedbackResponses, response.getBody().getData());
+        assertEquals("Bulk feedback created successfully", response.getBody().getMessage());
+        verify(feedbackService, times(1)).createBulkFeedback(feedbackRequests);
+    }
+
+    @Test
+    void testGetFeedbacksByCreatedByUserName() {
+        String username = "testUser";
+        List<FeedbackResponse> mockFeedbacks = Collections.singletonList(new FeedbackResponse());
+        when(feedbackService.getFeedbacksByCreatedByUserName(username)).thenReturn(mockFeedbacks);
+
+        ApiResponse<List<FeedbackResponse>> response = feedbackController.getFeedbacksByCreatedByUserName(username);
+
+        assertEquals(mockFeedbacks, response.getData());
+        assertEquals("Get feedbacks by created by username", response.getMessage());
+        verify(feedbackService, times(1)).getFeedbacksByCreatedByUserName(username);
+    }
+
+    @Test
+    void testGetFeedbacksByCreatedByUserNameAndHackathon() {
+        String username = "testUser";
+        Long hackathonId = 1L;
+        List<FeedbackResponse> mockFeedbacks = Collections.singletonList(new FeedbackResponse());
+        when(feedbackService.getFeedbacksByCreatedByUserNameAndHackathon(username, hackathonId))
+                .thenReturn(mockFeedbacks);
+
+        ApiResponse<List<FeedbackResponse>> response =
+                feedbackController.getFeedbacksByCreatedByUserNameAndHackathon(username, hackathonId);
+
+        assertEquals(mockFeedbacks, response.getData());
+        assertEquals("Get feedbacks by created by username and hackathon", response.getMessage());
+        verify(feedbackService, times(1)).getFeedbacksByCreatedByUserNameAndHackathon(username, hackathonId);
+    }
+
+    @Test
+    void testGetFeedbacksByHackathon() {
+        Long hackathonId = 1L;
+        List<FeedbackResponse> mockFeedbacks = Collections.singletonList(new FeedbackResponse());
+        when(feedbackService.getFeedbacksByHackathon(hackathonId)).thenReturn(mockFeedbacks);
+
+        ApiResponse<List<FeedbackResponse>> response = feedbackController.getFeedbacksByHackathon(hackathonId);
+
+        assertEquals(mockFeedbacks, response.getData());
+        assertEquals("Get feedbacks by hackathon", response.getMessage());
+        verify(feedbackService, times(1)).getFeedbacksByHackathon(hackathonId);
+    }
 }

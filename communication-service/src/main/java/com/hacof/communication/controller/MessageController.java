@@ -92,7 +92,7 @@ public class MessageController {
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())
                 .channel("HACOF")
-                .data(messageService.getMessagesByConversation(conversationId))
+                .data(messages)
                 .message("Get all messages in conversation")
                 .build();
     }
