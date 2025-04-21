@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hacof.analytics.constant.OrganizationStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -85,8 +86,9 @@ public class Hackathon extends AuditUserBase {
     @Column(name = "category")
     CategoryStatus category;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "organization")
-    String organization;
+    OrganizationStatus organization;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

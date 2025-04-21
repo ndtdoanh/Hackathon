@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.15.xsd">
+
+    <changeSet id="insert-hackathons" author="ndtdoanh">
+        <sql>
+            <![CDATA[
+            INSERT INTO hackathons (id, title, sub_title, banner_image_url, enroll_start_date, enroll_end_date, description,
+                                    information, start_date, end_date, max_teams, min_team_size, max_team_size, contact,
+                                    category, organization, status)
+            VALUES (1, 'AI Innovation Challenge', 'Exploring the Future of AI',
+                    'https://doanthanhnien.vn/Content/uploads/images/132311755918511627_Banner.jpg',
+                    '2025-01-01 08:00:00', '2025-12-01 23:59:00',
+                    'A hackathon focused on AI and Machine Learning.',
+                    'Participants will develop AI-powered solutions.',
+                    '2024-01-01 08:00:00', '2028-12-01 23:59:00',
+                    20, 3, 5, 'contact@ai-hackathon.com',
+                    'CODING', 'FPTU', 'ACTIVE'),
+
+                   (2, 'Blockchain Revolution', 'Building the Next-Gen Blockchain Apps',
+                    'https://i.chungta.vn/2021/01/07/hkt-6268-1610007165_1200x0.png',
+                    '2025-01-01 08:00:00', '2025-12-01 23:59:00',
+                    'A hackathon focused on decentralized applications and smart contracts.',
+                    'Teams will create blockchain-based solutions.',
+                    '2024-01-01 08:00:00', '2028-12-01 23:59:00',
+                    15, 2, 6, 'contact@blockchain-hack.com',
+                    'CODING', 'FPTU', 'ACTIVE'),
+
+                   (3, 'HealthTech Hackathon', 'Innovating Healthcare Solutions',
+                    'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=328,h=410,fit=crop/YKb3LN2zOWc05D7L/poster4-mnlW25JWQJu732Gj.jpg',
+                    '2025-01-01 08:00:00', '2025-12-01 23:59:00',
+                    'A hackathon to develop digital health solutions.',
+                    'Participants will design and prototype healthcare applications.',
+                    '2024-01-01 08:00:00', '2028-12-01 23:59:00',
+                    25, 3, 6, 'contact@healthtech-hack.com',
+                    'CODING', 'FPTU', 'ACTIVE'),
+
+                   (4, 'Cybersecurity Challenge', 'Defending the Digital World',
+                    'https://uet.vnu.edu.vn/wp-content/uploads/2024/08/B%C3%A0i-gi%E1%BB%9Bi-thi%E1%BB%87u-3-1024x1024.png',
+                    '2025-01-01 08:00:00', '2025-12-01 23:59:00',
+                    'A hackathon for ethical hackers and security researchers.',
+                    'Teams will work on securing digital assets.',
+                    '2024-01-01 08:00:00', '2028-12-01 23:59:00',
+                    18, 2, 5, 'contact@cybersecurity-hack.com',
+                    'CODING', 'FPTU', 'ACTIVE'),
+
+                   (5, 'GreenTech Innovation', 'Innovating Eco-friendly Technologies',
+                    'https://example.com/banner5.jpg',
+                    '2025-01-01 08:00:00', '2025-12-01 23:59:00',
+                    'A hackathon to promote eco-friendly and sustainable technologies.',
+                    'Participants will create green-tech solutions to tackle climate change.',
+                    '2024-01-01 08:00:00', '2028-12-01 23:59:00',
+                    30, 3, 7, 'contact@greentech-hack.com',
+                    'CODING', 'FPTU', 'ACTIVE');
+            ]]>
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

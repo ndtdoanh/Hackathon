@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.15.xsd">
+
+    <changeSet id="insert-permissions" author="ndtdoanh">
+        <sql>
+            <![CDATA[
+            INSERT INTO permissions (id, permission_name, api_path, method, module)
+            VALUES (1, 'GET_LOGS', '/api/v1/logs', 'GET', 'ACTIVITY_LOGS'),
+                   (2, 'GET_LOG', '/api/v1/logs/{Id}', 'GET', 'ACTIVITY_LOGS'),
+                   (3, 'SEARCH_LOGS', '/api/v1/logs/search', 'GET', 'ACTIVITY_LOGS'),
+
+                   (4, 'CREATE_DEVICE', '/api/v1/devices', 'POST', 'DEVICES'),
+                   (5, 'UPDATE_DEVICE', '/api/v1/devices/{Id}', 'PUT', 'DEVICES'),
+                   (6, 'DELETE_DEVICE', '/api/v1/devices/{Id}', 'DELETE', 'DEVICES'),
+
+                   (7, 'CREATE_PERMISSION', '/api/v1/permissions', 'POST', 'PERMISSIONS'),
+                   (8, 'UPDATE_PERMISSION', '/api/v1/permissions/{Id}', 'PUT', 'PERMISSIONS'),
+                   (9, 'DELETE_PERMISSION', '/api/v1/permissions/{Id}', 'DELETE', 'PERMISSIONS'),
+                   (10, 'DELETE_PERMISSION_FROM_ROLE', '/api/v1/permissions/{roleId}/permissions/{permissionId}', 'DELETE', 'PERMISSIONS'),
+
+                   (11, 'CREATE_ROLE', '/api/v1/roles', 'POST', 'ROLES'),
+                   (12, 'UPDATE_ROLE', '/api/v1/roles/{Id}', 'PUT', 'ROLES'),
+                   (13, 'DELETE_ROLE', '/api/v1/roles/{Id}', 'DELETE', 'ROLES'),
+
+                   (14, 'UPDATE_JUDGE_MENTOR_BY_ORGANIZER', '/api/v1/users/organizer', 'PUT', 'USERS'),
+                   (15, 'DELETE_USER', '/api/v1/users/{Id}', 'DELETE', 'USERS'),
+
+                   (16, 'CREATE_USER_DEVICE', '/api/v1/user-devices', 'POST', 'USER_DEVICES'),
+                   (17, 'UPDATE_USER_DEVICE', '/api/v1/user-devices/{Id}', 'PUT', 'USER_DEVICES'),
+                   (18, 'DELETE_USER_DEVICE', '/api/v1/user-devices/{Id}', 'DELETE', 'USER_DEVICES'),
+
+                   (19, 'CREATE_USER_DEVICE_TRACK', '/api/v1/user-device-tracks', 'POST', 'USER_DEVICE_TRACKS'),
+                   (20, 'UPDATE_USER_DEVICE_TRACK', '/api/v1/user-device-tracks/{Id}', 'PUT', 'USER_DEVICE_TRACKS'),
+                   (21, 'DELETE_USER_DEVICE_TRACK', '/api/v1/user-device-tracks/{Id}', 'DELETE', 'USER_DEVICE_TRACKS'),
+
+                   (22, 'CREATE_USER_HACKATHON', '/api/v1/user-hackathons', 'POST', 'USER_HACKATHONS'),
+                   (23, 'DELETE_USER_HACKATHON', '/api/v1/user-hackathons/{Id}', 'DELETE', 'USER_HACKATHONS'),
+
+                   (24, 'CREATE_NOTIFICATION', '/api/v1/notifications', 'POST', 'NOTIFICATIONS'),
+                   (25, 'DELETE_NOTIFICATION', '/api/v1/notifications/{Id}', 'DELETE', 'NOTIFICATIONS'),
+                   (26, 'UPDATE_READ_STATUS', '/api/v1/notifications/notification-deliveries/read-status', 'PUT', 'NOTIFICATIONS'),
+
+                   (27, 'CREATE_BLOG_POST', '/api/v1/blog-posts', 'POST', 'BLOG_POSTS'),
+                   (28, 'SUBMIT_BLOG_POST', '/api/v1/blog-posts/{id}/submit', 'PUT', 'BLOG_POSTS'),
+                   (29, 'APPROVE_BLOG_POST', '/api/v1/blog-posts/{id}/approve', 'PUT', 'BLOG_POSTS'),
+                   (30, 'REJECT_BLOG_POST', '/api/v1/blog-posts/{id}/reject', 'PUT', 'BLOG_POSTS'),
+                   (31, 'DELETE_BLOG_POST', '/api/v1/blog-posts/{id}', 'DELETE', 'BLOG_POSTS'),
+
+                   (32, 'CREATE_JUDGE_ROUND', '/api/v1/judge-rounds', 'POST', 'JUDGE_ROUNDS'),
+                   (33, 'UPDATE_JUDGE_ROUND', '/api/v1/judge-rounds/{id}', 'PUT', 'JUDGE_ROUNDS'),
+                   (34, 'DELETE_JUDGE_ROUND', '/api/v1/judge-rounds/{id}', 'DELETE', 'JUDGE_ROUNDS'),
+                   (35, 'UPDATE_JUDGE_ROUND_BY_JUDGE_ID', '/api/v1/judge-rounds/judge/{judgeId}', 'PUT', 'JUDGE_ROUNDS'),
+                   (36, 'DELETE_JUDGE_ROUND_BY_JUDGE_ID_AND_ROUND_ID', '/api/v1/judge-rounds/by-judge-round', 'DELETE', 'JUDGE_ROUNDS'),
+
+                   (37, 'CREATE_ROUND_MARK_CRITERIA', '/api/v1/roundmarkcriteria', 'POST', 'ROUND_MARK_CRITERIA'),
+                   (38, 'UPDATE_ROUND_MARK_CRITERIA', '/api/v1/roundmarkcriteria/{id}', 'PUT', 'ROUND_MARK_CRITERIA'),
+                   (39, 'DELETE_ROUND_MARK_CRITERIA', '/api/v1/roundmarkcriteria/{id}', 'DELETE', 'ROUND_MARK_CRITERIA'),
+
+                   (40, 'CREATE_TEAM_ROUND_JUDGE', '/api/v1/teamroundjudges', 'POST', 'TEAM_ROUND_JUDGE'),
+                   (41, 'UPDATE_TEAM_ROUND_JUDGE', '/api/v1/teamroundjudges/{id}', 'PUT', 'TEAM_ROUND_JUDGE'),
+                   (42, 'DELETE_TEAM_ROUND_JUDGE', '/api/v1/teamroundjudges/{id}', 'DELETE', 'TEAM_ROUND_JUDGE'),
+                   (43, 'DELETE_BY_TEAM_ROUND_AND_JUDGE', '/api/v1/teamroundjudges/by-team-round-judge', 'DELETE', 'TEAM_ROUND_JUDGE'),
+
+                   (44, 'CREATE_JUDGE_SUBMISSION', '/api/v1/judge-submissions', 'POST', 'JUDGE_SUBMISSIONS'),
+                   (45, 'UPDATE_JUDGE_SUBMISSION', '/api/v1/judge-submissions/{id}', 'PUT', 'JUDGE_SUBMISSIONS'),
+                   (46, 'DELETE_JUDGE_SUBMISSION', '/api/v1/judge-submissions/{id}', 'DELETE', 'JUDGE_SUBMISSIONS'),
+
+                   (47, 'CREATE_SUBMISSION', '/api/v1/submissions', 'POST', 'SUBMISSIONS'),
+                   (48, 'UPDATE_SUBMISSION', '/api/v1/submissions/{id}', 'PUT', 'SUBMISSIONS'),
+                   (49, 'DELETE_SUBMISSION', '/api/v1/submissions/{id}', 'DELETE', 'SUBMISSIONS'),
+
+                   (50, 'CREATE_FEEDBACK', '/api/v1/feedbacks', 'POST', 'FEEDBACKS'),
+                   (51, 'DELETE_FEEDBACK', '/api/v1/feedbacks/{id}', 'DELETE', 'FEEDBACKS'),
+
+                   (52, 'DELETE_FEEDBACK_DETAIL', '/api/v1/feedback-details/{id}', 'DELETE', 'FEEDBACK_DETAILS');
+
+            ]]>
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

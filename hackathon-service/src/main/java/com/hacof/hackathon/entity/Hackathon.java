@@ -86,6 +86,7 @@ public class Hackathon extends AuditUserBase {
     @Column(name = "category")
     CategoryStatus category;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "organization")
     OrganizationStatus organization;
 
