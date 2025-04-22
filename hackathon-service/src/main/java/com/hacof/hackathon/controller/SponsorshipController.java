@@ -278,18 +278,19 @@ public class SponsorshipController {
     }
 
 
-    @PutMapping("/details/update-files/{id}")
-    public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailFiles(
+    @PutMapping("/details/update-info/{id}")
+    public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailInfo(
             @PathVariable Long id,
-            @RequestBody CommonRequest<List<String>> request) {
+            @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailRequestDTO> request) {
 
-        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.updateFiles(id, request.getData());
+        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.updateInfo(
+                id, request.getData());
 
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Files updated successfully"),
+                new CommonResponse.Result("0000", "Updated successfully"),
                 dto));
     }
 
