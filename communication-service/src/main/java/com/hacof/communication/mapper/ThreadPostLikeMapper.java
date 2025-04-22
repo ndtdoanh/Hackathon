@@ -97,7 +97,7 @@ public class ThreadPostLikeMapper {
         forumThreadResponseDTO.setThreadPosts(threadPostList);
 
         // Set ForumThread into ThreadPostResponseDTO
-        threadPostResponseDTO.setForumThread(forumThreadResponseDTO);
+        threadPostResponseDTO.setForumThreadId(String.valueOf(threadPostLike.getThreadPost().getForumThread().getId()));
 
         // Set the full ThreadPostResponseDTO in the response DTO
         responseDTO.setThreadPost(threadPostResponseDTO);

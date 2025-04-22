@@ -15,5 +15,5 @@ public interface ThreadPostService {
 
     ThreadPostResponseDTO updateThreadPost(Long id, ThreadPostRequestDTO requestDTO);
 
-    void deleteThreadPost(Long id);
+    ThreadPostResponseDTO deleteThreadPost(Long id);
 }

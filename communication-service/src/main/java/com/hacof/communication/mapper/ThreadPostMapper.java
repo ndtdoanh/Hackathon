@@ -30,15 +30,17 @@ public class ThreadPostMapper {
         ThreadPostResponseDTO responseDTO = new ThreadPostResponseDTO();
         responseDTO.setId(String.valueOf(threadPost.getId()));
         responseDTO.setContent(threadPost.getContent());
-        responseDTO.setDeleted(threadPost.isDeleted());
+        responseDTO.setIsDeleted(threadPost.isDeleted());
         responseDTO.setCreatedByUserName(
                 threadPost.getCreatedBy() != null ? threadPost.getCreatedBy().getUsername() : null);
         responseDTO.setCreatedAt(threadPost.getCreatedDate());
         responseDTO.setUpdatedAt(threadPost.getLastModifiedDate());
-
+        responseDTO.setDeletedById(
+                String.valueOf(threadPost.getDeletedBy() != null ? threadPost.getDeletedBy().getId() : null)
+        );
         // **Mapping ForumThread**
-        responseDTO.setForumThread(mapForumThread(threadPost));
-
+//        responseDTO.setForumThread(mapForumThread(threadPost));
+        responseDTO.setForumThreadId(String.valueOf(threadPost.getForumThread().getId()));
         // **Mapping Likes**
         responseDTO.setThreadPostLikes(mapThreadPostLikes(threadPost));
 

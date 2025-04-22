@@ -30,6 +30,7 @@ public class ThreadPostServiceImpl implements ThreadPostService {
     @Autowired
     private UserRepository userRepository;
 
+    private ThreadPostMapper threadPostMapper;
     @Override
     public ThreadPostResponseDTO createThreadPost(ThreadPostRequestDTO requestDTO) {
         Long forumThreadId = Long.parseLong(requestDTO.getForumThreadId());
@@ -69,7 +70,7 @@ public class ThreadPostServiceImpl implements ThreadPostService {
     }
 
     @Override
-    public void deleteThreadPost(Long id) {
+    public ThreadPostResponseDTO deleteThreadPost(Long id) {
         ThreadPost threadPost = threadPostRepository
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + id));
@@ -85,6 +86,8 @@ public class ThreadPostServiceImpl implements ThreadPostService {
                 .orElseThrow(() -> new RuntimeException("User not found: " + currentUsername));
 
         threadPost.setDeletedBy(currentUser);
-        threadPostRepository.save(threadPost);
+        ThreadPost updated = threadPostRepository.save(threadPost);
+
+        return threadPostMapper.toResponseDTO(updated);
     }
 }

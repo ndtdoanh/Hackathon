@@ -11,12 +11,22 @@ import lombok.Setter;
 public class ThreadPostResponseDTO {
 
     String id;
-    ForumThreadResponseDTO forumThread;
+//    ForumThreadResponseDTO forumThread;
+    String forumThreadId;
     String content;
     boolean isDeleted;
     String createdByUserName;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    String deletedById;
     List<ThreadPostLikeResponseDTO> threadPostLikes;
     List<ThreadPostReportResponseDTO> threadPostReports;
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        isDeleted = isDeleted;
+    }
 }

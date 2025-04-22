@@ -135,13 +135,14 @@ public class ThreadPostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<String>> deleteThreadPost(@PathVariable Long id) {
-        CommonResponse<String> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<ThreadPostResponseDTO>> deleteThreadPost(@PathVariable Long id) {
+        CommonResponse<ThreadPostResponseDTO> response = new CommonResponse<>();
         try {
-            threadPostService.deleteThreadPost(id);
+            ThreadPostResponseDTO dto = threadPostService.deleteThreadPost(id);
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Thread post deleted successfully!");
+            response.setData(dto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
             setDefaultResponseFields(response);
