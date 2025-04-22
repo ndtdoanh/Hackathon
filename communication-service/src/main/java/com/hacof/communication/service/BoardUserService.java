@@ -11,7 +11,7 @@ public interface BoardUserService {
 
     BoardUserResponseDTO updateBoardUser(Long id, BoardUserRequestDTO requestDTO);
 
-    void deleteBoardUser(Long id);
+    BoardUserResponseDTO deleteBoardUser(Long id);
 
     BoardUserResponseDTO getBoardUser(Long id);
 

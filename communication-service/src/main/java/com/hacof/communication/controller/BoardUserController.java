@@ -94,13 +94,14 @@ public class BoardUserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<String>> deleteBoardUser(@PathVariable Long id) {
-        CommonResponse<String> response = new CommonResponse<>();
+    public ResponseEntity<CommonResponse<BoardUserResponseDTO>> deleteBoardUser(@PathVariable Long id) {
+        CommonResponse<BoardUserResponseDTO> response = new CommonResponse<>();
         try {
-            boardUserService.deleteBoardUser(id);
+            BoardUserResponseDTO dto = boardUserService.deleteBoardUser(id);
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("BoardUser deleted successfully!");
+            response.setData(dto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
             setDefaultResponseFields(response);
@@ -114,6 +115,7 @@ public class BoardUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<BoardUserResponseDTO>> getBoardUser(@PathVariable Long id) {

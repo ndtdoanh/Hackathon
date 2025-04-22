@@ -20,7 +20,16 @@ public class BoardUserResponseDTO {
     private String boardId;
     private String userId;
     private String role; // ADMIN, MEMBER
-    private boolean isDeleted;
+    boolean isDeleted;
+    String deletedById;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        isDeleted = isDeleted;
+    }
 }

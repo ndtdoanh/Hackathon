@@ -21,6 +21,7 @@ public class BoardUserMapper {
                 .userId(String.valueOf(boardUser.getUser().getId()))
                 .role(boardUser.getRole() != null ? boardUser.getRole().name() : null)
                 .isDeleted(boardUser.isDeleted())
+                .deletedById(boardUser.getDeletedBy() != null ? String.valueOf(boardUser.getDeletedBy().getId()) : null)
                 .createdAt(boardUser.getCreatedDate())
                 .updatedAt(boardUser.getLastModifiedDate())
                 .build();

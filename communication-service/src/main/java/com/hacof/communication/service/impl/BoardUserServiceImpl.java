@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.communication.constant.BoardUserRole;
@@ -108,15 +109,26 @@ public class BoardUserServiceImpl implements BoardUserService {
     }
 
     @Override
-    public void deleteBoardUser(Long id) {
-        // Check if the BoardUser exists
+    public BoardUserResponseDTO deleteBoardUser(Long id) {
+        // Tìm BoardUser
         BoardUser boardUser = boardUserRepository
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
 
-        // Mark as deleted (soft delete)
+        if (boardUser.isDeleted()) {
+            throw new IllegalArgumentException("BoardUser with ID " + id + " has already been deleted.");
+        }
+
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new RuntimeException("User not found: " + currentUsername));
+
         boardUser.setDeleted(true);
-        boardUserRepository.save(boardUser);
+        boardUser.setDeletedBy(currentUser);
+        boardUser = boardUserRepository.save(boardUser);
+
+        // Trả về DTO
+        return boardUserMapper.toDto(boardUser);
     }
 
     @Override
