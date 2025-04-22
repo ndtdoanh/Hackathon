@@ -3,22 +3,23 @@ package com.hacof.hackathon.service;
 import java.util.List;
 
 import com.hacof.hackathon.dto.FileUrlResponse;
-import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailRequestDTO;
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailResponseDTO;
 
 public interface SponsorshipHackathonDetailService {
     void delete(Long id);
 
-    List<SponsorshipHackathonDetailDTO> getAll();
+    List<SponsorshipHackathonDetailResponseDTO> getAll();
 
-    SponsorshipHackathonDetailDTO getById(Long id);
+    SponsorshipHackathonDetailResponseDTO getById(Long id);
 
-    List<SponsorshipHackathonDetailDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId);
+    List<SponsorshipHackathonDetailResponseDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId);
 
     List<FileUrlResponse> getFileUrlsBySponsorshipHackathonDetailId(Long sponsorshipHackathonDetailId);
 
-    SponsorshipHackathonDetailDTO createWithFiles(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+    SponsorshipHackathonDetailResponseDTO createWithFiles(SponsorshipHackathonDetailRequestDTO dto);
 
-    SponsorshipHackathonDetailDTO updateInfo(Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO);
+    SponsorshipHackathonDetailResponseDTO updateInfo(Long id, SponsorshipHackathonDetailRequestDTO dto);
 
-    SponsorshipHackathonDetailDTO updateFiles(Long id, List<String> fileUrls);
+    SponsorshipHackathonDetailResponseDTO updateFiles(Long id, List<String> fileUrls);
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailRequestDTO;
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailResponseDTO;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -113,80 +115,63 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     //    }
 
     @Override
-    public SponsorshipHackathonDetailDTO createWithFiles(SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO) {
+    public SponsorshipHackathonDetailResponseDTO createWithFiles(SponsorshipHackathonDetailRequestDTO dto) {
         log.info("Creating new sponsorship hackathon detail");
 
         SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonRepository
-                .findById(Long.parseLong(sponsorshipHackathonDetailDTO.getSponsorshipHackathonId()))
+                .findById(Long.parseLong(dto.getSponsorshipHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
 
-        SponsorshipHackathonDetail sponsorshipHackathonDetail =
-                SponsorshipHackathonDetailMapperManual.toEntity(sponsorshipHackathonDetailDTO);
-        sponsorshipHackathonDetail.setSponsorshipHackathon(sponsorshipHackathon);
+        SponsorshipHackathonDetail entity = SponsorshipHackathonDetailMapperManual.toEntity(dto);
+        entity.setSponsorshipHackathon(sponsorshipHackathon);
 
-        // Handle file URLs if provided
-        if (sponsorshipHackathonDetailDTO.getFileUrls() != null
-                && !sponsorshipHackathonDetailDTO.getFileUrls().isEmpty()) {
-            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(
-                    sponsorshipHackathonDetailDTO.getFileUrls());
-            for (FileUrl file : fileUrls) {
-                file.setSponsorshipHackathonDetail(sponsorshipHackathonDetail); // Associate file with detail
-            }
+        final SponsorshipHackathonDetail finalEntity = entity;
+
+        if (dto.getFileUrls() != null && !dto.getFileUrls().isEmpty()) {
+            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(dto.getFileUrls());
+            fileUrls.forEach(f -> f.setSponsorshipHackathonDetail(finalEntity));
             fileUrlRepository.saveAll(fileUrls);
         }
 
-        sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository.save(sponsorshipHackathonDetail);
-        return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
+        entity = sponsorshipHackathonDetailRepository.save(entity);
+        return SponsorshipHackathonDetailMapperManual.toDto(entity);
+
     }
 
     @Override
-    public SponsorshipHackathonDetailDTO updateInfo(
-            Long id, SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO) {
+    public SponsorshipHackathonDetailResponseDTO updateInfo(Long id, SponsorshipHackathonDetailRequestDTO dto) {
         log.info("Updating sponsorship hackathon detail info with id: {}", id);
 
-        SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository
+        SponsorshipHackathonDetail entity = sponsorshipHackathonDetailRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found"));
 
         SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonRepository
-                .findById(Long.parseLong(sponsorshipHackathonDetailDTO.getSponsorshipHackathonId()))
+                .findById(Long.parseLong(dto.getSponsorshipHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
 
-        sponsorshipHackathonDetail.setMoneySpent(sponsorshipHackathonDetailDTO.getMoneySpent());
-        sponsorshipHackathonDetail.setContent(sponsorshipHackathonDetailDTO.getContent());
-        sponsorshipHackathonDetail.setStatus(
-                SponsorshipDetailStatus.valueOf(sponsorshipHackathonDetailDTO.getStatus()));
-        sponsorshipHackathonDetail.setTimeFrom(sponsorshipHackathonDetailDTO.getTimeFrom());
-        sponsorshipHackathonDetail.setTimeTo(sponsorshipHackathonDetailDTO.getTimeTo());
+        SponsorshipHackathonDetailMapperManual.updateEntityFromDto(dto, entity);
+        entity.setSponsorshipHackathon(sponsorshipHackathon);
 
-        sponsorshipHackathonDetail.setSponsorshipHackathon(sponsorshipHackathon);
-
-        sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository.save(sponsorshipHackathonDetail);
-        return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
+        entity = sponsorshipHackathonDetailRepository.save(entity);
+        return SponsorshipHackathonDetailMapperManual.toDto(entity);
     }
 
     @Override
-    public SponsorshipHackathonDetailDTO updateFiles(Long id, List<String> fileUrls) {
+    public SponsorshipHackathonDetailResponseDTO updateFiles(Long id, List<String> fileUrls) {
         log.info("Updating sponsorship hackathon detail files for id: {}", id);
 
-        SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailRepository
+        SponsorshipHackathonDetail entity = sponsorshipHackathonDetailRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found"));
 
         if (fileUrls != null && !fileUrls.isEmpty()) {
-            // Find the file URLs in the database and associate them with the sponsorshipHackathonDetail
-            List<FileUrl> newFileUrls =
-                    fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(fileUrls);
-
-            for (FileUrl file : newFileUrls) {
-                file.setSponsorshipHackathonDetail(sponsorshipHackathonDetail); // Associate file with detail
-            }
-
-            // Save all new files
+            List<FileUrl> newFileUrls = fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(fileUrls);
+            newFileUrls.forEach(f -> f.setSponsorshipHackathonDetail(entity));
             fileUrlRepository.saveAll(newFileUrls);
         }
 
-        return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
+        return SponsorshipHackathonDetailMapperManual.toDto(entity);
     }
 
     @Override
@@ -199,7 +184,7 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     }
 
     @Override
-    public List<SponsorshipHackathonDetailDTO> getAll() {
+    public List<SponsorshipHackathonDetailResponseDTO> getAll() {
         log.info("Fetching all sponsorship hackathon details");
         return sponsorshipHackathonDetailRepository.findAll().stream()
                 .map(SponsorshipHackathonDetailMapperManual::toDto)
@@ -207,15 +192,14 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     }
 
     @Override
-    public SponsorshipHackathonDetailDTO getById(Long id) {
-        Optional<SponsorshipHackathonDetail> sponsorshipHackathonDetailOptional =
-                sponsorshipHackathonDetailRepository.findById(id);
-        SponsorshipHackathonDetail sponsorshipHackathonDetail = sponsorshipHackathonDetailOptional.orElse(null);
-        return SponsorshipHackathonDetailMapperManual.toDto(sponsorshipHackathonDetail);
+    public SponsorshipHackathonDetailResponseDTO getById(Long id) {
+        return sponsorshipHackathonDetailRepository.findById(id)
+                .map(SponsorshipHackathonDetailMapperManual::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found"));
     }
 
     @Override
-    public List<SponsorshipHackathonDetailDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId) {
+    public List<SponsorshipHackathonDetailResponseDTO> getAllBySponsorshipHackathonId(String sponsorshipHackathonId) {
         return sponsorshipHackathonDetailRepository
                 .findAllBySponsorshipHackathonId(Long.parseLong(sponsorshipHackathonId))
                 .stream()
