@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardUserRequestDTO {
-    private Long boardId;
-    private Long userId;
+    private String boardId;
+    private String userId;
     private String role; // ADMIN, MEMBER
 }

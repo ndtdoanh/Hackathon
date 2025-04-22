@@ -15,12 +15,14 @@ public class BoardUserMapper {
     public BoardUserResponseDTO toDto(BoardUser boardUser) {
         return BoardUserResponseDTO.builder()
                 .id(String.valueOf(boardUser.getId()))
-                .board(mapBoardToDto(boardUser.getBoard()))
-                .user(mapUserToDto(boardUser.getUser()))
+//                .board(mapBoardToDto(boardUser.getBoard()))
+//                .user(mapUserToDto(boardUser.getUser()))
+                .boardId(String.valueOf(boardUser.getBoard().getId()))
+                .userId(String.valueOf(boardUser.getUser().getId()))
                 .role(boardUser.getRole() != null ? boardUser.getRole().name() : null)
                 .isDeleted(boardUser.isDeleted())
-                .createdDate(boardUser.getCreatedDate())
-                .lastModifiedDate(boardUser.getLastModifiedDate())
+                .createdAt(boardUser.getCreatedDate())
+                .updatedAt(boardUser.getLastModifiedDate())
                 .build();
     }
 
