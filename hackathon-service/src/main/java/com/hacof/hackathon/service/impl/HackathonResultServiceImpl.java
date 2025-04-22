@@ -38,14 +38,21 @@ public class HackathonResultServiceImpl implements HackathonResultService {
     @Override
     public HackathonResultDTO create(HackathonResultDTO hackathonResultDTO) {
         validateForeignKeys(hackathonResultDTO);
+
+        Long hackathonId = Long.parseLong(hackathonResultDTO.getHackathonId());
+        Long teamId = Long.parseLong(hackathonResultDTO.getTeamId());
+
+        boolean exists = hackathonResultRepository.existsByHackathonIdAndTeamId(hackathonId, teamId);
+        if (exists) {
+            throw new IllegalArgumentException("Team already has a result in this hackathon");
+        }
+
         HackathonResult hackathonResult = HackathonResultMapperManual.toEntity(hackathonResultDTO);
 
-        hackathonResult.setHackathon(hackathonRepository
-                .findById(Long.parseLong(hackathonResultDTO.getHackathonId()))
+        hackathonResult.setHackathon(hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
 
-        hackathonResult.setTeam(teamRepository
-                .findById(Long.parseLong(hackathonResultDTO.getTeamId()))
+        hackathonResult.setTeam(teamRepository.findById(teamId)
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
 
         return HackathonResultMapperManual.toDto(hackathonResultRepository.save(hackathonResult));
@@ -95,14 +102,20 @@ public class HackathonResultServiceImpl implements HackathonResultService {
 
         List<HackathonResult> hackathonResults = hackathonResultDTOs.stream()
                 .map(dto -> {
+                    Long hackathonId = Long.parseLong(dto.getHackathonId());
+                    Long teamId = Long.parseLong(dto.getTeamId());
+                    boolean exists = hackathonResultRepository.existsByHackathonIdAndTeamId(hackathonId, teamId);
+                    if (exists) {
+                        throw new IllegalArgumentException(
+                                "Team with ID " + teamId + " already has a result in hackathon ID " + hackathonId);
+                    }
+
                     HackathonResult entity = HackathonResultMapperManual.toEntity(dto);
 
-                    entity.setHackathon(hackathonRepository
-                            .findById(Long.parseLong(dto.getHackathonId()))
+                    entity.setHackathon(hackathonRepository.findById(hackathonId)
                             .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
 
-                    entity.setTeam(teamRepository
-                            .findById(Long.parseLong(dto.getTeamId()))
+                    entity.setTeam(teamRepository.findById(teamId)
                             .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
 
                     return entity;

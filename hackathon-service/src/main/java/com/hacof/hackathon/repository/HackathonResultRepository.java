@@ -17,4 +17,7 @@ public interface HackathonResultRepository extends JpaRepository<HackathonResult
             + "LEFT JOIN FETCH th.hackathon "
             + "WHERE r.hackathon.id = :hackathonId")
     List<HackathonResult> findDetailedByHackathonId(@Param("hackathonId") Long hackathonId);
+
+    boolean existsByHackathonIdAndTeamId(Long hackathonId, Long teamId);
+
 }
