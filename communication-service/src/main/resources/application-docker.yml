@@ -16,8 +16,8 @@ spring:
           starttls:
             enable: true
   datasource:
-    url: "jdbc:mysql://localhost:3306/hacof"
-    driverClassName: "com.mysql.cj.jdbc.Driver"
+    url: 'jdbc:mysql://mysql:3306/hacof'
+    driverClassName: 'com.mysql.cj.jdbc.Driver'
     username: root
     password: 12345
 
@@ -32,7 +32,7 @@ spring:
     max-request-size: 15MB
 
 jwt:
-  signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
+  signerKey: 'ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3'
   valid-duration: 3600
   refreshable-duration: 864000
 
@@ -46,7 +46,7 @@ aws:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-server:8761/eureka
     register-with-eureka: true
     fetch-registry: true
   instance:
