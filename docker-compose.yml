@@ -20,10 +20,17 @@ services:
       - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
       - "5000:5000"
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
     depends_on:
       - elasticsearch
     networks:
       - microservice-networks
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9600" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.14
@@ -77,8 +84,12 @@ services:
     networks:
       - microservice-networks
     depends_on:
-      - eureka-server
-      - redis
+      eureka-server:
+        condition: service_started
+      redis:
+        condition: service_started
+      logstash:
+        condition: service_started
 
   redis:
     image: redis:latest
@@ -105,6 +116,9 @@ services:
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
       - clientId=${CLIENT_ID}
       - clientSecret=${CLIENT_SECRET}
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5000
+      - SPRING_APPLICATION_NAME=identity-service
     networks:
       - microservice-networks
     depends_on:
@@ -114,6 +128,8 @@ services:
         condition: service_started
       redis:
         condition: service_started
+      logstash:
+        condition: service_healthy
 
   hackathon-service:
     build:
@@ -128,6 +144,9 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5000
+      - SPRING_APPLICATION_NAME=hackathon-service
     networks:
       - microservice-networks
     depends_on:
@@ -137,6 +156,8 @@ services:
         condition: service_started
       identity-service:
         condition: service_started
+      logstash:
+        condition: service_healthy
 
   submission-service:
     build:
@@ -151,6 +172,9 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5000
+      - SPRING_APPLICATION_NAME=submission-service
     networks:
       - microservice-networks
     depends_on:
@@ -160,6 +184,8 @@ services:
         condition: service_started
       identity-service:
         condition: service_started
+      logstash:
+        condition: service_healthy
 
   communication-service:
     build:
@@ -174,6 +200,9 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5000
+      - SPRING_APPLICATION_NAME=communication-service
     networks:
       - microservice-networks
     depends_on:
@@ -183,6 +212,8 @@ services:
         condition: service_started
       identity-service:
         condition: service_started
+      logstash:
+        condition: service_healthy
 
   analytics-service:
     build:
@@ -197,6 +228,9 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5000
+      - SPRING_APPLICATION_NAME=analytics-service
     networks:
       - microservice-networks
     depends_on:
@@ -206,6 +240,8 @@ services:
         condition: service_started
       identity-service:
         condition: service_started
+      logstash:
+        condition: service_healthy
 
 networks:
   microservice-networks:

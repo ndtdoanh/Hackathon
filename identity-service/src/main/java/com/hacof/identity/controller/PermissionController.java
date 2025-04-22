@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PermissionController {
     PermissionService permissionService;
+    ObjectMapper objectMapper;
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_PERMISSION')")
@@ -50,7 +53,11 @@ public class PermissionController {
                 .data(permissionResponse)
                 .message("Permission created successfully")
                 .build();
-        log.debug(response.toString());
+        try {
+            log.debug("API Response: {}", objectMapper.writeValueAsString(response));
+        } catch (JsonProcessingException e) {
+            log.debug("Failed to serialize API response: {}", response.getRequestId());
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
