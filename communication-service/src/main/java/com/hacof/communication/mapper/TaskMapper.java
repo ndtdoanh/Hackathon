@@ -39,6 +39,8 @@ public class TaskMapper {
                         .fileName(fileUrl.getFileName())
                         .fileType(fileUrl.getFileType())
                         .fileSize(fileUrl.getFileSize())
+                        .createdAt(fileUrl.getCreatedDate())
+                        .updatedAt(fileUrl.getLastModifiedDate())
                         .build())
                 .collect(Collectors.toList())
                 : null;

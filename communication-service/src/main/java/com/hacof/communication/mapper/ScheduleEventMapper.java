@@ -49,7 +49,9 @@ public class ScheduleEventMapper {
                                 fileUrl.getFileName(),
                                 fileUrl.getFileUrl(),
                                 fileUrl.getFileType(),
-                                fileUrl.getFileSize()))
+                                fileUrl.getFileSize(),
+                                fileUrl.getCreatedDate(),
+                                fileUrl.getLastModifiedDate()))
                         .collect(Collectors.toList())
                 : new ArrayList<>();
 
