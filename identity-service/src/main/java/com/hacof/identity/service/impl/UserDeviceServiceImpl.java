@@ -1,6 +1,7 @@
 package com.hacof.identity.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -132,34 +133,45 @@ public class UserDeviceServiceImpl implements UserDeviceService {
                     .findById(Long.valueOf(request.getUserId()))
                     .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
         }
+
         if (request.getDeviceId() != null) {
             existingUserDevice.setDevice(deviceRepository
                     .findById(Long.valueOf(request.getDeviceId()))
                     .orElseThrow(() -> new AppException(ErrorCode.DEVICE_NOT_FOUND)));
         }
-        if (files != null && !files.isEmpty()) {
-            List<FileUrl> fileUrlList = files.stream()
-                    .map(file -> {
-                        try {
-                            String fileUrl = s3Service.uploadFile(
-                                    file.getInputStream(),
-                                    file.getOriginalFilename(),
-                                    file.getSize(),
-                                    file.getContentType());
 
-                            return new FileUrl(
-                                    file.getOriginalFilename(),
-                                    fileUrl,
-                                    file.getContentType(),
-                                    (int) file.getSize(),
-                                    existingUserDevice);
-                        } catch (IOException e) {
-                            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
-                        }
-                    })
-                    .collect(Collectors.toList());
-            fileUrlRepository.saveAll(fileUrlList);
-            existingUserDevice.setFileUrls(fileUrlList);
+        if (files != null && !files.isEmpty()) {
+            List<FileUrl> fileUrlList = new ArrayList<>();
+
+            for (MultipartFile file : files) {
+                if (file != null && !file.isEmpty() &&
+                        file.getOriginalFilename() != null &&
+                        !file.getOriginalFilename().trim().isEmpty()) {
+                    try {
+                        String fileUrl = s3Service.uploadFile(
+                                file.getInputStream(),
+                                file.getOriginalFilename(),
+                                file.getSize(),
+                                file.getContentType());
+
+                        FileUrl newFileUrl = new FileUrl(
+                                file.getOriginalFilename(),
+                                fileUrl,
+                                file.getContentType(),
+                                (int) file.getSize(),
+                                existingUserDevice);
+
+                        fileUrlList.add(newFileUrl);
+                    } catch (IOException e) {
+                        throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                    }
+                }
+            }
+
+            if (!fileUrlList.isEmpty()) {
+                existingUserDevice.getFileUrls().addAll(fileUrlList);
+                fileUrlRepository.saveAll(fileUrlList);
+            }
         }
 
         UserDevice updatedUserDevice = userDeviceRepository.save(existingUserDevice);

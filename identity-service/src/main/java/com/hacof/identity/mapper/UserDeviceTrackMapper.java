@@ -26,10 +26,7 @@ public interface UserDeviceTrackMapper {
     @Mapping(target = "updatedAt", source = "lastModifiedDate")
     UserDeviceTrackResponse toUserDeviceTrackResponse(UserDeviceTrack userDeviceTrack);
 
-    @Mapping(
-            target = "userDevice.id",
-            source = "userDeviceId",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
     @Mapping(
             target = "deviceQualityStatus",
             source = "deviceQualityStatus",

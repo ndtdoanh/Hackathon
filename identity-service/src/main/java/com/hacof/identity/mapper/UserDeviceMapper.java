@@ -35,14 +35,6 @@ public interface UserDeviceMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(
-            target = "user.id",
-            source = "userId",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(
-            target = "device.id",
-            source = "deviceId",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(
             target = "timeFrom",
             source = "timeFrom",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
