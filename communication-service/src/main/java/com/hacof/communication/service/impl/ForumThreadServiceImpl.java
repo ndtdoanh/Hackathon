@@ -133,9 +133,8 @@ public class ForumThreadServiceImpl implements ForumThreadService {
     @Override
     public List<ForumThreadResponseDTO> getForumThreadsByCategoryId(Long categoryId) {
         List<ForumThread> forumThreads = forumThreadRepository.findByForumCategoryId(categoryId);
-        if (forumThreads.isEmpty()) {
-            throw new IllegalArgumentException("No forum threads found for category ID: " + categoryId);
-        }
-        return forumThreads.stream().map(ForumThreadMapper::toResponseDTO).collect(Collectors.toList());
+        return forumThreads.stream()
+                .map(ForumThreadMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 }
