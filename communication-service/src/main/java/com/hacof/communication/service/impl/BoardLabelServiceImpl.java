@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.repository.TaskLabelRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ public class BoardLabelServiceImpl implements BoardLabelService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private TaskLabelRepository taskLabelRepository;
 
     @Autowired
     private BoardLabelMapper boardLabelMapper;
@@ -106,11 +111,14 @@ public class BoardLabelServiceImpl implements BoardLabelService {
     }
 
     @Override
+    @Transactional
     public void deleteBoardLabel(Long id) {
         Optional<BoardLabel> boardLabelOptional = boardLabelRepository.findById(id);
         if (!boardLabelOptional.isPresent()) {
             throw new IllegalArgumentException("Board label with ID " + id + " not found!");
         }
+
+        taskLabelRepository.deleteAllByBoardLabelId(id);
         boardLabelRepository.deleteById(id);
     }
 

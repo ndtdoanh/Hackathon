@@ -15,4 +15,6 @@ public interface TaskLabelRepository extends JpaRepository<TaskLabel, Long> {
     Optional<TaskLabel> findByTaskAndBoardLabel(Task task, BoardLabel boardLabel);
 
     List<TaskLabel> findByTaskId(Long taskId);
+
+    void deleteAllByBoardLabelId(Long boardLabelId);
 }
