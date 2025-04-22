@@ -1,6 +1,7 @@
 package com.hacof.identity.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,35 +115,43 @@ public class UserDeviceTrackServiceImpl implements UserDeviceTrackService {
         userDeviceTrackMapper.updateUserDeviceTrack(request, existingUserDeviceTrack);
 
         if (request.getUserDeviceId() != null) {
-            userDeviceRepository
+            existingUserDeviceTrack.setUserDevice(userDeviceRepository
                     .findById(Long.valueOf(request.getUserDeviceId()))
-                    .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED));
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_DEVICE_NOT_EXISTED)));
         }
 
         if (files != null && !files.isEmpty()) {
-            List<FileUrl> fileUrlList = files.stream()
-                    .map(file -> {
-                        try {
-                            String fileUrl = s3Service.uploadFile(
-                                    file.getInputStream(),
-                                    file.getOriginalFilename(),
-                                    file.getSize(),
-                                    file.getContentType());
+            List<FileUrl> fileUrlList = new ArrayList<>();
 
-                            return new FileUrl(
-                                    file.getOriginalFilename(),
-                                    fileUrl,
-                                    file.getContentType(),
-                                    (int) file.getSize(),
-                                    existingUserDeviceTrack);
-                        } catch (IOException e) {
-                            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
-                        }
-                    })
-                    .collect(Collectors.toList());
+            for (MultipartFile file : files) {
+                if (file != null && !file.isEmpty() &&
+                        file.getOriginalFilename() != null &&
+                        !file.getOriginalFilename().trim().isEmpty()) {
+                    try {
+                        String fileUrl = s3Service.uploadFile(
+                                file.getInputStream(),
+                                file.getOriginalFilename(),
+                                file.getSize(),
+                                file.getContentType());
 
-            fileUrlRepository.saveAll(fileUrlList);
-            existingUserDeviceTrack.setFileUrls(fileUrlList);
+                        FileUrl newFileUrl = new FileUrl(
+                                file.getOriginalFilename(),
+                                fileUrl,
+                                file.getContentType(),
+                                (int) file.getSize(),
+                                existingUserDeviceTrack);
+
+                        fileUrlList.add(newFileUrl);
+                    } catch (IOException e) {
+                        throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                    }
+                }
+            }
+
+            if (!fileUrlList.isEmpty()) {
+                existingUserDeviceTrack.setFileUrls(fileUrlList);
+                fileUrlRepository.saveAll(fileUrlList);
+            }
         }
 
         UserDeviceTrack updatedUserDeviceTrack = userDeviceTrackRepository.save(existingUserDeviceTrack);

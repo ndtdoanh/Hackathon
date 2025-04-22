@@ -233,20 +233,22 @@ public class DeviceServiceImpl implements DeviceService {
 
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                try {
-                    String fileUrl = s3Service.uploadFile(
-                            file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
+                if (file != null && !file.isEmpty() && file.getOriginalFilename() != null && !file.getOriginalFilename().trim().isEmpty()) {
+                    try {
+                        String fileUrl = s3Service.uploadFile(
+                                file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
 
-                    FileUrl newFileUrl = new FileUrl(
-                            file.getOriginalFilename(),
-                            fileUrl,
-                            file.getContentType(),
-                            (int) file.getSize(),
-                            updatedDevice);
+                        FileUrl newFileUrl = new FileUrl(
+                                file.getOriginalFilename(),
+                                fileUrl,
+                                file.getContentType(),
+                                (int) file.getSize(),
+                                updatedDevice);
 
-                    fileUrlRepository.save(newFileUrl);
-                } catch (IOException e) {
-                    throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                        fileUrlRepository.save(newFileUrl);
+                    } catch (IOException e) {
+                        throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                    }
                 }
             }
 
