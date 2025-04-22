@@ -12,5 +12,8 @@
 <!--    <include file="scripts/changelog_dml_user_roles_4.xml" relativeToChangelogFile="true"/>-->
 <!--    <include file="scripts/changelog_dml_role_permissions_5.xml" relativeToChangelogFile="true"/>-->
     <include file="scripts/changelog_dml_hackathons_6.xml" relativeToChangelogFile="true"/>
+    <include file="scripts/changelog_dml_schedules_7.xml" relativeToChangelogFile="true"/>
+    <include file="scripts/changelog_dml_boards_8.xml" relativeToChangelogFile="true"/>
+    <include file="scripts/changelog_dml_board_users_9.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
