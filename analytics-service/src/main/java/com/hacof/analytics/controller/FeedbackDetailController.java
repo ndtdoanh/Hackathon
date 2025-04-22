@@ -103,15 +103,17 @@ public class FeedbackDetailController {
                 .build();
     }
 
-    //    @GetMapping("/by-feedback")
-    //    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK')")
-    //    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackId(@RequestParam Long feedbackId)
-    // {
-    //        return ApiResponse.<List<FeedbackDetailResponse>>builder()
-    //                .data(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
-    //                .message("Retrieved feedback details by feedbackId")
-    //                .build();
-    //    }
+    @GetMapping("/by-feedback/{feedbackId}")
+    // @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK_ID')")
+    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackId(@PathVariable Long feedbackId) {
+        return ApiResponse.<List<FeedbackDetailResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
+                .message("Retrieved feedback details by feedbackId")
+                .build();
+    }
 
     //    @GetMapping("/by-mentor")
     //    //    @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_MENTOR')")

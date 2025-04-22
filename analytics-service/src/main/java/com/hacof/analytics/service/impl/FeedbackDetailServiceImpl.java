@@ -98,17 +98,18 @@ public class FeedbackDetailServiceImpl implements FeedbackDetailService {
     }
 
     @Override
+    public List<FeedbackDetailResponse> getFeedbackDetailsByFeedbackId(Long feedbackId) {
+        List<FeedbackDetail> details = feedbackDetailRepository.findAllByFeedbackId(feedbackId);
+        return feedbackDetailMapper.toFeedbackDetailResponseList(details);
+    }
+
+    @Override
     public void deleteFeedbackDetail(Long id) {
         FeedbackDetail feedbackDetail = feedbackDetailRepository
                 .findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_DETAIL_NOT_FOUND));
 
         feedbackDetailRepository.delete(feedbackDetail);
-    }
-
-    @Override
-    public List<FeedbackDetailResponse> getFeedbackDetailsByFeedbackId(Long feedbackId) {
-        return feedbackDetailMapper.toFeedbackDetailResponseList(feedbackDetailRepository.findByFeedbackId(feedbackId));
     }
 
     @Override

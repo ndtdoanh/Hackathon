@@ -14,9 +14,9 @@ public interface FeedbackDetailService {
 
     FeedbackDetailResponse getFeedbackDetail(Long id);
 
-    void deleteFeedbackDetail(Long id);
-
     List<FeedbackDetailResponse> getFeedbackDetailsByFeedbackId(Long feedbackId);
+
+    void deleteFeedbackDetail(Long id);
 
     List<FeedbackDetailResponse> getFeedbackDetailsByMentorId(Long mentorId);
 
