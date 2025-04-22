@@ -40,7 +40,7 @@
                     'CODING', 'FPTU', 'ACTIVE'),
 
                    (4, 'Cybersecurity Challenge', 'Defending the Digital World',
-                    'https://uet.vnu.edu.vn/wp-content/uploads/2024/08/B%C3%A0i-gi%E1%BB%9Bi-thi%E1%BB%87u-3-1024x1024.png',
+                    'https://greenscapehub-media.s3.ap-southeast-1.amazonaws.com/hacofpt/bcdec61e-93f6-4b7f-bd53-c736e8f9e20f_generatedHeaderImage-1662578814159.jpg',
                     '2025-01-01 08:00:00', '2025-12-01 23:59:00',
                     'A hackathon for ethical hackers and security researchers.',
                     'Teams will work on securing digital assets.',
@@ -49,7 +49,7 @@
                     'CODING', 'FPTU', 'ACTIVE'),
 
                    (5, 'GreenTech Innovation', 'Innovating Eco-friendly Technologies',
-                    'https://example.com/banner5.jpg',
+                    'https://greenscapehub-media.s3.ap-southeast-1.amazonaws.com/hacofpt/d8af2511-ac99-4823-923f-5122fd8da84c_1supq92uyknelefyyf7ughw-15454498606631836572894-crop-1545449864895548482406.png',
                     '2025-01-01 08:00:00', '2025-12-01 23:59:00',
                     'A hackathon to promote eco-friendly and sustainable technologies.',
                     'Participants will create green-tech solutions to tackle climate change.',
