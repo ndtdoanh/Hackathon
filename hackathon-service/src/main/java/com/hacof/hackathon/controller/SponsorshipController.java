@@ -261,23 +261,6 @@ public class SponsorshipController {
                 dto));
     }
 
-
-    @PutMapping("/details/update-info")
-    public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailInfo(
-            @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailRequestDTO> request) {
-
-        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.updateInfo(
-                Long.parseLong(request.getData().getSponsorshipHackathonId()), request.getData());
-
-        return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Updated successfully"),
-                dto));
-    }
-
-
     @PutMapping("/details/update-info/{id}")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailInfo(
             @PathVariable Long id,
@@ -294,6 +277,21 @@ public class SponsorshipController {
                 dto));
     }
 
+
+    @PutMapping("/details/update-files/{id}")
+    public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailFiles(
+            @PathVariable Long id,
+            @RequestBody CommonRequest<List<String>> request) {
+
+        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.updateFiles(id, request.getData());
+
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Files updated successfully"),
+                dto));
+    }
 
     @DeleteMapping("/details/{id}")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> deleteSponsorshipHackathonDetail(

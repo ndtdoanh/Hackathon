@@ -52,6 +52,8 @@ public class SponsorshipHackathonDetailMapperManual {
                         .fileName(f.getFileName())
                         .fileType(f.getFileType())
                         .fileSize(f.getFileSize())
+                        .createdAt(f.getCreatedDate())
+                        .updatedAt(f.getLastModifiedDate())
                         .build())
                 .collect(Collectors.toList())
                 : Collections.emptyList();

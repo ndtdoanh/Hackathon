@@ -161,17 +161,23 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
     public SponsorshipHackathonDetailResponseDTO updateFiles(Long id, List<String> fileUrls) {
         log.info("Updating sponsorship hackathon detail files for id: {}", id);
 
-        SponsorshipHackathonDetail entity = sponsorshipHackathonDetailRepository
+        SponsorshipHackathonDetail sponsorshipDetail = sponsorshipHackathonDetailRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found"));
 
         if (fileUrls != null && !fileUrls.isEmpty()) {
-            List<FileUrl> newFileUrls = fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(fileUrls);
-            newFileUrls.forEach(f -> f.setSponsorshipHackathonDetail(entity));
+            List<FileUrl> newFileUrls = fileUrlRepository
+                    .findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(fileUrls);
+
+            newFileUrls.forEach(f -> f.setSponsorshipHackathonDetail(sponsorshipDetail));
             fileUrlRepository.saveAll(newFileUrls);
         }
 
-        return SponsorshipHackathonDetailMapperManual.toDto(entity);
+        SponsorshipHackathonDetail updatedDetail = sponsorshipHackathonDetailRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found after update"));
+
+        return SponsorshipHackathonDetailMapperManual.toDto(updatedDetail);
     }
 
     @Override
