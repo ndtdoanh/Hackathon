@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.15.xsd">
+
+    <changeSet id="insert-board_users" author="ndtdoanh">
+        <sql>
+            <![CDATA[
+            INSERT INTO board_users (id, board_id, user_id, role, is_deleted)
+            VALUES (1, 1, 1, 'ADMIN', false);
+            ]]>
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
