@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,4 +22,6 @@ public class FileUrlResponse {
     String fileUrl;
     String fileType;
     int fileSize;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

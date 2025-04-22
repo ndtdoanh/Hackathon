@@ -18,6 +18,8 @@ public interface FileUrlMapper {
     @Mapping(target = "fileUrl", source = "fileUrl")
     @Mapping(target = "fileType", source = "fileType")
     @Mapping(target = "fileSize", source = "fileSize")
+    @Mapping(source = "createdDate", target = "createdAt")
+    @Mapping(source = "lastModifiedDate", target = "updatedAt")
     FileUrlResponse toResponse(FileUrl fileUrl);
 
     List<FileUrlResponse> toResponseList(List<FileUrl> fileUrls);
