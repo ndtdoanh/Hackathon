@@ -17,11 +17,14 @@ public class BoardUserMapper {
                 .id(String.valueOf(boardUser.getId()))
                 .board(mapBoardToDto(boardUser.getBoard()))
                 .user(mapUserToDto(boardUser.getUser()))
-//                .boardId(String.valueOf(boardUser.getBoard().getId()))
-//                .userId(String.valueOf(boardUser.getUser().getId()))
+                //                .boardId(String.valueOf(boardUser.getBoard().getId()))
+                //                .userId(String.valueOf(boardUser.getUser().getId()))
                 .role(boardUser.getRole() != null ? boardUser.getRole().name() : null)
                 .isDeleted(boardUser.isDeleted())
-                .deletedById(boardUser.getDeletedBy() != null ? String.valueOf(boardUser.getDeletedBy().getId()) : null)
+                .deletedById(
+                        boardUser.getDeletedBy() != null
+                                ? String.valueOf(boardUser.getDeletedBy().getId())
+                                : null)
                 .createdAt(boardUser.getCreatedDate())
                 .updatedAt(boardUser.getLastModifiedDate())
                 .build();

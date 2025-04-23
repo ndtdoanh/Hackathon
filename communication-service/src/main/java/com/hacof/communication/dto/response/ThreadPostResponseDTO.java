@@ -11,7 +11,7 @@ import lombok.Setter;
 public class ThreadPostResponseDTO {
 
     String id;
-//    ForumThreadResponseDTO forumThread;
+    //    ForumThreadResponseDTO forumThread;
     String forumThreadId;
     String content;
     boolean isDeleted;

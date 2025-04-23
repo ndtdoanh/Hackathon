@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.repository.TaskLabelRepository;
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,7 @@ import com.hacof.communication.entity.BoardLabel;
 import com.hacof.communication.mapper.BoardLabelMapper;
 import com.hacof.communication.repository.BoardLabelRepository;
 import com.hacof.communication.repository.BoardRepository;
+import com.hacof.communication.repository.TaskLabelRepository;
 import com.hacof.communication.service.BoardLabelService;
 
 @Service
