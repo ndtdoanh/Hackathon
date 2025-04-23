@@ -105,32 +105,40 @@ class MessageReactionControllerTest {
     @Test
     void testHandleReaction_validRequest() {
         Long messageId = 1L;
+        String username = "testUser";
         MessageReactionRequest request = new MessageReactionRequest();
+        request.setId(100L);
         request.setReactionType(ReactionType.LIKE);
 
         MessageReactionResponse expectedResponse = new MessageReactionResponse();
+        expectedResponse.setId("100");
         expectedResponse.setReactionType(ReactionType.LIKE);
 
-        when(reactionService.reactToMessage(messageId, request)).thenReturn(expectedResponse);
+        when(reactionService.findById(100L)).thenReturn(expectedResponse);
 
-        controller.handleReaction(request, messageId);
+        controller.handleReaction(request, messageId, username);
 
-        String destination = "/topic/messages/" + messageId;
+        expectedResponse.setCreatedByUserName(username);
+
+        String destination = "/topic/messages";
         verify(messagingTemplate, times(1)).convertAndSend(eq(destination), eq(expectedResponse));
 
-        verify(reactionService, times(1)).reactToMessage(messageId, request);
+        verify(reactionService, times(1)).findById(100L);
     }
 
     @Test
     void testHandleReaction_serviceThrowsException() {
         Long messageId = 1L;
+        String username = "testUser";
+
         MessageReactionRequest request = new MessageReactionRequest();
+        request.setId(100L);
         request.setReactionType(ReactionType.LIKE);
 
-        when(reactionService.reactToMessage(messageId, request)).thenThrow(new RuntimeException("Service error"));
+        when(reactionService.findById(100L)).thenThrow(new RuntimeException("Service error"));
 
-        assertThrows(RuntimeException.class, () -> controller.handleReaction(request, messageId));
+        assertThrows(RuntimeException.class, () -> controller.handleReaction(request, messageId, username));
 
-        verify(reactionService, times(1)).reactToMessage(messageId, request);
+        verify(reactionService, times(1)).findById(100L);
     }
 }
