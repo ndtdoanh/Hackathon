@@ -15,5 +15,7 @@
     <include file="scripts/changelog_dml_schedules_7.xml" relativeToChangelogFile="true"/>
     <include file="scripts/changelog_dml_boards_8.xml" relativeToChangelogFile="true"/>
     <include file="scripts/changelog_dml_board_users_9.xml" relativeToChangelogFile="true"/>
+    <include file="scripts/changelog_dml_conversations_10.xml" relativeToChangelogFile="true"/>
+    <include file="scripts/changelog_dml_conversation_users_11.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

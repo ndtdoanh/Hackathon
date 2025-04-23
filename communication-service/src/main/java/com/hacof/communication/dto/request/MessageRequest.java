@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MessageRequest {
+    Long id;
     String content;
     List<String> fileUrls;
-    Long id;
 }

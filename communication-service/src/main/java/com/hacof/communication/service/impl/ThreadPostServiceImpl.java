@@ -3,8 +3,6 @@ package com.hacof.communication.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.entity.User;
-import com.hacof.communication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,9 +11,11 @@ import com.hacof.communication.dto.request.ThreadPostRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostResponseDTO;
 import com.hacof.communication.entity.ForumThread;
 import com.hacof.communication.entity.ThreadPost;
+import com.hacof.communication.entity.User;
 import com.hacof.communication.mapper.ThreadPostMapper;
 import com.hacof.communication.repository.ForumThreadRepository;
 import com.hacof.communication.repository.ThreadPostRepository;
+import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ThreadPostService;
 
 @Service
@@ -31,6 +31,7 @@ public class ThreadPostServiceImpl implements ThreadPostService {
     private UserRepository userRepository;
 
     private ThreadPostMapper threadPostMapper;
+
     @Override
     public ThreadPostResponseDTO createThreadPost(ThreadPostRequestDTO requestDTO) {
         Long forumThreadId = Long.parseLong(requestDTO.getForumThreadId());
@@ -81,8 +82,10 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
         threadPost.setDeleted(true);
 
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
+        String currentUsername =
+                SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository
+                .findByUsername(currentUsername)
                 .orElseThrow(() -> new RuntimeException("User not found: " + currentUsername));
 
         threadPost.setDeletedBy(currentUser);

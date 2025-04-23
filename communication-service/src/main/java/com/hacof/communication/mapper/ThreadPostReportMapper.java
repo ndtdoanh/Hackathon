@@ -102,7 +102,8 @@ public class ThreadPostReportMapper {
         forumThreadResponseDTO.setThreadPosts(threadPostList);
 
         // Set ForumThread into ThreadPostResponseDTO
-        threadPostResponseDTO.setForumThreadId(String.valueOf(threadPostReport.getThreadPost().getForumThread().getId()));
+        threadPostResponseDTO.setForumThreadId(
+                String.valueOf(threadPostReport.getThreadPost().getForumThread().getId()));
 
         // Set the full ThreadPostResponseDTO in the response DTO
         responseDTO.setThreadPost(threadPostResponseDTO);

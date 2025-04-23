@@ -2,6 +2,8 @@ package com.hacof.identity.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -37,13 +41,16 @@ class PermissionControllerTest {
     @Mock
     PermissionService permissionService;
 
+    @Mock
+    ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testCreatePermission() {
+    void testCreatePermission_whenJsonProcessingExceptionThrown() throws JsonProcessingException {
         PermissionCreateRequest createRequest = new PermissionCreateRequest();
         ApiRequest<PermissionCreateRequest> apiRequest = new ApiRequest<>();
         apiRequest.setData(createRequest);
@@ -54,11 +61,14 @@ class PermissionControllerTest {
         PermissionResponse mockResponse = new PermissionResponse();
         when(permissionService.createPermission(createRequest)).thenReturn(mockResponse);
 
+        doThrow(JsonProcessingException.class).when(objectMapper).writeValueAsString(any());
+
         ResponseEntity<?> responseEntity = permissionController.createPermission(apiRequest);
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         verify(permissionService, times(1)).createPermission(createRequest);
+        verify(objectMapper, times(1)).writeValueAsString(any());
     }
 
     @Test

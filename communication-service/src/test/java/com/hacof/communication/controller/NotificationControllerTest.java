@@ -2,6 +2,7 @@ package com.hacof.communication.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,6 +29,7 @@ import com.hacof.communication.service.NotificationService;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class NotificationControllerTest {
@@ -38,9 +40,34 @@ class NotificationControllerTest {
     @Mock
     NotificationService notificationService;
 
+    @Mock
+    SimpMessagingTemplate messagingTemplate;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testHandleWebSocketNotification_validRequest() {
+        Long userId = 1L;
+        Long notificationId = 100L;
+
+        NotificationRequest request = new NotificationRequest();
+        request.setId(notificationId);
+        request.setContent("You have a new message");
+
+        NotificationResponse response = new NotificationResponse();
+        response.setId(String.valueOf(notificationId));
+        response.setContent("You have a new message");
+
+        when(notificationService.getNotification(notificationId)).thenReturn(response);
+
+        notificationController.handleWebSocketNotification(request, userId);
+
+        String expectedDestination = "/topic/notifications/" + userId;
+        verify(messagingTemplate, times(1)).convertAndSend(eq(expectedDestination), eq(response));
+        verify(notificationService, times(1)).getNotification(notificationId);
     }
 
     @Test

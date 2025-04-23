@@ -1,10 +1,14 @@
 package com.hacof.analytics.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +36,27 @@ public class FeedbackDetailControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testGetFeedbackDetailsByFeedbackId_validId_returnsData() {
+        Long feedbackId = 1L;
+        FeedbackDetailResponse detail = new FeedbackDetailResponse();
+        detail.setContent("Feedback content example");
+
+        List<FeedbackDetailResponse> mockList = Collections.singletonList(detail);
+
+        when(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId)).thenReturn(mockList);
+
+        ApiResponse<List<FeedbackDetailResponse>> response = feedbackDetailController.getFeedbackDetailsByFeedbackId(feedbackId);
+
+        assertNotNull(response);
+        assertNotNull(response.getData());
+        assertEquals(1, response.getData().size());
+        assertEquals("Feedback content example", response.getData().get(0).getContent());
+        assertEquals("Retrieved feedback details by feedbackId", response.getMessage());
+
+        verify(feedbackDetailService, times(1)).getFeedbackDetailsByFeedbackId(feedbackId);
     }
 
     @Test

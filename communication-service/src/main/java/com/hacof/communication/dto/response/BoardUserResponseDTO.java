@@ -17,8 +17,8 @@ public class BoardUserResponseDTO {
     private String id;
     private BoardResponseDTO board;
     private UserResponse user;
-//    private String boardId;
-//    private String userId;
+    //    private String boardId;
+    //    private String userId;
     private String role; // ADMIN, MEMBER
     boolean isDeleted;
     String deletedById;

@@ -119,8 +119,10 @@ public class BoardUserServiceImpl implements BoardUserService {
             throw new IllegalArgumentException("BoardUser with ID " + id + " has already been deleted.");
         }
 
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userRepository.findByUsername(currentUsername)
+        String currentUsername =
+                SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository
+                .findByUsername(currentUsername)
                 .orElseThrow(() -> new RuntimeException("User not found: " + currentUsername));
 
         boardUser.setDeleted(true);

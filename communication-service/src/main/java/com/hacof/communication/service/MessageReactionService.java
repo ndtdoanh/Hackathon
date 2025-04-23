@@ -11,4 +11,6 @@ public interface MessageReactionService {
     void removeReaction(Long reactionId);
 
     List<MessageReactionResponse> getReactionsByMessage(Long messageId);
+
+    MessageReactionResponse findById(Long messageId);
 }

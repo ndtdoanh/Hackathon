@@ -35,11 +35,10 @@ public class ThreadPostMapper {
                 threadPost.getCreatedBy() != null ? threadPost.getCreatedBy().getUsername() : null);
         responseDTO.setCreatedAt(threadPost.getCreatedDate());
         responseDTO.setUpdatedAt(threadPost.getLastModifiedDate());
-        responseDTO.setDeletedById(
-                String.valueOf(threadPost.getDeletedBy() != null ? threadPost.getDeletedBy().getId() : null)
-        );
+        responseDTO.setDeletedById(String.valueOf(
+                threadPost.getDeletedBy() != null ? threadPost.getDeletedBy().getId() : null));
         // **Mapping ForumThread**
-//        responseDTO.setForumThread(mapForumThread(threadPost));
+        //        responseDTO.setForumThread(mapForumThread(threadPost));
         responseDTO.setForumThreadId(String.valueOf(threadPost.getForumThread().getId()));
         // **Mapping Likes**
         responseDTO.setThreadPostLikes(mapThreadPostLikes(threadPost));
