@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
 
@@ -70,7 +70,7 @@ services:
       dockerfile: eureka-server/Dockerfile
     container_name: eureka-server
     ports:
-      - "8761:8761"
+      - "8762:8761"
     networks:
       - microservice-networks
 
@@ -80,7 +80,7 @@ services:
       dockerfile: api-gateway/Dockerfile
     container_name: api-gateway
     ports:
-      - "9191:9191"
+      - "9192:9191"
     networks:
       - microservice-networks
     depends_on:
@@ -107,7 +107,7 @@ services:
       dockerfile: identity-service/Dockerfile
     container_name: identity-service
     ports:
-      - "8080:8080"
+      - "9080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -137,7 +137,7 @@ services:
       dockerfile: hackathon-service/Dockerfile
     container_name: hackathon-service
     ports:
-      - '8081:8081'
+      - "9081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -165,7 +165,7 @@ services:
       dockerfile: submission-service/Dockerfile
     container_name: submission-service
     ports:
-      - '8082:8082'
+      - "9082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -193,7 +193,7 @@ services:
       dockerfile: communication-service/Dockerfile
     container_name: communication-service
     ports:
-      - '8083:8083'
+      - "9083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -221,7 +221,7 @@ services:
       dockerfile: analytics-service/Dockerfile
     container_name: analytics-service
     ports:
-      - '8084:8084'
+      - "9084:8084"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
