@@ -61,6 +61,14 @@ public class TeamMapperManual {
                     .collect(Collectors.toList()));
         }
 
+        // Map audit fields
+        dto.setCreatedByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setCreatedAt(entity.getCreatedDate());
+        dto.setLastModifiedByUserName(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setUpdatedAt(entity.getLastModifiedDate());
+
+        dto.setDeleted(entity.getIsDeleted());
+        dto.setDeletedById(entity.getDeletedBy() != null ? String.valueOf(entity.getDeletedBy().getId()) : null);
         return dto;
     }
 

@@ -33,7 +33,7 @@ public class IndividualRegistrationRequestMapperManual {
                         : null);
         dto.setHackathon(entity.getHackathon() != null ? HackathonMapperManual.toDto(entity.getHackathon()) : null);
         dto.setStatus(entity.getStatus().name());
-        dto.setReviewById(
+        dto.setReviewedById(
                 entity.getReviewedBy() != null
                         ? String.valueOf(entity.getReviewedBy().getId())
                         : null);

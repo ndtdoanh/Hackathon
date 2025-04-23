@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.hackathon.constant.StatusCode;
+import com.hacof.hackathon.exception.InvalidInputException;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -61,6 +63,21 @@ public class IndividualRegistrationRequestController {
                 request.getChannel(),
                 new CommonResponse.Result("0000", "Individual registration updated successfully"),
                 individualRegistrationRequestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    // update 23/4/25
+    @PutMapping("/bulk-update")
+    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> bulkUpdateIndividualRegistrations(
+            @RequestBody @Valid CommonRequest<List<IndividualRegistrationRequestDTO>> request) {
+        List<IndividualRegistrationRequestDTO> updatedRequests =
+                individualRegistrationRequestService.bulkUpdate(request.getData());
+        CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), "Bulk update successful"),
+                updatedRequests);
         return ResponseEntity.ok(response);
     }
 
@@ -146,11 +163,15 @@ public class IndividualRegistrationRequestController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/filter-by-hackathon-and-status-approved")
+    @GetMapping("/filter-by-hackathon-and-status-completed")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByHackathonIdAndStatusApproved(
             @RequestParam String hackathonId) {
+        if (!hackathonId.matches("\\d+")) { // Validate that hackathonId is numeric
+            throw new InvalidInputException("Hackathon ID must be a numeric value");
+        }
+
         List<IndividualRegistrationRequestDTO> requests =
-                individualRegistrationRequestService.getAllByHackathonIdAndStatusApproved(hackathonId);
+                individualRegistrationRequestService.getAllByHackathonIdAndStatusCompleted(hackathonId);
         CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

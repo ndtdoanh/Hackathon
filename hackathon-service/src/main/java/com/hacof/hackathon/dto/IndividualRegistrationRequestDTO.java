@@ -26,7 +26,7 @@ public class IndividualRegistrationRequestDTO {
     String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String reviewById;
+    String reviewedById;
 
     UserDTO reviewedBy;
 

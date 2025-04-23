@@ -234,6 +234,18 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/by-hackathon/{hackathonId}")
+    public ResponseEntity<CommonResponse<List<TeamDTO>>> getTeamsByHackathonId(@PathVariable Long hackathonId) {
+        List<TeamDTO> teams = teamService.getTeamsByHackathonId(hackathonId);
+        CommonResponse<List<TeamDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched teams successfully"),
+                teams);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping
     public ResponseEntity<CommonResponse<List<TeamDTO>>> getAllTeams() {
         List<TeamDTO> teams = teamService.getAllTeams();

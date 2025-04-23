@@ -24,4 +24,9 @@ public interface IndividualRegistrationRequestService {
     List<IndividualRegistrationRequestDTO> getAllByHackathonId(String hackathonId);
 
     List<IndividualRegistrationRequestDTO> getAllByHackathonIdAndStatusApproved(String hackathonId);
+
+    List<IndividualRegistrationRequestDTO> bulkUpdate(List<IndividualRegistrationRequestDTO> requestDTOs);
+
+    List<IndividualRegistrationRequestDTO> getAllByHackathonIdAndStatusCompleted(String hackathonId);
+
 }

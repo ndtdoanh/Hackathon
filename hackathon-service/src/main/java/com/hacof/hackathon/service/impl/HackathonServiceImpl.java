@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.constant.BoardUserRole;
+import com.hacof.hackathon.entity.*;
+import com.hacof.hackathon.repository.*;
 import jakarta.transaction.Transactional;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,16 +20,9 @@ import com.hacof.hackathon.constant.CategoryStatus;
 import com.hacof.hackathon.constant.OrganizationStatus;
 import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.dto.HackathonDTO;
-import com.hacof.hackathon.entity.FileUrl;
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.HackathonMapper;
-import com.hacof.hackathon.repository.FileUrlRepository;
-import com.hacof.hackathon.repository.HackathonRepository;
-import com.hacof.hackathon.repository.TeamRequestRepository;
-import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.HackathonService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,6 +40,10 @@ public class HackathonServiceImpl implements HackathonService {
     UserRepository userRepository;
     FileUrlRepository fileUrlRepository;
     TeamRequestRepository teamRequestRepository;
+    // update 23/4/25:
+    ScheduleRepository scheduleRepository;
+    BoardRepository boardRepository;
+    BoardUserRepository boardUserRepository;
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
@@ -76,6 +76,40 @@ public class HackathonServiceImpl implements HackathonService {
         }
 
         hackathon = hackathonRepository.save(hackathon);
+
+        // Get the current authenticated user
+        Authentication authentication = getAuthenticatedUser();
+        String username = authentication.getName();
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+        // Create Schedule
+        Schedule schedule = Schedule.builder()
+                .hackathon(hackathon)
+                .name("Default Schedule for " + hackathon.getTitle())
+                .description("This is the default schedule for the hackathon.")
+                .build();
+        scheduleRepository.save(schedule);
+
+        // Create Board
+        Board board = Board.builder()
+                .name("Default Board for " + hackathon.getTitle())
+                .description("This is the default board for the hackathon.")
+                .owner(currentUser)
+                .hackathon(hackathon)
+                .build();
+        boardRepository.save(board);
+
+        // Create BoardUser
+        BoardUser boardUser = BoardUser.builder()
+                .board(board)
+                .user(currentUser)
+                .role(BoardUserRole.ADMIN)
+                .isDeleted(false)
+                .build();
+        boardUserRepository.save(boardUser);
+
         return hackathonMapper.toDto(hackathon);
     }
 

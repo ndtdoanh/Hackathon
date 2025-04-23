@@ -12,7 +12,8 @@ import com.hacof.hackathon.entity.Team;
 public interface TeamMapper {
 
     @Mapping(target = "teamLeaderId", source = "teamLeader.id") // ánh xạ teamLeaderId từ teamLeader entity
-    @Mapping(target = "teamMembers", source = "teamMembers") // ánh xạ teamMembers từ entity
+    //@Mapping(target = "teamMembers", source = "teamMembers") // ánh xạ teamMembers từ entity
+    @Mapping(target = "teamMembers", ignore = true) // Break recursion
     @Mapping(target = "teamHackathons", source = "teamHackathons") // ánh xạ teamHackathons từ entity
     TeamDTO toDto(Team team);
 

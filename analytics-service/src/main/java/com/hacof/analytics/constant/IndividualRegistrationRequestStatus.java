@@ -1,4 +1,4 @@
-package com.hacof.hackathon.constant;
+package com.hacof.analytics.constant;
 
 public enum IndividualRegistrationRequestStatus {
     PENDING,
