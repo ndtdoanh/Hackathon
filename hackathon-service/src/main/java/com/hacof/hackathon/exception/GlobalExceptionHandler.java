@@ -23,7 +23,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
         InvalidInputException.class,
         GenericErrorException.class,
-        ResourceNotFoundException.class,
         TimeoutException.class,
         CustomException.class,
         NotificationException.class
