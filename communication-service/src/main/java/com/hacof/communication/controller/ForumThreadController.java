@@ -8,6 +8,7 @@ import com.hacof.communication.dto.request.ForumThreadMemberRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,7 @@ public class ForumThreadController {
     }
 
     @PostMapping("/admin")
+    @PreAuthorize("hasAuthority('CREATE_FORUM_THREAD_ADMIN')")
     public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> createForumThreadByAdmin(
             @RequestBody CommonRequest<ForumThreadRequestDTO> request) {
         CommonResponse<ForumThreadResponseDTO> response = new CommonResponse<>();
@@ -136,6 +138,7 @@ public class ForumThreadController {
     }
 
     @PutMapping("/admin/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_FORUM_THREAD_ADMIN')")
     public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> updateForumThreadByAdmin(
             @PathVariable Long id, @RequestBody CommonRequest<ForumThreadRequestDTO> request) {
         CommonResponse<ForumThreadResponseDTO> response = new CommonResponse<>();
