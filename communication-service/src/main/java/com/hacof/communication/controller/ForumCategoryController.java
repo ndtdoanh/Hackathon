@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,7 @@ public class ForumCategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_FORUM_CATEGORY')")
     public ResponseEntity<CommonResponse<ForumCategoryResponseDTO>> createForumCategory(
             @RequestBody CommonRequest<ForumCategoryRequestDTO> request) {
         CommonResponse<ForumCategoryResponseDTO> response = new CommonResponse<>();
@@ -111,6 +113,7 @@ public class ForumCategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_FORUM_CATEGORY')")
     public ResponseEntity<CommonResponse<ForumCategoryResponseDTO>> updateForumCategory(
             @PathVariable Long id, @RequestBody CommonRequest<ForumCategoryRequestDTO> request) {
         CommonResponse<ForumCategoryResponseDTO> response = new CommonResponse<>();
@@ -135,6 +138,7 @@ public class ForumCategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_FORUM_CATEGORY')")
     public ResponseEntity<CommonResponse<String>> deleteForumCategory(@PathVariable Long id) {
         CommonResponse<String> response = new CommonResponse<>();
         try {
