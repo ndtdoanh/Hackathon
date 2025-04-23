@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.communication.dto.request.ForumThreadMemberRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,8 @@ public class ForumThreadController {
         response.setChannel("HACOF");
     }
 
-    @PostMapping
-    public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> createForumThread(
+    @PostMapping("/admin")
+    public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> createForumThreadByAdmin(
             @RequestBody CommonRequest<ForumThreadRequestDTO> request) {
         CommonResponse<ForumThreadResponseDTO> response = new CommonResponse<>();
         try {
@@ -54,6 +55,30 @@ public class ForumThreadController {
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Forum thread created successfully!");
+            response.setData(createdThread);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/member")
+    public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> createForumThreadByMember(
+            @RequestBody CommonRequest<ForumThreadMemberRequestDTO> request) {
+        CommonResponse<ForumThreadResponseDTO> response = new CommonResponse<>();
+        try {
+            ForumThreadResponseDTO createdThread = forumThreadService.createForumThreadByMember(request.getData());
+            setCommonResponseFields(response, request);
+            response.setStatus(HttpStatus.CREATED.value());
+            response.setMessage("Forum thread created successfully by member!");
             response.setData(createdThread);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
@@ -110,15 +135,15 @@ public class ForumThreadController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> updateForumThread(
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> updateForumThreadByAdmin(
             @PathVariable Long id, @RequestBody CommonRequest<ForumThreadRequestDTO> request) {
         CommonResponse<ForumThreadResponseDTO> response = new CommonResponse<>();
         try {
             ForumThreadResponseDTO updatedThread = forumThreadService.updateForumThread(id, request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("Forum thread updated successfully!");
+            response.setMessage("Forum thread updated successfully by admin!");
             response.setData(updatedThread);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
@@ -133,6 +158,31 @@ public class ForumThreadController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PutMapping("/member/{id}")
+    public ResponseEntity<CommonResponse<ForumThreadResponseDTO>> updateForumThreadByMember(
+            @PathVariable Long id, @RequestBody CommonRequest<ForumThreadMemberRequestDTO> request) {
+        CommonResponse<ForumThreadResponseDTO> response = new CommonResponse<>();
+        try {
+            ForumThreadResponseDTO updatedThread = forumThreadService.updateForumThreadByMember(id, request.getData());
+            setCommonResponseFields(response, request);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Forum thread updated successfully by member!");
+            response.setData(updatedThread);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<String>> deleteForumThread(@PathVariable Long id) {
