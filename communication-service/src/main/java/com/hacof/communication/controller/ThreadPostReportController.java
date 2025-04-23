@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.communication.dto.request.ThreadPostReportReviewRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -158,4 +160,34 @@ public class ThreadPostReportController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PutMapping("/review/{id}")
+    @PreAuthorize("hasAuthority('REVIEW_THREAD_POST_REPORT')")
+    public ResponseEntity<CommonResponse<ThreadPostReportResponseDTO>> reviewThreadPostReport(
+            @PathVariable Long id,
+            @RequestBody CommonRequest<ThreadPostReportReviewRequestDTO> request) {
+
+        CommonResponse<ThreadPostReportResponseDTO> response = new CommonResponse<>();
+        try {
+            ThreadPostReportResponseDTO reviewed =
+                    threadPostReportService.reviewThreadPostReport(id, request.getData());
+
+            setCommonResponseFields(response, request);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Thread post report reviewed successfully!");
+            response.setData(reviewed);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

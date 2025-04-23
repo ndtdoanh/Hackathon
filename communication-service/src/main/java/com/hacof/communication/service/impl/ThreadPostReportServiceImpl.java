@@ -3,6 +3,9 @@ package com.hacof.communication.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.communication.constant.ThreadPostReportStatus;
+import com.hacof.communication.dto.request.ThreadPostReportReviewRequestDTO;
+import com.hacof.communication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,9 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
     @Autowired
     private ThreadPostRepository threadPostRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public ThreadPostReportResponseDTO createThreadPostReport(ThreadPostReportRequestDTO requestDTO) {
         Long threadPostId = Long.parseLong(requestDTO.getThreadPostId());
@@ -33,8 +39,7 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
                 .findById(threadPostId)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPost not found with id " + threadPostId));
 
-        User createdBy = AuditContext.getCurrentUser();
-        ThreadPostReport threadPostReport = ThreadPostReportMapper.toEntity(requestDTO, threadPost, createdBy);
+        ThreadPostReport threadPostReport = ThreadPostReportMapper.toEntity(requestDTO, threadPost);
         threadPostReport = threadPostReportRepository.save(threadPostReport);
 
         return ThreadPostReportMapper.toResponseDTO(threadPostReport);
@@ -73,4 +78,26 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
         }
         threadPostReportRepository.deleteById(id);
     }
+
+    @Override
+    public ThreadPostReportResponseDTO reviewThreadPostReport(Long id, ThreadPostReportReviewRequestDTO requestDTO) {
+        ThreadPostReport report = threadPostReportRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ThreadPostReport not found with id " + id));
+
+        if (!requestDTO.getStatus().equals("REVIEWED") && !requestDTO.getStatus().equals("DISMISSED")) {
+            throw new IllegalArgumentException("Invalid status. Must be REVIEWED or DISMISSED.");
+        }
+
+        String reviewerId = String.valueOf(AuditContext.getCurrentUser().getId());
+        User reviewer = userRepository.findById(Long.parseLong(reviewerId))
+                .orElseThrow(() -> new IllegalArgumentException("Reviewer not found with ID: " + reviewerId));
+
+        report.setStatus(ThreadPostReportStatus.valueOf(requestDTO.getStatus()));
+        report.setReviewedBy(reviewer);
+        report.setLastModifiedDate(java.time.LocalDateTime.now());
+
+        return ThreadPostReportMapper.toResponseDTO(threadPostReportRepository.save(report));
+    }
+
 }

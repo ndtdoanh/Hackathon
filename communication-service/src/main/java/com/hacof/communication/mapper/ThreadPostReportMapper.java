@@ -17,12 +17,11 @@ public class ThreadPostReportMapper {
 
     // Convert DTO to Entity
     public static ThreadPostReport toEntity(
-            ThreadPostReportRequestDTO requestDTO, ThreadPost threadPost, User reviewedBy) {
+            ThreadPostReportRequestDTO requestDTO, ThreadPost threadPost) {
         return ThreadPostReport.builder()
                 .threadPost(threadPost)
                 .reason(requestDTO.getReason())
                 .status(ThreadPostReportStatus.PENDING) // Default status could be PENDING
-                .reviewedBy(reviewedBy)
                 .build();
     }
 
