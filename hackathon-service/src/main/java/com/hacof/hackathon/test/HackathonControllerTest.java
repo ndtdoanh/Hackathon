@@ -1,7 +1,6 @@
 package com.hacof.hackathon.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -128,9 +127,11 @@ class HackathonControllerTest {
         request.setChannel("HACOF");
         request.setData(null);
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.createHackathon(request);
+        InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
+            hackathonController.createHackathon(request);
+        });
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Hackathon data cannot be null", exception.getMessage());
         verify(hackathonService, never()).create(any(HackathonDTO.class));
     }
 
@@ -146,11 +147,14 @@ class HackathonControllerTest {
         request.setChannel("HACOF");
         request.setData(dto);
 
-        when(hackathonService.update("999", dto)).thenThrow(new ResourceNotFoundException("Hackathon not found"));
+        when(hackathonService.update("999", dto))
+                .thenThrow(new ResourceNotFoundException("Hackathon not found"));
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.updateHackathon(request);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            hackathonController.updateHackathon(request);
+        });
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Hackathon not found", exception.getMessage());
         verify(hackathonService, times(1)).update("999", dto);
     }
 
@@ -168,9 +172,11 @@ class HackathonControllerTest {
         when(hackathonService.create(dto))
                 .thenThrow(new InvalidInputException("Hackathon with title 'Duplicate Title' already exists."));
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.createHackathon(request);
+        InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
+            hackathonController.createHackathon(request);
+        });
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Hackathon with title 'Duplicate Title' already exists.", exception.getMessage());
         verify(hackathonService, times(1)).create(dto);
     }
 
@@ -188,9 +194,11 @@ class HackathonControllerTest {
 
         when(hackathonService.update("1", dto)).thenThrow(new InvalidInputException("Title cannot be empty"));
 
-        ResponseEntity<CommonResponse<HackathonDTO>> response = hackathonController.updateHackathon(request);
+        InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
+            hackathonController.updateHackathon(request);
+        });
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Title cannot be empty", exception.getMessage());
         verify(hackathonService, times(1)).update("1", dto);
     }
 
@@ -198,11 +206,13 @@ class HackathonControllerTest {
     void testDeleteNonExistentHackathon() {
         doThrow(new ResourceNotFoundException("Hackathon not found"))
                 .when(hackathonService)
-                .deleteHackathon(1L);
+                .deleteHackathon(999L);
 
-        ResponseEntity<CommonResponse<Void>> response = hackathonController.deleteHackathon("1");
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            hackathonController.deleteHackathon("999");
+        });
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(hackathonService, times(1)).deleteHackathon(1L);
+        assertEquals("Hackathon not found", exception.getMessage());
+        verify(hackathonService, times(1)).deleteHackathon(999L);
     }
 }

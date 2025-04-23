@@ -282,12 +282,4 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Bulk teams created successfully"),
                 createdTeams));
     }
-
-    //    @PutMapping("/bulk")
-    //    public ResponseEntity<CommonResponse<List<TeamDTO>>> updateBulkTeams(@Valid @RequestBody
-    // List<TeamBulkRequestDTO> bulkRequest) {
-    //        List<TeamDTO> updatedTeams = teamService.updateBulkTeams(bulkRequest);
-    //        return ResponseEntity.ok(new CommonResponse<>(new CommonResponse.Result("0000", "Bulk teams updated
-    // successfully"), updatedTeams));
-    //    }
 }

@@ -41,6 +41,9 @@ public class IndividualRegistrationRequestController {
     @PostMapping
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> createIndividualRegistration(
             @RequestBody @Valid CommonRequest<IndividualRegistrationRequestDTO> request) {
+        if (request.getData() == null || request.getData().getHackathonId() == null) {
+            throw new InvalidInputException("Hackathon ID cannot be null");
+        }
         IndividualRegistrationRequestDTO individualRegistrationRequestDTO =
                 individualRegistrationRequestService.create(request.getData());
         CommonResponse<IndividualRegistrationRequestDTO> response = new CommonResponse<>(
@@ -82,9 +85,8 @@ public class IndividualRegistrationRequestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<Void>> deleteIndividualRegistration(
-            @RequestBody IndividualRegistrationRequestDTO request) {
-        individualRegistrationRequestService.delete(Long.parseLong(request.getId()));
+    public ResponseEntity<CommonResponse<Void>> deleteIndividualRegistration(@PathVariable Long id) {
+        individualRegistrationRequestService.delete(id);
         CommonResponse<Void> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

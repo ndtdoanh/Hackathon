@@ -76,6 +76,18 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(StatusCode.ERROR, "An unexpected error occurred");
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<CommonResponse<Void>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        log.error("Resource not found: {}", ex.getMessage(), ex);
+        CommonResponse<Void> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result(StatusCode.NOT_FOUND.getCode(), ex.getMessage()),
+                null);
+        return ResponseEntity.status(404).body(response);
+    }
+
     private StatusCode getStatusByException(Exception ex) {
         if (ex instanceof InvalidInputException) return StatusCode.INVALID_INPUT;
         if (ex instanceof ResourceNotFoundException) return StatusCode.NOT_FOUND;

@@ -48,6 +48,7 @@ class TeamRoundControllerTest {
     void testCreateTeamRound() {
         TeamRoundDTO dto = new TeamRoundDTO();
         dto.setId("1");
+        dto.setTeamId("Test Team Round");
 
         CommonRequest<TeamRoundDTO> request = new CommonRequest<>();
         request.setRequestId(UUID.randomUUID().toString());
@@ -78,9 +79,8 @@ class TeamRoundControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody(), "Response body should not be null");
         assertNotNull(response.getBody().getData(), "Response body data should not be null");
-        assertEquals(
-                "Updated Team Round", response.getBody().getData().getFirst().getId());
-        verify(teamRoundService, times(1)).update("1", dto);
+        assertEquals("1", response.getBody().getData().get(0).getId());
+        verify(teamRoundService, times(1)).getAllByRoundId("round1");
     }
 
     @Test

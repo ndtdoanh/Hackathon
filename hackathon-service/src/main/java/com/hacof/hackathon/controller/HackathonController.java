@@ -80,6 +80,9 @@ public class HackathonController {
     @PostMapping
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
             @Valid @RequestBody CommonRequest<HackathonDTO> request) {
+        if (request.getData() == null) {
+            throw new InvalidInputException("Hackathon data cannot be null");
+        }
         HackathonDTO createdHackathon = hackathonService.create(request.getData());
         CommonResponse<HackathonDTO> response = new CommonResponse<>(
                 request.getRequestId(),

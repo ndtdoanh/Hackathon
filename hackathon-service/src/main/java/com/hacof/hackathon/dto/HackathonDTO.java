@@ -37,15 +37,15 @@ import lombok.experimental.FieldDefaults;
 public class HackathonDTO {
     String id;
 
-    @NotBlank(message = "Title is required")
+    @NotNull(message = "Title is required")
     @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     String title;
 
-    @NotBlank(message = "Sub Title is required")
+    @NotNull(message = "Sub Title is required")
     @Size(max = 250, message = "Sub Title must be less than 250 characters")
     String subTitle;
 
-    @NotBlank(message = "Banner Image URL is required")
+    @NotNull(message = "Banner Image URL is required")
     @URL(message = "Banner Image URL must be a valid URL")
     String bannerImageUrl;
 
@@ -72,18 +72,18 @@ public class HackathonDTO {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime endDate;
 
-    @NotBlank(message = "Information is required")
+    @NotNull(message = "Information is required")
     String information;
 
     String description;
 
-    @NotBlank(message = "Contact is required")
+    @NotNull(message = "Contact is required")
     String contact;
 
-    @NotBlank(message = "Category is required")
+    @NotNull(message = "Category is required")
     String category; // Used for category filtering
 
-    @NotBlank(message = "Organization is required")
+    @NotNull(message = "Organization is required")
     String organization;
 
     String enrollmentStatus; // OPEN - UP_COMING - CLOSED

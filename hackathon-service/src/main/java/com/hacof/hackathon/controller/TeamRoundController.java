@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,14 +39,24 @@ public class TeamRoundController {
 
     @PostMapping
     public ResponseEntity<CommonResponse<TeamRoundDTO>> createTeamRound(
-            @Valid @RequestBody CommonRequest<TeamRoundDTO> request) {
-        TeamRoundDTO created = teamRoundService.create(request.getData());
-        return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
+            @RequestBody CommonRequest<TeamRoundDTO> request) {
+        if (request.getData() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CommonResponse<>(
+                            request.getRequestId(),
+                            LocalDateTime.now(),
+                            request.getChannel(),
+                            new CommonResponse.Result("0310", "Invalid input: TeamRound data cannot be null"),
+                            null));
+        }
+        TeamRoundDTO teamRoundDTO = teamRoundService.create(request.getData());
+        CommonResponse<TeamRoundDTO> response = new CommonResponse<>(
+                request.getRequestId(),
                 LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Team Round create successfully!"),
-                created));
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Team Round created successfully"),
+                teamRoundDTO);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping

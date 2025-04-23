@@ -27,7 +27,6 @@ public class CommonRequest<T> {
     private String channel;
 
     @Valid
-    //    @JsonUnwrapped
     private T data;
 
     public CommonRequest(T data) {

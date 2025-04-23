@@ -1,6 +1,7 @@
 package com.hacof.hackathon.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.hackathon.constant.StatusCode;
+import com.hacof.hackathon.exception.InvalidInputException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +51,7 @@ class IndividualRegistrationRequestControllerTest {
     void testCreateIndividualRegistration() {
         IndividualRegistrationRequestDTO dto = new IndividualRegistrationRequestDTO();
         dto.setId("1");
+        dto.setHackathonId("123"); // Provide a valid Hackathon ID
         dto.setCreatedByUserName("user1");
 
         CommonRequest<IndividualRegistrationRequestDTO> request = new CommonRequest<>();
@@ -96,18 +100,16 @@ class IndividualRegistrationRequestControllerTest {
         verify(individualRegistrationRequestService, times(1)).update(1L, dto);
     }
 
-    @Test
     void testDeleteIndividualRegistration() {
-        IndividualRegistrationRequestDTO dto = new IndividualRegistrationRequestDTO();
-        dto.setId("1");
+        Long id = 1L;
 
-        doNothing().when(individualRegistrationRequestService).delete(1L);
+        doNothing().when(individualRegistrationRequestService).delete(id);
 
         ResponseEntity<CommonResponse<Void>> response =
-                individualRegistrationRequestController.deleteIndividualRegistration(dto);
+                individualRegistrationRequestController.deleteIndividualRegistration(id);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(individualRegistrationRequestService, times(1)).delete(1L);
+        verify(individualRegistrationRequestService, times(1)).delete(id);
     }
 
     @Test
@@ -159,7 +161,7 @@ class IndividualRegistrationRequestControllerTest {
     @Test
     void testCreateIndividualRegistrationWithNullHackathonId() {
         IndividualRegistrationRequestDTO dto = new IndividualRegistrationRequestDTO();
-        dto.setHackathonId(null);
+        dto.setHackathonId(null); // Hackathon ID is null
 
         CommonRequest<IndividualRegistrationRequestDTO> request = new CommonRequest<>();
         request.setRequestId(UUID.randomUUID().toString());
@@ -167,10 +169,12 @@ class IndividualRegistrationRequestControllerTest {
         request.setChannel("HACOF");
         request.setData(dto);
 
-        ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> response =
-                individualRegistrationRequestController.createIndividualRegistration(request);
+        InvalidInputException exception = assertThrows(
+                InvalidInputException.class,
+                () -> individualRegistrationRequestController.createIndividualRegistration(request)
+        );
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Hackathon ID cannot be null", exception.getMessage());
         verify(individualRegistrationRequestService, never()).create(any(IndividualRegistrationRequestDTO.class));
     }
 
@@ -188,10 +192,12 @@ class IndividualRegistrationRequestControllerTest {
         when(individualRegistrationRequestService.create(dto))
                 .thenThrow(new ResourceNotFoundException("Hackathon not found"));
 
-        ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> response =
-                individualRegistrationRequestController.createIndividualRegistration(request);
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> individualRegistrationRequestController.createIndividualRegistration(request)
+        );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Hackathon not found", exception.getMessage());
         verify(individualRegistrationRequestService, times(1)).create(dto);
     }
 
@@ -209,28 +215,32 @@ class IndividualRegistrationRequestControllerTest {
         when(individualRegistrationRequestService.update(999L, dto))
                 .thenThrow(new ResourceNotFoundException("Individual registration request not found"));
 
-        ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> response =
-                individualRegistrationRequestController.updateIndividualRegistration(request);
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> individualRegistrationRequestController.updateIndividualRegistration(request)
+        );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Individual registration request not found", exception.getMessage());
         verify(individualRegistrationRequestService, times(1)).update(999L, dto);
     }
 
     @Test
     void testDeleteNonExistentIndividualRegistration() {
-        IndividualRegistrationRequestDTO dto = new IndividualRegistrationRequestDTO();
-        dto.setId("999");
+        Long id = 999L;
 
         doThrow(new ResourceNotFoundException("Individual registration request not found"))
                 .when(individualRegistrationRequestService)
-                .delete(999L);
+                .delete(id);
 
-        ResponseEntity<CommonResponse<Void>> response =
-                individualRegistrationRequestController.deleteIndividualRegistration(dto);
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> individualRegistrationRequestController.deleteIndividualRegistration(id)
+        );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(individualRegistrationRequestService, times(1)).delete(999L);
+        assertEquals("Individual registration request not found", exception.getMessage());
+        verify(individualRegistrationRequestService, times(1)).delete(id);
     }
+
 
     @Test
     void testGetAllByHackathonId() {

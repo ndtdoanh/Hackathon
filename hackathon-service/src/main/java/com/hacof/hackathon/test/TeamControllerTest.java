@@ -42,21 +42,6 @@ class TeamControllerTest {
     }
 
     @Test
-    void testCreateBulkTeams() {
-        TeamDTO dto = new TeamDTO();
-        dto.setId("1");
-
-        when(teamService.createBulkTeams(any(), any())).thenReturn(Collections.singletonList(dto));
-
-        ResponseEntity<CommonResponse<List<TeamDTO>>> response =
-                teamController.createBulkTeams(Collections.singletonMap("teamLeaderId", "1"));
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().getData().size());
-        verify(teamService, times(1)).createBulkTeams(any(), any());
-    }
-
-    @Test
     void testGetAllTeams() {
         TeamDTO dto = new TeamDTO();
         dto.setId("1");

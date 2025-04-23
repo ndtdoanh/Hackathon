@@ -120,6 +120,10 @@ public class HackathonServiceImpl implements HackathonService {
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + id));
 
+        if (hackathonDTO.getTitle() == null || hackathonDTO.getTitle().trim().isEmpty()) {
+            throw new InvalidInputException("Title cannot be empty");
+        }
+
         validateUniqueTitleForUpdate(id, hackathonDTO.getTitle());
         validateEnumValues(hackathonDTO);
         // get current user's information from SecurityContext
