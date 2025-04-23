@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationRequest {
+    Long id;
     NotificationType type;
     String content;
     String metadata;

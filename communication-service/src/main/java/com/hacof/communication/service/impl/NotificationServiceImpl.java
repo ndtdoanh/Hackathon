@@ -10,9 +10,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hacof.communication.constant.NotificationMethod;
 import com.hacof.communication.constant.NotificationStatus;
@@ -221,6 +221,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public NotificationResponse getNotification(Long id) {
         Notification notification = notificationRepository
                 .findById(id)

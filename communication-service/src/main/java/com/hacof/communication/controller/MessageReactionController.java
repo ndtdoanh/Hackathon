@@ -40,16 +40,20 @@ public class MessageReactionController {
     MessageReactionService reactionService;
     SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/reactions/{messageId}")
-    public void handleReaction(@Payload MessageReactionRequest request, @DestinationVariable Long messageId) {
+    @MessageMapping("/reactions/{messageId}/{username}")
+    public void handleReaction(
+            @Payload MessageReactionRequest request,
+            @DestinationVariable Long messageId,
+            @DestinationVariable String username) {
         log.info("Message ID: {}", messageId);
         log.info("ReactionType: {}", request.getReactionType());
 
-        MessageReactionResponse reactionResponse = reactionService.reactToMessage(messageId, request);
+        MessageReactionResponse reactionResponse = reactionService.findById(request.getId());
+        reactionResponse.setCreatedByUserName(username);
 
         log.info("Created reaction response: {}", reactionResponse);
 
-        String destination = "/topic/messages/" + messageId;
+        String destination = "/topic/messages";
         log.info("Sending to destination: {}", destination);
         messagingTemplate.convertAndSend(destination, reactionResponse);
     }

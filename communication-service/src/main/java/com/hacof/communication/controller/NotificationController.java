@@ -8,6 +8,10 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,13 +32,28 @@ import com.hacof.communication.service.NotificationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
 @RequiredArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationController {
     NotificationService notificationService;
+    SimpMessagingTemplate messagingTemplate;
+
+    @MessageMapping("/notifications/{userId}")
+    public void handleWebSocketNotification(@Payload NotificationRequest request, @DestinationVariable Long userId) {
+        log.info("Received WebSocket notification for user: {}", userId);
+        log.info("Notification content: {}", request.getContent());
+
+        NotificationResponse notificationResponse = notificationService.getNotification(request.getId());
+
+        String destination = "/topic/notifications/" + userId;
+        log.info("Sending to destination: {}", destination);
+        messagingTemplate.convertAndSend(destination, notificationResponse);
+    }
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_NOTIFICATION')")

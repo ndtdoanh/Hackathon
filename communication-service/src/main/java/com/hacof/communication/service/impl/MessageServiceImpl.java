@@ -78,8 +78,8 @@ public class MessageServiceImpl implements MessageService {
         return messageResponse;
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public MessageResponse getMessageById(Long messageId) {
         Message message = messageRepository
                 .findById(messageId)
