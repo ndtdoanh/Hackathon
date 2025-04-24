@@ -149,7 +149,7 @@ public class UserDeviceTrackServiceImpl implements UserDeviceTrackService {
             }
 
             if (!fileUrlList.isEmpty()) {
-                existingUserDeviceTrack.setFileUrls(fileUrlList);
+                existingUserDeviceTrack.getFileUrls().addAll(fileUrlList);
                 fileUrlRepository.saveAll(fileUrlList);
             }
         }

@@ -105,13 +105,27 @@ public class FeedbackDetailController {
 
     @GetMapping("/by-feedback/{feedbackId}")
     // @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAILS_BY_FEEDBACK_ID')")
-    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackId(@PathVariable Long feedbackId) {
+    public ApiResponse<List<FeedbackDetailResponse>> getAllFeedbackDetailsByFeedbackId(@PathVariable Long feedbackId) {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())
                 .channel("HACOF")
-                .data(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId))
+                .data(feedbackDetailService.getAllFeedbackDetailsByFeedbackId(feedbackId))
                 .message("Retrieved feedback details by feedbackId")
+                .build();
+    }
+
+    @GetMapping("/by-feedback/{feedbackId}/user/{createdBy}")
+    // @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAIL_BY_FEEDBACKID_AND_USER')")
+    public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackIdAndCreatedBy(
+            @PathVariable Long feedbackId,
+            @PathVariable String createdBy) {
+        return ApiResponse.<List<FeedbackDetailResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .data(feedbackDetailService.getFeedbackDetailsByFeedbackIdAndCreatedBy(feedbackId, createdBy))
+                .message("Retrieved feedback details by feedbackId and createdBy")
                 .build();
     }
 

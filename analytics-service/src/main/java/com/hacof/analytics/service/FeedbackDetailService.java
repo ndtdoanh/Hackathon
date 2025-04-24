@@ -14,7 +14,9 @@ public interface FeedbackDetailService {
 
     FeedbackDetailResponse getFeedbackDetail(Long id);
 
-    List<FeedbackDetailResponse> getFeedbackDetailsByFeedbackId(Long feedbackId);
+    List<FeedbackDetailResponse> getAllFeedbackDetailsByFeedbackId(Long feedbackId);
+
+    List<FeedbackDetailResponse> getFeedbackDetailsByFeedbackIdAndCreatedBy(Long feedbackId, String createdBy);
 
     void deleteFeedbackDetail(Long id);
 

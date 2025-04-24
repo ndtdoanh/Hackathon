@@ -73,6 +73,33 @@ class FeedbackControllerTest {
     }
 
     @Test
+    void testGetFeedbacksByMentor() {
+        Long mentorId = 1L;
+        List<FeedbackResponse> mockFeedbacks = Collections.singletonList(new FeedbackResponse());
+        when(feedbackService.getFeedbacksByMentor(mentorId)).thenReturn(mockFeedbacks);
+
+        ApiResponse<List<FeedbackResponse>> response = feedbackController.getFeedbacksByMentor(mentorId);
+
+        assertEquals(mockFeedbacks, response.getData());
+        assertEquals("Get feedbacks by mentor", response.getMessage());
+        verify(feedbackService, times(1)).getFeedbacksByMentor(mentorId);
+    }
+
+    @Test
+    void testGetFeedback() {
+        String hackathonId = "1";
+        String mentorId = "1";
+        FeedbackResponse mockFeedback = new FeedbackResponse();
+        when(feedbackService.getFeedback(hackathonId, mentorId)).thenReturn(mockFeedback);
+
+        ApiResponse<FeedbackResponse> response = feedbackController.getFeedback(hackathonId, mentorId);
+
+        assertEquals(mockFeedback, response.getData());
+        assertEquals("Feedback retrieved successfully", response.getMessage());
+        verify(feedbackService, times(1)).getFeedback(hackathonId, mentorId);
+    }
+
+    @Test
     void testGetFeedbackById() {
         Long id = 1L;
         FeedbackResponse mockFeedback = new FeedbackResponse();
