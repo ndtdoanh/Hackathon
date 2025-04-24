@@ -51,12 +51,12 @@ public class HackathonDTO {
 
     @NotNull(message = "Enroll Start Date is required")
     @FutureOrPresent(message = "Enroll Start Date must be in the present or future")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+   // @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime enrollStartDate;
 
     @NotNull(message = "Enroll End Date is required")
     @FutureOrPresent(message = "Enroll End Date must be in the present or future")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime enrollEndDate;
 
     @NotNull(message = "Max Teams is required")
@@ -64,12 +64,12 @@ public class HackathonDTO {
 
     @NotNull(message = " Start Date is required")
     @FutureOrPresent(message = "Start Date must be in the present or future")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime startDate;
 
     @NotNull(message = " End Date is required")
     @FutureOrPresent(message = " End Date must be in the present or future")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+   // @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime endDate;
 
     @NotNull(message = "Information is required")

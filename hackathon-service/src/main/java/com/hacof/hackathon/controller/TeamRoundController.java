@@ -60,9 +60,9 @@ public class TeamRoundController {
     }
 
     @PutMapping
-    public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(@Valid @RequestBody TeamRoundDTO request) {
-        String id = request.getId();
-        TeamRoundDTO updated = teamRoundService.update(id, request);
+    public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(@RequestBody CommonRequest<TeamRoundDTO> request) {
+        String id = request.getData().getId();
+        TeamRoundDTO updated = teamRoundService.update(id, request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

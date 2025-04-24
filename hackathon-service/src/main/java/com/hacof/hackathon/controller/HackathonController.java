@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class HackathonController {
+    /**
+     * This class is responsible for handling all the endpoints related to hackathons and hackathon results.
+     */
+    // --- ENDPOINTS FOR HACKATHONS ---
     HackathonService hackathonService;
     HackathonResultService hackathonResultService;
 
@@ -78,6 +83,7 @@ public class HackathonController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> createHackathon(
             @Valid @RequestBody CommonRequest<HackathonDTO> request) {
         if (request.getData() == null) {
@@ -95,6 +101,7 @@ public class HackathonController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_HACKATHON')")
     public ResponseEntity<CommonResponse<HackathonDTO>> updateHackathon(
             @Valid @RequestBody CommonRequest<HackathonDTO> request) {
         HackathonDTO updatedHackathon =
@@ -110,6 +117,7 @@ public class HackathonController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_HACKATHON')")
     public ResponseEntity<CommonResponse<Void>> deleteHackathon(@PathVariable String id) {
         log.debug("Received request to delete hackathon with id: {}", id);
         if (id == null || id.isEmpty()) {
@@ -127,6 +135,7 @@ public class HackathonController {
 
     // --- ENDPOINTS FOR HACKATHON RESULTS ---
     @PostMapping("/results")
+    @PreAuthorize("hasAuthority('CREATE_HACKATHON_RESULT')")
     public ResponseEntity<CommonResponse<HackathonResultDTO>> createHackathonResult(
             @Valid @RequestBody CommonRequest<HackathonResultDTO> request) {
         log.debug("Creating hackathon result: {}", request.getData());
@@ -140,6 +149,7 @@ public class HackathonController {
     }
 
     @PutMapping("/results")
+    @PreAuthorize("hasAuthority('UPDATE_HACKATHON_RESULT')")
     public ResponseEntity<CommonResponse<HackathonResultDTO>> updateHackathonResult(
             @Valid @RequestBody CommonRequest<HackathonResultDTO> request) {
         String id = request.getData().getId();
@@ -153,6 +163,7 @@ public class HackathonController {
     }
 
     @DeleteMapping("/results/{id}")
+    @PreAuthorize("hasAuthority('DELETE_HACKATHON_RESULT')")
     public ResponseEntity<CommonResponse<HackathonResultDTO>> deleteHackathonResult(@PathVariable String id) {
         hackathonResultService.delete(Long.parseLong(id));
 
@@ -165,6 +176,7 @@ public class HackathonController {
     }
 
     @PostMapping("/results/bulk-create")
+    @PreAuthorize("hasAuthority('CREATE_BULK_HACKATHON_RESULT')")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> createBulkHackathonResults(
             @Valid @RequestBody List<HackathonResultDTO> request) {
         List<HackathonResultDTO> created = hackathonResultService.createBulk(request);
@@ -177,6 +189,7 @@ public class HackathonController {
     }
 
     @PutMapping("/results/bulk-update")
+    @PreAuthorize("hasAuthority('UPDATE_BULK_HACKATHON_RESULT')")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> updateBulkHackathonResults(
             @Valid @RequestBody List<HackathonResultDTO> request) {
         List<HackathonResultDTO> created = hackathonResultService.updateBulk(request);

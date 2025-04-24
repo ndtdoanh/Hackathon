@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipDTO;
 import com.hacof.hackathon.dto.SponsorshipHackathonDTO;
-import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
 import com.hacof.hackathon.entity.Sponsorship;
 import com.hacof.hackathon.service.SponsorshipHackathonDetailService;
 import com.hacof.hackathon.service.SponsorshipHackathonService;

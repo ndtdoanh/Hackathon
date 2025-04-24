@@ -10,8 +10,6 @@ import com.hacof.hackathon.entity.IndividualRegistrationRequest;
 import org.springframework.data.jpa.repository.Query;
 
 public interface IndividualRegistrationRequestRepository extends JpaRepository<IndividualRegistrationRequest, Long> {
-    List<IndividualRegistrationRequest> findAllByStatus(IndividualRegistrationRequestStatus status);
-
     List<IndividualRegistrationRequest> findAllByCreatedByUsername(String createdByUsername);
 
     List<IndividualRegistrationRequest> findAllByCreatedByUsernameAndHackathonId(

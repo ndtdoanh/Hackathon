@@ -31,7 +31,6 @@ public class MentorTeamServiceImpl implements MentorTeamService {
     TeamRepository teamRepository;
     UserRepository userRepository;
     HackathonRepository hackathonRepository;
-    // MentorTeamMapper mentorTeamMapper;
 
     // not use
     @Override

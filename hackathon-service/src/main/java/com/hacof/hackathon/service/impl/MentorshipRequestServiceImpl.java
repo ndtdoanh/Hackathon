@@ -19,7 +19,6 @@ import com.hacof.hackathon.entity.Team;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.MentorshipRequestMapper;
 import com.hacof.hackathon.mapper.manual.MentorshipRequestMapperManual;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.MentorTeamRepository;
@@ -43,7 +42,6 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
     UserRepository userRepository;
     TeamRepository teamRepository;
     MentorTeamRepository mentorTeamRepository;
-    MentorshipRequestMapper mentorshipRequestMapper;
 
     @Override
     public MentorshipRequestDTO create(MentorshipRequestDTO mentorshipRequestDTO) {

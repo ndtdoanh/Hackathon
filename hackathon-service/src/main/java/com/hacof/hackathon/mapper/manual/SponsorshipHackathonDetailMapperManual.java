@@ -4,7 +4,6 @@ import com.hacof.hackathon.constant.SponsorshipDetailStatus;
 import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipHackathonDetailRequestDTO;
 import com.hacof.hackathon.dto.SponsorshipHackathonDetailResponseDTO;
-import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.entity.SponsorshipHackathonDetail;
 
 import java.util.Collections;

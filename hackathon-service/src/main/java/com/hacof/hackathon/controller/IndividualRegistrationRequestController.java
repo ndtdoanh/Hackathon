@@ -1,7 +1,5 @@
 package com.hacof.hackathon.controller;
 
-// import com.hacof.hackathon.service.IndividualRegistrationRequestService;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +9,7 @@ import com.hacof.hackathon.exception.InvalidInputException;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +38,7 @@ public class IndividualRegistrationRequestController {
     IndividualRegistrationRequestService individualRegistrationRequestService;
 
     @PostMapping
+ //   @PreAuthorize("hasAuthority('CREATE_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> createIndividualRegistration(
             @RequestBody @Valid CommonRequest<IndividualRegistrationRequestDTO> request) {
         if (request.getData() == null || request.getData().getHackathonId() == null) {
@@ -56,6 +56,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @PutMapping
+  //  @PreAuthorize("hasAuthority('UPDATE_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> updateIndividualRegistration(
             @RequestBody @Valid CommonRequest<IndividualRegistrationRequestDTO> request) {
         IndividualRegistrationRequestDTO individualRegistrationRequestDTO = individualRegistrationRequestService.update(
@@ -71,6 +72,7 @@ public class IndividualRegistrationRequestController {
 
     // update 23/4/25
     @PutMapping("/bulk-update")
+ //   @PreAuthorize("hasAuthority('UPDATE_BULK_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> bulkUpdateIndividualRegistrations(
             @RequestBody @Valid CommonRequest<List<IndividualRegistrationRequestDTO>> request) {
         List<IndividualRegistrationRequestDTO> updatedRequests =
@@ -85,6 +87,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @DeleteMapping("/{id}")
+//    @PreAuthorize("hasAuthority('DELETE_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<Void>> deleteIndividualRegistration(@PathVariable Long id) {
         individualRegistrationRequestService.delete(id);
         CommonResponse<Void> response = new CommonResponse<>(
@@ -97,6 +100,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping
+   // @PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllIndividualRegistrations() {
         List<IndividualRegistrationRequestDTO> individualRegistrations = individualRegistrationRequestService.getAll();
         CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
@@ -109,6 +113,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/{id}")
+    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> getIndividualRegistrationById(
             @PathVariable Long id) {
         IndividualRegistrationRequestDTO individualRegistration = individualRegistrationRequestService.getById(id);
@@ -122,6 +127,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/filter-by-username")
+    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByCreatedByUsername(
             @RequestParam String createdByUsername) {
         List<IndividualRegistrationRequestDTO> requests =
@@ -136,6 +142,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/filter-by-username-and-hackathon")
+    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>>
             getAllByCreatedByUsernameAndHackathonId(
                     @RequestParam String createdByUsername, @RequestParam String hackathonId) {
@@ -152,6 +159,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/filter-by-hackathon")
+    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByHackathonId(
             @RequestParam String hackathonId) {
         List<IndividualRegistrationRequestDTO> requests =
@@ -166,7 +174,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/filter-by-hackathon-and-status-completed")
-    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByHackathonIdAndStatusApproved(
+    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByHackathonIdAndStatusCompleted(
             @RequestParam String hackathonId) {
         if (!hackathonId.matches("\\d+")) { // Validate that hackathonId is numeric
             throw new InvalidInputException("Hackathon ID must be a numeric value");
@@ -174,6 +182,24 @@ public class IndividualRegistrationRequestController {
 
         List<IndividualRegistrationRequestDTO> requests =
                 individualRegistrationRequestService.getAllByHackathonIdAndStatusCompleted(hackathonId);
+        CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/filter-by-hackathon-and-status-approved")
+    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByHackathonIdAndStatusApproved(
+            @RequestParam String hackathonId) {
+        if (!hackathonId.matches("\\d+")) { // Validate that hackathonId is numeric
+            throw new InvalidInputException("Hackathon ID must be a numeric value");
+        }
+
+        List<IndividualRegistrationRequestDTO> requests =
+                individualRegistrationRequestService.getAllByHackathonIdAndStatusApproved(hackathonId);
         CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

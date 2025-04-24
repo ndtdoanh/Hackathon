@@ -62,7 +62,19 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "DELETE_FORUM_CATEGORY",
 
                     "CREATE_FORUM_THREAD_ADMIN",
-                    "UPDATE_FORUM_THREAD_ADMIN"
+                    "UPDATE_FORUM_THREAD_ADMIN",
+
+                    // update 23-4-25
+                    "CREATE_HACKATHON",
+                    "UPDATE_HACKATHON",
+                    "DELETE_HACKATHON",
+
+                    "CREATE_HACKATHON_RESULT",
+                    "UPDATE_HACKATHON_RESULT",
+                    "DELETE_HACKATHON_RESULT",
+                    "CREATE_BULK_HACKATHON_RESULT",
+                    "UPDATE_BULK_HACKATHON_RESULT"
+
             ),
             "ORGANIZER",
             Set.of(
@@ -107,7 +119,18 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                     "CREATE_FEEDBACK",
                     "DELETE_FEEDBACK",
-                    "DELETE_FEEDBACK_DETAIL"
+                    "DELETE_FEEDBACK_DETAIL",
+
+                    // update 23-4-25
+                    "CREATE_HACKATHON",
+                    "UPDATE_HACKATHON",
+                    "DELETE_HACKATHON",
+
+                    "CREATE_HACKATHON_RESULT",
+                    "UPDATE_HACKATHON_RESULT",
+                    "DELETE_HACKATHON_RESULT",
+                    "CREATE_BULK_HACKATHON_RESULT",
+                    "UPDATE_BULK_HACKATHON_RESULT"
             ),
             "JUDGE",
             Set.of(
@@ -230,7 +253,21 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("DELETE_FORUM_CATEGORY", "/api/v1/forum-categories/{id}", "DELETE", "FORUM_CATIGORIES"),
 
                 new Permission("CREATE_FORUM_THREAD_ADMIN", "/api/v1/forum-threads/admin", "POST", "FORUM_THREADS"),
-                new Permission("UPDATE_FORUM_THREAD_ADMIN", "/api/v1/forum-threads/admin/{id}", "PUT", "FORUM_THREADS")
+                new Permission("UPDATE_FORUM_THREAD_ADMIN", "/api/v1/forum-threads/admin/{id}", "PUT", "FORUM_THREADS"),
+
+                // update permission - 23/4/25
+                new Permission("CREATE_HACKATHON", "/api/v1/hackathons", "POST", "HACKATHONS"),
+                new Permission("UPDATE_HACKATHON", "/api/v1/hackathons/{id}", "PUT", "HACKATHONS"),
+                new Permission("DELETE_HACKATHON", "/api/v1/hackathons/{id}", "DELETE", "HACKATHONS"),
+                new Permission("LIST_HACKATHONS", "/api/v1/hackathons", "GET", "HACKATHONS"),
+                new Permission("CREATE_HACKATHON_RESULT", "/api/v1/hackathons/results", "POST", "HACKATHON_RESULTS"),
+                new Permission("UPDATE_HACKATHON_RESULT", "/api/v1/hackathons/results", "PUT", "HACKATHON_RESULTS"),
+                new Permission("DELETE_HACKATHON_RESULT", "/api/v1/hackathons/results/{id}", "DELETE", "HACKATHON_RESULTS"),
+                new Permission("CREATE_BULK_HACKATHON_RESULT", "/api/v1/hackathons/results/bulk-create", "POST", "HACKATHON_RESULTS"),
+                new Permission("UPDATE_BULK_HACKATHON_RESULT", "/api/v1/hackathons/results/bulk-update", "PUT", "HACKATHON_RESULTS"),
+                new Permission("GET_HACKATHON_RESULT_BY_HACKATHON_ID", "/api/v1/hackathons/results/filter-by-hackathonId", "GET", "HACKATHON_RESULTS"),
+                new Permission("GET_HACKATHON_RESULT", "/api/v1/hackathons/results", "GET", "HACKATHON_RESULTS"),
+                new Permission("GET_HACKATHON_RESULT_BY_ID", "/api/v1/hackathons/results/{id}", "GET", "HACKATHON_RESULTS")
         );
 
         permissionRepository.saveAll(permissions);

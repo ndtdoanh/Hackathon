@@ -2,6 +2,7 @@ package com.hacof.hackathon.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hacof.hackathon.constant.TeamRoundStatus;
 
 import lombok.AccessLevel;
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TeamRoundDTO {
     String id;
 

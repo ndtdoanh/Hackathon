@@ -34,7 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional
 @FieldDefaults(makeFinal = true)
-public class TeamRoundServiceImpl implements TeamRoundService {
+public class
+TeamRoundServiceImpl implements TeamRoundService {
     TeamRoundRepository teamRoundRepository;
     TeamRepository teamRepository;
     RoundRepository roundRepository;
