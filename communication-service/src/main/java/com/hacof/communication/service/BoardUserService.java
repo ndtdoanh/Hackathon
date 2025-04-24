@@ -13,6 +13,8 @@ public interface BoardUserService {
 
     BoardUserResponseDTO deleteBoardUser(Long id);
 
+    BoardUserResponseDTO undeleteBoardUser(Long id);
+
     BoardUserResponseDTO getBoardUser(Long id);
 
     List<BoardUserResponseDTO> getAllBoardUsers();

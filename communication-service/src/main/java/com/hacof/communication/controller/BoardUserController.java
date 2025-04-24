@@ -116,6 +116,30 @@ public class BoardUserController {
         }
     }
 
+    @PutMapping("/undelete/{id}")
+    public ResponseEntity<CommonResponse<BoardUserResponseDTO>> undeleteBoardUser(@PathVariable Long id) {
+        CommonResponse<BoardUserResponseDTO> response = new CommonResponse<>();
+        try {
+            BoardUserResponseDTO dto = boardUserService.undeleteBoardUser(id);
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("BoardUser undeleted successfully!");
+            response.setData(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<BoardUserResponseDTO>> getBoardUser(@PathVariable Long id) {
         CommonResponse<BoardUserResponseDTO> response = new CommonResponse<>();
