@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.hacof.submission.constant.TeamRoundStatus;
+import com.hacof.submission.entity.TeamRound;
+import com.hacof.submission.repository.TeamRoundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +45,9 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
     @Autowired
     private TeamRoundJudgeRepository teamRoundJudgeRepository;
+
+    @Autowired
+    private TeamRoundRepository teamRoundRepository;
 
     @Autowired
     private JudgeSubmissionMapper judgeSubmissionMapper;
@@ -133,28 +139,50 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
     @Transactional
     public void updateFinalScoreIfAllJudgesSubmitted(Submission submission) {
-        // Lấy danh sách các giám khảo được giao chấm bài trong TeamRoundJudge
         List<User> assignedJudges = teamRoundJudgeRepository.findJudgesByRoundAndTeam(
                 submission.getRound().getId(), submission.getTeam().getId());
 
-        // Lấy danh sách giám khảo đã chấm bài xong
         List<User> judgesWhoCompleted = judgeSubmissionRepository.findJudgesWhoCompletedSubmission(submission.getId());
 
-        // Nếu chưa đủ giám khảo chấm xong, giữ finalScore = null
         if (!new HashSet<>(judgesWhoCompleted).containsAll(assignedJudges)) {
             submission.setFinalScore(null);
             submissionRepository.save(submission);
             return;
         }
 
-        // Tính tổng điểm của tất cả giám khảo đã chấm xong
         int totalScore = judgeSubmissionRepository.getTotalScoreBySubmission(submission.getId());
         int numberOfJudges = judgesWhoCompleted.size();
         int finalScore = numberOfJudges > 0 ? totalScore / numberOfJudges : 0;
 
-        // Cập nhật finalScore vào Submission
         submission.setFinalScore(finalScore);
         submissionRepository.save(submission);
+
+        List<Submission> allSubmissions = submissionRepository.findByRoundId(submission.getRound().getId());
+        boolean allScored = allSubmissions.stream().allMatch(s -> s.getFinalScore() != null);
+        if (!allScored) return;
+
+        List<Submission> sorted = allSubmissions.stream()
+                .sorted((a, b) -> Integer.compare(b.getFinalScore(), a.getFinalScore()))
+                .collect(Collectors.toList());
+
+        int totalTeam = submission.getRound().getTotalTeam();
+
+        for (int i = 0; i < sorted.size(); i++) {
+            Submission s = sorted.get(i);
+            Long teamId = s.getTeam().getId();
+            Long roundId = s.getRound().getId();
+
+            TeamRound teamRound = teamRoundRepository.findByTeamIdAndRoundId(teamId, roundId)
+                    .orElseThrow(() -> new IllegalArgumentException("TeamRound not found"));
+
+            if (i < totalTeam) {
+                teamRound.setStatus(TeamRoundStatus.PASSED);
+            } else {
+                teamRound.setStatus(TeamRoundStatus.FAILED);
+            }
+
+            teamRoundRepository.save(teamRound);
+        }
     }
 
     @Override

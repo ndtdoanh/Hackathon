@@ -12,4 +12,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByRoundIdAndCreatedByUsername(Long roundId, String createdByUsername);
 
     List<Submission> findByTeamIdAndRoundId(Long teamId, Long roundId);
+
+    List<Submission> findByRoundId(Long roundId);
+
 }

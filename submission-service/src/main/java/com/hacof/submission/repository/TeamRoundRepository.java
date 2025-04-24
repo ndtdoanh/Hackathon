@@ -10,4 +10,7 @@ import com.hacof.submission.entity.TeamRound;
 @Repository
 public interface TeamRoundRepository extends JpaRepository<TeamRound, Long> {
     Optional<TeamRound> findById(Long id);
+
+    Optional<TeamRound> findByTeamIdAndRoundId(Long teamId, Long roundId);
+
 }
