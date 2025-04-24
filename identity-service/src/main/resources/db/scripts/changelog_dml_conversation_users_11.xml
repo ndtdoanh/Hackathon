@@ -10,9 +10,9 @@
         <sql>
             <![CDATA[
             INSERT INTO conversation_users (id, is_deleted, conversation_id, user_id)
-            VALUES (1, false, 1, 57),
-                   (2, false, 1, 58),
-                   (3, false, 1, 59),
+            VALUES (1, false, 1, 56),
+                   (2, false, 1, 57),
+                   (3, false, 1, 58);
             ]]>
         </sql>
     </changeSet>
