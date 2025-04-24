@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ public class RoundController {
 
     // ----------- ROUND ENDPOINTS -----------
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_ROUND')")
     public ResponseEntity<CommonResponse<RoundDTO>> createRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         RoundDTO roundDTO = roundService.create(request.getData());
         CommonResponse<RoundDTO> response = new CommonResponse<>(
@@ -54,6 +56,7 @@ public class RoundController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_ROUND')")
     public ResponseEntity<CommonResponse<RoundDTO>> updateRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
         if (request.getData() == null) {
             throw new InvalidInputException("Round data cannot be null");
@@ -70,6 +73,7 @@ public class RoundController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_ROUND')")
     public ResponseEntity<CommonResponse<RoundDTO>> deleteRound(@PathVariable String id) {
         roundService.delete(Long.parseLong(id));
         CommonResponse<RoundDTO> response = new CommonResponse<>(
@@ -105,7 +109,9 @@ public class RoundController {
         return ResponseEntity.ok(response);
     }
 
+    // ----------  LOCATION ENDPOINTS -----------
     @PostMapping("/locations")
+    @PreAuthorize("hasAuthority('CREATE_LOCATION')")
     public ResponseEntity<CommonResponse<RoundLocationDTO>> createRoundLocation(
             @RequestBody @Valid CommonRequest<RoundLocationDTO> request) {
         RoundLocationDTO roundLocationDTO = roundLocationService.create(request.getData());
@@ -119,6 +125,7 @@ public class RoundController {
     }
 
     @PutMapping("/locations")
+    @PreAuthorize("hasAuthority('UPDATE_LOCATION')")
     public ResponseEntity<CommonResponse<RoundLocationDTO>> updateRoundLocation(
             @RequestBody @Valid CommonRequest<RoundLocationDTO> request) {
         RoundLocationDTO roundLocationDTO =
@@ -133,6 +140,7 @@ public class RoundController {
     }
 
     @DeleteMapping("/locations/{id}")
+    @PreAuthorize("hasAuthority('DELETE_LOCATION')")
     public ResponseEntity<CommonResponse<RoundLocationDTO>> deleteRoundLocation(@PathVariable String id) {
         roundLocationService.delete(Long.parseLong(id));
         CommonResponse<RoundLocationDTO> response = new CommonResponse<>(

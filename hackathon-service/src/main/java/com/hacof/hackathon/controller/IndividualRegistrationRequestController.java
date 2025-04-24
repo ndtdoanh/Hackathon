@@ -38,7 +38,7 @@ public class IndividualRegistrationRequestController {
     IndividualRegistrationRequestService individualRegistrationRequestService;
 
     @PostMapping
- //   @PreAuthorize("hasAuthority('CREATE_INDIVIDUAL_REGISTRATION')")
+    @PreAuthorize("hasAuthority('CREATE_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> createIndividualRegistration(
             @RequestBody @Valid CommonRequest<IndividualRegistrationRequestDTO> request) {
         if (request.getData() == null || request.getData().getHackathonId() == null) {
@@ -56,7 +56,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @PutMapping
-  //  @PreAuthorize("hasAuthority('UPDATE_INDIVIDUAL_REGISTRATION')")
+    @PreAuthorize("hasAuthority('UPDATE_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> updateIndividualRegistration(
             @RequestBody @Valid CommonRequest<IndividualRegistrationRequestDTO> request) {
         IndividualRegistrationRequestDTO individualRegistrationRequestDTO = individualRegistrationRequestService.update(
@@ -72,7 +72,7 @@ public class IndividualRegistrationRequestController {
 
     // update 23/4/25
     @PutMapping("/bulk-update")
- //   @PreAuthorize("hasAuthority('UPDATE_BULK_INDIVIDUAL_REGISTRATION')")
+    @PreAuthorize("hasAuthority('UPDATE_BULK_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> bulkUpdateIndividualRegistrations(
             @RequestBody @Valid CommonRequest<List<IndividualRegistrationRequestDTO>> request) {
         List<IndividualRegistrationRequestDTO> updatedRequests =
@@ -87,7 +87,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasAuthority('DELETE_INDIVIDUAL_REGISTRATION')")
+    @PreAuthorize("hasAuthority('DELETE_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<Void>> deleteIndividualRegistration(@PathVariable Long id) {
         individualRegistrationRequestService.delete(id);
         CommonResponse<Void> response = new CommonResponse<>(
@@ -100,7 +100,6 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping
-   // @PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllIndividualRegistrations() {
         List<IndividualRegistrationRequestDTO> individualRegistrations = individualRegistrationRequestService.getAll();
         CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
@@ -113,7 +112,6 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/{id}")
-    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<IndividualRegistrationRequestDTO>> getIndividualRegistrationById(
             @PathVariable Long id) {
         IndividualRegistrationRequestDTO individualRegistration = individualRegistrationRequestService.getById(id);
@@ -127,7 +125,6 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/filter-by-username")
-    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByCreatedByUsername(
             @RequestParam String createdByUsername) {
         List<IndividualRegistrationRequestDTO> requests =
@@ -142,7 +139,6 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/filter-by-username-and-hackathon")
-    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>>
             getAllByCreatedByUsernameAndHackathonId(
                     @RequestParam String createdByUsername, @RequestParam String hackathonId) {
@@ -159,7 +155,6 @@ public class IndividualRegistrationRequestController {
     }
 
     @GetMapping("/filter-by-hackathon")
-    //@PreAuthorize("hasAuthority('GET_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByHackathonId(
             @RequestParam String hackathonId) {
         List<IndividualRegistrationRequestDTO> requests =

@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,7 @@ public class TeamController {
     // --- TEAM REQUEST ENDPOINTS ---
     // Step 1: Leader creates a team request
     @PostMapping("/requests")
+    @PreAuthorize("hasAuthority('CREATE_TEAM_REQUEST')")
     public ResponseEntity<CommonResponse<TeamRequestDTO>> createTeamRequest(
             @RequestBody CommonRequest<TeamRequestDTO> request) {
         TeamRequestDTO teamRequestDTO = teamRequestService.createTeamRequest(request.getData());
@@ -74,6 +76,7 @@ public class TeamController {
 
     // Step 2: Member responses to the team request
     @PostMapping("/requests/respond")
+        @PreAuthorize("hasAuthority('RESPOND_TEAM_REQUEST')")
     public ResponseEntity<CommonResponse<TeamRequestDTO>> respondToTeamRequest(
             @RequestBody CommonRequest<TeamRequestMemberResponseDTO> request) {
         TeamRequestDTO updated = teamRequestService.updateMemberResponse(
@@ -91,6 +94,7 @@ public class TeamController {
 
     // Step 3: Organizer/Admin review
     @PostMapping("/requests/review")
+    @PreAuthorize("hasAuthority('REVIEW_TEAM_REQUEST')")
     public ResponseEntity<CommonResponse<TeamRequestDTO>> reviewTeamRequest(
             @RequestBody CommonRequest<TeamRequestReviewDTO> request) {
         TeamRequestDTO reviewed = teamRequestService.reviewTeamRequest(
@@ -106,6 +110,18 @@ public class TeamController {
     }
 
     // Step 4: Search team requests
+    @DeleteMapping("/requests/{id}")
+    @PreAuthorize("hasAuthority('DELETE_TEAM_REQUEST')")
+    public ResponseEntity<CommonResponse<TeamRequestDTO>> deleteTeamRequest(@PathVariable Long id) {
+        teamRequestService.deleteTeamRequest(id);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Delete team request successfully"),
+                null));
+    }
+
     @GetMapping("/requests")
     public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> getAllTeamRequests() {
         List<TeamRequestDTO> teamRequests = teamRequestService.getAllTeamRequests();
@@ -169,19 +185,9 @@ public class TeamController {
                 teamRequests));
     }
 
-    @DeleteMapping("/requests/{id}")
-    public ResponseEntity<CommonResponse<TeamRequestDTO>> deleteTeamRequest(@PathVariable Long id) {
-        teamRequestService.deleteTeamRequest(id);
-        return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Delete team request successfully"),
-                null));
-    }
-
     // --- TEAM ENDPOINTS ---
     // Step 1: Create bulk team
+    // pending
     @PostMapping
     public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(@RequestBody Map<String, Object> request) {
         Map<String, Object> data = request;
@@ -197,7 +203,21 @@ public class TeamController {
                 createdTeams));
     }
 
+    @PostMapping("/bulk")
+    @PreAuthorize("hasAuthority('CREATE_BULK_TEAM')")
+    public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(
+            @Valid @RequestBody List<TeamBulkRequestDTO> bulkRequest) {
+        List<TeamDTO> createdTeams = teamService.createBulkTeams(bulkRequest);
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Bulk teams created successfully"),
+                createdTeams));
+    }
+
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_BULK_TEAM')")
     public ResponseEntity<CommonResponse<TeamDTO>> updateTeam(@RequestBody CommonRequest<TeamDTO> request) {
         String id = request.getData().getId();
         TeamDTO teamDTO = teamService.updateTeam(Long.parseLong(id), request.getData());
@@ -211,6 +231,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_TEAM')")
     public ResponseEntity<CommonResponse<Void>> deleteTeam(@PathVariable long id) {
         teamService.deleteTeam(id);
         CommonResponse<Void> response = new CommonResponse<>(
@@ -269,17 +290,5 @@ public class TeamController {
                 new CommonResponse.Result("0000", "Teams fetched successfully"),
                 teams);
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/bulk")
-    public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(
-            @Valid @RequestBody List<TeamBulkRequestDTO> bulkRequest) {
-        List<TeamDTO> createdTeams = teamService.createBulkTeams(bulkRequest);
-        return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Bulk teams created successfully"),
-                createdTeams));
     }
 }

@@ -7,6 +7,7 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class MentorTeamController {
     MentorTeamService mentorTeamService;
     MentorTeamLimitService mentorTeamLimitService;
 
+    // pending
     @PostMapping
     public ResponseEntity<CommonResponse<MentorTeamDTO>> createMentorTeam(
             @Valid @RequestBody CommonRequest<MentorTeamDTO> request) {
@@ -50,6 +52,7 @@ public class MentorTeamController {
                 created));
     }
 
+    // pending
     @PutMapping
     public ResponseEntity<CommonResponse<MentorTeamDTO>> updateMentorTeam(
             @Valid @RequestBody CommonRequest<MentorTeamDTO> request) {
@@ -63,7 +66,9 @@ public class MentorTeamController {
                 updated));
     }
 
+
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_MENTOR_TEAM')")
     public ResponseEntity<CommonResponse<Void>> deleteMentorTeam(@PathVariable String id) {
         mentorTeamService.delete(id);
         return ResponseEntity.ok(new CommonResponse<>(

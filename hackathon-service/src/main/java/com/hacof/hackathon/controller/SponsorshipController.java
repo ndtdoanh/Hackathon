@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,7 @@ public class SponsorshipController {
     SponsorshipHackathonDetailService sponsorshipHackathonDetailService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_SPONSORSHIP')")
     public ResponseEntity<CommonResponse<SponsorshipDTO>> createSponsorship(
             @RequestBody @Valid CommonRequest<SponsorshipDTO> request) {
         SponsorshipDTO sponsorshipDTO = sponsorshipService.create(request.getData());
@@ -58,6 +60,7 @@ public class SponsorshipController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_SPONSORSHIP')")
     public ResponseEntity<CommonResponse<SponsorshipDTO>> updateSponsorship(
             @RequestBody @Valid CommonRequest<SponsorshipDTO> request) {
         SponsorshipDTO sponsorshipDTO =
@@ -72,6 +75,7 @@ public class SponsorshipController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_SPONSORSHIP')")
     public ResponseEntity<CommonResponse<SponsorshipDTO>> deleteSponsorship(@PathVariable Long id) {
 
         sponsorshipService.delete(id);
@@ -109,6 +113,7 @@ public class SponsorshipController {
 
     // sponsorship hackathon service
     @PostMapping("/hackathons")
+        @PreAuthorize("hasAuthority('CREATE_SPONSORSHIP_HACKATHON')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> createSponsorshipHackathon(
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDTO> request) {
         SponsorshipHackathonDTO sponsorshipHackathonDTO = sponsorshipHackathonService.create(request.getData());
@@ -122,6 +127,7 @@ public class SponsorshipController {
     }
 
     @PutMapping("/hackathons")
+    @PreAuthorize("hasAuthority('UPDATE_SPONSORSHIP_HACKATHON')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> updateSponsorshipHackathon(
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDTO> request) {
         SponsorshipHackathonDTO sponsorshipHackathonDTO =
@@ -136,6 +142,7 @@ public class SponsorshipController {
     }
 
     @DeleteMapping("/hackathons/{id}")
+    @PreAuthorize("hasAuthority('DELETE_SPONSORSHIP_HACKATHON')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> deleteSponsorshipHackathon(@PathVariable String id) {
         sponsorshipHackathonService.delete(Long.parseLong(id));
         CommonResponse<SponsorshipHackathonDTO> response = new CommonResponse<>(
@@ -218,35 +225,9 @@ public class SponsorshipController {
         return ResponseEntity.ok(response);
     }
 
-    //    @PostMapping("/details")
-    //    public ResponseEntity<CommonResponse<SponsorshipHackathonDetailDTO>> createSponsorshipHackathonDetail(
-    //            @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailDTO> request) {
-    //        SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO =
-    //                sponsorshipHackathonDetailService.create(request.getData());
-    //        CommonResponse<SponsorshipHackathonDetailDTO> response = new CommonResponse<>(
-    //                UUID.randomUUID().toString(),
-    //                LocalDateTime.now(),
-    //                "HACOF",
-    //                new CommonResponse.Result("0000", "Sponsorship Hackathon Detail created successfully"),
-    //                sponsorshipHackathonDetailDTO);
-    //        return ResponseEntity.ok(response);
-    //    }
-    //
-    //    @PutMapping("/details")
-    //    public ResponseEntity<CommonResponse<SponsorshipHackathonDetailDTO>> updateSponsorshipHackathonDetail(
-    //            @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailDTO> request) {
-    //        SponsorshipHackathonDetailDTO sponsorshipHackathonDetailDTO = sponsorshipHackathonDetailService.update(
-    //                Long.parseLong(request.getData().getId()), request.getData());
-    //        CommonResponse<SponsorshipHackathonDetailDTO> response = new CommonResponse<>(
-    //                UUID.randomUUID().toString(),
-    //                LocalDateTime.now(),
-    //                "HACOF",
-    //                new CommonResponse.Result("0000", "Sponsorship Hackathon Detail updated successfully"),
-    //                sponsorshipHackathonDetailDTO);
-    //        return ResponseEntity.ok(response);
-    //    }
-
+    // --- Sponsorship Hackathon Detail Service ---
     @PostMapping("/details")
+    @PreAuthorize("hasAuthority('CREATE_SPONSORSHIP_HACKATHON_DETAIL')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> createSponsorshipHackathonDetail(
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailRequestDTO> request) {
 
@@ -261,6 +242,7 @@ public class SponsorshipController {
     }
 
     @PutMapping("/details/update-info/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_SPONSORSHIP_HACKATHON_DETAIL')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailInfo(
             @PathVariable Long id,
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailRequestDTO> request) {
@@ -278,6 +260,7 @@ public class SponsorshipController {
 
 
     @PutMapping("/details/update-files/{id}")
+    @PreAuthorize("hasAuthority('UPDATE_SPONSORSHIP_HACKATHON_DETAIL_FILES')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailFiles(
             @PathVariable Long id,
             @RequestBody CommonRequest<List<String>> request) {
@@ -293,6 +276,7 @@ public class SponsorshipController {
     }
 
     @DeleteMapping("/details/{id}")
+    @PreAuthorize("hasAuthority('DELETE_SPONSORSHIP_HACKATHON_DETAIL')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> deleteSponsorshipHackathonDetail(
             @PathVariable String id) {
         sponsorshipHackathonDetailService.delete(Long.parseLong(id));

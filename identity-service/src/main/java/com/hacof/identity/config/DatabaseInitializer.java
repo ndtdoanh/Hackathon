@@ -73,8 +73,60 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "UPDATE_HACKATHON_RESULT",
                     "DELETE_HACKATHON_RESULT",
                     "CREATE_BULK_HACKATHON_RESULT",
-                    "UPDATE_BULK_HACKATHON_RESULT"
+                    "UPDATE_BULK_HACKATHON_RESULT",
 
+                    "CREATE_INDIVIDUAL_REGISTRATION",
+                    "UPDATE_INDIVIDUAL_REGISTRATION",
+                    "UPDATE_BULK_INDIVIDUAL_REGISTRATION",
+                    "DELETE_INDIVIDUAL_REGISTRATION",
+
+                    "CREATE_LOCATION",
+                    "UPDATE_LOCATION",
+                    "DELETE_LOCATION",
+
+                    "CREATE_MENTORSHIP_REQUEST",
+                    "APPROVE_MENTORSHIP_REQUEST",
+                    "REJECT_MENTORSHIP_REQUEST",
+                    "UPDATE_MENTORSHIP_REQUEST",
+                    "DELETE_MENTORSHIP_REQUEST",
+                    "CREATE_MENTORSHIP_SESSION_REQUEST",
+                    "UPDATE_MENTORSHIP_SESSION_REQUEST",
+                    "APPROVE_MENTORSHIP_SESSION_REQUEST",
+                    "REJECT_MENTORSHIP_SESSION_REQUEST",
+                    "DELETE_MENTORSHIP_SESSION_REQUEST",
+
+                    "DELETE_MENTOR_TEAM",
+
+                    "CREATE_ROUND",
+                    "UPDATE_ROUND",
+                    "DELETE_ROUND",
+
+                    "CREATE_SPONSORSHIP",
+                    "UPDATE_SPONSORSHIP",
+                    "DELETE_SPONSORSHIP",
+
+                    "CREATE_SPONSORSHIP_HACKATHON",
+                    "UPDATE_SPONSORSHIP_HACKATHON",
+                    "DELETE_SPONSORSHIP_HACKATHON",
+
+                    "CREATE_SPONSORSHIP_HACKATHON_DETAIL",
+                    "UPDATE_SPONSORSHIP_HACKATHON_DETAIL",
+                    "UPDATE_SPONSORSHIP_HACKATHON_DETAIL_FILES",
+                    "DELETE_SPONSORSHIP_HACKATHON_DETAIL",
+
+                    "CREATE_TEAM_REQUEST",
+                    "RESPOND_TEAM_REQUEST",
+                    "REVIEW_TEAM_REQUEST",
+                    "DELETE_TEAM_REQUEST",
+
+                    "CREATE_BULK_TEAM",
+                    "UPDATE_BULK_TEAM",
+                    "DELETE_TEAM",
+
+                    "CREATE_TEAM_ROUND",
+                    "UPDATE_TEAM_ROUND",
+                    "DELETE_TEAM_ROUND",
+                    "UPDATE_BULK_TEAM_ROUND"
             ),
             "ORGANIZER",
             Set.of(
@@ -130,7 +182,51 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "UPDATE_HACKATHON_RESULT",
                     "DELETE_HACKATHON_RESULT",
                     "CREATE_BULK_HACKATHON_RESULT",
-                    "UPDATE_BULK_HACKATHON_RESULT"
+                    "UPDATE_BULK_HACKATHON_RESULT",
+
+                    "CREATE_INDIVIDUAL_REGISTRATION",
+                    "UPDATE_INDIVIDUAL_REGISTRATION",
+                    "UPDATE_BULK_INDIVIDUAL_REGISTRATION",
+                    "DELETE_INDIVIDUAL_REGISTRATION",
+
+                    "CREATE_LOCATION",
+                    "UPDATE_LOCATION",
+                    "DELETE_LOCATION",
+
+                    "UPDATE_MENTORSHIP_REQUEST",
+                    "DELETE_MENTORSHIP_REQUEST",
+                    "UPDATE_MENTORSHIP_SESSION_REQUEST",
+                    "DELETE_MENTORSHIP_SESSION_REQUEST",
+
+                    "DELETE_MENTOR_TEAM",
+
+                    "CREATE_ROUND",
+                    "UPDATE_ROUND",
+                    "DELETE_ROUND",
+
+                    "CREATE_SPONSORSHIP",
+                    "UPDATE_SPONSORSHIP",
+                    "DELETE_SPONSORSHIP",
+
+                    "CREATE_SPONSORSHIP_HACKATHON",
+                    "UPDATE_SPONSORSHIP_HACKATHON",
+                    "DELETE_SPONSORSHIP_HACKATHON",
+
+                    "CREATE_SPONSORSHIP_HACKATHON_DETAIL",
+                    "UPDATE_SPONSORSHIP_HACKATHON_DETAIL",
+                    "UPDATE_SPONSORSHIP_HACKATHON_DETAIL_FILES",
+                    "DELETE_SPONSORSHIP_HACKATHON_DETAIL",
+
+                    "REVIEW_TEAM_REQUEST",
+
+                    "CREATE_BULK_TEAM",
+                    "UPDATE_BULK_TEAM",
+                    "DELETE_TEAM",
+
+                    "CREATE_TEAM_ROUND",
+                    "UPDATE_TEAM_ROUND",
+                    "DELETE_TEAM_ROUND",
+                    "UPDATE_BULK_TEAM_ROUND"
             ),
             "JUDGE",
             Set.of(
@@ -139,17 +235,36 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "DELETE_JUDGE_SUBMISSION"
             ),
             "MENTOR",
-            Set.of(),
+            Set.of(
+                    "APPROVE_MENTORSHIP_REQUEST",
+                    "REJECT_MENTORSHIP_REQUEST",
+                    "APPROVE_MENTORSHIP_SESSION_REQUEST",
+                    "REJECT_MENTORSHIP_SESSION_REQUEST"
+            ),
             "TEAM_MEMBER",
             Set.of(
                     "CREATE_SUBMISSION",
                     "UPDATE_SUBMISSION",
-                    "DELETE_SUBMISSION"
+                    "DELETE_SUBMISSION",
+
+                    "CREATE_TEAM_REQUEST",
+                    "RESPOND_TEAM_REQUEST"
             ),
             "TEAM_LEADER",
             Set.of("CREATE_SUBMISSION",
                     "UPDATE_SUBMISSION",
-                    "DELETE_SUBMISSION"
+                    "DELETE_SUBMISSION",
+
+                    "CREATE_MENTORSHIP_REQUEST",
+                    "UPDATE_MENTORSHIP_REQUEST",
+                    "DELETE_MENTORSHIP_REQUEST",
+
+                    "CREATE_MENTORSHIP_SESSION_REQUEST",
+                    "UPDATE_MENTORSHIP_SESSION_REQUEST",
+                    "DELETE_MENTORSHIP_SESSION_REQUEST",
+
+                    "CREATE_TEAM_REQUEST",
+                    "DELETE_TEAM_REQUEST"
             ));
 
     @Override
@@ -259,15 +374,65 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("CREATE_HACKATHON", "/api/v1/hackathons", "POST", "HACKATHONS"),
                 new Permission("UPDATE_HACKATHON", "/api/v1/hackathons/{id}", "PUT", "HACKATHONS"),
                 new Permission("DELETE_HACKATHON", "/api/v1/hackathons/{id}", "DELETE", "HACKATHONS"),
-                new Permission("LIST_HACKATHONS", "/api/v1/hackathons", "GET", "HACKATHONS"),
+
                 new Permission("CREATE_HACKATHON_RESULT", "/api/v1/hackathons/results", "POST", "HACKATHON_RESULTS"),
                 new Permission("UPDATE_HACKATHON_RESULT", "/api/v1/hackathons/results", "PUT", "HACKATHON_RESULTS"),
                 new Permission("DELETE_HACKATHON_RESULT", "/api/v1/hackathons/results/{id}", "DELETE", "HACKATHON_RESULTS"),
                 new Permission("CREATE_BULK_HACKATHON_RESULT", "/api/v1/hackathons/results/bulk-create", "POST", "HACKATHON_RESULTS"),
                 new Permission("UPDATE_BULK_HACKATHON_RESULT", "/api/v1/hackathons/results/bulk-update", "PUT", "HACKATHON_RESULTS"),
-                new Permission("GET_HACKATHON_RESULT_BY_HACKATHON_ID", "/api/v1/hackathons/results/filter-by-hackathonId", "GET", "HACKATHON_RESULTS"),
-                new Permission("GET_HACKATHON_RESULT", "/api/v1/hackathons/results", "GET", "HACKATHON_RESULTS"),
-                new Permission("GET_HACKATHON_RESULT_BY_ID", "/api/v1/hackathons/results/{id}", "GET", "HACKATHON_RESULTS")
+
+                new Permission("CREATE_INDIVIDUAL_REGISTRATION", "/api/v1/individuals", "POST", "INDIVIDUAL_REGISTRATIONS"),
+                new Permission("UPDATE_INDIVIDUAL_REGISTRATION", "/api/v1/individuals", "PUT", "INDIVIDUAL_REGISTRATIONS"),
+                new Permission("UPDATE_BULK_INDIVIDUAL_REGISTRATION", "/api/v1/individuals/bulk-update", "PUT", "INDIVIDUAL_REGISTRATIONS"),
+                new Permission("DELETE_INDIVIDUAL_REGISTRATION", "/api/v1/individuals/{id}", "DELETE", "INDIVIDUAL_REGISTRATIONS"),
+
+                new Permission("CREATE_LOCATION", "/api/v1/locations", "POST", "LOCATIONS"),
+                new Permission("UPDATE_LOCATION", "/api/v1/locations", "PUT", "LOCATIONS"),
+                new Permission("DELETE_LOCATION", "/api/v1/locations/{id}", "DELETE", "LOCATIONS"),
+
+                new Permission("CREATE_MENTORSHIP_REQUEST", "/api/v1/mentorships", "POST", "MENTORSHIP_REQUESTS"),
+                new Permission("APPROVE_MENTORSHIP_REQUEST", "/api/v1/mentorships/approve", "POST", "MENTORSHIP_REQUESTS"),
+                new Permission("REJECT_MENTORSHIP_REQUEST", "/api/v1/mentorships/reject", "POST", "MENTORSHIP_REQUESTS"),
+                new Permission("UPDATE_MENTORSHIP_REQUEST", "/api/v1/mentorships", "PUT", "MENTORSHIP_REQUESTS"),
+                new Permission("DELETE_MENTORSHIP_REQUEST", "/api/v1/mentorships/{id}", "DELETE", "MENTORSHIP_REQUESTS"),
+
+                new Permission("CREATE_MENTORSHIP_SESSION_REQUEST", "/api/v1/mentorships/sessions", "POST", "MENTORSHIP_SESSION_REQUESTS"),
+                new Permission("UPDATE_MENTORSHIP_SESSION_REQUEST", "/api/v1/mentorships/sessions", "PUT", "MENTORSHIP_SESSION_REQUESTS"),
+                new Permission("APPROVE_MENTORSHIP_SESSION_REQUEST", "/api/v1/mentorships/sessions/approve", "POST", "MENTORSHIP_SESSION_REQUESTS"),
+                new Permission("REJECT_MENTORSHIP_SESSION_REQUEST", "/api/v1/mentorships/sessions/reject", "POST", "MENTORSHIP_SESSION_REQUESTS"),
+                new Permission("DELETE_MENTORSHIP_SESSION_REQUEST", "/api/v1/mentorships/sessions/{id}", "DELETE", "MENTORSHIP_SESSION_REQUESTS"),
+
+                new Permission("DELETE_MENTOR_TEAM", "/api/v1/mentor-teams/{id}", "DELETE", "MENTOR_TEAMS"),
+
+                new Permission("CREATE_ROUND", "/api/v1/rounds", "POST", "ROUNDS"),
+                new Permission("UPDATE_ROUND", "/api/v1/rounds", "PUT", "ROUNDS"),
+                new Permission("DELETE_ROUND", "/api/v1/rounds/{id}", "DELETE", "ROUNDS"),
+
+                new Permission("CREATE_SPONSORSHIP", "/api/v1/sponsorships", "POST", "SPONSORSHIPS"),
+                new Permission("UPDATE_SPONSORSHIP", "/api/v1/sponsorships", "PUT", "SPONSORSHIPS"),
+                new Permission("DELETE_SPONSORSHIP", "/api/v1/sponsorships/{id}", "DELETE", "SPONSORSHIPS"),
+
+                new Permission("CREATE_SPONSORSHIP_HACKATHON", "/api/v1/sponsorships/hackathons", "POST", "SPONSORSHIP_HACKATHONS"),
+                new Permission("UPDATE_SPONSORSHIP_HACKATHON", "/api/v1/sponsorships/hackathons", "PUT", "SPONSORSHIP_HACKATHONS"),
+                new Permission("DELETE_SPONSORSHIP_HACKATHON", "/api/v1/sponsorships/hackathons/{id}", "DELETE", "SPONSORSHIP_HACKATHONS"),
+
+                new Permission("CREATE_SPONSORSHIP_HACKATHON_DETAIL", "/api/v1/sponsorships/hackathons/details", "POST", "SPONSORSHIP_HACKATHON_DETAILS"),
+                new Permission("UPDATE_SPONSORSHIP_HACKATHON_DETAIL", "/api/v1/sponsorships/hackathons/details", "PUT", "SPONSORSHIP_HACKATHON_DETAILS"),
+                new Permission("UPDATE_SPONSORSHIP_HACKATHON_DETAIL_FILES", "/api/v1/sponsorships/hackathons/details/files", "PUT", "SPONSORSHIP_HACKATHON_DETAILS"),
+                new Permission("DELETE_SPONSORSHIP_HACKATHON_DETAIL", "/api/v1/sponsorships/hackathons/details/{id}", "DELETE", "SPONSORSHIP_HACKATHON_DETAILS"),
+
+                new Permission("CREATE_TEAM_REQUEST", "/api/v1/teams/requests", "POST", "TEAM_REQUESTS"),
+                new Permission("RESPOND_TEAM_REQUEST", "/api/v1/teams/requests/respond", "POST", "TEAM_REQUESTS"),
+                new Permission("REVIEW_TEAM_REQUEST", "/api/v1/teams/requests/review", "POST", "TEAM_REQUESTS"),
+                new Permission("DELETE_TEAM_REQUEST", "/api/v1/teams/requests/{id}", "DELETE", "TEAM_REQUESTS"),
+                new Permission("CREATE_BULK_TEAM", "/api/v1/teams/bulk-create", "POST", "TEAM_REQUESTS"),
+                new Permission("UPDATE_BULK_TEAM", "/api/v1/teams/bulk-update", "PUT", "TEAM_REQUESTS"),
+                new Permission("DELETE_TEAM", "/api/v1/teams/{id}", "DELETE", "TEAM_REQUESTS"),
+
+                new Permission("CREATE_TEAM_ROUND", "/api/v1/team-rounds", "POST", "TEAM_ROUNDS"),
+                new Permission("UPDATE_TEAM_ROUND", "/api/v1/team-rounds", "PUT", "TEAM_ROUNDS"),
+                new Permission("DELETE_TEAM_ROUND", "/api/v1/team-rounds/{id}", "DELETE", "TEAM_ROUNDS"),
+                new Permission("UPDATE_BULK_TEAM_ROUND", "/api/v1/team-rounds/bulk-update", "PUT", "TEAM_ROUNDS")
         );
 
         permissionRepository.saveAll(permissions);

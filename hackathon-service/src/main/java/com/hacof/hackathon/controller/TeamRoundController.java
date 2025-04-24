@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ public class TeamRoundController {
     TeamRoundService teamRoundService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_TEAM_ROUND')")
     public ResponseEntity<CommonResponse<TeamRoundDTO>> createTeamRound(
             @RequestBody CommonRequest<TeamRoundDTO> request) {
         if (request.getData() == null) {
@@ -60,6 +62,7 @@ public class TeamRoundController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_TEAM_ROUND')")
     public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(@RequestBody CommonRequest<TeamRoundDTO> request) {
         String id = request.getData().getId();
         TeamRoundDTO updated = teamRoundService.update(id, request.getData());
@@ -72,6 +75,7 @@ public class TeamRoundController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_TEAM_ROUND')")
     public ResponseEntity<CommonResponse<Void>> deleteTeamRound(@PathVariable String id) {
         log.debug("Xóa team round: {}", id);
         teamRoundService.delete(id);
@@ -120,6 +124,7 @@ public class TeamRoundController {
     }
 
     @PutMapping("/bulk")
+    @PreAuthorize("hasAuthority('UPDATE_BULK_TEAM_ROUND')")
     public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> updateBulkTeamRounds(
             @Valid @RequestBody List<TeamRoundDTO> teamRoundDTOList) {
         List<TeamRoundDTO> updatedTeamRounds = teamRoundService.updateBulk(teamRoundDTOList);

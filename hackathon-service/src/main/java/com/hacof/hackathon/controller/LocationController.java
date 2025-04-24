@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +69,7 @@ public class LocationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_LOCATION')")
     public ResponseEntity<CommonResponse<LocationDTO>> createLocation(
             @Valid @RequestBody CommonRequest<LocationDTO> request) {
         LocationDTO locationDTO = locationService.create(request.getData());
@@ -81,6 +83,7 @@ public class LocationController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('UPDATE_LOCATION')")
     public ResponseEntity<CommonResponse<LocationDTO>> updateLocation(
             @Valid @RequestBody CommonRequest<LocationDTO> request) {
         LocationDTO locationDTO =
@@ -95,6 +98,7 @@ public class LocationController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DELETE_LOCATION')")
     public ResponseEntity<CommonResponse<LocationDTO>> deleteLocation(@PathVariable String id) {
         locationService.delete(Long.parseLong(id));
         CommonResponse<LocationDTO> response = new CommonResponse<>(
