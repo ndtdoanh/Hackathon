@@ -55,7 +55,14 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                     "APPROVE_BLOG_POST",
                     "REJECT_BLOG_POST",
-                    "DELETE_BLOG_POST"
+                    "DELETE_BLOG_POST",
+
+                    "CREATE_FORUM_CATEGORY",
+                    "UPDATE_FORUM_CATEGORY",
+                    "DELETE_FORUM_CATEGORY",
+
+                    "CREATE_FORUM_THREAD_ADMIN",
+                    "UPDATE_FORUM_THREAD_ADMIN"
             ),
             "ORGANIZER",
             Set.of(
@@ -216,7 +223,15 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("CREATE_FEEDBACK", "/api/v1/feedbacks", "POST", "FEEDBACKS"),
                 new Permission("DELETE_FEEDBACK", "/api/v1/feedbacks/{id}", "DELETE", "FEEDBACKS"),
 
-                new Permission("DELETE_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "DELETE", "FEEDBACK_DETAILS"));
+                new Permission("DELETE_FEEDBACK_DETAIL", "/api/v1/feedback-details/{id}", "DELETE", "FEEDBACK_DETAILS"),
+
+                new Permission("CREATE_FORUM_CATEGORY", "/api/v1/forum-categories", "POST", "FORUM_CATIGORIES"),
+                new Permission("UPDATE_FORUM_CATEGORY", "/api/v1/forum-categories/{id}", "PUT", "FORUM_CATIGORIES"),
+                new Permission("DELETE_FORUM_CATEGORY", "/api/v1/forum-categories/{id}", "DELETE", "FORUM_CATIGORIES"),
+
+                new Permission("CREATE_FORUM_THREAD_ADMIN", "/api/v1/forum-threads/admin", "POST", "FORUM_THREADS"),
+                new Permission("UPDATE_FORUM_THREAD_ADMIN", "/api/v1/forum-threads/admin/{id}", "PUT", "FORUM_THREADS")
+        );
 
         permissionRepository.saveAll(permissions);
         log.info(">>> PERMISSIONS CREATED SUCCESSFULLY");
