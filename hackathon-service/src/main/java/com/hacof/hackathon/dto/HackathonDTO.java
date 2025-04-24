@@ -7,13 +7,11 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.URL;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hacof.hackathon.entity.Device;
 import com.hacof.hackathon.entity.Feedback;
@@ -64,12 +62,10 @@ public class HackathonDTO {
 
     @NotNull(message = " Start Date is required")
     @FutureOrPresent(message = "Start Date must be in the present or future")
-    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime startDate;
 
     @NotNull(message = " End Date is required")
     @FutureOrPresent(message = " End Date must be in the present or future")
-   // @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime endDate;
 
     @NotNull(message = "Information is required")

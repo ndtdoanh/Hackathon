@@ -97,8 +97,9 @@ TeamRoundServiceImpl implements TeamRoundService {
         }
 
         existing.setStatus(dto.getStatus());
-        existing.setDescription(dto.getDescription());
-        teamRoundRepository.save(existing);
+        if (dto.getDescription() != null) {
+            existing.setDescription(dto.getDescription());
+        }        teamRoundRepository.save(existing);
 
         if (dto.getStatus() == TeamRoundStatus.PASSED) {
             createNextRoundForTeam(existing);

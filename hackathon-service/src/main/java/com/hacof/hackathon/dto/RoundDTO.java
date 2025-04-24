@@ -3,6 +3,8 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hacof.hackathon.util.CustomLocalDateTimeDeserialized;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
@@ -27,10 +29,12 @@ public class RoundDTO {
 
     @NotNull(message = "Start Time is required")
     @FutureOrPresent(message = "Start Time must be in the present or future")
+    @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     LocalDateTime startTime;
 
     @NotNull(message = "End Time is required")
     @FutureOrPresent(message = "End Time must be in the present or future")
+    @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     LocalDateTime endTime;
 
     @NotNull(message = "Round Number is required")

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.hackathon.exception.InvalidInputException;
 import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -54,9 +55,13 @@ public class RoundController {
 
     @PutMapping
     public ResponseEntity<CommonResponse<RoundDTO>> updateRound(@Valid @RequestBody CommonRequest<RoundDTO> request) {
+        if (request.getData() == null) {
+            throw new InvalidInputException("Round data cannot be null");
+        }
+
         RoundDTO roundDTO = roundService.update(request.getData().getId(), request.getData());
         CommonResponse<RoundDTO> response = new CommonResponse<>(
-                request.getRequestId(),
+                UUID.randomUUID().toString(),
                 LocalDateTime.now(),
                 request.getChannel(),
                 new CommonResponse.Result("0000", "Round updated successfully"),
