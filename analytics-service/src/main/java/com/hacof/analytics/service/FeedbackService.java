@@ -14,6 +14,8 @@ public interface FeedbackService {
 
     FeedbackResponse getFeedback(Long id);
 
+    FeedbackResponse getFeedback(String hackathonIdStr, String mentorIdStr);
+
     List<FeedbackResponse> getFeedbacksByCreatedByUserName(String username);
 
     List<FeedbackResponse> getFeedbacksByCreatedByUserNameAndHackathon(String username, Long hackathonId);
