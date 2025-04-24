@@ -133,6 +133,25 @@ public class BoardUserServiceImpl implements BoardUserService {
         return boardUserMapper.toDto(boardUser);
     }
 
+
+    @Override
+    public BoardUserResponseDTO undeleteBoardUser(Long id) {
+        // Tìm BoardUser
+        BoardUser boardUser = boardUserRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("BoardUser not found with ID: " + id));
+
+        if (!boardUser.isDeleted()) {
+            throw new IllegalArgumentException("BoardUser with ID " + id + " is not deleted.");
+        }
+
+        boardUser.setDeleted(false);
+        boardUser.setDeletedBy(null);
+        boardUser = boardUserRepository.save(boardUser);
+
+        return boardUserMapper.toDto(boardUser);
+    }
+
     @Override
     public BoardUserResponseDTO getBoardUser(Long id) {
         BoardUser boardUser = boardUserRepository
