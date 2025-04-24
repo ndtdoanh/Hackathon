@@ -175,4 +175,42 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/admin")
+    public ResponseEntity<CommonResponse<List<BoardResponseDTO>>> getAdminBoards() {
+        CommonResponse<List<BoardResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardResponseDTO> boards = boardService.getAdminBoards();
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Admin Boards fetched successfully!");
+            response.setData(boards);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error fetching admin boards: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/hackathon-operating")
+    public ResponseEntity<CommonResponse<List<BoardResponseDTO>>> getHackathonOperatingBoards(
+            @RequestParam Long hackathonId) {
+        CommonResponse<List<BoardResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<BoardResponseDTO> boards = boardService.getHackathonOperatingBoards(hackathonId);
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Hackathon Operating Boards fetched successfully!");
+            response.setData(boards);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error fetching hackathon operating boards: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

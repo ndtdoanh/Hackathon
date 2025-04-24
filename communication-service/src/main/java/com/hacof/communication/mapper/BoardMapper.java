@@ -29,7 +29,10 @@ public class BoardMapper {
                 .name(board.getName())
                 .description(board.getDescription())
                 .ownerId(String.valueOf(board.getOwner().getId()))
-                .teamId(String.valueOf(board.getTeam().getId()))
+                .teamId(
+                        board.getTeam() != null
+                                ? String.valueOf(board.getTeam().getId())
+                                : null)
                 .hackathonId(
                         board.getHackathon() != null
                                 ? String.valueOf(board.getHackathon().getId())

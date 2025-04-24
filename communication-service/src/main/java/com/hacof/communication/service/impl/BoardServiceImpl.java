@@ -202,4 +202,17 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findByTeamIdAndHackathonId(teamId, hackathonId);
         return boards.stream().map(boardMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<BoardResponseDTO> getAdminBoards() {
+        List<Board> boards = boardRepository.findByTeamIsNullAndHackathonIsNull();
+        return boards.stream().map(boardMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BoardResponseDTO> getHackathonOperatingBoards(Long hackathonId) {
+        List<Board> boards = boardRepository.findByTeamIsNullAndHackathonId(hackathonId);
+        return boards.stream().map(boardMapper::toDto).collect(Collectors.toList());
+    }
+
 }

@@ -13,4 +13,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findByNameAndTeamId(String name, Long teamId);
 
     List<Board> findByTeamIdAndHackathonId(Long teamId, Long hackathonId);
+
+    List<Board> findByTeamIsNullAndHackathonId(Long hackathonId);
+
+    List<Board> findByTeamIsNullAndHackathonIsNull();
 }
