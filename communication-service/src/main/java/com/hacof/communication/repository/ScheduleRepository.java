@@ -18,4 +18,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     boolean existsByTeamIdAndNameAndIdNot(Long teamId, String name, Long id);
 
     List<Schedule> findByTeamIdAndHackathonId(Long teamId, Long hackathonId);
+
+    List<Schedule> findByTeamIsNullAndHackathonIsNull();
+
+    List<Schedule> findByTeamIsNullAndHackathonId(Long hackathonId);
+
 }

@@ -161,4 +161,17 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ScheduleResponseDTO> getAdminSchedules() {
+        List<Schedule> schedules = scheduleRepository.findByTeamIsNullAndHackathonIsNull();
+        return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleResponseDTO> getOperatingSchedulesByHackathonId(Long hackathonId) {
+        List<Schedule> schedules = scheduleRepository.findByTeamIsNullAndHackathonId(hackathonId);
+        return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
+    }
+
 }

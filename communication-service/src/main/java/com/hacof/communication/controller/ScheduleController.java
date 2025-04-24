@@ -230,4 +230,43 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/admin")
+    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getAdminSchedules() {
+        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getAdminSchedules();
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Admin schedules fetched successfully!");
+            response.setData(schedules);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Internal Server Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+    @GetMapping("/operating")
+    public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getOperatingSchedulesByHackathonId(
+            @RequestParam Long hackathonId) {
+        CommonResponse<List<ScheduleResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getOperatingSchedulesByHackathonId(hackathonId);
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Operating schedules fetched successfully!");
+            response.setData(schedules);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Internal Server Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }
