@@ -46,9 +46,9 @@ public class FeedbackDetailControllerTest {
 
         List<FeedbackDetailResponse> mockList = Collections.singletonList(detail);
 
-        when(feedbackDetailService.getFeedbackDetailsByFeedbackId(feedbackId)).thenReturn(mockList);
+        when(feedbackDetailService.getAllFeedbackDetailsByFeedbackId(feedbackId)).thenReturn(mockList);
 
-        ApiResponse<List<FeedbackDetailResponse>> response = feedbackDetailController.getFeedbackDetailsByFeedbackId(feedbackId);
+        ApiResponse<List<FeedbackDetailResponse>> response = feedbackDetailController.getAllFeedbackDetailsByFeedbackId(feedbackId);
 
         assertNotNull(response);
         assertNotNull(response.getData());
@@ -56,7 +56,7 @@ public class FeedbackDetailControllerTest {
         assertEquals("Feedback content example", response.getData().get(0).getContent());
         assertEquals("Retrieved feedback details by feedbackId", response.getMessage());
 
-        verify(feedbackDetailService, times(1)).getFeedbackDetailsByFeedbackId(feedbackId);
+        verify(feedbackDetailService, times(1)).getAllFeedbackDetailsByFeedbackId(feedbackId);
     }
 
     @Test
@@ -79,6 +79,22 @@ public class FeedbackDetailControllerTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
         assertThat(response.getBody().getData()).isEqualTo(responseData);
         verify(feedbackDetailService).createFeedbackDetail(requestData);
+    }
+
+    @Test
+    void testGetFeedbackDetailsByFeedbackIdAndCreatedBy() {
+        Long feedbackId = 1L;
+        String createdBy = "testUser";
+        List<FeedbackDetailResponse> mockFeedbackDetails = Collections.singletonList(new FeedbackDetailResponse());
+        when(feedbackDetailService.getFeedbackDetailsByFeedbackIdAndCreatedBy(feedbackId, createdBy))
+                .thenReturn(mockFeedbackDetails);
+
+        ApiResponse<List<FeedbackDetailResponse>> response =
+                feedbackDetailController.getFeedbackDetailsByFeedbackIdAndCreatedBy(feedbackId, createdBy);
+
+        assertEquals(mockFeedbackDetails, response.getData());
+        assertEquals("Retrieved feedback details by feedbackId and createdBy", response.getMessage());
+        verify(feedbackDetailService, times(1)).getFeedbackDetailsByFeedbackIdAndCreatedBy(feedbackId, createdBy);
     }
 
     @Test
