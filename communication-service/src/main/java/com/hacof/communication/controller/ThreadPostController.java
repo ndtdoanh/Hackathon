@@ -156,4 +156,28 @@ public class ThreadPostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/forum-thread/{forumThreadId}")
+    public ResponseEntity<CommonResponse<List<ThreadPostResponseDTO>>> getThreadPostsByForumThreadId(@PathVariable Long forumThreadId) {
+        CommonResponse<List<ThreadPostResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ThreadPostResponseDTO> posts = threadPostService.getThreadPostsByForumThreadId(forumThreadId);
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Thread posts by forumThreadId fetched successfully!");
+            response.setData(posts);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }
