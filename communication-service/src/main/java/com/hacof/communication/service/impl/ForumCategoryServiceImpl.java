@@ -59,7 +59,8 @@ public class ForumCategoryServiceImpl implements ForumCategoryService {
             throw new IllegalArgumentException("Section cannot be null or empty.");
         }
 
-        if (forumCategoryRepository.existsByName(requestDTO.getName())) {
+        Optional<ForumCategory> existingCategory = forumCategoryRepository.findByName(requestDTO.getName());
+        if (existingCategory.isPresent() && existingCategory.get().getId() != id) {
             throw new IllegalArgumentException(
                     "A forum category with the name " + requestDTO.getName() + " already exists.");
         }
