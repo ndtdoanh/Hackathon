@@ -27,6 +27,6 @@ public class ThreadPostResponseDTO {
     }
 
     public void setIsDeleted(boolean isDeleted) {
-        isDeleted = isDeleted;
+        this.isDeleted = isDeleted;
     }
 }
