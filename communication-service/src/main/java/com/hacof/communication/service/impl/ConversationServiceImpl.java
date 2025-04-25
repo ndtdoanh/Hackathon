@@ -261,6 +261,7 @@ public class ConversationServiceImpl implements ConversationService {
                     if (user != null) {
                         userResponse.setFirstName(user.getFirstName());
                         userResponse.setLastName(user.getLastName());
+                        userResponse.setAvatarUrl(user.getAvatarUrl());
                     }
 
                     return userResponse;
@@ -374,6 +375,7 @@ public class ConversationServiceImpl implements ConversationService {
                                         if (user != null) {
                                             userResponse.setFirstName(user.getFirstName());
                                             userResponse.setLastName(user.getLastName());
+                                            userResponse.setAvatarUrl(user.getAvatarUrl());
                                         }
 
                                         return userResponse;
