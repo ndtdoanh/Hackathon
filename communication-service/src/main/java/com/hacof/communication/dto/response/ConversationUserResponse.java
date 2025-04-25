@@ -22,6 +22,7 @@ public class ConversationUserResponse {
     String userId;
     String firstName;
     String lastName;
+    String avatarUrl;
     boolean isDeleted;
     String deletedByUserName;
     LocalDateTime createdAt;

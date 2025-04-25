@@ -104,8 +104,7 @@ public class ConversationServiceImpl implements ConversationService {
                     ConversationUserResponse userResponse = new ConversationUserResponse();
                     userResponse.setId(String.valueOf(conversationUser.getId()));
                     userResponse.setConversationId(conversationId);
-                    userResponse.setUserId(
-                            String.valueOf(conversationUser.getUser().getId()));
+                    userResponse.setUserId(String.valueOf(conversationUser.getUser().getId()));
                     userResponse.setDeleted(conversationUser.isDeleted());
                     userResponse.setDeletedByUserName(
                             conversationUser.getDeletedBy() != null
@@ -118,6 +117,7 @@ public class ConversationServiceImpl implements ConversationService {
                     if (user != null) {
                         userResponse.setFirstName(user.getFirstName());
                         userResponse.setLastName(user.getLastName());
+                        userResponse.setAvatarUrl(user.getAvatarUrl());
                     }
 
                     return userResponse;
@@ -261,6 +261,7 @@ public class ConversationServiceImpl implements ConversationService {
                     if (user != null) {
                         userResponse.setFirstName(user.getFirstName());
                         userResponse.setLastName(user.getLastName());
+                        userResponse.setAvatarUrl(user.getAvatarUrl());
                     }
 
                     return userResponse;
@@ -374,6 +375,7 @@ public class ConversationServiceImpl implements ConversationService {
                                         if (user != null) {
                                             userResponse.setFirstName(user.getFirstName());
                                             userResponse.setLastName(user.getLastName());
+                                            userResponse.setAvatarUrl(user.getAvatarUrl());
                                         }
 
                                         return userResponse;
