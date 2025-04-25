@@ -20,7 +20,7 @@ This project is developed using modern technologies such as **Spring Boot** for 
 
 ![HaCoF Architecture](https://github.com/user-attachments/assets/50a68760-2ee9-48a6-ba34-c55ec589c65f)
 
----
+---------
 
 ## Key Features
 
