@@ -206,8 +206,8 @@ public class TeamController {
     @PostMapping("/bulk")
     @PreAuthorize("hasAuthority('CREATE_BULK_TEAM')")
     public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(
-            @Valid @RequestBody List<TeamBulkRequestDTO> bulkRequest) {
-        List<TeamDTO> createdTeams = teamService.createBulkTeams(bulkRequest);
+            @Valid @RequestBody CommonRequest<List<TeamBulkRequestDTO>> bulkRequest) {
+        List<TeamDTO> createdTeams = teamService.createBulkTeams(bulkRequest.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

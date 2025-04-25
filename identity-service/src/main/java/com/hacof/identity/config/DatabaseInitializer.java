@@ -184,6 +184,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "REJECT_MENTORSHIP_REQUEST",
                     "APPROVE_MENTORSHIP_SESSION_REQUEST",
                     "REJECT_MENTORSHIP_SESSION_REQUEST",
+                    "UPDATE_MENTORSHIP_SESSION_REQUEST",
 
                     "UPDATE_MENTORSHIP_REQUEST"
             ),
