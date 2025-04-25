@@ -76,7 +76,7 @@ public class TeamController {
 
     // Step 2: Member responses to the team request
     @PostMapping("/requests/respond")
-        @PreAuthorize("hasAuthority('RESPOND_TEAM_REQUEST')")
+    @PreAuthorize("hasAuthority('RESPOND_TEAM_REQUEST')")
     public ResponseEntity<CommonResponse<TeamRequestDTO>> respondToTeamRequest(
             @RequestBody CommonRequest<TeamRequestMemberResponseDTO> request) {
         TeamRequestDTO updated = teamRequestService.updateMemberResponse(
