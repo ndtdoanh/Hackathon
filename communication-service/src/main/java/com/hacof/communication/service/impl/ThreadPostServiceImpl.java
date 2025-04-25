@@ -93,4 +93,18 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
         return threadPostMapper.toResponseDTO(updated);
     }
+
+    @Override
+    public List<ThreadPostResponseDTO> getThreadPostsByForumThreadId(Long forumThreadId) {
+        ForumThread forumThread = forumThreadRepository
+                .findById(forumThreadId)
+                .orElseThrow(() -> new IllegalArgumentException("ForumThread not found with id " + forumThreadId));
+
+        List<ThreadPost> threadPosts = threadPostRepository.findByForumThread(forumThread);
+
+        return threadPosts.stream()
+                .map(ThreadPostMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }
