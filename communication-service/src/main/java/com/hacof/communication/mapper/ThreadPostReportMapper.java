@@ -117,6 +117,7 @@ public class ThreadPostReportMapper {
                         : null);
         responseDTO.setCreatedAt(threadPostReport.getCreatedDate());
         responseDTO.setUpdatedAt(threadPostReport.getLastModifiedDate());
+        responseDTO.setCreatedByUserName(threadPostReport.getCreatedBy().getUsername());
 
         return responseDTO;
     }

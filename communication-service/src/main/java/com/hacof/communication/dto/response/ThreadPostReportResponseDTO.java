@@ -18,4 +18,5 @@ public class ThreadPostReportResponseDTO {
     String reviewedById;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    String createdByUserName;
 }
