@@ -28,12 +28,12 @@ public class RoundDTO {
     String hackathonId;
 
     @NotNull(message = "Start Time is required")
-    @FutureOrPresent(message = "Start Time must be in the present or future")
+    //@FutureOrPresent(message = "Start Time must be in the present or future")
     @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     LocalDateTime startTime;
 
     @NotNull(message = "End Time is required")
-    @FutureOrPresent(message = "End Time must be in the present or future")
+   // @FutureOrPresent(message = "End Time must be in the present or future")
     @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     LocalDateTime endTime;
 
@@ -67,9 +67,9 @@ public class RoundDTO {
     String lastModifiedByUserName; // save username
     LocalDateTime updatedAt = LocalDateTime.now();
 
-    @JsonIgnore
-    @AssertTrue(message = "Start Time must be before End Time")
-    public boolean isStartTimeBeforeEndTime() {
-        return startTime.isBefore(endTime);
-    }
+//    @JsonIgnore
+//    @AssertTrue(message = "Start Time must be before End Time")
+//    public boolean isStartTimeBeforeEndTime() {
+//        return startTime.isBefore(endTime);
+//    }
 }
