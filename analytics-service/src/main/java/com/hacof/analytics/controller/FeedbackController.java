@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.analytics.dto.ApiRequest;
@@ -143,7 +142,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/mentor/{mentorId}")
-    //@PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")
+    // @PreAuthorize("hasAuthority('GET_FEEDBACKS_BY_MENTOR')")
     public ApiResponse<List<FeedbackResponse>> getFeedbacksByMentor(@PathVariable Long mentorId) {
         return ApiResponse.<List<FeedbackResponse>>builder()
                 .requestId(UUID.randomUUID().toString())
@@ -155,10 +154,8 @@ public class FeedbackController {
     }
 
     @GetMapping("/hackathon/{hackathonId}/mentor/{mentorId}")
-    //@PreAuthorize("hasAuthority('GET_FEEDBACK')")
-    public ApiResponse<FeedbackResponse> getFeedback(
-            @PathVariable String hackathonId,
-            @PathVariable String mentorId) {
+    // @PreAuthorize("hasAuthority('GET_FEEDBACK')")
+    public ApiResponse<FeedbackResponse> getFeedback(@PathVariable String hackathonId, @PathVariable String mentorId) {
 
         return ApiResponse.<FeedbackResponse>builder()
                 .requestId(UUID.randomUUID().toString())
