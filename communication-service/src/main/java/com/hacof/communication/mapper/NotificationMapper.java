@@ -43,6 +43,7 @@ public interface NotificationMapper {
                 .type(request.getType())
                 .content(request.getContent())
                 .metadata(request.getMetadata())
+                .isRead(false)
                 .build();
     }
 
@@ -55,7 +56,6 @@ public interface NotificationMapper {
                         .role(request.getRole())
                         .method(request.getMethod())
                         .status(NotificationStatus.SENT)
-                        .isRead(false)
                         .build())
                 .collect(Collectors.toList());
     }

@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BulkUpdateReadStatusRequest {
-    List<String> deliveryIds;
+    List<String> notificationIds;
 
     @JsonProperty("isRead")
     boolean isRead;

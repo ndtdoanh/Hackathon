@@ -130,7 +130,7 @@ public class NotificationController {
                 .build();
     }
 
-    @PutMapping("/notification-deliveries/read-status")
+    @PutMapping("/notification/read-status")
     @PreAuthorize("hasAuthority('UPDATE_READ_STATUS')")
     public ApiResponse<String> updateReadStatusBulk(@RequestBody ApiRequest<BulkUpdateReadStatusRequest> request) {
         notificationService.updateReadStatusBulk(request.getData());
