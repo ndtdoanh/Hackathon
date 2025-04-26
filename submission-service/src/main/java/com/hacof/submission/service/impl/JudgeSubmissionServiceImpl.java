@@ -2,11 +2,14 @@ package com.hacof.submission.service.impl;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.hacof.submission.constant.TeamRoundStatus;
+import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.TeamRound;
+import com.hacof.submission.repository.RoundRepository;
 import com.hacof.submission.repository.TeamRoundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +51,9 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
     @Autowired
     private TeamRoundRepository teamRoundRepository;
+
+    @Autowired
+    private RoundRepository roundRepository;
 
     @Autowired
     private JudgeSubmissionMapper judgeSubmissionMapper;
@@ -184,11 +190,35 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
             if (i < totalTeam) {
                 teamRound.setStatus(TeamRoundStatus.PASSED);
+                teamRoundRepository.save(teamRound);
+
+                // 👉 Gộp luôn logic tạo next round ở đây
+                Round currentRound = teamRound.getRound();
+                int nextRoundNumber = currentRound.getRoundNumber() + 1;
+                Long hackathonId = currentRound.getHackathon().getId();
+
+                Optional<Round> nextRoundOpt = roundRepository.findByHackathonIdAndRoundNumber(hackathonId, nextRoundNumber);
+
+                if (nextRoundOpt.isPresent()) {
+                    Round nextRound = nextRoundOpt.get();
+
+                    boolean exists = teamRoundRepository.existsByTeamIdAndRoundId(
+                            teamRound.getTeam().getId(), nextRound.getId());
+
+                    if (!exists) {
+                        TeamRound nextTeamRound = new TeamRound();
+                        nextTeamRound.setTeam(teamRound.getTeam());
+                        nextTeamRound.setRound(nextRound);
+                        nextTeamRound.setStatus(TeamRoundStatus.PENDING);
+                        nextTeamRound.setDescription("Auto-generated for next round");
+
+                        teamRoundRepository.save(nextTeamRound);
+                    }
+                }
             } else {
                 teamRound.setStatus(TeamRoundStatus.FAILED);
+                teamRoundRepository.save(teamRound);
             }
-
-            teamRoundRepository.save(teamRound);
         }
     }
 
