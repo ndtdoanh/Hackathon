@@ -49,11 +49,12 @@ public class HackathonResultServiceImpl implements HackathonResultService {
 
         HackathonResult hackathonResult = HackathonResultMapperManual.toEntity(hackathonResultDTO);
 
-        hackathonResult.setHackathon(hackathonRepository.findById(hackathonId)
+        hackathonResult.setHackathon(hackathonRepository
+                .findById(hackathonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
 
-        hackathonResult.setTeam(teamRepository.findById(teamId)
-                .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
+        hackathonResult.setTeam(
+                teamRepository.findById(teamId).orElseThrow(() -> new ResourceNotFoundException("Team not found")));
 
         return HackathonResultMapperManual.toDto(hackathonResultRepository.save(hackathonResult));
     }
@@ -112,10 +113,12 @@ public class HackathonResultServiceImpl implements HackathonResultService {
 
                     HackathonResult entity = HackathonResultMapperManual.toEntity(dto);
 
-                    entity.setHackathon(hackathonRepository.findById(hackathonId)
+                    entity.setHackathon(hackathonRepository
+                            .findById(hackathonId)
                             .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found")));
 
-                    entity.setTeam(teamRepository.findById(teamId)
+                    entity.setTeam(teamRepository
+                            .findById(teamId)
                             .orElseThrow(() -> new ResourceNotFoundException("Team not found")));
 
                     return entity;

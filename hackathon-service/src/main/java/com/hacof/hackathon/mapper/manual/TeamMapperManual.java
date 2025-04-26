@@ -31,6 +31,9 @@ public class TeamMapperManual {
         if (dto.getTeamLeaderId() != null) {
             User leader = new User();
             leader.setId(Long.parseLong(dto.getTeamLeaderId()));
+            leader.setAvatarUrl(
+                    dto.getTeamLeader() != null ? dto.getTeamLeader().getAvatarUrl() : null);
+            leader.setBio(dto.getTeamLeader() != null ? dto.getTeamLeader().getBio() : null);
             entity.setTeamLeader(leader);
         }
 
@@ -62,13 +65,18 @@ public class TeamMapperManual {
         }
 
         // Map audit fields
-        dto.setCreatedByUserName(entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
+        dto.setCreatedByUserName(
+                entity.getCreatedBy() != null ? entity.getCreatedBy().getUsername() : null);
         dto.setCreatedAt(entity.getCreatedDate());
-        dto.setLastModifiedByUserName(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
+        dto.setLastModifiedByUserName(
+                entity.getLastModifiedBy() != null ? entity.getLastModifiedBy().getUsername() : null);
         dto.setUpdatedAt(entity.getLastModifiedDate());
 
         dto.setDeleted(entity.getIsDeleted());
-        dto.setDeletedById(entity.getDeletedBy() != null ? String.valueOf(entity.getDeletedBy().getId()) : null);
+        dto.setDeletedById(
+                entity.getDeletedBy() != null
+                        ? String.valueOf(entity.getDeletedBy().getId())
+                        : null);
         return dto;
     }
 

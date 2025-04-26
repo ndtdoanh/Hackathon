@@ -2,18 +2,15 @@ package com.hacof.hackathon.service.impl;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.dto.SponsorshipHackathonDetailRequestDTO;
-import com.hacof.hackathon.dto.SponsorshipHackathonDetailResponseDTO;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.hacof.hackathon.constant.SponsorshipDetailStatus;
 import com.hacof.hackathon.dto.FileUrlResponse;
-import com.hacof.hackathon.dto.SponsorshipHackathonDetailDTO;
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailRequestDTO;
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailResponseDTO;
 import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.entity.SponsorshipHackathon;
 import com.hacof.hackathon.entity.SponsorshipHackathonDetail;
@@ -128,14 +125,14 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
         final SponsorshipHackathonDetail finalEntity = entity;
 
         if (dto.getFileUrls() != null && !dto.getFileUrls().isEmpty()) {
-            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(dto.getFileUrls());
+            List<FileUrl> fileUrls =
+                    fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(dto.getFileUrls());
             fileUrls.forEach(f -> f.setSponsorshipHackathonDetail(finalEntity));
             fileUrlRepository.saveAll(fileUrls);
         }
 
         entity = sponsorshipHackathonDetailRepository.save(entity);
         return SponsorshipHackathonDetailMapperManual.toDto(entity);
-
     }
 
     @Override
@@ -166,8 +163,8 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found"));
 
         if (fileUrls != null && !fileUrls.isEmpty()) {
-            List<FileUrl> newFileUrls = fileUrlRepository
-                    .findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(fileUrls);
+            List<FileUrl> newFileUrls =
+                    fileUrlRepository.findAllByFileUrlInAndSponsorshipHackathonDetailIsNull(fileUrls);
 
             newFileUrls.forEach(f -> f.setSponsorshipHackathonDetail(sponsorshipDetail));
             fileUrlRepository.saveAll(newFileUrls);
@@ -175,7 +172,8 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
 
         SponsorshipHackathonDetail updatedDetail = sponsorshipHackathonDetailRepository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found after update"));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found after update"));
 
         return SponsorshipHackathonDetailMapperManual.toDto(updatedDetail);
     }
@@ -199,7 +197,8 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
 
     @Override
     public SponsorshipHackathonDetailResponseDTO getById(Long id) {
-        return sponsorshipHackathonDetailRepository.findById(id)
+        return sponsorshipHackathonDetailRepository
+                .findById(id)
                 .map(SponsorshipHackathonDetailMapperManual::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon Detail not found"));
     }
@@ -221,8 +220,6 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
 
         List<FileUrl> fileUrls = scheduleEvent.getFileUrls();
 
-        return fileUrlMapper.toResponseList(
-                fileUrls != null ? fileUrls : Collections.emptyList()
-        );
+        return fileUrlMapper.toResponseList(fileUrls != null ? fileUrls : Collections.emptyList());
     }
 }

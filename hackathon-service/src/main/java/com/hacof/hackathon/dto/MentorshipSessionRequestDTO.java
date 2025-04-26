@@ -34,7 +34,7 @@ public class MentorshipSessionRequestDTO {
     @NotNull(message = "Status is required")
     String status;
 
-    //@NotNull(message = "Evaluated By ID is required")
+    // @NotNull(message = "Evaluated By ID is required")
     String evaluatedById;
 
     UserDTO evaluatedBy;

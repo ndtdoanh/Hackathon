@@ -47,6 +47,7 @@ public class HackathonController {
      */
     // --- ENDPOINTS FOR HACKATHONS ---
     HackathonService hackathonService;
+
     HackathonResultService hackathonResultService;
 
     @GetMapping
@@ -178,8 +179,8 @@ public class HackathonController {
     @PostMapping("/results/bulk-create")
     @PreAuthorize("hasAuthority('CREATE_BULK_HACKATHON_RESULT')")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> createBulkHackathonResults(
-            @Valid @RequestBody List<HackathonResultDTO> request) {
-        List<HackathonResultDTO> created = hackathonResultService.createBulk(request);
+            @Valid @RequestBody CommonRequest<List<HackathonResultDTO>> request) {
+        List<HackathonResultDTO> created = hackathonResultService.createBulk(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
@@ -191,8 +192,8 @@ public class HackathonController {
     @PutMapping("/results/bulk-update")
     @PreAuthorize("hasAuthority('UPDATE_BULK_HACKATHON_RESULT')")
     public ResponseEntity<CommonResponse<List<HackathonResultDTO>>> updateBulkHackathonResults(
-            @Valid @RequestBody List<HackathonResultDTO> request) {
-        List<HackathonResultDTO> created = hackathonResultService.updateBulk(request);
+            @Valid @RequestBody CommonRequest<List<HackathonResultDTO>> request) {
+        List<HackathonResultDTO> created = hackathonResultService.updateBulk(request.getData());
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

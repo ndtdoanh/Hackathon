@@ -335,11 +335,11 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<TeamDTO> getTeamsByHackathonId(Long hackathonId) {
-        Hackathon hackathon = hackathonRepository.findById(hackathonId)
+        Hackathon hackathon = hackathonRepository
+                .findById(hackathonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + hackathonId));
 
         List<Team> teams = teamRepository.findByHackathonId(hackathonId);
         return teams.stream().map(TeamMapperManual::toDto).collect(Collectors.toList());
     }
-
 }

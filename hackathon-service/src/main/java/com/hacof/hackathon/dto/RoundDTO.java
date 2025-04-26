@@ -3,15 +3,13 @@ package com.hacof.hackathon.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.hacof.hackathon.util.CustomLocalDateTimeDeserialized;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hacof.hackathon.util.CustomLocalDateTimeDeserialized;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,12 +26,12 @@ public class RoundDTO {
     String hackathonId;
 
     @NotNull(message = "Start Time is required")
-    //@FutureOrPresent(message = "Start Time must be in the present or future")
+    // @FutureOrPresent(message = "Start Time must be in the present or future")
     @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     LocalDateTime startTime;
 
     @NotNull(message = "End Time is required")
-   // @FutureOrPresent(message = "End Time must be in the present or future")
+    // @FutureOrPresent(message = "End Time must be in the present or future")
     @JsonDeserialize(using = CustomLocalDateTimeDeserialized.class)
     LocalDateTime endTime;
 
@@ -67,9 +65,9 @@ public class RoundDTO {
     String lastModifiedByUserName; // save username
     LocalDateTime updatedAt = LocalDateTime.now();
 
-//    @JsonIgnore
-//    @AssertTrue(message = "Start Time must be before End Time")
-//    public boolean isStartTimeBeforeEndTime() {
-//        return startTime.isBefore(endTime);
-//    }
+    //    @JsonIgnore
+    //    @AssertTrue(message = "Start Time must be before End Time")
+    //    public boolean isStartTimeBeforeEndTime() {
+    //        return startTime.isBefore(endTime);
+    //    }
 }

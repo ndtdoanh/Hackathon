@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -48,24 +47,24 @@ public class HackathonDTO {
     String bannerImageUrl;
 
     @NotNull(message = "Enroll Start Date is required")
-    //@FutureOrPresent(message = "Enroll Start Date must be in the present or future")
-   // @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    // @FutureOrPresent(message = "Enroll Start Date must be in the present or future")
+    // @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime enrollStartDate;
 
     @NotNull(message = "Enroll End Date is required")
-   // @FutureOrPresent(message = "Enroll End Date must be in the present or future")
-    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    // @FutureOrPresent(message = "Enroll End Date must be in the present or future")
+    // @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime enrollEndDate;
 
     @NotNull(message = "Max Teams is required")
     int enrollmentCount;
 
     @NotNull(message = " Start Date is required")
-   // @FutureOrPresent(message = "Start Date must be in the present or future")
+    // @FutureOrPresent(message = "Start Date must be in the present or future")
     LocalDateTime startDate;
 
     @NotNull(message = " End Date is required")
-  //  @FutureOrPresent(message = " End Date must be in the present or future")
+    //  @FutureOrPresent(message = " End Date must be in the present or future")
     LocalDateTime endDate;
 
     @NotNull(message = "Information is required")
@@ -136,10 +135,10 @@ public class HackathonDTO {
     String lastModifiedByUserName; // save username
     LocalDateTime updatedAt;
 
-//    @AssertTrue(message = "Start Date must be before End Date")
-//    private boolean isEndDateAfterStartDate() {
-//        return enrollEndDate == null || enrollStartDate == null || enrollEndDate.isAfter(enrollStartDate);
-//    }
+    //    @AssertTrue(message = "Start Date must be before End Date")
+    //    private boolean isEndDateAfterStartDate() {
+    //        return enrollEndDate == null || enrollStartDate == null || enrollEndDate.isAfter(enrollStartDate);
+    //    }
 
     @AssertTrue(message = "Minimum Team Members must be less than or equal to Maximum Team Members")
     private boolean isMaxTeamSizeValid() {

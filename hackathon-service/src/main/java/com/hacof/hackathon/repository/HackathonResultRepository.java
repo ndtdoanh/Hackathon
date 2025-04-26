@@ -19,5 +19,4 @@ public interface HackathonResultRepository extends JpaRepository<HackathonResult
     List<HackathonResult> findDetailedByHackathonId(@Param("hackathonId") Long hackathonId);
 
     boolean existsByHackathonIdAndTeamId(Long hackathonId, Long teamId);
-
 }

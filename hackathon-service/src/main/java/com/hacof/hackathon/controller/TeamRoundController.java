@@ -63,7 +63,8 @@ public class TeamRoundController {
 
     @PutMapping
     @PreAuthorize("hasAuthority('UPDATE_TEAM_ROUND')")
-    public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(@RequestBody CommonRequest<TeamRoundDTO> request) {
+    public ResponseEntity<CommonResponse<TeamRoundDTO>> updateTeamRound(
+            @RequestBody CommonRequest<TeamRoundDTO> request) {
         String id = request.getData().getId();
         TeamRoundDTO updated = teamRoundService.update(id, request.getData());
         return ResponseEntity.ok(new CommonResponse<>(

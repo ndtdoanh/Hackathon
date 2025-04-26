@@ -16,6 +16,8 @@ public class UserMapperManual {
         dto.setUsername(user.getUsername());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
+        dto.setAvatarUrl(user.getAvatarUrl());
+        dto.setBio(user.getBio());
 
         return dto;
     }

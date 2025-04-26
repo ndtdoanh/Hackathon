@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.hackathon.constant.StatusCode;
-import com.hacof.hackathon.exception.InvalidInputException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.hacof.hackathon.controller.IndividualRegistrationRequestController;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.service.IndividualRegistrationRequestService;
 import com.hacof.hackathon.util.CommonRequest;
@@ -171,8 +170,7 @@ class IndividualRegistrationRequestControllerTest {
 
         InvalidInputException exception = assertThrows(
                 InvalidInputException.class,
-                () -> individualRegistrationRequestController.createIndividualRegistration(request)
-        );
+                () -> individualRegistrationRequestController.createIndividualRegistration(request));
 
         assertEquals("Hackathon ID cannot be null", exception.getMessage());
         verify(individualRegistrationRequestService, never()).create(any(IndividualRegistrationRequestDTO.class));
@@ -194,8 +192,7 @@ class IndividualRegistrationRequestControllerTest {
 
         ResourceNotFoundException exception = assertThrows(
                 ResourceNotFoundException.class,
-                () -> individualRegistrationRequestController.createIndividualRegistration(request)
-        );
+                () -> individualRegistrationRequestController.createIndividualRegistration(request));
 
         assertEquals("Hackathon not found", exception.getMessage());
         verify(individualRegistrationRequestService, times(1)).create(dto);
@@ -217,8 +214,7 @@ class IndividualRegistrationRequestControllerTest {
 
         ResourceNotFoundException exception = assertThrows(
                 ResourceNotFoundException.class,
-                () -> individualRegistrationRequestController.updateIndividualRegistration(request)
-        );
+                () -> individualRegistrationRequestController.updateIndividualRegistration(request));
 
         assertEquals("Individual registration request not found", exception.getMessage());
         verify(individualRegistrationRequestService, times(1)).update(999L, dto);
@@ -234,13 +230,11 @@ class IndividualRegistrationRequestControllerTest {
 
         ResourceNotFoundException exception = assertThrows(
                 ResourceNotFoundException.class,
-                () -> individualRegistrationRequestController.deleteIndividualRegistration(id)
-        );
+                () -> individualRegistrationRequestController.deleteIndividualRegistration(id));
 
         assertEquals("Individual registration request not found", exception.getMessage());
         verify(individualRegistrationRequestService, times(1)).delete(id);
     }
-
 
     @Test
     void testGetAllByHackathonId() {

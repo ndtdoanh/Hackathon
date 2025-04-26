@@ -45,8 +45,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 "HACOF",
                 new CommonResponse.Result("0603", "Access Denied: You do not have permission to perform this action."),
-                null
-        );
+                null);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }

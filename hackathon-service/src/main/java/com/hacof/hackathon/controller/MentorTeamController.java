@@ -66,7 +66,6 @@ public class MentorTeamController {
                 updated));
     }
 
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('DELETE_MENTOR_TEAM')")
     public ResponseEntity<CommonResponse<Void>> deleteMentorTeam(@PathVariable String id) {

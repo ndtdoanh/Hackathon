@@ -34,8 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional
 @FieldDefaults(makeFinal = true)
-public class
-TeamRoundServiceImpl implements TeamRoundService {
+public class TeamRoundServiceImpl implements TeamRoundService {
     TeamRoundRepository teamRoundRepository;
     TeamRepository teamRepository;
     RoundRepository roundRepository;
@@ -99,7 +98,8 @@ TeamRoundServiceImpl implements TeamRoundService {
         existing.setStatus(dto.getStatus());
         if (dto.getDescription() != null) {
             existing.setDescription(dto.getDescription());
-        }        teamRoundRepository.save(existing);
+        }
+        teamRoundRepository.save(existing);
 
         if (dto.getStatus() == TeamRoundStatus.PASSED) {
             createNextRoundForTeam(existing);

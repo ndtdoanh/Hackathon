@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.hackathon.dto.SponsorshipHackathonDetailRequestDTO;
-import com.hacof.hackathon.dto.SponsorshipHackathonDetailResponseDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.dto.SponsorshipDTO;
 import com.hacof.hackathon.dto.SponsorshipHackathonDTO;
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailRequestDTO;
+import com.hacof.hackathon.dto.SponsorshipHackathonDetailResponseDTO;
 import com.hacof.hackathon.entity.Sponsorship;
 import com.hacof.hackathon.service.SponsorshipHackathonDetailService;
 import com.hacof.hackathon.service.SponsorshipHackathonService;
@@ -113,7 +113,7 @@ public class SponsorshipController {
 
     // sponsorship hackathon service
     @PostMapping("/hackathons")
-        @PreAuthorize("hasAuthority('CREATE_SPONSORSHIP_HACKATHON')")
+    @PreAuthorize("hasAuthority('CREATE_SPONSORSHIP_HACKATHON')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDTO>> createSponsorshipHackathon(
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDTO> request) {
         SponsorshipHackathonDTO sponsorshipHackathonDTO = sponsorshipHackathonService.create(request.getData());
@@ -231,7 +231,8 @@ public class SponsorshipController {
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> createSponsorshipHackathonDetail(
             @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailRequestDTO> request) {
 
-        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.createWithFiles(request.getData());
+        SponsorshipHackathonDetailResponseDTO dto =
+                sponsorshipHackathonDetailService.createWithFiles(request.getData());
 
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
@@ -244,11 +245,9 @@ public class SponsorshipController {
     @PutMapping("/details/update-info/{id}")
     @PreAuthorize("hasAuthority('UPDATE_SPONSORSHIP_HACKATHON_DETAIL')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailInfo(
-            @PathVariable Long id,
-            @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailRequestDTO> request) {
+            @PathVariable Long id, @RequestBody @Valid CommonRequest<SponsorshipHackathonDetailRequestDTO> request) {
 
-        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.updateInfo(
-                id, request.getData());
+        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.updateInfo(id, request.getData());
 
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
@@ -258,14 +257,13 @@ public class SponsorshipController {
                 dto));
     }
 
-
     @PutMapping("/details/update-files/{id}")
     @PreAuthorize("hasAuthority('UPDATE_SPONSORSHIP_HACKATHON_DETAIL_FILES')")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> updateSponsorshipHackathonDetailFiles(
-            @PathVariable Long id,
-            @RequestBody CommonRequest<List<String>> request) {
+            @PathVariable Long id, @RequestBody CommonRequest<List<String>> request) {
 
-        SponsorshipHackathonDetailResponseDTO dto = sponsorshipHackathonDetailService.updateFiles(id, request.getData());
+        SponsorshipHackathonDetailResponseDTO dto =
+                sponsorshipHackathonDetailService.updateFiles(id, request.getData());
 
         return ResponseEntity.ok(new CommonResponse<>(
                 UUID.randomUUID().toString(),
@@ -290,8 +288,10 @@ public class SponsorshipController {
     }
 
     @GetMapping("/details")
-    public ResponseEntity<CommonResponse<List<SponsorshipHackathonDetailResponseDTO>>> getAllSponsorshipHackathonDetails() {
-        List<SponsorshipHackathonDetailResponseDTO> sponsorshipHackathonDetails = sponsorshipHackathonDetailService.getAll();
+    public ResponseEntity<CommonResponse<List<SponsorshipHackathonDetailResponseDTO>>>
+            getAllSponsorshipHackathonDetails() {
+        List<SponsorshipHackathonDetailResponseDTO> sponsorshipHackathonDetails =
+                sponsorshipHackathonDetailService.getAll();
         CommonResponse<List<SponsorshipHackathonDetailResponseDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),
@@ -304,7 +304,8 @@ public class SponsorshipController {
     @GetMapping("/details/{id}")
     public ResponseEntity<CommonResponse<SponsorshipHackathonDetailResponseDTO>> getSponsorshipHackathonDetailById(
             @PathVariable Long id) {
-        SponsorshipHackathonDetailResponseDTO sponsorshipHackathonDetailDTO = sponsorshipHackathonDetailService.getById(id);
+        SponsorshipHackathonDetailResponseDTO sponsorshipHackathonDetailDTO =
+                sponsorshipHackathonDetailService.getById(id);
         CommonResponse<SponsorshipHackathonDetailResponseDTO> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
                 LocalDateTime.now(),

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.hackathon.exception.InvalidInputException;
 import jakarta.validation.Valid;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hacof.hackathon.dto.RoundDTO;
 import com.hacof.hackathon.dto.RoundLocationDTO;
 import com.hacof.hackathon.entity.Round;
+import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.service.RoundLocationService;
 import com.hacof.hackathon.service.RoundService;
 import com.hacof.hackathon.specification.RoundSpecification;

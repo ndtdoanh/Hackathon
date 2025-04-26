@@ -147,8 +147,7 @@ class HackathonControllerTest {
         request.setChannel("HACOF");
         request.setData(dto);
 
-        when(hackathonService.update("999", dto))
-                .thenThrow(new ResourceNotFoundException("Hackathon not found"));
+        when(hackathonService.update("999", dto)).thenThrow(new ResourceNotFoundException("Hackathon not found"));
 
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             hackathonController.updateHackathon(request);

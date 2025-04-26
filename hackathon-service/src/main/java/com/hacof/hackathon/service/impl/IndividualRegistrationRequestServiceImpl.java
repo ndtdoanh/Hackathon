@@ -87,12 +87,12 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + reviewById));
         }
 
-//        if (existingRequest.getStatus() == IndividualRegistrationRequestStatus.APPROVED
-//                && !IndividualRegistrationRequestStatus.APPROVED
-//                        .name()
-//                        .equalsIgnoreCase(individualRegistrationRequestDTO.getStatus())) {
-//            throw new InvalidInputException("Cannot update status after it's approved");
-//        }
+        //        if (existingRequest.getStatus() == IndividualRegistrationRequestStatus.APPROVED
+        //                && !IndividualRegistrationRequestStatus.APPROVED
+        //                        .name()
+        //                        .equalsIgnoreCase(individualRegistrationRequestDTO.getStatus())) {
+        //            throw new InvalidInputException("Cannot update status after it's approved");
+        //        }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
