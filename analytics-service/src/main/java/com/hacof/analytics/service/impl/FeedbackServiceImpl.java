@@ -36,43 +36,30 @@ public class FeedbackServiceImpl implements FeedbackService {
     UserRepository userRepository;
     HackathonRepository hackathonRepository;
     TeamRepository teamRepository;
-    FeedbackDetailMapper feedbackDetailMapper;
-    FeedbackDetailRepository feedbackDetailRepository;
 
     @Override
     public FeedbackResponse createFeedback(FeedbackRequest request) {
-        boolean hasHackathon = StringUtils.hasText(request.getHackathonId());
-        boolean hasMentor = StringUtils.hasText(request.getMentorId());
-
-        if (!hasHackathon && !hasMentor) {
+        if (!StringUtils.hasText(request.getHackathonId()) || !StringUtils.hasText(request.getMentorId())) {
             throw new AppException(ErrorCode.FEEDBACK_TARGET_REQUIRED);
         }
 
+        Long hackathonId = Long.parseLong(request.getHackathonId());
+        Long mentorId = Long.parseLong(request.getMentorId());
+
+        Hackathon hackathon = hackathonRepository.findById(hackathonId)
+                .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND));
+
+        User mentor = userRepository.findById(mentorId)
+                .orElseThrow(() -> new AppException(ErrorCode.MENTOR_NOT_FOUND));
+
+        boolean feedbackExists = feedbackRepository.existsByHackathonIdAndMentorId(hackathonId, mentorId);
+        if (feedbackExists) {
+            throw new AppException(ErrorCode.FEEDBACK_EXISTED);
+        }
+
         Feedback feedback = new Feedback();
-
-        if (hasHackathon) {
-            Long hackathonId = Long.parseLong(request.getHackathonId());
-            Hackathon hackathon = hackathonRepository.findById(hackathonId)
-                    .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND));
-
-            if (feedbackRepository.existsByHackathonId(hackathonId)) {
-                throw new AppException(ErrorCode.FEEDBACK_EXISTED);
-            }
-
-            feedback.setHackathon(hackathon);
-        }
-
-        if (hasMentor) {
-            Long mentorId = Long.parseLong(request.getMentorId());
-            User mentor = userRepository.findById(mentorId)
-                    .orElseThrow(() -> new AppException(ErrorCode.MENTOR_NOT_FOUND));
-
-            if (feedbackRepository.existsByMentorId(mentorId)) {
-                throw new AppException(ErrorCode.FEEDBACK_EXISTED);
-            }
-
-            feedback.setMentor(mentor);
-        }
+        feedback.setHackathon(hackathon);
+        feedback.setMentor(mentor);
 
         Feedback saved = feedbackRepository.save(feedback);
         return feedbackMapper.toFeedbackResponse(saved);
