@@ -35,10 +35,10 @@ public class BoardUserMapper {
                 .id(String.valueOf(board.getId()))
                 .name(board.getName())
                 .description(board.getDescription())
-                .ownerId(String.valueOf(board.getOwner().getId()))
-                .teamId(String.valueOf(board.getTeam().getId()))
-                .hackathonId(String.valueOf(board.getHackathon().getId())) // Lấy tên team (nếu có)
-                .createdBy(board.getCreatedBy().getUsername())
+                .ownerId(board.getOwner() != null ? String.valueOf(board.getOwner().getId()) : null)
+                .teamId(board.getTeam() != null ? String.valueOf(board.getTeam().getId()) : null)
+                .hackathonId(board.getHackathon() != null ? String.valueOf(board.getHackathon().getId()) : null)
+                .createdBy(board.getCreatedBy() != null ? board.getCreatedBy().getUsername() : null)
                 .createdDate(board.getCreatedDate())
                 .lastModifiedDate(board.getLastModifiedDate())
                 .build();
@@ -54,6 +54,7 @@ public class BoardUserMapper {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .avatarUrl(user.getAvatarUrl())
                 .build();
     }
 }
