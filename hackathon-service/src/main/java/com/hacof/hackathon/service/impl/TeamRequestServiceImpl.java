@@ -59,6 +59,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     RoundRepository roundRepository;
     NotificationService notificationService;
 
+
     @Override
     public List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId) {
         return teamRequestRepository.findByMemberIdAndHackathonId(memberId, hackathonId).stream()
@@ -405,9 +406,9 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathon_Id(id);
 
-        if (teamRequests.isEmpty()) {
-            throw new ResourceNotFoundException("No team requests found for Hackathon ID = " + id);
-        }
+//        if (teamRequests.isEmpty()) {
+//            throw new ResourceNotFoundException("No team requests found for Hackathon ID = " + id);
+//        }
 
         return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
