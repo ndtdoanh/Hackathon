@@ -19,7 +19,15 @@ public interface BlogPostService {
 
     BlogPostResponse approveBlogPost(Long id);
 
+    BlogPostResponse publishBlogPost(Long id);
+
+    BlogPostResponse unpublishBlogPost(Long id);
+
+    BlogPostResponse getBlogPostBySlug(String slug);
+
     BlogPostResponse rejectBlogPost(Long id);
+
+    BlogPostResponse updateBlogPost(Long id, BlogPostRequest request);
 
     void deleteBlogPost(Long id);
 }

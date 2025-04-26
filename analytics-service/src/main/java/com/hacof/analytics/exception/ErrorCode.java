@@ -27,7 +27,9 @@ public enum ErrorCode {
     HACKATHON_REQUIRED(1016, "Hackathon required", HttpStatus.BAD_REQUEST),
     FEEDBACK_DETAIL_ALREADY_SUBMITTED(1017, "Feedback detail already submitted", HttpStatus.BAD_REQUEST),
     FEEDBACK_TARGET_REQUIRED(1018, "Feedback target required", HttpStatus.BAD_REQUEST),
-    BLOG_SLUG_ALREADY_EXISTS(1019, "Blog post slug already exists", HttpStatus.BAD_REQUEST);
+    BLOG_CANNOT_PUBLISH(1019, "Blog cannot publish", HttpStatus.BAD_REQUEST),
+    BLOG_CANNOT_UNPUBLISH(1020, "Blog cannot unpublish", HttpStatus.BAD_REQUEST),
+    BLOG_SLUG_ALREADY_EXISTS(1021, "Blog post slug already exists", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
