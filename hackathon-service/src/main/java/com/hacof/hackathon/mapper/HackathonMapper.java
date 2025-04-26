@@ -39,9 +39,9 @@ public interface HackathonMapper {
     @Named("determineEnrollmentStatus")
     default String determineEnrollmentStatus(Hackathon hackathon) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(hackathon.getStartDate())) {
+        if (now.isBefore(hackathon.getEnrollStartDate())) {
             return "UPCOMING";
-        } else if (now.isAfter(hackathon.getStartDate()) && now.isBefore(hackathon.getEndDate())) {
+        } else if (now.isAfter(hackathon.getEnrollStartDate()) && now.isBefore(hackathon.getEnrollEndDate())) {
             return "OPEN";
         } else {
             return "CLOSED";
