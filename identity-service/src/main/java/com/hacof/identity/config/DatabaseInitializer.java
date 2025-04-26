@@ -68,6 +68,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                     "CREATE_FORUM_THREAD_ADMIN",
                     "UPDATE_FORUM_THREAD_ADMIN",
+                    "REVIEW_THREAD_POST_REPORT",
 
                     "CREATE_HACKATHON",
                     "UPDATE_HACKATHON",
@@ -335,6 +336,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                 new Permission("CREATE_FORUM_THREAD_ADMIN", "/api/v1/forum-threads/admin", "POST", "FORUM_THREADS"),
                 new Permission("UPDATE_FORUM_THREAD_ADMIN", "/api/v1/forum-threads/admin/{id}", "PUT", "FORUM_THREADS"),
+                new Permission("REVIEW_THREAD_POST_REPORT", "/api/v1/forum-threads/review/{id}", "PUT", "FORUM_THREADS"),
 
                 new Permission("CREATE_HACKATHON", "/api/v1/hackathons", "POST", "HACKATHONS"),
                 new Permission("UPDATE_HACKATHON", "/api/v1/hackathons", "PUT", "HACKATHONS"),
