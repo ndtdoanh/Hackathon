@@ -102,9 +102,6 @@ public class ThreadPostServiceImpl implements ThreadPostService {
 
         List<ThreadPost> threadPosts = threadPostRepository.findByForumThread(forumThread);
 
-        return threadPosts.stream()
-                .map(ThreadPostMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return threadPosts.stream().map(ThreadPostMapper::toResponseDTO).collect(Collectors.toList());
     }
-
 }

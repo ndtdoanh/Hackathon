@@ -249,7 +249,6 @@ public class ScheduleController {
         }
     }
 
-
     @GetMapping("/operating")
     public ResponseEntity<CommonResponse<List<ScheduleResponseDTO>>> getOperatingSchedulesByHackathonId(
             @RequestParam Long hackathonId) {
@@ -268,5 +267,4 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

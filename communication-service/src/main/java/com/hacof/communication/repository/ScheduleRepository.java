@@ -22,5 +22,4 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByTeamIsNullAndHackathonIsNull();
 
     List<Schedule> findByTeamIsNullAndHackathonId(Long hackathonId);
-
 }

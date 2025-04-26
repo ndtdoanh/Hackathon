@@ -173,5 +173,4 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> schedules = scheduleRepository.findByTeamIsNullAndHackathonId(hackathonId);
         return schedules.stream().map(scheduleMapper::toDto).collect(Collectors.toList());
     }
-
 }

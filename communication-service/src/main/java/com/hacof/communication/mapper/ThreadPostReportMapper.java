@@ -11,13 +11,11 @@ import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
 import com.hacof.communication.dto.response.ThreadPostResponseDTO;
 import com.hacof.communication.entity.ThreadPost;
 import com.hacof.communication.entity.ThreadPostReport;
-import com.hacof.communication.entity.User;
 
 public class ThreadPostReportMapper {
 
     // Convert DTO to Entity
-    public static ThreadPostReport toEntity(
-            ThreadPostReportRequestDTO requestDTO, ThreadPost threadPost) {
+    public static ThreadPostReport toEntity(ThreadPostReportRequestDTO requestDTO, ThreadPost threadPost) {
         return ThreadPostReport.builder()
                 .threadPost(threadPost)
                 .reason(requestDTO.getReason())

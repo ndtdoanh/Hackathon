@@ -9,9 +9,11 @@ import com.hacof.communication.dto.response.ForumThreadResponseDTO;
 public interface ForumThreadService {
 
     ForumThreadResponseDTO createForumThread(ForumThreadRequestDTO forumThreadRequestDTO);
+
     ForumThreadResponseDTO createForumThreadByMember(ForumThreadMemberRequestDTO requestDTO);
 
     ForumThreadResponseDTO updateForumThread(Long id, ForumThreadRequestDTO forumThreadRequestDTO);
+
     ForumThreadResponseDTO updateForumThreadByMember(Long id, ForumThreadMemberRequestDTO dto);
 
     void deleteForumThread(Long id);

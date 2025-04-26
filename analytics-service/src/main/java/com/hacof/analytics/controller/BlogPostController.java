@@ -158,8 +158,7 @@ public class BlogPostController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE_BLOG_POST')")
     public ApiResponse<BlogPostResponse> updateBlogPost(
-            @PathVariable Long id,
-            @RequestBody ApiRequest<BlogPostRequest> request) {
+            @PathVariable Long id, @RequestBody ApiRequest<BlogPostRequest> request) {
 
         BlogPostResponse updated = blogPostService.updateBlogPost(id, request.getData());
 
