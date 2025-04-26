@@ -21,4 +21,5 @@ public interface ThreadPostReportService {
     ThreadPostReportResponseDTO reviewThreadPostReport(Long id, ThreadPostReportReviewRequestDTO requestDTO);
 
     List<ThreadPostReportResponseDTO> getAllThreadPostReports();
+
 }
