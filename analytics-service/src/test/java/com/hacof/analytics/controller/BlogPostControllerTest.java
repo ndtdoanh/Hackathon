@@ -10,11 +10,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hacof.analytics.dto.ApiRequest;
 import com.hacof.analytics.dto.request.BlogPostRequest;
@@ -24,6 +24,7 @@ import com.hacof.analytics.service.BlogPostService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+@ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class BlogPostControllerTest {
 
@@ -32,11 +33,6 @@ class BlogPostControllerTest {
 
     @InjectMocks
     BlogPostController blogPostController;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testCreateBlogPost() {
@@ -177,7 +173,7 @@ class BlogPostControllerTest {
         var response = blogPostController.approveBlogPost(id);
 
         assertEquals(responseData, response.getData());
-        assertEquals("Blog post approved and published", response.getMessage());
+        assertEquals("Blog post approved successfully", response.getMessage());
         verify(blogPostService, times(1)).approveBlogPost(id);
     }
 

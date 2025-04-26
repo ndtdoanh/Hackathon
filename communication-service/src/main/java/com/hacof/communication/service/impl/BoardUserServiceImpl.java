@@ -133,7 +133,6 @@ public class BoardUserServiceImpl implements BoardUserService {
         return boardUserMapper.toDto(boardUser);
     }
 
-
     @Override
     public BoardUserResponseDTO undeleteBoardUser(Long id) {
         // Tìm BoardUser

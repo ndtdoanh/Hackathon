@@ -32,4 +32,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     Optional<Feedback> findByMentor_Id(Long mentorId);
 
     boolean existsByHackathonIdAndMentorId(Long hackathonId, Long mentorId);
+
+    boolean existsByHackathonIdAndMentorIsNull(Long hackathonId);
 }

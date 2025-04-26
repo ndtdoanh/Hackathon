@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hacof.communication.dto.ApiRequest;
 import com.hacof.communication.dto.ApiResponse;
@@ -22,6 +22,11 @@ import com.hacof.communication.dto.request.ConversationRequest;
 import com.hacof.communication.dto.response.ConversationResponse;
 import com.hacof.communication.service.ConversationService;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class ConversationControllerTest {
 
     @InjectMocks
@@ -29,11 +34,6 @@ class ConversationControllerTest {
 
     @Mock
     ConversationService conversationService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testCreateSingleConversation() {

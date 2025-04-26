@@ -99,8 +99,8 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Override
     public BlogPostResponse getBlogPostBySlug(String slug) {
-        BlogPost blogPost = blogPostRepository.findBySlug(slug)
-                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
+        BlogPost blogPost =
+                blogPostRepository.findBySlug(slug).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
         return blogPostMapper.toResponse(blogPost);
     }
 
@@ -118,8 +118,7 @@ public class BlogPostServiceImpl implements BlogPostService {
     public BlogPostResponse updateBlogPost(Long id, BlogPostRequest request) {
         BlogPost existing = findBlogPostById(id);
 
-        if (!existing.getSlug().equals(request.getSlug()) &&
-                blogPostRepository.existsBySlug(request.getSlug())) {
+        if (!existing.getSlug().equals(request.getSlug()) && blogPostRepository.existsBySlug(request.getSlug())) {
             throw new AppException(ErrorCode.BLOG_SLUG_ALREADY_EXISTS);
         }
 

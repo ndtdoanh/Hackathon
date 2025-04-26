@@ -233,10 +233,16 @@ public class DeviceServiceImpl implements DeviceService {
 
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                if (file != null && !file.isEmpty() && file.getOriginalFilename() != null && !file.getOriginalFilename().trim().isEmpty()) {
+                if (file != null
+                        && !file.isEmpty()
+                        && file.getOriginalFilename() != null
+                        && !file.getOriginalFilename().trim().isEmpty()) {
                     try {
                         String fileUrl = s3Service.uploadFile(
-                                file.getInputStream(), file.getOriginalFilename(), file.getSize(), file.getContentType());
+                                file.getInputStream(),
+                                file.getOriginalFilename(),
+                                file.getSize(),
+                                file.getContentType());
 
                         FileUrl newFileUrl = new FileUrl(
                                 file.getOriginalFilename(),

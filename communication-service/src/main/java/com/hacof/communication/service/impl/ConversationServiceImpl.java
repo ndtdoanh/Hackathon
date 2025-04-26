@@ -104,7 +104,8 @@ public class ConversationServiceImpl implements ConversationService {
                     ConversationUserResponse userResponse = new ConversationUserResponse();
                     userResponse.setId(String.valueOf(conversationUser.getId()));
                     userResponse.setConversationId(conversationId);
-                    userResponse.setUserId(String.valueOf(conversationUser.getUser().getId()));
+                    userResponse.setUserId(
+                            String.valueOf(conversationUser.getUser().getId()));
                     userResponse.setDeleted(conversationUser.isDeleted());
                     userResponse.setDeletedByUserName(
                             conversationUser.getDeletedBy() != null

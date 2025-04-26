@@ -105,7 +105,8 @@ public class FeedbackDetailServiceImpl implements FeedbackDetailService {
 
     @Override
     public List<FeedbackDetailResponse> getFeedbackDetailsByFeedbackIdAndCreatedBy(Long feedbackId, String createdBy) {
-        List<FeedbackDetail> details = feedbackDetailRepository.findAllByFeedbackIdAndCreatedBy_Username(feedbackId, createdBy);
+        List<FeedbackDetail> details =
+                feedbackDetailRepository.findAllByFeedbackIdAndCreatedBy_Username(feedbackId, createdBy);
         return feedbackDetailMapper.toFeedbackDetailResponseList(details);
     }
 

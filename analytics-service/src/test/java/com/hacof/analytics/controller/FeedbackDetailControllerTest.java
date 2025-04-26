@@ -12,11 +12,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import com.hacof.analytics.dto.ApiRequest;
@@ -25,18 +25,18 @@ import com.hacof.analytics.dto.request.FeedbackDetailRequest;
 import com.hacof.analytics.dto.response.FeedbackDetailResponse;
 import com.hacof.analytics.service.FeedbackDetailService;
 
-public class FeedbackDetailControllerTest {
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+class FeedbackDetailControllerTest {
 
     @Mock
     private FeedbackDetailService feedbackDetailService;
 
     @InjectMocks
     private FeedbackDetailController feedbackDetailController;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testGetFeedbackDetailsByFeedbackId_validId_returnsData() {
@@ -46,9 +46,11 @@ public class FeedbackDetailControllerTest {
 
         List<FeedbackDetailResponse> mockList = Collections.singletonList(detail);
 
-        when(feedbackDetailService.getAllFeedbackDetailsByFeedbackId(feedbackId)).thenReturn(mockList);
+        when(feedbackDetailService.getAllFeedbackDetailsByFeedbackId(feedbackId))
+                .thenReturn(mockList);
 
-        ApiResponse<List<FeedbackDetailResponse>> response = feedbackDetailController.getAllFeedbackDetailsByFeedbackId(feedbackId);
+        ApiResponse<List<FeedbackDetailResponse>> response =
+                feedbackDetailController.getAllFeedbackDetailsByFeedbackId(feedbackId);
 
         assertNotNull(response);
         assertNotNull(response.getData());

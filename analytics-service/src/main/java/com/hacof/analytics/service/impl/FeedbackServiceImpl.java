@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.hacof.analytics.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,11 +11,10 @@ import com.hacof.analytics.dto.request.FeedbackRequest;
 import com.hacof.analytics.dto.response.FeedbackResponse;
 import com.hacof.analytics.entity.Feedback;
 import com.hacof.analytics.entity.Hackathon;
+import com.hacof.analytics.entity.User;
 import com.hacof.analytics.exception.AppException;
 import com.hacof.analytics.exception.ErrorCode;
-import com.hacof.analytics.mapper.FeedbackDetailMapper;
 import com.hacof.analytics.mapper.FeedbackMapper;
-import com.hacof.analytics.repository.FeedbackDetailRepository;
 import com.hacof.analytics.repository.FeedbackRepository;
 import com.hacof.analytics.repository.HackathonRepository;
 import com.hacof.analytics.repository.TeamRepository;
@@ -39,27 +37,36 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public FeedbackResponse createFeedback(FeedbackRequest request) {
-        if (!StringUtils.hasText(request.getHackathonId()) || !StringUtils.hasText(request.getMentorId())) {
+        if (!StringUtils.hasText(request.getHackathonId())) {
             throw new AppException(ErrorCode.FEEDBACK_TARGET_REQUIRED);
         }
 
         Long hackathonId = Long.parseLong(request.getHackathonId());
-        Long mentorId = Long.parseLong(request.getMentorId());
-
-        Hackathon hackathon = hackathonRepository.findById(hackathonId)
+        Hackathon hackathon = hackathonRepository
+                .findById(hackathonId)
                 .orElseThrow(() -> new AppException(ErrorCode.HACKATHON_NOT_FOUND));
-
-        User mentor = userRepository.findById(mentorId)
-                .orElseThrow(() -> new AppException(ErrorCode.MENTOR_NOT_FOUND));
-
-        boolean feedbackExists = feedbackRepository.existsByHackathonIdAndMentorId(hackathonId, mentorId);
-        if (feedbackExists) {
-            throw new AppException(ErrorCode.FEEDBACK_EXISTED);
-        }
 
         Feedback feedback = new Feedback();
         feedback.setHackathon(hackathon);
-        feedback.setMentor(mentor);
+
+        if (StringUtils.hasText(request.getMentorId())) {
+            Long mentorId = Long.parseLong(request.getMentorId());
+            User mentor = userRepository.findById(mentorId)
+                    .orElseThrow(() -> new AppException(ErrorCode.MENTOR_NOT_FOUND));
+
+            boolean feedbackExists = feedbackRepository.existsByHackathonIdAndMentorId(hackathonId, mentorId);
+            if (feedbackExists) {
+                throw new AppException(ErrorCode.FEEDBACK_EXISTED);
+            }
+
+            feedback.setMentor(mentor);
+        } else {
+            boolean feedbackExists = feedbackRepository.existsByHackathonIdAndMentorIsNull(hackathonId);
+            if (feedbackExists) {
+                throw new AppException(ErrorCode.FEEDBACK_EXISTED);
+            }
+            feedback.setMentor(null);
+        }
 
         Feedback saved = feedbackRepository.save(feedback);
         return feedbackMapper.toFeedbackResponse(saved);
@@ -130,8 +137,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             feedbackOptional = feedbackRepository.findByMentor_Id(mentorId);
         }
 
-        Feedback feedback = feedbackOptional
-                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+        Feedback feedback = feedbackOptional.orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
 
         return feedbackMapper.toFeedbackResponse(feedback);
     }
