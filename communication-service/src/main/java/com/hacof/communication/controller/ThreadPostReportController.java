@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.communication.dto.request.ThreadPostReportReviewRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
-import com.hacof.communication.dto.request.ThreadPostReportReviewRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
 import com.hacof.communication.service.ThreadPostReportService;
 import com.hacof.communication.util.CommonRequest;
@@ -164,7 +164,8 @@ public class ThreadPostReportController {
     @PutMapping("/review/{id}")
     @PreAuthorize("hasAuthority('REVIEW_THREAD_POST_REPORT')")
     public ResponseEntity<CommonResponse<ThreadPostReportResponseDTO>> reviewThreadPostReport(
-            @PathVariable Long id, @RequestBody CommonRequest<ThreadPostReportReviewRequestDTO> request) {
+            @PathVariable Long id,
+            @RequestBody CommonRequest<ThreadPostReportReviewRequestDTO> request) {
 
         CommonResponse<ThreadPostReportResponseDTO> response = new CommonResponse<>();
         try {
@@ -188,4 +189,23 @@ public class ThreadPostReportController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<ThreadPostReportResponseDTO>>> getAllThreadPostReports() {
+        CommonResponse<List<ThreadPostReportResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ThreadPostReportResponseDTO> reports = threadPostReportService.getAllThreadPostReports();
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("All thread post reports fetched successfully!");
+            response.setData(reports);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }
