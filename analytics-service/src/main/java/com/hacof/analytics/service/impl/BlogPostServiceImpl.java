@@ -73,8 +73,35 @@ public class BlogPostServiceImpl implements BlogPostService {
         if (blogPost.getStatus() != BlogPostStatus.PENDING_REVIEW) {
             throw new AppException(ErrorCode.BLOG_CANNOT_APPROVE);
         }
+        blogPost.setStatus(BlogPostStatus.APPROVED);
+        return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
+    }
+
+    @Override
+    public BlogPostResponse publishBlogPost(Long id) {
+        BlogPost blogPost = findBlogPostById(id);
+        if (blogPost.getStatus() != BlogPostStatus.APPROVED) {
+            throw new AppException(ErrorCode.BLOG_CANNOT_PUBLISH);
+        }
         blogPost.setStatus(BlogPostStatus.PUBLISHED);
         return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
+    }
+
+    @Override
+    public BlogPostResponse unpublishBlogPost(Long id) {
+        BlogPost blogPost = findBlogPostById(id);
+        if (blogPost.getStatus() != BlogPostStatus.PUBLISHED) {
+            throw new AppException(ErrorCode.BLOG_CANNOT_UNPUBLISH);
+        }
+        blogPost.setStatus(BlogPostStatus.APPROVED);
+        return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
+    }
+
+    @Override
+    public BlogPostResponse getBlogPostBySlug(String slug) {
+        BlogPost blogPost = blogPostRepository.findBySlug(slug)
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
+        return blogPostMapper.toResponse(blogPost);
     }
 
     @Override
@@ -85,6 +112,23 @@ public class BlogPostServiceImpl implements BlogPostService {
         }
         blogPost.setStatus(BlogPostStatus.REJECTED);
         return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
+    }
+
+    @Override
+    public BlogPostResponse updateBlogPost(Long id, BlogPostRequest request) {
+        BlogPost existing = findBlogPostById(id);
+
+        if (!existing.getSlug().equals(request.getSlug()) &&
+                blogPostRepository.existsBySlug(request.getSlug())) {
+            throw new AppException(ErrorCode.BLOG_SLUG_ALREADY_EXISTS);
+        }
+
+        existing.setTitle(request.getTitle());
+        existing.setContent(request.getContent());
+        existing.setSlug(request.getSlug());
+        existing.setBannerImageUrl(request.getBannerImageUrl());
+
+        return blogPostMapper.toResponse(blogPostRepository.save(existing));
     }
 
     @Override

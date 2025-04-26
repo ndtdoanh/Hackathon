@@ -53,8 +53,13 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                     "DELETE_USER",
 
+                    "CREATE_BLOG_POST",
+                    "SUBMIT_BLOG_POST",
                     "APPROVE_BLOG_POST",
+                    "PUBLISH_BLOG_POST",
+                    "UNPUBLISH_BLOG_POST",
                     "REJECT_BLOG_POST",
+                    "UPDATE_BLOG_POST",
                     "DELETE_BLOG_POST",
 
                     "CREATE_FORUM_CATEGORY",
@@ -290,7 +295,10 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("CREATE_BLOG_POST", "/api/v1/blog-posts", "POST", "BLOG_POSTS"),
                 new Permission("SUBMIT_BLOG_POST", "/api/v1/blog-posts/{id}/submit", "PUT", "BLOG_POSTS"),
                 new Permission("APPROVE_BLOG_POST", "/api/v1/blog-posts/{id}/approve", "PUT", "BLOG_POSTS"),
+                new Permission("PUBLISH_BLOG_POST", "/api/v1/blog-posts/{id}/publish", "PUT", "BLOG_POSTS"),
+                new Permission("UNPUBLISH_BLOG_POST", "/api/v1/blog-posts/{id}/unpublish", "PUT", "BLOG_POSTS"),
                 new Permission("REJECT_BLOG_POST", "/api/v1/blog-posts/{id}/reject", "PUT", "BLOG_POSTS"),
+                new Permission("UPDATE_BLOG_POST", "/api/v1/blog-posts/{id}", "PUT", "BLOG_POSTS"),
                 new Permission("DELETE_BLOG_POST", "/api/v1/blog-posts/{id}", "DELETE", "BLOG_POSTS"),
 
                 new Permission("CREATE_JUDGE_ROUND", "/api/v1/judge-rounds", "POST", "JUDGE_ROUNDS"),

@@ -1,6 +1,7 @@
 package com.hacof.analytics.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,4 +14,6 @@ public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
     boolean existsBySlug(String slug);
 
     List<BlogPost> findByStatus(BlogPostStatus status);
+
+    Optional<BlogPost> findBySlug(String slug);
 }
