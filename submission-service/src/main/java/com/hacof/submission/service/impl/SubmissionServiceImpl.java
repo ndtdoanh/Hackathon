@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,18 +45,19 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Autowired
     private S3Service s3Service;
 
-    private static final List<String> ALLOWED_FILE_TYPES = List.of(
-            "image/jpeg",
-            "image/png",
-            "application/pdf",
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "application/vnd.ms-excel",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "application/vnd.ms-powerpoint",
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            "text/plain");
+//    private static final List<String> ALLOWED_FILE_TYPES = List.of(
+//            "image/jpeg",
+//            "image/png",
+//            "application/pdf",
+//            "application/msword",
+//            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//            "application/vnd.ms-excel",
+//            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//            "application/vnd.ms-powerpoint",
+//            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+//            "text/plain");
 
+    @Transactional
     @Override
     public SubmissionResponseDTO createSubmission(SubmissionRequestDTO submissionDTO, List<MultipartFile> files)
             throws IOException {
@@ -102,6 +104,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         return submissions.stream().map(submissionMapper::toResponseDTO).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public SubmissionResponseDTO updateSubmission(
             Long id, SubmissionRequestDTO submissionDTO, List<MultipartFile> files) throws IOException {
@@ -149,10 +152,10 @@ public class SubmissionServiceImpl implements SubmissionService {
     private static final long MAX_FILE_SIZE = 15 * 1024 * 1024;
 
     private void processAndSaveFile(MultipartFile file, Submission submission) throws IOException {
-        String fileType = file.getContentType();
-        if (!ALLOWED_FILE_TYPES.contains(fileType)) {
-            throw new IllegalArgumentException("File type not allowed: " + fileType);
-        }
+//        String fileType = file.getContentType();
+//        if (!ALLOWED_FILE_TYPES.contains(fileType)) {
+//            throw new IllegalArgumentException("File type not allowed: " + fileType);
+//        }
 
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new IllegalArgumentException("File size exceeds the 15MB limit.");
