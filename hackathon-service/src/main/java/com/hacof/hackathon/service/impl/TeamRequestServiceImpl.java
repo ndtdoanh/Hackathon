@@ -541,4 +541,14 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
         return authentication;
     }
+
+    @Override
+    public List<TeamRequestDTO> getTeamRequestsByMemberId(Long memberId) {
+        if (memberId == null) {
+            throw new IllegalArgumentException("Member ID must not be null");
+        }
+        List<TeamRequest> teamRequests = teamRequestRepository.findByTeamRequestMembers_User_Id(memberId);
+        return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
+    }
+
 }

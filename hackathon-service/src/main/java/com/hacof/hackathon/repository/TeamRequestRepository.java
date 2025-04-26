@@ -37,4 +37,6 @@ public interface TeamRequestRepository extends JpaRepository<TeamRequest, Long>,
             @Param("userId") Long userId, @Param("hackathonId") Long hackathonId);
 
     boolean existsByHackathonId(Long hackathonId);
+
+    List<TeamRequest> findByTeamRequestMembers_User_Id(Long memberId);
 }
