@@ -59,6 +59,66 @@ class BlogPostControllerTest {
     }
 
     @Test
+    void testPublishBlogPost() {
+        Long id = 1L;
+        BlogPostResponse responseData = new BlogPostResponse();
+        when(blogPostService.publishBlogPost(id)).thenReturn(responseData);
+
+        var response = blogPostController.publishBlogPost(id);
+
+        assertEquals(responseData, response.getData());
+        assertEquals("Blog post published successfully", response.getMessage());
+        verify(blogPostService, times(1)).publishBlogPost(id);
+    }
+
+    @Test
+    void testUnpublishBlogPost() {
+        Long id = 1L;
+        BlogPostResponse responseData = new BlogPostResponse();
+        when(blogPostService.unpublishBlogPost(id)).thenReturn(responseData);
+
+        var response = blogPostController.unpublishBlogPost(id);
+
+        assertEquals(responseData, response.getData());
+        assertEquals("Blog post unpublished successfully", response.getMessage());
+        verify(blogPostService, times(1)).unpublishBlogPost(id);
+    }
+
+    @Test
+    void testGetBlogPostBySlug() {
+        String slug = "test-slug";
+        BlogPostResponse responseData = new BlogPostResponse();
+        when(blogPostService.getBlogPostBySlug(slug)).thenReturn(responseData);
+
+        var response = blogPostController.getBlogPostBySlug(slug);
+
+        assertEquals(responseData, response.getData());
+        assertEquals("Blog post retrieved by slug", response.getMessage());
+        verify(blogPostService, times(1)).getBlogPostBySlug(slug);
+    }
+
+    @Test
+    void testUpdateBlogPost() {
+        Long id = 1L;
+        BlogPostRequest requestData = new BlogPostRequest();
+        BlogPostResponse responseData = new BlogPostResponse();
+        ApiRequest<BlogPostRequest> request = new ApiRequest<>();
+
+        request.setRequestId(UUID.randomUUID().toString());
+        request.setRequestDateTime(LocalDateTime.now());
+        request.setChannel("HACOF");
+        request.setData(requestData);
+
+        when(blogPostService.updateBlogPost(id, requestData)).thenReturn(responseData);
+
+        var response = blogPostController.updateBlogPost(id, request);
+
+        assertEquals(responseData, response.getData());
+        assertEquals("Blog post updated successfully", response.getMessage());
+        verify(blogPostService, times(1)).updateBlogPost(id, requestData);
+    }
+
+    @Test
     void testGetBlogPosts() {
         List<BlogPostResponse> mockPosts = Collections.singletonList(new BlogPostResponse());
         when(blogPostService.getBlogPosts()).thenReturn(mockPosts);
