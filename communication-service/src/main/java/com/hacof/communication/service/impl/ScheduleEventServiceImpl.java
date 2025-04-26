@@ -1,5 +1,6 @@
 package com.hacof.communication.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -236,7 +237,7 @@ public class ScheduleEventServiceImpl implements ScheduleEventService {
     public List<ScheduleEventResponseDTO> getScheduleEventsByScheduleId(Long scheduleId) {
         List<ScheduleEvent> scheduleEvents = scheduleEventRepository.findByScheduleId(scheduleId);
         if (scheduleEvents.isEmpty()) {
-            throw new IllegalArgumentException("No schedule events found for the given scheduleId: " + scheduleId);
+            return Collections.emptyList();
         }
         return scheduleEvents.stream().map(scheduleEventMapper::toDto).collect(Collectors.toList());
     }
