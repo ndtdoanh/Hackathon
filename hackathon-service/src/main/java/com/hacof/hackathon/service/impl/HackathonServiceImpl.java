@@ -61,24 +61,14 @@ public class HackathonServiceImpl implements HackathonService {
 
         hackathon = hackathonRepository.save(hackathon);
 
-        List<FileUrl> fileUrls =
-                fileUrlRepository.findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
 
-        for (FileUrl file : fileUrls) {
-            file.setHackathon(hackathon);
-        }
-        fileUrlRepository.saveAll(fileUrls);
-        hackathon.setDocumentation(fileUrls);
-
-        if (hackathonDTO.getBannerImageUrl() != null) {
-            Optional<FileUrl> bannerFileUrlOptional =
-                    fileUrlRepository.findByFileUrlAndHackathonIsNull(hackathonDTO.getBannerImageUrl());
-
-            final Hackathon finalHackathon = hackathon;
-            bannerFileUrlOptional.ifPresent(bannerFileUrl -> {
-                bannerFileUrl.setHackathon(finalHackathon);
-                fileUrlRepository.save(bannerFileUrl);
-            });
+        if (hackathonDTO.getDocumentation() != null && !hackathonDTO.getDocumentation().isEmpty()) {
+            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
+            for (FileUrl file : fileUrls) {
+                file.setHackathon(hackathon);
+            }
+            fileUrlRepository.saveAll(fileUrls);
+            hackathon.setDocumentation(fileUrls);
         }
 
         hackathon = hackathonRepository.save(hackathon);
