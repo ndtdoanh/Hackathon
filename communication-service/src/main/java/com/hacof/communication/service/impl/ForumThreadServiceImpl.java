@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.dto.request.ForumThreadMemberRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hacof.communication.dto.request.ForumThreadMemberRequestDTO;
 import com.hacof.communication.dto.request.ForumThreadRequestDTO;
 import com.hacof.communication.dto.response.ForumThreadResponseDTO;
 import com.hacof.communication.entity.ForumCategory;
@@ -34,8 +34,8 @@ public class ForumThreadServiceImpl implements ForumThreadService {
     public ForumThreadResponseDTO createForumThread(ForumThreadRequestDTO forumThreadRequestDTO) {
         validateForumThreadInput(forumThreadRequestDTO.getTitle(), forumThreadRequestDTO.getForumCategoryId());
 
-        ForumCategory forumCategory = forumCategoryRepository.findById(
-                        Long.parseLong(forumThreadRequestDTO.getForumCategoryId()))
+        ForumCategory forumCategory = forumCategoryRepository
+                .findById(Long.parseLong(forumThreadRequestDTO.getForumCategoryId()))
                 .orElseThrow(() -> new IllegalArgumentException("ForumCategory not found!"));
 
         if (forumThreadRepository.existsByTitleAndForumCategoryId(
@@ -52,12 +52,11 @@ public class ForumThreadServiceImpl implements ForumThreadService {
     public ForumThreadResponseDTO createForumThreadByMember(ForumThreadMemberRequestDTO requestDTO) {
         validateForumThreadInput(requestDTO.getTitle(), requestDTO.getForumCategoryId());
 
-        ForumCategory forumCategory = forumCategoryRepository.findById(
-                        Long.parseLong(requestDTO.getForumCategoryId()))
+        ForumCategory forumCategory = forumCategoryRepository
+                .findById(Long.parseLong(requestDTO.getForumCategoryId()))
                 .orElseThrow(() -> new IllegalArgumentException("ForumCategory not found!"));
 
-        if (forumThreadRepository.existsByTitleAndForumCategoryId(
-                requestDTO.getTitle(), forumCategory.getId())) {
+        if (forumThreadRepository.existsByTitleAndForumCategoryId(requestDTO.getTitle(), forumCategory.getId())) {
             throw new IllegalArgumentException("A thread with the same title already exists in this category.");
         }
 
@@ -152,7 +151,6 @@ public class ForumThreadServiceImpl implements ForumThreadService {
         forumThread.setForumCategory(forumCategory);
         return ForumThreadMapper.toResponseDTO(forumThreadRepository.save(forumThread));
     }
-
 
     @Override
     public void deleteForumThread(Long id) {

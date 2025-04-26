@@ -18,5 +18,4 @@ public interface ThreadPostService {
     ThreadPostResponseDTO deleteThreadPost(Long id);
 
     List<ThreadPostResponseDTO> getThreadPostsByForumThreadId(Long forumThreadId);
-
 }

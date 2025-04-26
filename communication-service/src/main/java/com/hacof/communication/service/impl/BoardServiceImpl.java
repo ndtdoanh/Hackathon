@@ -214,5 +214,4 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findByTeamIsNullAndHackathonId(hackathonId);
         return boards.stream().map(boardMapper::toDto).collect(Collectors.toList());
     }
-
 }

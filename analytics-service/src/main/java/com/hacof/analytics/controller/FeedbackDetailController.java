@@ -118,8 +118,7 @@ public class FeedbackDetailController {
     @GetMapping("/by-feedback/{feedbackId}/user/{createdBy}")
     // @PreAuthorize("hasAuthority('GET_FEEDBACK_DETAIL_BY_FEEDBACKID_AND_USER')")
     public ApiResponse<List<FeedbackDetailResponse>> getFeedbackDetailsByFeedbackIdAndCreatedBy(
-            @PathVariable Long feedbackId,
-            @PathVariable String createdBy) {
+            @PathVariable Long feedbackId, @PathVariable String createdBy) {
         return ApiResponse.<List<FeedbackDetailResponse>>builder()
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())

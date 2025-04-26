@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -28,6 +28,7 @@ import com.hacof.identity.service.RoleService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+@ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class RoleControllerTest {
 
@@ -36,11 +37,6 @@ class RoleControllerTest {
 
     @Mock
     RoleService roleService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testCreateRole() {

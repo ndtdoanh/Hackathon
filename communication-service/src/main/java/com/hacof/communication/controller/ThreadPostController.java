@@ -158,7 +158,8 @@ public class ThreadPostController {
     }
 
     @GetMapping("/forum-thread/{forumThreadId}")
-    public ResponseEntity<CommonResponse<List<ThreadPostResponseDTO>>> getThreadPostsByForumThreadId(@PathVariable Long forumThreadId) {
+    public ResponseEntity<CommonResponse<List<ThreadPostResponseDTO>>> getThreadPostsByForumThreadId(
+            @PathVariable Long forumThreadId) {
         CommonResponse<List<ThreadPostResponseDTO>> response = new CommonResponse<>();
         try {
             List<ThreadPostResponseDTO> posts = threadPostService.getThreadPostsByForumThreadId(forumThreadId);
@@ -179,5 +180,4 @@ public class ThreadPostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

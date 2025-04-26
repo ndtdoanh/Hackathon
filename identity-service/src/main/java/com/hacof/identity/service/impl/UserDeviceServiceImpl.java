@@ -144,9 +144,10 @@ public class UserDeviceServiceImpl implements UserDeviceService {
             List<FileUrl> fileUrlList = new ArrayList<>();
 
             for (MultipartFile file : files) {
-                if (file != null && !file.isEmpty() &&
-                        file.getOriginalFilename() != null &&
-                        !file.getOriginalFilename().trim().isEmpty()) {
+                if (file != null
+                        && !file.isEmpty()
+                        && file.getOriginalFilename() != null
+                        && !file.getOriginalFilename().trim().isEmpty()) {
                     try {
                         String fileUrl = s3Service.uploadFile(
                                 file.getInputStream(),

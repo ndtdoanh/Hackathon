@@ -139,7 +139,6 @@ public class BoardUserController {
         }
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<BoardUserResponseDTO>> getBoardUser(@PathVariable Long id) {
         CommonResponse<BoardUserResponseDTO> response = new CommonResponse<>();

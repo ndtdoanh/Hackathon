@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.communication.dto.request.ForumThreadMemberRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hacof.communication.dto.request.ForumThreadMemberRequestDTO;
 import com.hacof.communication.dto.request.ForumThreadRequestDTO;
 import com.hacof.communication.dto.response.ForumThreadResponseDTO;
 import com.hacof.communication.service.ForumThreadService;
@@ -185,7 +185,6 @@ public class ForumThreadController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<String>> deleteForumThread(@PathVariable Long id) {
