@@ -70,6 +70,14 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .findById(Long.valueOf(submissionDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + submissionDTO.getTeamId()));
 
+        LocalDateTime now = LocalDateTime.now();
+        if (round.getStartTime() != null && now.isBefore(round.getStartTime())) {
+            throw new IllegalArgumentException("Submission is not allowed before the round starts.");
+        }
+        if (round.getEndTime() != null && now.isAfter(round.getEndTime())) {
+            throw new IllegalArgumentException("Submission is not allowed after the round ends.");
+        }
+
         Submission submission = new Submission();
         submission.setRound(round);
         submission.setTeam(team);
@@ -118,11 +126,18 @@ public class SubmissionServiceImpl implements SubmissionService {
                         () -> new IllegalArgumentException("Round not found for ID: " + submissionDTO.getRoundId()));
         submission.setRound(round);
 
+        LocalDateTime now = LocalDateTime.now();
+        if (round.getStartTime() != null && now.isBefore(round.getStartTime())) {
+            throw new IllegalArgumentException("Submission update is not allowed before the round starts.");
+        }
+        if (round.getEndTime() != null && now.isAfter(round.getEndTime())) {
+            throw new IllegalArgumentException("Submission update is not allowed after the round ends.");
+        }
+
         Team team = teamRepository
                 .findById(Long.valueOf(submissionDTO.getTeamId()))
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with ID " + submissionDTO.getTeamId()));
         submission.setTeam(team);
-
         submission.setStatus(Status.valueOf(submissionDTO.getStatus().toUpperCase()));
         submission.setSubmittedAt(LocalDateTime.now());
 
