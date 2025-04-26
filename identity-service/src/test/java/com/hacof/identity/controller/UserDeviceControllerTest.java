@@ -8,11 +8,11 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -27,6 +27,7 @@ import com.hacof.identity.service.UserDeviceService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+@ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UserDeviceControllerTest {
 
@@ -35,11 +36,6 @@ class UserDeviceControllerTest {
 
     @Mock
     UserDeviceService userDeviceService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testCreateUserDevice() throws IOException {

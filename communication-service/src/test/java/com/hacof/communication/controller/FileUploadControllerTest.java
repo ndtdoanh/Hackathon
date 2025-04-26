@@ -13,11 +13,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +28,11 @@ import com.hacof.communication.mapper.FileUrlMapper;
 import com.hacof.communication.repository.FileUrlRepository;
 import com.hacof.communication.service.impl.S3Service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class FileUploadControllerTest {
 
     @InjectMocks
@@ -41,11 +46,6 @@ class FileUploadControllerTest {
 
     @Mock
     FileUrlMapper fileUrlMapper;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testUploadFiles() throws IOException {

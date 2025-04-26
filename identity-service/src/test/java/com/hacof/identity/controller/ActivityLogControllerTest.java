@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.ApiResponse;
@@ -23,6 +23,7 @@ import com.hacof.identity.service.ActivityLogService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+@ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class ActivityLogControllerTest {
 
@@ -31,11 +32,6 @@ class ActivityLogControllerTest {
 
     @InjectMocks
     ActivityLogController activityLogController;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testGetLogs() {
