@@ -162,7 +162,14 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         if (!allScored) return;
 
         List<Submission> sorted = allSubmissions.stream()
-                .sorted((a, b) -> Integer.compare(b.getFinalScore(), a.getFinalScore()))
+                .sorted((a, b) -> {
+                    int scoreCompare = Integer.compare(b.getFinalScore(), a.getFinalScore());
+                    if (scoreCompare != 0) return scoreCompare;
+                    if (a.getSubmittedAt() == null && b.getSubmittedAt() == null) return 0;
+                    if (a.getSubmittedAt() == null) return 1;
+                    if (b.getSubmittedAt() == null) return -1;
+                    return a.getSubmittedAt().compareTo(b.getSubmittedAt());
+                })
                 .collect(Collectors.toList());
 
         int totalTeam = submission.getRound().getTotalTeam();
