@@ -62,4 +62,7 @@ public class Notification extends AuditBase {
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, orphanRemoval = true)
     List<NotificationDelivery> notificationDeliveries;
+
+    @Column(name = "is_read")
+    boolean isRead = false;
 }

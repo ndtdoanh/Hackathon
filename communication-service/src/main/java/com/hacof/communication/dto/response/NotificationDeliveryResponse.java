@@ -27,7 +27,6 @@ public class NotificationDeliveryResponse {
     RoleType role;
     NotificationMethod method;
     NotificationStatus status;
-    boolean isRead;
 
     public Set<UserResponse> getRecipients() {
         return recipients != null ? recipients : Collections.emptySet();
