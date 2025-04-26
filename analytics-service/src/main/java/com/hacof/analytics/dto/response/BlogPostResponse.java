@@ -24,6 +24,7 @@ public class BlogPostResponse {
     String slug;
     String bannerImageUrl;
     String content;
+    int wordCount;
     BlogPostStatus status;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
