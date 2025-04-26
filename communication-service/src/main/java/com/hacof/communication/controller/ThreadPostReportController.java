@@ -190,4 +190,22 @@ public class ThreadPostReportController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<ThreadPostReportResponseDTO>>> getAllThreadPostReports() {
+        CommonResponse<List<ThreadPostReportResponseDTO>> response = new CommonResponse<>();
+        try {
+            List<ThreadPostReportResponseDTO> reports = threadPostReportService.getAllThreadPostReports();
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("All thread post reports fetched successfully!");
+            response.setData(reports);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

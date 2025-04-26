@@ -100,4 +100,12 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
         return ThreadPostReportMapper.toResponseDTO(threadPostReportRepository.save(report));
     }
 
+    @Override
+    public List<ThreadPostReportResponseDTO> getAllThreadPostReports() {
+        List<ThreadPostReport> reports = threadPostReportRepository.findAll();
+        return reports.stream()
+                .map(ThreadPostReportMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

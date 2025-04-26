@@ -19,4 +19,7 @@ public interface ThreadPostReportService {
     void deleteThreadPostReport(Long id);
 
     ThreadPostReportResponseDTO reviewThreadPostReport(Long id, ThreadPostReportReviewRequestDTO requestDTO);
+
+    List<ThreadPostReportResponseDTO> getAllThreadPostReports();
+
 }
