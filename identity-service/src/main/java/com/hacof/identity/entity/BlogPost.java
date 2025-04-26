@@ -52,6 +52,8 @@ public class BlogPost extends AuditCreatedBase {
     @Column(name = "content")
     String content;
 
+    int wordCount;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     BlogPostStatus status;

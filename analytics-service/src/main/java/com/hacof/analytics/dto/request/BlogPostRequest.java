@@ -19,4 +19,5 @@ public class BlogPostRequest {
     String slug;
     String bannerImageUrl;
     String content;
+    int wordCount;
 }
