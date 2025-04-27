@@ -18,4 +18,6 @@ public interface ScheduleEventReminderRepository extends JpaRepository<ScheduleE
     boolean existsByScheduleEventIdAndUserId(Long scheduleEventId, Long userId);
 
     void deleteByScheduleEvent(ScheduleEvent scheduleEvent);
+
+    List<ScheduleEventReminder> findByUserIdAndScheduleEventId(Long userId, Long scheduleEventId);
 }
