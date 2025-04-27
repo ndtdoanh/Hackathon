@@ -229,18 +229,23 @@ public class ConversationServiceImpl implements ConversationService {
         ConversationResponse response = new ConversationResponse();
         response.setId(String.valueOf(conversation.getId()));
         response.setType(conversation.getType());
-        if (conversation.getType() == ConversationType.PRIVATE) {
-            Long currentUserId = AuditContext.getCurrentUser().getId();
-            Optional<ConversationUser> otherUser = conversation.getConversationUsers().stream()
-                    .filter(cu -> cu.getUser().getId() != currentUserId)
-                    .findFirst();
 
-            String name = otherUser
-                    .map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName())
-                    .orElse("Unknown");
-            response.setName(name);
-        } else {
+        if (conversation.getName() != null && !conversation.getName().isEmpty()) {
             response.setName(conversation.getName());
+        } else {
+            if (conversation.getType() == ConversationType.PRIVATE) {
+                Long currentUserId = AuditContext.getCurrentUser().getId();
+                Optional<ConversationUser> otherUser = conversation.getConversationUsers().stream()
+                        .filter(cu -> cu.getUser().getId() != currentUserId)
+                        .findFirst();
+
+                String name = otherUser
+                        .map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName())
+                        .orElse("Unknown");
+                response.setName(name);
+            } else {
+                response.setName(conversation.getName());
+            }
         }
 
         Set<ConversationUserResponse> conversationUserResponses = conversation.getConversationUsers().stream()
@@ -339,19 +344,23 @@ public class ConversationServiceImpl implements ConversationService {
                     ConversationResponse response = new ConversationResponse();
                     response.setId(String.valueOf(conversation.getId()));
                     response.setType(conversation.getType());
-                    if (conversation.getType() == ConversationType.PRIVATE) {
-                        Long currentUserId = AuditContext.getCurrentUser().getId();
-                        Optional<ConversationUser> otherUser = conversation.getConversationUsers().stream()
-                                .filter(cu -> cu.getUser().getId() != currentUserId)
-                                .findFirst();
 
-                        String name = otherUser
-                                .map(cu -> cu.getUser().getFirstName() + " "
-                                        + cu.getUser().getLastName())
-                                .orElse("Unknown");
-                        response.setName(name);
-                    } else {
+                    if (conversation.getName() != null && !conversation.getName().isEmpty()) {
                         response.setName(conversation.getName());
+                    } else {
+                        if (conversation.getType() == ConversationType.PRIVATE) {
+                            Long currentUserId = AuditContext.getCurrentUser().getId();
+                            Optional<ConversationUser> otherUser = conversation.getConversationUsers().stream()
+                                    .filter(cu -> cu.getUser().getId() != currentUserId)
+                                    .findFirst();
+
+                            String name = otherUser
+                                    .map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName())
+                                    .orElse("Unknown");
+                            response.setName(name);
+                        } else {
+                            response.setName(conversation.getName());
+                        }
                     }
 
                     Set<ConversationUserResponse> conversationUserResponses =
