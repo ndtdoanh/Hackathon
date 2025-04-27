@@ -1,8 +1,11 @@
 package com.hacof.hackathon.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.dto.IndividualRegistrationBulkRequestDTO;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
@@ -45,6 +48,9 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         Hackathon hackathon = hackathonRepository
                 .findById(Long.parseLong(individualRegistrationRequestDTO.getHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+        // validate enrollment period
+        validateEnrollPeriod(hackathon);
+
 
         User reviewedBy = null;
         if (individualRegistrationRequestDTO.getReviewedById() != null
@@ -61,6 +67,38 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         IndividualRegistrationRequestDTO responseDTO = IndividualRegistrationRequestMapperManual.toDto(request);
         responseDTO.setReviewedById(individualRegistrationRequestDTO.getReviewedById()); // Use setter instead
         return responseDTO;
+    }
+
+    @Override
+    public List<IndividualRegistrationRequestDTO> createBulk(List<IndividualRegistrationBulkRequestDTO> bulkRequestDTOList) {
+        if (bulkRequestDTOList == null || bulkRequestDTOList.isEmpty()) {
+            throw new InvalidInputException("Bulk request cannot be empty");
+        }
+
+        List<IndividualRegistrationRequestDTO> resultList = new ArrayList<>();
+
+        for (IndividualRegistrationBulkRequestDTO bulkRequestDTO : bulkRequestDTOList) {
+            Hackathon hackathon = hackathonRepository
+                    .findById(Long.parseLong(bulkRequestDTO.getHackathonId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+
+            User createdByUser = userRepository
+                    .findById(Long.parseLong(bulkRequestDTO.getCreatedByUserId()))
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+            IndividualRegistrationRequest request = new IndividualRegistrationRequest();
+            request.setHackathon(hackathon);
+            request.setStatus(IndividualRegistrationRequestStatus.valueOf(bulkRequestDTO.getStatus()));
+            request.setCreatedBy(createdByUser);
+
+            request = requestRepository.save(request);
+
+            IndividualRegistrationRequestDTO responseDTO = IndividualRegistrationRequestMapperManual.toDto(request);
+            responseDTO.setCreatedByUserName(createdByUser.getUsername());
+            resultList.add(responseDTO);
+        }
+
+        return resultList;
     }
 
     @Override
@@ -216,5 +254,12 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         return requests.stream()
                 .map(IndividualRegistrationRequestMapperManual::toDto)
                 .collect(Collectors.toList());
+    }
+
+    private void validateEnrollPeriod(Hackathon hackathon) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(hackathon.getEnrollStartDate()) || now.isAfter(hackathon.getEnrollEndDate())) {
+            throw new InvalidInputException("Cannot individual create request outside of enrollment period");
+        }
     }
 }

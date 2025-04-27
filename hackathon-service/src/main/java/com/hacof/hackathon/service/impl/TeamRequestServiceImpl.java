@@ -76,6 +76,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     @Override
     public TeamRequestDTO createTeamRequest(TeamRequestDTO request) {
         Hackathon hackathon = validateHackathon(request.getHackathonId());
+        validateEnrollPeriod(hackathon);
         validateTeamSize(request.getTeamRequestMembers().size(), hackathon);
 
         User currentUser = getCurrentUser();
@@ -540,6 +541,13 @@ public class TeamRequestServiceImpl implements TeamRequestService {
             throw new InvalidInputException("No authenticated user found");
         }
         return authentication;
+    }
+
+    private void validateEnrollPeriod(Hackathon hackathon) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(hackathon.getEnrollStartDate()) || now.isAfter(hackathon.getEnrollEndDate())) {
+            throw new InvalidInputException("Cannot create a team request outside the enrollment period");
+        }
     }
 
     @Override

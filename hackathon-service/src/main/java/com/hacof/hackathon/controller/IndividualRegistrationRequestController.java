@@ -1,13 +1,16 @@
 package com.hacof.hackathon.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.hackathon.dto.IndividualRegistrationBulkRequestDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +55,27 @@ public class IndividualRegistrationRequestController {
                 request.getChannel(),
                 new CommonResponse.Result("0000", "Individual registration created successfully"),
                 individualRegistrationRequestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> createBulkIndividualRegistration(
+            @RequestBody @Valid CommonRequest<List<IndividualRegistrationBulkRequestDTO>> request) {
+
+        if (request.getData() == null || request.getData().isEmpty()) {
+            throw new InvalidInputException("Request data cannot be empty");
+        }
+
+        List<IndividualRegistrationRequestDTO> createdRequests = individualRegistrationRequestService.createBulk(request.getData());
+
+        CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
+                request.getRequestId(),
+                LocalDateTime.now(),
+                request.getChannel(),
+                new CommonResponse.Result("0000", "Bulk individual registration created successfully"),
+                createdRequests
+        );
+
         return ResponseEntity.ok(response);
     }
 

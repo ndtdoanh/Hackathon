@@ -2,6 +2,7 @@ package com.hacof.hackathon.service;
 
 import java.util.List;
 
+import com.hacof.hackathon.dto.IndividualRegistrationBulkRequestDTO;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
 
 public interface IndividualRegistrationRequestService {
@@ -28,4 +29,6 @@ public interface IndividualRegistrationRequestService {
     List<IndividualRegistrationRequestDTO> bulkUpdate(List<IndividualRegistrationRequestDTO> requestDTOs);
 
     List<IndividualRegistrationRequestDTO> getAllByHackathonIdAndStatusCompleted(String hackathonId);
+
+    List<IndividualRegistrationRequestDTO> createBulk(List<IndividualRegistrationBulkRequestDTO> bulkRequestDTOList);
 }
