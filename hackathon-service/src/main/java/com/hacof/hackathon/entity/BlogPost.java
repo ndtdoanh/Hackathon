@@ -49,7 +49,7 @@ public class BlogPost extends AuditCreatedBase {
     String bannerImageUrl;
 
     @Lob
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "MEDIUMTEXT")
     String content;
 
     int wordCount;
