@@ -34,7 +34,7 @@ public class FileUrl extends AuditCreatedBase {
     @Column(name = "file_name")
     String fileName;
 
-    @Column(name = "file_url")
+    @Column(name = "file_url", length = 2048)
     String fileUrl;
 
     @Column(name = "file_type")
