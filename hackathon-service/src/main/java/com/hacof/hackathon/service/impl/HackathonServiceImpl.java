@@ -2,7 +2,6 @@ package com.hacof.hackathon.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.hacof.hackathon.constant.BoardUserRole;
@@ -58,6 +57,14 @@ public class HackathonServiceImpl implements HackathonService {
 
         Hackathon hackathon = hackathonMapper.toEntity(hackathonDTO);
         hackathon.setDocumentation(null);
+        Authentication authentication = getAuthenticatedUser();
+        String username = authentication.getName();
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+        hackathon.setCreatedBy(currentUser);
+        hackathon.setCreatedDate(LocalDateTime.now());
 
         hackathon = hackathonRepository.save(hackathon);
 
@@ -72,13 +79,6 @@ public class HackathonServiceImpl implements HackathonService {
         }
 
         hackathon = hackathonRepository.save(hackathon);
-
-        // Get the current authenticated user
-        Authentication authentication = getAuthenticatedUser();
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
         // Create Schedule
         Schedule schedule = Schedule.builder()
@@ -140,8 +140,8 @@ public class HackathonServiceImpl implements HackathonService {
         existingHackathon.setBannerImageUrl(hackathonDTO.getBannerImageUrl());
         existingHackathon.setEnrollStartDate(hackathonDTO.getEnrollStartDate());
         existingHackathon.setEnrollEndDate(hackathonDTO.getEnrollEndDate());
-        existingHackathon.setStartDate(hackathonDTO.getEnrollStartDate());
-        existingHackathon.setEndDate(hackathonDTO.getEnrollEndDate());
+        existingHackathon.setStartDate(hackathonDTO.getStartDate());
+        existingHackathon.setEndDate(hackathonDTO.getEndDate());
         existingHackathon.setDescription(hackathonDTO.getDescription());
         existingHackathon.setInformation(hackathonDTO.getInformation());
         existingHackathon.setMinTeamSize(hackathonDTO.getMinimumTeamMembers());
