@@ -28,6 +28,7 @@ public interface NotificationMapper {
     @Mapping(
             target = "notificationDeliveries",
             expression = "java(mapNotificationDeliveries(notification.getNotificationDeliveries()))")
+    @Mapping(target = "isRead", source = "read", defaultValue = "false")
     NotificationResponse toNotificationResponse(Notification notification);
 
     @Mapping(target = "id", expression = "java(String.valueOf(delivery.getId()))")
