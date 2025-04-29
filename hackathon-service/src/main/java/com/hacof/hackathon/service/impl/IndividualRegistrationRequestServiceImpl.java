@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.dto.IndividualRegistrationBulkRequestDTO;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
@@ -13,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.IndividualRegistrationRequestStatus;
+import com.hacof.hackathon.dto.IndividualRegistrationBulkRequestDTO;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
 import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.IndividualRegistrationRequest;
@@ -51,7 +51,6 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         // validate enrollment period
         validateEnrollPeriod(hackathon);
 
-
         User reviewedBy = null;
         if (individualRegistrationRequestDTO.getReviewedById() != null
                 && !individualRegistrationRequestDTO.getReviewedById().isEmpty()) {
@@ -70,7 +69,8 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     }
 
     @Override
-    public List<IndividualRegistrationRequestDTO> createBulk(List<IndividualRegistrationBulkRequestDTO> bulkRequestDTOList) {
+    public List<IndividualRegistrationRequestDTO> createBulk(
+            List<IndividualRegistrationBulkRequestDTO> bulkRequestDTOList) {
         if (bulkRequestDTOList == null || bulkRequestDTOList.isEmpty()) {
             throw new InvalidInputException("Bulk request cannot be empty");
         }

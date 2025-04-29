@@ -51,8 +51,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         if (StringUtils.hasText(request.getMentorId())) {
             Long mentorId = Long.parseLong(request.getMentorId());
-            User mentor = userRepository.findById(mentorId)
-                    .orElseThrow(() -> new AppException(ErrorCode.MENTOR_NOT_FOUND));
+            User mentor =
+                    userRepository.findById(mentorId).orElseThrow(() -> new AppException(ErrorCode.MENTOR_NOT_FOUND));
 
             boolean feedbackExists = feedbackRepository.existsByHackathonIdAndMentorId(hackathonId, mentorId);
             if (feedbackExists) {

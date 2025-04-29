@@ -150,7 +150,8 @@ public class TeamController {
     }
 
     @GetMapping("/requests/filter-by-member")
-    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByMemberId(@RequestParam("memberId") Long memberId) {
+    public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByMemberId(
+            @RequestParam("memberId") Long memberId) {
         List<TeamRequestDTO> teamRequests = teamRequestService.getTeamRequestsByMemberId(memberId);
         CommonResponse<List<TeamRequestDTO>> response = new CommonResponse<>(
                 UUID.randomUUID().toString(),
@@ -160,7 +161,6 @@ public class TeamController {
                 teamRequests);
         return ResponseEntity.ok(response);
     }
-
 
     @PostMapping("/requests/filter-by-user")
     public ResponseEntity<CommonResponse<List<TeamRequestDTO>>> filterByUserId(

@@ -240,7 +240,8 @@ public class ConversationServiceImpl implements ConversationService {
                         .findFirst();
 
                 String name = otherUser
-                        .map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName())
+                        .map(cu ->
+                                cu.getUser().getFirstName() + " " + cu.getUser().getLastName())
                         .orElse("Unknown");
                 response.setName(name);
             } else {
@@ -345,7 +346,8 @@ public class ConversationServiceImpl implements ConversationService {
                     response.setId(String.valueOf(conversation.getId()));
                     response.setType(conversation.getType());
 
-                    if (conversation.getName() != null && !conversation.getName().isEmpty()) {
+                    if (conversation.getName() != null
+                            && !conversation.getName().isEmpty()) {
                         response.setName(conversation.getName());
                     } else {
                         if (conversation.getType() == ConversationType.PRIVATE) {
@@ -355,7 +357,8 @@ public class ConversationServiceImpl implements ConversationService {
                                     .findFirst();
 
                             String name = otherUser
-                                    .map(cu -> cu.getUser().getFirstName() + " " + cu.getUser().getLastName())
+                                    .map(cu -> cu.getUser().getFirstName() + " "
+                                            + cu.getUser().getLastName())
                                     .orElse("Unknown");
                             response.setName(name);
                         } else {

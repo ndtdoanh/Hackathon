@@ -10,6 +10,4 @@ public class IndividualRegistrationBulkRequestDTO {
     String hackathonId;
     String status;
     String createdByUserId;
-
-
 }
