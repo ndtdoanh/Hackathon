@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,9 +32,11 @@ import lombok.experimental.FieldDefaults;
 @RestController
 @RequestMapping("/api/v1/blog-posts")
 @RequiredArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BlogPostController {
     BlogPostService blogPostService;
+    ObjectMapper objectMapper;
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_BLOG_POST')")
@@ -44,6 +49,11 @@ public class BlogPostController {
                 .data(blogPostService.createBlogPost(request.getData()))
                 .message("Blog post created successfully")
                 .build();
+        try {
+            log.debug("API Response: {}", objectMapper.writeValueAsString(response));
+        } catch (JsonProcessingException e) {
+            log.debug("Failed to serialize API response: {}", response.getRequestId());
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationController {
     NotificationService notificationService;
     SimpMessagingTemplate messagingTemplate;
+    ObjectMapper objectMapper;
 
     @MessageMapping("/notifications/{userId}")
     public void handleWebSocketNotification(@Payload NotificationRequest request, @DestinationVariable Long userId) {
@@ -67,6 +70,11 @@ public class NotificationController {
                 .data(notificationResponse)
                 .message("Notification created successfully")
                 .build();
+        try {
+            log.debug("API Response: {}", objectMapper.writeValueAsString(response));
+        } catch (JsonProcessingException e) {
+            log.debug("Failed to serialize API response: {}", response.getRequestId());
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
