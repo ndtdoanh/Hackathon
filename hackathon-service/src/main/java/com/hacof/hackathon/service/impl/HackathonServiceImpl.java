@@ -4,9 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.constant.BoardUserRole;
-import com.hacof.hackathon.entity.*;
-import com.hacof.hackathon.repository.*;
 import jakarta.transaction.Transactional;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,13 +12,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.hacof.hackathon.constant.BoardUserRole;
 import com.hacof.hackathon.constant.CategoryStatus;
 import com.hacof.hackathon.constant.OrganizationStatus;
 import com.hacof.hackathon.constant.Status;
 import com.hacof.hackathon.dto.HackathonDTO;
+import com.hacof.hackathon.entity.*;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.HackathonMapper;
+import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.HackathonService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,11 +46,11 @@ public class HackathonServiceImpl implements HackathonService {
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
-//        // check Authority
-//        Authentication authentication = getAuthenticatedUser();
-//        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
-//            throw new InvalidInputException("You do not have permission to perform this action.");
-//        }
+        //        // check Authority
+        //        Authentication authentication = getAuthenticatedUser();
+        //        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
+        //            throw new InvalidInputException("You do not have permission to perform this action.");
+        //        }
 
         validateEnumValues(hackathonDTO);
         validateUniqueTitleForCreate(hackathonDTO.getTitle());
@@ -68,9 +68,10 @@ public class HackathonServiceImpl implements HackathonService {
 
         hackathon = hackathonRepository.save(hackathon);
 
-
-        if (hackathonDTO.getDocumentation() != null && !hackathonDTO.getDocumentation().isEmpty()) {
-            List<FileUrl> fileUrls = fileUrlRepository.findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
+        if (hackathonDTO.getDocumentation() != null
+                && !hackathonDTO.getDocumentation().isEmpty()) {
+            List<FileUrl> fileUrls =
+                    fileUrlRepository.findAllByFileUrlInAndHackathonIsNull(hackathonDTO.getDocumentation());
             for (FileUrl file : fileUrls) {
                 file.setHackathon(hackathon);
             }
@@ -113,10 +114,10 @@ public class HackathonServiceImpl implements HackathonService {
     @Transactional
     public HackathonDTO update(String id, HackathonDTO hackathonDTO) {
         // check Authority
-//        Authentication authentication = getAuthenticatedUser();
-//        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
-//            throw new InvalidInputException("You do not have permission to perform this action.");
-//        }
+        //        Authentication authentication = getAuthenticatedUser();
+        //        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
+        //            throw new InvalidInputException("You do not have permission to perform this action.");
+        //        }
 
         Hackathon existingHackathon = hackathonRepository
                 .findById(Long.parseLong(id))
@@ -182,11 +183,11 @@ public class HackathonServiceImpl implements HackathonService {
 
     @Override
     public void deleteHackathon(Long id) {
-//        // check Authority
-//        Authentication authentication = getAuthenticatedUser();
-//        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
-//            throw new InvalidInputException("You do not have permission to perform this action.");
-//        }
+        //        // check Authority
+        //        Authentication authentication = getAuthenticatedUser();
+        //        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
+        //            throw new InvalidInputException("You do not have permission to perform this action.");
+        //        }
 
         // Check if exists
         if (!hackathonRepository.existsById(id)) {
@@ -268,5 +269,6 @@ public class HackathonServiceImpl implements HackathonService {
 
     private boolean hasRole(Authentication authentication, String role) {
         return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(role));    }
+                .anyMatch(authority -> authority.getAuthority().equals(role));
+    }
 }

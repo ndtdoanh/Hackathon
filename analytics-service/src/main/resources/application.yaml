@@ -28,3 +28,7 @@ eureka:
     fetch-registry: true
   instance:
     preferIpAddress: true
+
+logging:
+  level:
+    com.hacof.identity: debug

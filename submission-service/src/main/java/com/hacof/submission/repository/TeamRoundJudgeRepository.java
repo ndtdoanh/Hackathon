@@ -27,5 +27,4 @@ public interface TeamRoundJudgeRepository extends JpaRepository<TeamRoundJudge, 
     Optional<TeamRoundJudge> findByTeamRoundIdAndJudgeId(Long teamRoundId, Long judgeId);
 
     boolean existsByTeamRoundIdAndJudgeId(Long teamRoundId, Long judgeId);
-
 }

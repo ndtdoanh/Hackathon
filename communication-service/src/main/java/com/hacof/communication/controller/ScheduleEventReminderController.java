@@ -51,8 +51,8 @@ public class ScheduleEventReminderController {
             @RequestBody CommonRequest<ScheduleEventReminderRequestDTO> request) {
         CommonResponse<ScheduleEventReminderResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventReminderResponseDTO createdScheduleEventReminder = scheduleEventReminderService
-                    .createScheduleEventReminder(request.getData());
+            ScheduleEventReminderResponseDTO createdScheduleEventReminder =
+                    scheduleEventReminderService.createScheduleEventReminder(request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Schedule Event Reminder created successfully!");
@@ -76,8 +76,8 @@ public class ScheduleEventReminderController {
             @PathVariable Long id, @RequestBody CommonRequest<ScheduleEventReminderRequestDTO> request) {
         CommonResponse<ScheduleEventReminderResponseDTO> response = new CommonResponse<>();
         try {
-            ScheduleEventReminderResponseDTO updatedScheduleEventReminder = scheduleEventReminderService
-                    .updateScheduleEventReminder(id, request.getData());
+            ScheduleEventReminderResponseDTO updatedScheduleEventReminder =
+                    scheduleEventReminderService.updateScheduleEventReminder(id, request.getData());
             setCommonResponseFields(response, request);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Reminder updated successfully!");
@@ -123,8 +123,8 @@ public class ScheduleEventReminderController {
             @PathVariable Long id) {
         CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventReminderResponseDTO> scheduleEventReminders = scheduleEventReminderService
-                    .getScheduleEventReminder(id);
+            List<ScheduleEventReminderResponseDTO> scheduleEventReminders =
+                    scheduleEventReminderService.getScheduleEventReminder(id);
 
             setDefaultResponseFields(response);
 
@@ -151,8 +151,8 @@ public class ScheduleEventReminderController {
     public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>> getAllScheduleEventReminders() {
         CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventReminderResponseDTO> scheduleEventReminders = scheduleEventReminderService
-                    .getAllScheduleEventReminders();
+            List<ScheduleEventReminderResponseDTO> scheduleEventReminders =
+                    scheduleEventReminderService.getAllScheduleEventReminders();
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule Event Reminders fetched successfully!");
@@ -167,12 +167,12 @@ public class ScheduleEventReminderController {
     }
 
     @GetMapping("/by-schedule-event/{scheduleEventId}")
-    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>> getScheduleEventRemindersByScheduleEventId(
-            @PathVariable Long scheduleEventId) {
+    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>>
+            getScheduleEventRemindersByScheduleEventId(@PathVariable Long scheduleEventId) {
         CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventReminderResponseDTO> reminders = scheduleEventReminderService
-                    .getScheduleEventRemindersByScheduleEventId(scheduleEventId);
+            List<ScheduleEventReminderResponseDTO> reminders =
+                    scheduleEventReminderService.getScheduleEventRemindersByScheduleEventId(scheduleEventId);
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule event reminders fetched successfully!");
@@ -196,8 +196,8 @@ public class ScheduleEventReminderController {
             @PathVariable Long userId) {
         CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventReminderResponseDTO> reminders = scheduleEventReminderService
-                    .getScheduleEventRemindersByUserId(userId);
+            List<ScheduleEventReminderResponseDTO> reminders =
+                    scheduleEventReminderService.getScheduleEventRemindersByUserId(userId);
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule event reminders for the given user fetched successfully!");
@@ -217,13 +217,14 @@ public class ScheduleEventReminderController {
     }
 
     @GetMapping("/by-user-and-schedule-event")
-    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>> getScheduleEventRemindersByUserIdAndScheduleEventId(
-            @RequestParam("userId") Long userId,
-            @RequestParam("scheduleEventId") Long scheduleEventId) {
+    public ResponseEntity<CommonResponse<List<ScheduleEventReminderResponseDTO>>>
+            getScheduleEventRemindersByUserIdAndScheduleEventId(
+                    @RequestParam("userId") Long userId, @RequestParam("scheduleEventId") Long scheduleEventId) {
         CommonResponse<List<ScheduleEventReminderResponseDTO>> response = new CommonResponse<>();
         try {
-            List<ScheduleEventReminderResponseDTO> reminders = scheduleEventReminderService
-                    .getScheduleEventRemindersByUserIdAndScheduleEventId(userId, scheduleEventId);
+            List<ScheduleEventReminderResponseDTO> reminders =
+                    scheduleEventReminderService.getScheduleEventRemindersByUserIdAndScheduleEventId(
+                            userId, scheduleEventId);
             setDefaultResponseFields(response);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Schedule event reminders for the given user and schedule event fetched successfully!");

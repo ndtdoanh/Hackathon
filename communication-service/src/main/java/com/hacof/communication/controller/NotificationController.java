@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hacof.communication.dto.ApiRequest;
 import com.hacof.communication.dto.ApiResponse;
 import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
@@ -42,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationController {
     NotificationService notificationService;
     SimpMessagingTemplate messagingTemplate;
+    ObjectMapper objectMapper;
 
     @MessageMapping("/notifications/{userId}")
     public void handleWebSocketNotification(@Payload NotificationRequest request, @DestinationVariable Long userId) {
@@ -67,6 +70,11 @@ public class NotificationController {
                 .data(notificationResponse)
                 .message("Notification created successfully")
                 .build();
+        try {
+            log.debug("API Response: {}", objectMapper.writeValueAsString(response));
+        } catch (JsonProcessingException e) {
+            log.debug("Failed to serialize API response: {}", response.getRequestId());
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -131,7 +139,7 @@ public class NotificationController {
     }
 
     @PutMapping("/notification/read-status")
-//    @PreAuthorize("hasAuthority('UPDATE_READ_STATUS')")
+    //    @PreAuthorize("hasAuthority('UPDATE_READ_STATUS')")
     public ApiResponse<String> updateReadStatusBulk(@RequestBody ApiRequest<BulkUpdateReadStatusRequest> request) {
         notificationService.updateReadStatusBulk(request.getData());
         return ApiResponse.<String>builder()

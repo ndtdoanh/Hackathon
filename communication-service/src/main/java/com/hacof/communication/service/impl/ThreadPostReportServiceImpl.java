@@ -3,13 +3,12 @@ package com.hacof.communication.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.communication.constant.ThreadPostReportStatus;
-import com.hacof.communication.dto.request.ThreadPostReportReviewRequestDTO;
-import com.hacof.communication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hacof.communication.constant.ThreadPostReportStatus;
 import com.hacof.communication.dto.request.ThreadPostReportRequestDTO;
+import com.hacof.communication.dto.request.ThreadPostReportReviewRequestDTO;
 import com.hacof.communication.dto.response.ThreadPostReportResponseDTO;
 import com.hacof.communication.entity.ThreadPost;
 import com.hacof.communication.entity.ThreadPostReport;
@@ -17,6 +16,7 @@ import com.hacof.communication.entity.User;
 import com.hacof.communication.mapper.ThreadPostReportMapper;
 import com.hacof.communication.repository.ThreadPostReportRepository;
 import com.hacof.communication.repository.ThreadPostRepository;
+import com.hacof.communication.repository.UserRepository;
 import com.hacof.communication.service.ThreadPostReportService;
 import com.hacof.communication.util.AuditContext;
 
@@ -85,12 +85,14 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ThreadPostReport not found with id " + id));
 
-        if (!requestDTO.getStatus().equals("REVIEWED") && !requestDTO.getStatus().equals("DISMISSED")) {
+        if (!requestDTO.getStatus().equals("REVIEWED")
+                && !requestDTO.getStatus().equals("DISMISSED")) {
             throw new IllegalArgumentException("Invalid status. Must be REVIEWED or DISMISSED.");
         }
 
         String reviewerId = String.valueOf(AuditContext.getCurrentUser().getId());
-        User reviewer = userRepository.findById(Long.parseLong(reviewerId))
+        User reviewer = userRepository
+                .findById(Long.parseLong(reviewerId))
                 .orElseThrow(() -> new IllegalArgumentException("Reviewer not found with ID: " + reviewerId));
 
         report.setStatus(ThreadPostReportStatus.valueOf(requestDTO.getStatus()));
@@ -103,9 +105,6 @@ public class ThreadPostReportServiceImpl implements ThreadPostReportService {
     @Override
     public List<ThreadPostReportResponseDTO> getAllThreadPostReports() {
         List<ThreadPostReport> reports = threadPostReportRepository.findAll();
-        return reports.stream()
-                .map(ThreadPostReportMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return reports.stream().map(ThreadPostReportMapper::toResponseDTO).collect(Collectors.toList());
     }
-
 }

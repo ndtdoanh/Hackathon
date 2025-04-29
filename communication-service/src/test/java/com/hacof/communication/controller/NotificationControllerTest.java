@@ -2,7 +2,9 @@ package com.hacof.communication.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hacof.communication.dto.ApiRequest;
 import com.hacof.communication.dto.ApiResponse;
 import com.hacof.communication.dto.request.BulkUpdateReadStatusRequest;
@@ -43,6 +47,9 @@ class NotificationControllerTest {
 
     @Mock
     SimpMessagingTemplate messagingTemplate;
+
+    @Mock
+    ObjectMapper objectMapper;
 
     @Test
     void testHandleWebSocketNotification_validRequest() {
@@ -67,7 +74,7 @@ class NotificationControllerTest {
     }
 
     @Test
-    void testCreateNotification() {
+    void testCreateNotification_whenJsonProcessingExceptionThrown() throws JsonProcessingException {
         NotificationRequest createRequest = new NotificationRequest();
         ApiRequest<NotificationRequest> apiRequest = new ApiRequest<>();
         apiRequest.setData(createRequest);
@@ -76,7 +83,9 @@ class NotificationControllerTest {
         apiRequest.setChannel("HACOF");
 
         NotificationResponse mockResponse = new NotificationResponse();
+
         when(notificationService.createNotification(createRequest)).thenReturn(mockResponse);
+        doThrow(JsonProcessingException.class).when(objectMapper).writeValueAsString(any());
 
         ResponseEntity<ApiResponse<NotificationResponse>> responseEntity =
                 notificationController.createNotification(apiRequest);
@@ -85,7 +94,13 @@ class NotificationControllerTest {
         assertNotNull(responseEntity.getBody());
         assertEquals(
                 "Notification created successfully", responseEntity.getBody().getMessage());
+        assertEquals(mockResponse, responseEntity.getBody().getData());
+        assertEquals(apiRequest.getRequestId(), responseEntity.getBody().getRequestId());
+        assertEquals(apiRequest.getRequestDateTime(), responseEntity.getBody().getRequestDateTime());
+        assertEquals(apiRequest.getChannel(), responseEntity.getBody().getChannel());
+
         verify(notificationService, times(1)).createNotification(createRequest);
+        verify(objectMapper, times(1)).writeValueAsString(any());
     }
 
     @Test

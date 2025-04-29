@@ -26,5 +26,4 @@ public interface TeamRequestService {
     List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId);
 
     List<TeamRequestDTO> getTeamRequestsByMemberId(Long memberId);
-
 }

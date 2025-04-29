@@ -48,15 +48,16 @@ public class TeamRoundJudgeServiceImpl implements TeamRoundJudgeService {
             throw new IllegalArgumentException("Cannot assign judge to inactive team");
         }
 
-        if (teamRound.getRound().getHackathon().getEndDate() != null &&
-                teamRound.getRound().getHackathon().getEndDate().isBefore(LocalDateTime.now())) {
+        if (teamRound.getRound().getHackathon().getEndDate() != null
+                && teamRound.getRound().getHackathon().getEndDate().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Cannot assign after round ended");
         }
 
         boolean isJudgeInRound = judgeRoundRepository.existsByJudgeIdAndRoundId(
                 requestDTO.getJudgeId(), teamRound.getRound().getId());
         if (!isJudgeInRound) {
-            throw new IllegalArgumentException("Judge is not assigned to this round and cannot be added to TeamRoundJudge.");
+            throw new IllegalArgumentException(
+                    "Judge is not assigned to this round and cannot be added to TeamRoundJudge.");
         }
 
         boolean alreadyAssigned = teamRoundJudgeRepository.existsByTeamRoundIdAndJudgeId(
