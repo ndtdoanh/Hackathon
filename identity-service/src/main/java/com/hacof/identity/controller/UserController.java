@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.identity.constant.Status;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.ApiRequest;
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;

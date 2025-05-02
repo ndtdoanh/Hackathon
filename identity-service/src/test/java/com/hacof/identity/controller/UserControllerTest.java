@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hacof.identity.constant.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.ApiRequest;
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
