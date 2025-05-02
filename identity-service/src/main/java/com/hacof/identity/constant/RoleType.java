@@ -8,4 +8,5 @@ public enum RoleType {
     GUEST,
     TEAM_MEMBER,
     TEAM_LEADER,
+    DEMO;
 }

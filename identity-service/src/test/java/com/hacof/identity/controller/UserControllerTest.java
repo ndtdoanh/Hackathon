@@ -27,6 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.ApiRequest;
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
@@ -189,14 +190,16 @@ class UserControllerTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void testToggleUserStatus() {
         long userId = 1L;
-        doNothing().when(userService).deleteUser(userId);
+        Status newStatus = Status.INACTIVE;
 
-        ApiResponse<String> response = userController.deleteUser(userId);
+        doNothing().when(userService).toggleUserStatus(userId, newStatus);
 
-        assertEquals("User has been deleted", response.getData());
-        verify(userService).deleteUser(userId);
+        ApiResponse<String> response = userController.updateUserStatus(userId, newStatus);
+
+        assertEquals("User status has been updated", response.getData());
+        verify(userService).toggleUserStatus(userId, newStatus);
     }
 
     @Test

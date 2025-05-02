@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.request.ChangePasswordRequest;
 import com.hacof.identity.dto.request.ForgotPasswordRequest;
 import com.hacof.identity.dto.request.OrganizerUpdateForJudgeMentor;
@@ -39,7 +40,7 @@ public interface UserService {
 
     UserResponse updateJudgeMentorByOrganization(Long userId, OrganizerUpdateForJudgeMentor request);
 
-    void deleteUser(Long userId);
+    void toggleUserStatus(Long userId, Status newStatus);
 
     String addEmail(String email);
 

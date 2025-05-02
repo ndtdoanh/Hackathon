@@ -57,6 +57,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @PostMapping("/bulk")
+    @PreAuthorize("hasAuthority('CREATE_BULK_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> createBulkIndividualRegistration(
             @RequestBody @Valid CommonRequest<List<IndividualRegistrationBulkRequestDTO>> request) {
 

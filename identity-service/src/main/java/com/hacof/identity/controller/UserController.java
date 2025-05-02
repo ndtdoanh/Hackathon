@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hacof.identity.constant.Status;
 import com.hacof.identity.dto.ApiRequest;
 import com.hacof.identity.dto.ApiResponse;
 import com.hacof.identity.dto.request.AddEmailRequest;
@@ -189,15 +189,15 @@ public class UserController {
                 .build();
     }
 
-    @DeleteMapping("/{Id}")
-    @PreAuthorize("hasAuthority('DELETE_USER')")
-    public ApiResponse<String> deleteUser(@PathVariable("Id") long userId) {
-        userService.deleteUser(userId);
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('UPDATE_USER_STATUS')")
+    public ApiResponse<String> updateUserStatus(@PathVariable("id") long userId, @RequestParam Status status) {
+        userService.toggleUserStatus(userId, status);
         return ApiResponse.<String>builder()
                 .requestId(UUID.randomUUID().toString())
                 .requestDateTime(LocalDateTime.now())
                 .channel("HACOF")
-                .data("User has been deleted")
+                .data("User status has been updated")
                 .build();
     }
 
