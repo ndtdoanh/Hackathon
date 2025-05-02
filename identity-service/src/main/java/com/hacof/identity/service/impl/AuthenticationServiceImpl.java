@@ -182,6 +182,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
 
+        if (!user.getStatus().equals(Status.ACTIVE)) {
+            throw new AppException(ErrorCode.USER_INACTIVE);
+        }
+
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated) throw new AppException(ErrorCode.INVALID_CREDENTIALS);

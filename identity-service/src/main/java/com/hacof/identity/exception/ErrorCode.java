@@ -46,7 +46,8 @@ public enum ErrorCode {
     FILE_URL_NOT_EXISTED(1036, "FileUrl not existed", HttpStatus.BAD_REQUEST),
     ACCOUNT_LOCKED(1037, "Account locked", HttpStatus.BAD_REQUEST),
     INVALID_INPUT(1037, "Invalid input", HttpStatus.BAD_REQUEST),
-    DEVICE_NOT_FOUND(1038, "Device not found", HttpStatus.NOT_FOUND);
+    USER_INACTIVE(1038, "User inactive", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1039, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
