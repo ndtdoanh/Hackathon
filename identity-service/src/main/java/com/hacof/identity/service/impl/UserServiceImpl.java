@@ -221,7 +221,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            user.setStatus(Status.INACTIVE);
+
+            userRepository.save(user);
+        } else {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
     }
 
     @Override
