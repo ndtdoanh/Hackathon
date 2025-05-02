@@ -9,7 +9,8 @@ public enum RoleType {
     MENTOR,
     GUEST,
     TEAM_MEMBER,
-    TEAM_LEADER;
+    TEAM_LEADER,
+    DEMO;
 
     public static RoleType fromString(String name) {
         return Arrays.stream(RoleType.values())

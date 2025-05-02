@@ -229,6 +229,12 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "CREATE_TEAM_REQUEST",
                     "RESPOND_TEAM_REQUEST",
                     "DELETE_TEAM_REQUEST"
+            ),
+            "DEMO",
+            Set.of("CREATE_SUBMISSION",
+                    "CREATE_JUDGE_SUBMISSION",
+                    "CREATE_BULK_INDIVIDUAL_REGISTRATION",
+                    "UPDATE_BULK_INDIVIDUAL_REGISTRATION"
             ));
 
     @Override
@@ -351,6 +357,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
                 new Permission("CREATE_INDIVIDUAL_REGISTRATION", "/api/v1/individuals", "POST", "INDIVIDUAL_REGISTRATIONS"),
                 new Permission("UPDATE_INDIVIDUAL_REGISTRATION", "/api/v1/individuals", "PUT", "INDIVIDUAL_REGISTRATIONS"),
+                new Permission("CREATE_BULK_INDIVIDUAL_REGISTRATION", "/api/v1/individuals/bulk", "POST", "INDIVIDUAL_REGISTRATIONS"),
                 new Permission("UPDATE_BULK_INDIVIDUAL_REGISTRATION", "/api/v1/individuals/bulk-update", "PUT", "INDIVIDUAL_REGISTRATIONS"),
                 new Permission("DELETE_INDIVIDUAL_REGISTRATION", "/api/v1/individuals/{id}", "DELETE", "INDIVIDUAL_REGISTRATIONS"),
 
@@ -433,11 +440,14 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
     private void createDefaultUsers() {
+        Role demoRole = getRole("DEMO");
         Role adminRole = getRole("ADMIN");
         Role organizerRole = getRole("ORGANIZER");
         Role mentorRole = getRole("MENTOR");
         Role judgeRole = getRole("JUDGE");
         Role teammemberRole = getRole("TEAM_MEMBER");
+
+        createUser("demo", "demo@gmail.com", "12345", "Demo", "System", demoRole, "https://greenscapehub-media.s3.ap-southeast-1.amazonaws.com/hacofpt/504c1e5a-bc1f-4fe7-8905-d3bbbb12cabd_smiling-young-man-illustration_1308-174669.avif");
 
         createUser("admin1", "admin1@gmail.com", "12345", "Admin1", "System", adminRole, "https://greenscapehub-media.s3.ap-southeast-1.amazonaws.com/hacofpt/504c1e5a-bc1f-4fe7-8905-d3bbbb12cabd_smiling-young-man-illustration_1308-174669.avif");
         createUser("admin2", "admin2@gmail.com", "12345", "Admin2", "System", adminRole, "https://greenscapehub-media.s3.ap-southeast-1.amazonaws.com/hacofpt/504c1e5a-bc1f-4fe7-8905-d3bbbb12cabd_smiling-young-man-illustration_1308-174669.avif");

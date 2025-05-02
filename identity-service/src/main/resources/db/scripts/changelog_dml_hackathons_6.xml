@@ -11,7 +11,7 @@
             <![CDATA[
             INSERT INTO hackathons (id, title, sub_title, banner_image_url, enroll_start_date, enroll_end_date, description,
                                     information, start_date, end_date, max_teams, min_team_size, max_team_size, contact,
-                                    category, organization, status)
+                                    category, organization, status, created_by_user_id, created_date)
             VALUES (1, 'AI Innovation Challenge', 'Exploring the Future of AI',
                     'https://doanthanhnien.vn/Content/uploads/images/132311755918511627_Banner.jpg',
                     '2025-01-01 08:00:00', '2025-12-01 23:59:00',
@@ -19,7 +19,7 @@
                     'Participants will develop AI-powered solutions.',
                     '2024-01-01 08:00:00', '2028-12-01 23:59:00',
                     20, 3, 5, 'contact@ai-hackathon.com',
-                    'CODING', 'FPTU', 'ACTIVE'),
+                    'CODING', 'FPTU', 'ACTIVE', 6, '2025-05-01 08:00:00'),
 
                    (2, 'Blockchain Revolution', 'Building the Next-Gen Blockchain Apps',
                     'https://i.chungta.vn/2021/01/07/hkt-6268-1610007165_1200x0.png',
@@ -28,7 +28,7 @@
                     'Teams will create blockchain-based solutions.',
                     '2024-01-01 08:00:00', '2028-12-01 23:59:00',
                     15, 2, 6, 'contact@blockchain-hack.com',
-                    'CODING', 'FPTU', 'ACTIVE'),
+                    'CODING', 'FPTU', 'ACTIVE', 6, '2025-04-01 08:00:00'),
 
                    (3, 'HealthTech Hackathon', 'Innovating Healthcare Solutions',
                     'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=328,h=410,fit=crop/YKb3LN2zOWc05D7L/poster4-mnlW25JWQJu732Gj.jpg',
@@ -37,7 +37,7 @@
                     'Participants will design and prototype healthcare applications.',
                     '2024-01-01 08:00:00', '2028-12-01 23:59:00',
                     25, 3, 6, 'contact@healthtech-hack.com',
-                    'CODING', 'FPTU', 'ACTIVE'),
+                    'CODING', 'FPTU', 'ACTIVE', 6, '2025-03-01 08:00:00'),
 
                    (4, 'Cybersecurity Challenge', 'Defending the Digital World',
                     'https://greenscapehub-media.s3.ap-southeast-1.amazonaws.com/hacofpt/bcdec61e-93f6-4b7f-bd53-c736e8f9e20f_generatedHeaderImage-1662578814159.jpg',
@@ -46,7 +46,7 @@
                     'Teams will work on securing digital assets.',
                     '2024-01-01 08:00:00', '2028-12-01 23:59:00',
                     18, 2, 5, 'contact@cybersecurity-hack.com',
-                    'CODING', 'FPTU', 'ACTIVE'),
+                    'CODING', 'FPTU', 'ACTIVE', 6, '2024-01-01 08:00:00'),
 
                    (5, 'GreenTech Innovation', 'Innovating Eco-friendly Technologies',
                     'https://greenscapehub-media.s3.ap-southeast-1.amazonaws.com/hacofpt/d8af2511-ac99-4823-923f-5122fd8da84c_1supq92uyknelefyyf7ughw-15454498606631836572894-crop-1545449864895548482406.png',
@@ -55,7 +55,7 @@
                     'Participants will create green-tech solutions to tackle climate change.',
                     '2024-01-01 08:00:00', '2028-12-01 23:59:00',
                     30, 3, 7, 'contact@greentech-hack.com',
-                    'CODING', 'FPTU', 'ACTIVE');
+                    'CODING', 'FPTU', 'ACTIVE', 6, '2023-01-01 08:00:00');
             ]]>
         </sql>
     </changeSet>

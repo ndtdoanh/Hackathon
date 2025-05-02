@@ -28,7 +28,7 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog.xml
-    enabled: false
+    enabled: true
 
   jpa:
     hibernate:
