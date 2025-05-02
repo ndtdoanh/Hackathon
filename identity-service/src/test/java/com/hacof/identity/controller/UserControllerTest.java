@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hacof.identity.constant.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -189,14 +190,16 @@ class UserControllerTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void testToggleUserStatus() {
         long userId = 1L;
-        doNothing().when(userService).deleteUser(userId);
+        Status newStatus = Status.INACTIVE;
 
-        ApiResponse<String> response = userController.deleteUser(userId);
+        doNothing().when(userService).toggleUserStatus(userId, newStatus);
 
-        assertEquals("User has been deleted", response.getData());
-        verify(userService).deleteUser(userId);
+        ApiResponse<String> response = userController.updateUserStatus(userId, newStatus);
+
+        assertEquals("User status has been updated", response.getData());
+        verify(userService).toggleUserStatus(userId, newStatus);
     }
 
     @Test

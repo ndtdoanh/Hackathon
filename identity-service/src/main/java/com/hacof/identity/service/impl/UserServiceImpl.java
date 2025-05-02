@@ -220,15 +220,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public void toggleUserStatus(Long userId, Status newStatus) {
         Optional<User> userOpt = userRepository.findById(userId);
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
 
-            user.setStatus(Status.INACTIVE);
-
-            userRepository.save(user);
+            if (user.getStatus() != newStatus) {
+                user.setStatus(newStatus);
+                userRepository.save(user);
+            } else {
+                throw new AppException(ErrorCode.STATUS_ALREADY_SAME);
+            }
         } else {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }

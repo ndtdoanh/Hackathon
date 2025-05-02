@@ -47,7 +47,8 @@ public enum ErrorCode {
     ACCOUNT_LOCKED(1037, "Account locked", HttpStatus.BAD_REQUEST),
     INVALID_INPUT(1037, "Invalid input", HttpStatus.BAD_REQUEST),
     USER_INACTIVE(1038, "User inactive", HttpStatus.BAD_REQUEST),
-    DEVICE_NOT_FOUND(1039, "Device not found", HttpStatus.NOT_FOUND);
+    STATUS_ALREADY_SAME(1039, "Status already same", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1040, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

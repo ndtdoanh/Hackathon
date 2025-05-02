@@ -51,7 +51,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "UPDATE_ROLE",
                     "DELETE_ROLE",
 
-                    "DELETE_USER",
+                    "UPDATE_USER_STATUS",
 
                     "CREATE_BLOG_POST",
                     "SUBMIT_BLOG_POST",
@@ -276,7 +276,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new Permission("DELETE_ROLE", "/api/v1/roles/{Id}", "DELETE", "ROLES"),
 
                 new Permission("UPDATE_JUDGE_MENTOR_BY_ORGANIZER", "/api/v1/users/organizer", "PUT", "USERS"),
-                new Permission("DELETE_USER", "/api/v1/users/{Id}", "DELETE", "USERS"),
+                new Permission("UPDATE_USER_STATUS", "/api/v1/users/{Id}/status", "PUT", "USERS"),
 
                 new Permission("CREATE_USER_DEVICE", "/api/v1/user-devices", "POST", "USER_DEVICES"),
                 new Permission("UPDATE_USER_DEVICE", "/api/v1/user-devices/{Id}", "PUT", "USER_DEVICES"),
