@@ -24,5 +24,6 @@ public enum Status {
     DELETED,
     DRAFT,
     SUBMITTED,
-    REVIEWED
+    REVIEWED,
+    CLOSED
 }
