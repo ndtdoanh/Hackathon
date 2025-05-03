@@ -12,6 +12,12 @@ services:
       - "9200:9200"
     networks:
       - microservice-networks
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9200/_cluster/health" ]
+      interval: 10s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.17.14
@@ -23,14 +29,16 @@ services:
     environment:
       - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
     networks:
       - microservice-networks
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9600" ]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 10
+      start_period: 20s
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.14
