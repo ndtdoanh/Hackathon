@@ -51,7 +51,6 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         // validate enrollment period
         validateEnrollPeriod(hackathon);
 
-
         User reviewedBy = null;
         if (individualRegistrationRequestDTO.getReviewedById() != null
                 && !individualRegistrationRequestDTO.getReviewedById().isEmpty()) {
@@ -78,23 +77,30 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         List<IndividualRegistrationRequestDTO> resultList = new ArrayList<>();
 
         for (IndividualRegistrationBulkRequestDTO bulkRequestDTO : bulkRequestDTOList) {
+            //log.debug("Processing bulk request: {}", bulkRequestDTO.toString());
             Hackathon hackathon = hackathonRepository
                     .findById(Long.parseLong(bulkRequestDTO.getHackathonId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+            //log.debug("Fetched hackathon: {}", hackathon.toString());
 
             User createdByUser = userRepository
                     .findById(Long.parseLong(bulkRequestDTO.getCreatedByUserId()))
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+            log.debug("Fetched createdBy user: {}", createdByUser.toString());
+
             IndividualRegistrationRequest request = new IndividualRegistrationRequest();
             request.setHackathon(hackathon);
             request.setStatus(IndividualRegistrationRequestStatus.valueOf(bulkRequestDTO.getStatus()));
             request.setCreatedBy(createdByUser);
+            log.debug("Created IndividualRegistrationRequest: {}", request.getCreatedBy());
 
             request = requestRepository.save(request);
+            //log.debug("Saved IndividualRegistrationRequest: {}", request.toString());
 
             IndividualRegistrationRequestDTO responseDTO = IndividualRegistrationRequestMapperManual.toDto(request);
             responseDTO.setCreatedByUserName(createdByUser.getUsername());
+           // log.debug("Mapped response DTO: {}", responseDTO.toString());
             resultList.add(responseDTO);
         }
 
