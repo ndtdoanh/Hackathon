@@ -176,19 +176,6 @@ public class MentorshipController {
                 created));
     }
 
-    //    @PostMapping("/sessions/filter-by-mentor-team")
-    //    public ResponseEntity<CommonResponse<List<MentorshipSessionRequestDTO>>> getAllByMentorTeamId(
-    //            @RequestBody CommonRequest<MentorshipSessionRequestDTO> request) {
-    //        List<MentorshipSessionRequestDTO> requests = mentorshipSessionRequestService.getAllByMentorTeamId(
-    //                request.getData().getMentorTeamId());
-    //        return ResponseEntity.ok(new CommonResponse<>(
-    //                UUID.randomUUID().toString(),
-    //                LocalDateTime.now(),
-    //                "HACOF",
-    //                new CommonResponse.Result("0000", "Fetched mentorship session requests successfully"),
-    //                requests));
-    //    }
-
     @PutMapping("/sessions")
     @PreAuthorize("hasAuthority('UPDATE_MENTORSHIP_SESSION_REQUEST')")
     public ResponseEntity<CommonResponse<MentorshipSessionRequestDTO>> updateMentorshipSessionRequest(

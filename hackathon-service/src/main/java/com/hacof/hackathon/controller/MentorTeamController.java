@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.hacof.hackathon.constant.StatusCode;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -44,12 +45,12 @@ public class MentorTeamController {
             @Valid @RequestBody CommonRequest<MentorTeamDTO> request) {
         log.debug("Creating mentor team: {}", request.getData());
         MentorTeamDTO created = mentorTeamService.create(request.getData());
-        return ResponseEntity.ok(new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 request.getRequestId(),
-                LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Mentor team created successfully"),
-                created));
+                "Mentor team created successfully",
+                created
+        ));
     }
 
     // pending
@@ -58,62 +59,60 @@ public class MentorTeamController {
             @Valid @RequestBody CommonRequest<MentorTeamDTO> request) {
         log.debug("Updating mentor team: {}", request.getData().getId());
         MentorTeamDTO updated = mentorTeamService.update(request.getData().getId(), request.getData());
-        return ResponseEntity.ok(new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 request.getRequestId(),
-                LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Mentor team updated successfully"),
-                updated));
+                "Mentor team updated successfully",
+                updated
+        ));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('DELETE_MENTOR_TEAM')")
     public ResponseEntity<CommonResponse<Void>> deleteMentorTeam(@PathVariable String id) {
         mentorTeamService.delete(id);
-        return ResponseEntity.ok(new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 UUID.randomUUID().toString(),
-                LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Mentor team deleted successfully"),
-                null));
+                "Mentor team deleted successfully",
+                null
+        ));
     }
 
     @GetMapping("/filter-by-hackathon-and-team")
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByHackathonIdAndTeamId(
             @RequestParam String hackathonId, @RequestParam String teamId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByHackathonIdAndTeamId(hackathonId, teamId);
-        return ResponseEntity.ok(new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 UUID.randomUUID().toString(),
-                LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentor teams successfully"),
-                results));
+                "Fetched mentor teams successfully",
+                results
+        ));
     }
 
     @GetMapping("/filter-by-mentor")
     public ResponseEntity<CommonResponse<List<MentorTeamDTO>>> getAllByMentorId(@RequestParam String mentorId) {
         List<MentorTeamDTO> results = mentorTeamService.getAllByMentorId(mentorId);
-        return ResponseEntity.ok(new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 UUID.randomUUID().toString(),
-                LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentor teams successfully"),
-                results));
+                "Fetched mentor teams successfully",
+                results
+        ));
     }
 
     // ---------------- ENDPOINT FOR MENTOR TEAM LIMIT ----------------
-
     @PostMapping("/limits")
     public ResponseEntity<CommonResponse<MentorTeamLimitDTO>> createMentorTeamLimit(
             @RequestBody @Valid CommonRequest<MentorTeamLimitDTO> request) {
         MentorTeamLimitDTO mentorTeamLimitDTO = mentorTeamLimitService.create(request.getData());
-        CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 request.getRequestId(),
-                LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Mentor team limit created successfully"),
-                mentorTeamLimitDTO);
-        return ResponseEntity.ok(response);
+                "Mentor team limit created successfully",
+                mentorTeamLimitDTO
+        ));
     }
 
     @PutMapping("/limits")
@@ -121,48 +120,54 @@ public class MentorTeamController {
             @RequestBody @Valid CommonRequest<MentorTeamLimitDTO> request) {
         MentorTeamLimitDTO mentorTeamLimitDTO =
                 mentorTeamLimitService.update(Long.parseLong(request.getData().getId()), request.getData());
-        CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 request.getRequestId(),
-                LocalDateTime.now(),
                 request.getChannel(),
-                new CommonResponse.Result("0000", "Mentor team limit updated successfully"),
-                mentorTeamLimitDTO);
-        return ResponseEntity.ok(response);
+                "Mentor team limit updated successfully",
+                mentorTeamLimitDTO
+        ));
     }
 
     @DeleteMapping("/limits/{id}")
     public ResponseEntity<CommonResponse<MentorTeamLimitDTO>> deleteMentorTeamLimit(@PathVariable String id) {
         mentorTeamLimitService.delete(Long.parseLong(id));
-        CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 UUID.randomUUID().toString(),
-                LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Mentor team limit deleted successfully"),
-                null);
-        return ResponseEntity.ok(response);
+                "Mentor team limit deleted successfully",
+                null
+        ));
     }
 
     @GetMapping("/limits")
     public ResponseEntity<CommonResponse<List<MentorTeamLimitDTO>>> getAllMentorTeamLimits() {
         List<MentorTeamLimitDTO> mentorTeamLimits = mentorTeamLimitService.getAll();
-        CommonResponse<List<MentorTeamLimitDTO>> response = new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 UUID.randomUUID().toString(),
-                LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched all mentor team limits successfully"),
-                mentorTeamLimits);
-        return ResponseEntity.ok(response);
+                "Fetched all mentor team limits successfully",
+                mentorTeamLimits
+        ));
     }
 
     @GetMapping("/limits/{id}")
     public ResponseEntity<CommonResponse<MentorTeamLimitDTO>> getMentorTeamLimitById(@PathVariable Long id) {
         MentorTeamLimitDTO mentorTeamLimit = mentorTeamLimitService.getById(id);
-        CommonResponse<MentorTeamLimitDTO> response = new CommonResponse<>(
+        return ResponseEntity.ok(createCommonResponse(
                 UUID.randomUUID().toString(),
-                LocalDateTime.now(),
                 "HACOF",
-                new CommonResponse.Result("0000", "Fetched mentor team limit successfully"),
-                mentorTeamLimit);
-        return ResponseEntity.ok(response);
+                "Fetched mentor team limit successfully",
+                mentorTeamLimit
+        ));
+    }
+
+    private <T> CommonResponse<T> createCommonResponse(String requestId, String channel, String message, T data) {
+        return new CommonResponse<>(
+                requestId,
+                LocalDateTime.now(),
+                channel,
+                new CommonResponse.Result(StatusCode.SUCCESS.getCode(), message),
+                data
+        );
     }
 }
