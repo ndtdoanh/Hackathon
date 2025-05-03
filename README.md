@@ -6,7 +6,7 @@
 
 This project is developed using modern technologies such as **Spring Boot** for the backend, **NextJS** for the frontend, and **MySQL** for the database. Each team member has specific roles in the development and maintenance of the system.
 
---- --- ---- ------- -----
+--- --- ---- ------- --------
 
 ## Technologies Used
 
