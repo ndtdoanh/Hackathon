@@ -1,16 +1,13 @@
 package com.hacof.hackathon.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.hackathon.dto.IndividualRegistrationBulkRequestDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.hackathon.constant.StatusCode;
+import com.hacof.hackathon.dto.IndividualRegistrationBulkRequestDTO;
 import com.hacof.hackathon.dto.IndividualRegistrationRequestDTO;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.service.IndividualRegistrationRequestService;
@@ -59,6 +57,7 @@ public class IndividualRegistrationRequestController {
     }
 
     @PostMapping("/bulk")
+    @PreAuthorize("hasAuthority('CREATE_BULK_INDIVIDUAL_REGISTRATION')")
     public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> createBulkIndividualRegistration(
             @RequestBody @Valid CommonRequest<List<IndividualRegistrationBulkRequestDTO>> request) {
 
@@ -66,15 +65,15 @@ public class IndividualRegistrationRequestController {
             throw new InvalidInputException("Request data cannot be empty");
         }
 
-        List<IndividualRegistrationRequestDTO> createdRequests = individualRegistrationRequestService.createBulk(request.getData());
+        List<IndividualRegistrationRequestDTO> createdRequests =
+                individualRegistrationRequestService.createBulk(request.getData());
 
         CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
                 request.getRequestId(),
                 LocalDateTime.now(),
                 request.getChannel(),
                 new CommonResponse.Result("0000", "Bulk individual registration created successfully"),
-                createdRequests
-        );
+                createdRequests);
 
         return ResponseEntity.ok(response);
     }

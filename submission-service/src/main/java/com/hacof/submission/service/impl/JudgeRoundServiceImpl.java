@@ -41,7 +41,8 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
 
         User judge = userRepository
                 .findById(dto.getJudgeId())
-                .orElseThrow(() -> new IllegalArgumentException("No judges available. Please add judges to the hackathon first."));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("No judges available. Please add judges to the hackathon first."));
 
         boolean exists = judgeRoundRepository.existsByJudgeIdAndRoundId(judge.getId(), round.getId());
         if (exists) {
@@ -114,14 +115,13 @@ public class JudgeRoundServiceImpl implements JudgeRoundService {
 
         User judge = userRepository
                 .findById(dto.getJudgeId())
-                .orElseThrow(() -> new IllegalArgumentException("No judges available. Please add judges to the hackathon first."));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("No judges available. Please add judges to the hackathon first."));
 
         // Check nếu đổi sang 1 cặp judge-round đã tồn tại
         boolean isDuplicate = judgeRoundRepository.existsByJudgeIdAndRoundId(judge.getId(), round.getId())
-                && !(
-                Long.valueOf(judgeRound.getJudge().getId()).equals(judge.getId()) &&
-                        Long.valueOf(judgeRound.getRound().getId()).equals(round.getId())
-        );
+                && !(Long.valueOf(judgeRound.getJudge().getId()).equals(judge.getId())
+                        && Long.valueOf(judgeRound.getRound().getId()).equals(round.getId()));
 
         if (isDuplicate) {
             throw new IllegalArgumentException("Judge already assigned to this round");

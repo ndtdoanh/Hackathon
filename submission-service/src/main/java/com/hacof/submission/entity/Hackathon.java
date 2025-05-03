@@ -57,11 +57,11 @@ public class Hackathon extends AuditUserBase {
     LocalDateTime enrollEndDate;
 
     @Lob
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
     String description;
 
     @Lob
-    @Column(name = "information")
+    @Column(name = "information", columnDefinition = "MEDIUMTEXT")
     String information;
 
     @Column(name = "start_date", columnDefinition = "datetime(6)")
@@ -79,7 +79,7 @@ public class Hackathon extends AuditUserBase {
     @Column(name = "max_team_size")
     int maxTeamSize;
 
-    @Column(name = "contact")
+    @Column(name = "contact", columnDefinition = "MEDIUMTEXT")
     String contact;
 
     @Enumerated(EnumType.STRING)

@@ -1,6 +1,9 @@
 package com.hacof.analytics.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,8 +18,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hacof.analytics.dto.ApiRequest;
+import com.hacof.analytics.dto.ApiResponse;
 import com.hacof.analytics.dto.request.BlogPostRequest;
 import com.hacof.analytics.dto.response.BlogPostResponse;
 import com.hacof.analytics.service.BlogPostService;
@@ -34,24 +42,35 @@ class BlogPostControllerTest {
     @InjectMocks
     BlogPostController blogPostController;
 
-    @Test
-    void testCreateBlogPost() {
-        BlogPostRequest requestData = new BlogPostRequest();
-        BlogPostResponse responseData = new BlogPostResponse();
-        ApiRequest<BlogPostRequest> request = new ApiRequest<>();
+    @Mock
+    ObjectMapper objectMapper;
 
+    @Test
+    void testCreateBlogPost_whenJsonProcessingExceptionThrown() throws JsonProcessingException {
+        BlogPostRequest requestData = new BlogPostRequest();
+        ApiRequest<BlogPostRequest> request = new ApiRequest<>();
         request.setRequestId(UUID.randomUUID().toString());
         request.setRequestDateTime(LocalDateTime.now());
         request.setChannel("HACOF");
         request.setData(requestData);
 
+        BlogPostResponse responseData = new BlogPostResponse();
+
         when(blogPostService.createBlogPost(requestData)).thenReturn(responseData);
+        doThrow(JsonProcessingException.class).when(objectMapper).writeValueAsString(any());
 
-        var response = blogPostController.createBlogPost(request);
+        ResponseEntity<ApiResponse<BlogPostResponse>> response = blogPostController.createBlogPost(request);
 
-        assertEquals(responseData, response.getBody().getData());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
         assertEquals("Blog post created successfully", response.getBody().getMessage());
+        assertEquals(responseData, response.getBody().getData());
+        assertEquals(request.getRequestId(), response.getBody().getRequestId());
+        assertEquals(request.getRequestDateTime(), response.getBody().getRequestDateTime());
+        assertEquals(request.getChannel(), response.getBody().getChannel());
+
         verify(blogPostService, times(1)).createBlogPost(requestData);
+        verify(objectMapper, times(1)).writeValueAsString(any());
     }
 
     @Test

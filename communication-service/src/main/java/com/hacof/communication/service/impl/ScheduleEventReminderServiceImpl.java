@@ -121,8 +121,8 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
         // Return empty list if not found
         return scheduleEventReminderOptional
                 .map(scheduleEventReminder -> List.of(scheduleEventReminderMapper.toDto(scheduleEventReminder))) // Wrap
-                                                                                                                 // in a
-                                                                                                                 // list
+                // in a
+                // list
                 .orElse(List.of()); // Return empty list if not found
     }
 
@@ -153,12 +153,13 @@ public class ScheduleEventReminderServiceImpl implements ScheduleEventReminderSe
     }
 
     @Override
-public List<ScheduleEventReminderResponseDTO> getScheduleEventRemindersByUserIdAndScheduleEventId(Long userId, Long scheduleEventId) {
-    List<ScheduleEventReminder> reminders = scheduleEventReminderRepository.findByUserIdAndScheduleEventId(userId, scheduleEventId);
-    if (reminders.isEmpty()) {
-        return new ArrayList<>();
+    public List<ScheduleEventReminderResponseDTO> getScheduleEventRemindersByUserIdAndScheduleEventId(
+            Long userId, Long scheduleEventId) {
+        List<ScheduleEventReminder> reminders =
+                scheduleEventReminderRepository.findByUserIdAndScheduleEventId(userId, scheduleEventId);
+        if (reminders.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return reminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
     }
-    return reminders.stream().map(scheduleEventReminderMapper::toDto).collect(Collectors.toList());
-}
-
 }

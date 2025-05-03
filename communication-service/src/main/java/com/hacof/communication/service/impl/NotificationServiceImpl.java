@@ -259,7 +259,8 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     @Override
     public void updateReadStatusBulk(BulkUpdateReadStatusRequest request) {
-        List<Long> ids = request.getNotificationIds().stream().map(Long::valueOf).toList();
+        List<Long> ids =
+                request.getNotificationIds().stream().map(Long::valueOf).toList();
 
         List<Notification> notifications = notificationRepository.findAllById(ids);
 

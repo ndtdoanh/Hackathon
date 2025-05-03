@@ -52,7 +52,8 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
     public RoundMarkCriterionResponseDTO create(RoundMarkCriterionRequestDTO criterionDTO) {
         Round round = roundRepository
                 .findById(criterionDTO.getRoundId())
-                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + criterionDTO.getRoundId()));
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Round not found with ID " + criterionDTO.getRoundId()));
 
         // Validate input
         if (criterionDTO.getName() == null || criterionDTO.getName().trim().isEmpty()) {
@@ -89,9 +90,11 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
 
         Round round = roundRepository
                 .findById(updatedCriterionDTO.getRoundId())
-                .orElseThrow(() -> new IllegalArgumentException("Round not found with ID " + updatedCriterionDTO.getRoundId()));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Round not found with ID " + updatedCriterionDTO.getRoundId()));
 
-        if (updatedCriterionDTO.getName() == null || updatedCriterionDTO.getName().trim().isEmpty()) {
+        if (updatedCriterionDTO.getName() == null
+                || updatedCriterionDTO.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Criterion name is required");
         }
 
@@ -99,8 +102,11 @@ public class RoundMarkCriterionServiceImpl implements RoundMarkCriterionService 
             throw new IllegalArgumentException("Maximum score must be greater than 0");
         }
 
-        boolean isDuplicate = repository.existsByRoundAndName(round, updatedCriterionDTO.getName().trim())
-                && !criterion.getName().equalsIgnoreCase(updatedCriterionDTO.getName().trim());
+        boolean isDuplicate = repository.existsByRoundAndName(
+                        round, updatedCriterionDTO.getName().trim())
+                && !criterion
+                        .getName()
+                        .equalsIgnoreCase(updatedCriterionDTO.getName().trim());
 
         if (isDuplicate) {
             throw new IllegalArgumentException("Criterion name already exists in this round");

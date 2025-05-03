@@ -6,28 +6,28 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.hacof.submission.constant.TeamRoundStatus;
-import com.hacof.submission.entity.Round;
-import com.hacof.submission.entity.TeamRound;
-import com.hacof.submission.repository.RoundRepository;
-import com.hacof.submission.repository.TeamRoundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hacof.submission.constant.TeamRoundStatus;
 import com.hacof.submission.dto.request.JudgeSubmissionDetailRequestDTO;
 import com.hacof.submission.dto.request.JudgeSubmissionRequestDTO;
 import com.hacof.submission.dto.response.JudgeSubmissionResponseDTO;
 import com.hacof.submission.entity.JudgeSubmission;
 import com.hacof.submission.entity.JudgeSubmissionDetail;
+import com.hacof.submission.entity.Round;
 import com.hacof.submission.entity.RoundMarkCriterion;
 import com.hacof.submission.entity.Submission;
+import com.hacof.submission.entity.TeamRound;
 import com.hacof.submission.entity.User;
 import com.hacof.submission.mapper.JudgeSubmissionMapper;
 import com.hacof.submission.repository.JudgeSubmissionRepository;
 import com.hacof.submission.repository.RoundMarkCriterionRepository;
+import com.hacof.submission.repository.RoundRepository;
 import com.hacof.submission.repository.SubmissionRepository;
 import com.hacof.submission.repository.TeamRoundJudgeRepository;
+import com.hacof.submission.repository.TeamRoundRepository;
 import com.hacof.submission.repository.UserRepository;
 import com.hacof.submission.service.JudgeSubmissionService;
 
@@ -163,7 +163,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         submission.setFinalScore(finalScore);
         submissionRepository.save(submission);
 
-        List<Submission> allSubmissions = submissionRepository.findByRoundId(submission.getRound().getId());
+        List<Submission> allSubmissions =
+                submissionRepository.findByRoundId(submission.getRound().getId());
         boolean allScored = allSubmissions.stream().allMatch(s -> s.getFinalScore() != null);
         if (!allScored) return;
 
@@ -185,7 +186,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
             Long teamId = s.getTeam().getId();
             Long roundId = s.getRound().getId();
 
-            TeamRound teamRound = teamRoundRepository.findByTeamIdAndRoundId(teamId, roundId)
+            TeamRound teamRound = teamRoundRepository
+                    .findByTeamIdAndRoundId(teamId, roundId)
                     .orElseThrow(() -> new IllegalArgumentException("TeamRound not found"));
 
             if (i < totalTeam) {
@@ -197,7 +199,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
                 int nextRoundNumber = currentRound.getRoundNumber() + 1;
                 Long hackathonId = currentRound.getHackathon().getId();
 
-                Optional<Round> nextRoundOpt = roundRepository.findByHackathonIdAndRoundNumber(hackathonId, nextRoundNumber);
+                Optional<Round> nextRoundOpt =
+                        roundRepository.findByHackathonIdAndRoundNumber(hackathonId, nextRoundNumber);
 
                 if (nextRoundOpt.isPresent()) {
                     Round nextRound = nextRoundOpt.get();

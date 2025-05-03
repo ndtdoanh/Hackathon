@@ -22,15 +22,6 @@ public class FileUrlController {
     @Autowired
     private FileUrlService fileUrlService;
 
-    private void setCommonResponseFields(CommonResponse<?> response, CommonRequest<?> request) {
-        response.setRequestId(
-                request.getRequestId() != null
-                        ? request.getRequestId()
-                        : UUID.randomUUID().toString());
-        response.setRequestDateTime(
-                request.getRequestDateTime() != null ? request.getRequestDateTime() : LocalDateTime.now());
-        response.setChannel(request.getChannel() != null ? request.getChannel() : "HACOF");
-    }
 
     private void setDefaultResponseFields(CommonResponse<?> response) {
         response.setRequestId(UUID.randomUUID().toString());

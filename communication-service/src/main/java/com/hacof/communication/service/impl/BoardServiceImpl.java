@@ -115,25 +115,24 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException("Owner with ID " + boardRequestDTO.getOwnerId() + " not found!");
         }
 
-        // Validate team existence
-        Optional<Team> teamOptional = teamRepository.findById(Long.parseLong(boardRequestDTO.getTeamId()));
-        if (!teamOptional.isPresent()) {
-            throw new IllegalArgumentException("Team with ID " + boardRequestDTO.getTeamId() + " not found!");
+        // Optional Team
+        Team team = null;
+        if (boardRequestDTO.getTeamId() != null && !boardRequestDTO.getTeamId().isBlank()) {
+            Optional<Team> teamOptional = teamRepository.findById(Long.parseLong(boardRequestDTO.getTeamId()));
+            if (!teamOptional.isPresent()) {
+                throw new IllegalArgumentException("Team with ID " + boardRequestDTO.getTeamId() + " not found!");
+            }
+            team = teamOptional.get();
         }
 
-        // Validate hackathon existence
-        Optional<Hackathon> hackathonOptional =
-                hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
-        if (!hackathonOptional.isPresent()) {
-            throw new IllegalArgumentException("Hackathon with ID " + boardRequestDTO.getHackathonId() + " not found!");
-        }
-
-        // Check for duplicate board name in the same team, except for the current board being updated
-        Optional<Board> existingBoard = boardRepository.findByNameAndTeamId(
-                boardRequestDTO.getName(), Long.parseLong(boardRequestDTO.getTeamId()));
-        if (existingBoard.isPresent()
-                && !Long.valueOf(existingBoard.get().getId()).equals(Long.valueOf(id))) {
-            throw new IllegalArgumentException("A Board with the same name already exists for this team.");
+        // Optional Hackathon
+        Hackathon hackathon = null;
+        if (boardRequestDTO.getHackathonId() != null && !boardRequestDTO.getHackathonId().isBlank()) {
+            Optional<Hackathon> hackathonOptional = hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
+            if (!hackathonOptional.isPresent()) {
+                throw new IllegalArgumentException("Hackathon with ID " + boardRequestDTO.getHackathonId() + " not found!");
+            }
+            hackathon = hackathonOptional.get();
         }
 
         // Validate name and description
@@ -141,34 +140,21 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException("Board name cannot be empty");
         }
 
-        if (boardRequestDTO.getDescription() == null
-                || boardRequestDTO.getDescription().isEmpty()) {
+        if (boardRequestDTO.getDescription() == null || boardRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Board description cannot be empty");
         }
 
         // Update board
         Board board = boardOptional.get();
-        User owner = ownerOptional.get();
-        Team team = teamOptional.get();
-        Hackathon hackathon = hackathonOptional.get();
-
         board.setName(boardRequestDTO.getName());
         board.setDescription(boardRequestDTO.getDescription());
-        board.setOwner(owner);
+        board.setOwner(ownerOptional.get());
         board.setTeam(team);
         board.setHackathon(hackathon);
 
         board = boardRepository.save(board);
-        return new BoardResponseDTO(
-                String.valueOf(board.getId()),
-                board.getName(),
-                board.getDescription(),
-                board.getOwner().getUsername(),
-                String.valueOf(board.getTeam().getId()),
-                String.valueOf(board.getHackathon().getId()),
-                board.getCreatedBy().getUsername(),
-                board.getCreatedDate(),
-                board.getLastModifiedDate());
+
+        return boardMapper.toDto(board);
     }
 
     @Override
