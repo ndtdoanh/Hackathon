@@ -46,7 +46,9 @@ public abstract class AuditUserBase {
 
     @PrePersist
     public void handleBeforeCreate() {
-        this.createdBy = AuditContext.getCurrentUser();
+        if (this.createdBy == null) {
+            this.createdBy = AuditContext.getCurrentUser();
+        }
         this.createdDate = LocalDateTime.now();
     }
 
