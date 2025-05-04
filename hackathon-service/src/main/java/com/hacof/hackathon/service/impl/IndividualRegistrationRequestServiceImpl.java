@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +22,7 @@ import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.IndividualRegistrationRequestRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.IndividualRegistrationRequestService;
+import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -78,11 +78,11 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         List<IndividualRegistrationRequestDTO> resultList = new ArrayList<>();
 
         for (IndividualRegistrationBulkRequestDTO bulkRequestDTO : bulkRequestDTOList) {
-            //log.debug("Processing bulk request: {}", bulkRequestDTO.toString());
+            // log.debug("Processing bulk request: {}", bulkRequestDTO.toString());
             Hackathon hackathon = hackathonRepository
                     .findById(Long.parseLong(bulkRequestDTO.getHackathonId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
-            //log.debug("Fetched hackathon: {}", hackathon.toString());
+            // log.debug("Fetched hackathon: {}", hackathon.toString());
 
             User createdByUser = userRepository
                     .findById(Long.parseLong(bulkRequestDTO.getCreatedByUserId()))
@@ -97,11 +97,11 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
             log.debug("Created IndividualRegistrationRequest: {}", request.getCreatedBy());
 
             request = requestRepository.save(request);
-            //log.debug("Saved IndividualRegistrationRequest: {}", request.toString());
+            // log.debug("Saved IndividualRegistrationRequest: {}", request.toString());
 
             IndividualRegistrationRequestDTO responseDTO = IndividualRegistrationRequestMapperManual.toDto(request);
             responseDTO.setCreatedByUserName(createdByUser.getUsername());
-           // log.debug("Mapped response DTO: {}", responseDTO.toString());
+            // log.debug("Mapped response DTO: {}", responseDTO.toString());
             resultList.add(responseDTO);
         }
 

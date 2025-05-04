@@ -127,10 +127,13 @@ public class BoardServiceImpl implements BoardService {
 
         // Optional Hackathon
         Hackathon hackathon = null;
-        if (boardRequestDTO.getHackathonId() != null && !boardRequestDTO.getHackathonId().isBlank()) {
-            Optional<Hackathon> hackathonOptional = hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
+        if (boardRequestDTO.getHackathonId() != null
+                && !boardRequestDTO.getHackathonId().isBlank()) {
+            Optional<Hackathon> hackathonOptional =
+                    hackathonRepository.findById(Long.parseLong(boardRequestDTO.getHackathonId()));
             if (!hackathonOptional.isPresent()) {
-                throw new IllegalArgumentException("Hackathon with ID " + boardRequestDTO.getHackathonId() + " not found!");
+                throw new IllegalArgumentException(
+                        "Hackathon with ID " + boardRequestDTO.getHackathonId() + " not found!");
             }
             hackathon = hackathonOptional.get();
         }
@@ -140,7 +143,8 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException("Board name cannot be empty");
         }
 
-        if (boardRequestDTO.getDescription() == null || boardRequestDTO.getDescription().isEmpty()) {
+        if (boardRequestDTO.getDescription() == null
+                || boardRequestDTO.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Board description cannot be empty");
         }
 

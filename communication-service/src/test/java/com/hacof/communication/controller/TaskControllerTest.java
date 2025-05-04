@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.hacof.communication.dto.response.FileUrlResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.hacof.communication.dto.request.BulkTaskUpdateRequestDTO;
 import com.hacof.communication.dto.request.TaskRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
 import com.hacof.communication.dto.response.TaskResponseDTO;
 import com.hacof.communication.service.TaskService;
 import com.hacof.communication.util.CommonRequest;
@@ -241,5 +241,4 @@ class TaskControllerTest {
         assertEquals("File URLs fetched successfully!", response.getBody().getMessage());
         assertEquals(fileUrls, response.getBody().getData());
     }
-
 }

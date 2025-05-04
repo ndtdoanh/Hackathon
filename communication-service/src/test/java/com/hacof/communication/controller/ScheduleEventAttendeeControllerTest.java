@@ -1,23 +1,24 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.constant.ScheduleEventStatus;
-import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
-import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
-import com.hacof.communication.service.ScheduleEventAttendeeService;
-import com.hacof.communication.util.CommonRequest;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import com.hacof.communication.constant.ScheduleEventStatus;
+import com.hacof.communication.dto.request.ScheduleEventAttendeeRequestDTO;
+import com.hacof.communication.dto.response.ScheduleEventAttendeeResponseDTO;
+import com.hacof.communication.service.ScheduleEventAttendeeService;
+import com.hacof.communication.util.CommonRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleEventAttendeeControllerTest {
@@ -63,14 +64,12 @@ class ScheduleEventAttendeeControllerTest {
         req.setChannel("ZALO");
         req.setData(new ScheduleEventAttendeeRequestDTO());
 
-        when(service.createScheduleEventAttendee(any()))
-                .thenReturn(new ScheduleEventAttendeeResponseDTO());
+        when(service.createScheduleEventAttendee(any())).thenReturn(new ScheduleEventAttendeeResponseDTO());
 
         var res = controller.createScheduleEventAttendee(req);
 
         assertEquals(requestId, res.getBody().getRequestId());
     }
-
 
     @Test
     void testCreate_Success() {
@@ -95,24 +94,21 @@ class ScheduleEventAttendeeControllerTest {
 
     @Test
     void testUpdate_Success() {
-        when(service.updateScheduleEventAttendee(eq(1L), any()))
-                .thenReturn(new ScheduleEventAttendeeResponseDTO());
+        when(service.updateScheduleEventAttendee(eq(1L), any())).thenReturn(new ScheduleEventAttendeeResponseDTO());
         var response = controller.updateScheduleEventAttendee(1L, buildRequest());
         assertEquals(200, response.getStatusCodeValue());
     }
 
     @Test
     void testUpdate_IllegalArgument() {
-        when(service.updateScheduleEventAttendee(eq(1L), any()))
-                .thenThrow(new IllegalArgumentException("Not found"));
+        when(service.updateScheduleEventAttendee(eq(1L), any())).thenThrow(new IllegalArgumentException("Not found"));
         var response = controller.updateScheduleEventAttendee(1L, buildRequest());
         assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     void testUpdate_Exception() {
-        when(service.updateScheduleEventAttendee(eq(1L), any()))
-                .thenThrow(new RuntimeException("Crash"));
+        when(service.updateScheduleEventAttendee(eq(1L), any())).thenThrow(new RuntimeException("Crash"));
         var response = controller.updateScheduleEventAttendee(1L, buildRequest());
         assertEquals(500, response.getStatusCodeValue());
     }
@@ -168,8 +164,7 @@ class ScheduleEventAttendeeControllerTest {
 
     @Test
     void testChangeStatus_Success() {
-        when(service.changeStatus(eq(1L), any()))
-                .thenReturn(new ScheduleEventAttendeeResponseDTO());
+        when(service.changeStatus(eq(1L), any())).thenReturn(new ScheduleEventAttendeeResponseDTO());
         var response = controller.changeStatus(1L, ScheduleEventStatus.CONFIRMED);
         assertEquals(200, response.getStatusCodeValue());
     }
@@ -198,16 +193,14 @@ class ScheduleEventAttendeeControllerTest {
 
     @Test
     void testGetByEventId_IllegalArgument() {
-        when(service.getScheduleEventAttendeesByEventId(1L))
-                .thenThrow(new IllegalArgumentException("Invalid"));
+        when(service.getScheduleEventAttendeesByEventId(1L)).thenThrow(new IllegalArgumentException("Invalid"));
         var response = controller.getScheduleEventAttendeesByEventId(1L);
         assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     void testGetByEventId_Exception() {
-        when(service.getScheduleEventAttendeesByEventId(1L))
-                .thenThrow(new RuntimeException("Error"));
+        when(service.getScheduleEventAttendeesByEventId(1L)).thenThrow(new RuntimeException("Error"));
         var response = controller.getScheduleEventAttendeesByEventId(1L);
         assertEquals(500, response.getStatusCodeValue());
     }

@@ -129,7 +129,6 @@ class BoardUserControllerTest {
         assertEquals("BoardUser deleted successfully!", response.getBody().getMessage());
     }
 
-
     @Test
     void testDeleteBoardUser_IllegalArgument() {
         doThrow(new IllegalArgumentException("Invalid ID"))
@@ -269,5 +268,4 @@ class BoardUserControllerTest {
         assertEquals(500, response.getStatusCodeValue());
         assertEquals("Unexpected crash", response.getBody().getMessage());
     }
-
 }

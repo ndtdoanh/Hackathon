@@ -1,21 +1,22 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ThreadPostLikeRequestDTO;
-import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
-import com.hacof.communication.service.ThreadPostLikeService;
-import com.hacof.communication.util.CommonRequest;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.hacof.communication.dto.request.ThreadPostLikeRequestDTO;
+import com.hacof.communication.dto.response.ThreadPostLikeResponseDTO;
+import com.hacof.communication.service.ThreadPostLikeService;
+import com.hacof.communication.util.CommonRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ThreadPostLikeControllerTest {
@@ -111,7 +112,8 @@ class ThreadPostLikeControllerTest {
         doNothing().when(service).deleteThreadPostLike(9L);
         var response = controller.deleteThreadPostLike(9L);
         assertEquals(200, response.getStatusCodeValue());
-        assertEquals("Thread post like deleted successfully!", response.getBody().getMessage());
+        assertEquals(
+                "Thread post like deleted successfully!", response.getBody().getMessage());
     }
 
     @Test

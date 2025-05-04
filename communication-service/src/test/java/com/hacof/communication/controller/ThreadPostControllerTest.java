@@ -1,23 +1,24 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ThreadPostRequestDTO;
-import com.hacof.communication.dto.response.ThreadPostResponseDTO;
-import com.hacof.communication.service.ThreadPostService;
-import com.hacof.communication.util.CommonRequest;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import com.hacof.communication.dto.request.ThreadPostRequestDTO;
+import com.hacof.communication.dto.response.ThreadPostResponseDTO;
+import com.hacof.communication.service.ThreadPostService;
+import com.hacof.communication.util.CommonRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ThreadPostControllerTest {

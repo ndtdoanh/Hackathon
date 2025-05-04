@@ -289,5 +289,4 @@ class BoardControllerTest {
         assertEquals(500, response.getStatusCodeValue());
         assertTrue(response.getBody().getMessage().contains("Hackathon error"));
     }
-
 }
