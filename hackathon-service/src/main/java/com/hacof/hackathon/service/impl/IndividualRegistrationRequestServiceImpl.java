@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.repository.TeamRequestRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     IndividualRegistrationRequestRepository requestRepository;
     HackathonRepository hackathonRepository;
     UserRepository userRepository;
+    TeamRequestRepository teamRequestRepository;
     SecurityUtil securityUtil;
 
     @Override
@@ -78,17 +80,38 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         List<IndividualRegistrationRequestDTO> resultList = new ArrayList<>();
 
         for (IndividualRegistrationBulkRequestDTO bulkRequestDTO : bulkRequestDTOList) {
-            // log.debug("Processing bulk request: {}", bulkRequestDTO.toString());
             Hackathon hackathon = hackathonRepository
                     .findById(Long.parseLong(bulkRequestDTO.getHackathonId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
-            // log.debug("Fetched hackathon: {}", hackathon.toString());
 
             User createdByUser = userRepository
                     .findById(Long.parseLong(bulkRequestDTO.getCreatedByUserId()))
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-            log.debug("Fetched createdBy user: {}", createdByUser.toString());
+            // Validation: Check if the user has already created an individual request for the hackathon
+            boolean hasIndividualRequest = requestRepository.existsByHackathonAndCreatedBy(hackathon, createdByUser);
+            if (hasIndividualRequest) {
+                throw new InvalidInputException("User has already created an individual request for this hackathon");
+            }
+
+            // Check if the user has already submitted a request for the hackathon
+            if (requestRepository.existsByHackathonAndCreatedBy(hackathon, createdByUser)) {
+                throw new InvalidInputException("User has already submitted a request for this hackathon");
+            }
+
+            // Check if the user has an approved team request for the hackathon
+            boolean hasApprovedTeamRequest = teamRequestRepository.existsApprovedTeamRequestByUserIdAndHackathonId(
+                    createdByUser.getId(), hackathon.getId());
+            if (hasApprovedTeamRequest) {
+                throw new InvalidInputException("User has an approved team request for this hackathon");
+            }
+
+            // Check if the user is already part of a team for the hackathon
+            boolean isInTeam = teamRequestRepository.existsApprovedTeamRequestByUserIdAndHackathonId(
+                    createdByUser.getId(), hackathon.getId());
+            if (isInTeam) {
+                throw new InvalidInputException("User is already part of a team for this hackathon");
+            }
 
             IndividualRegistrationRequest request = new IndividualRegistrationRequest();
             request.setHackathon(hackathon);

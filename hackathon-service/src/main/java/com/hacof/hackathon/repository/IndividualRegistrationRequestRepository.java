@@ -2,6 +2,8 @@ package com.hacof.hackathon.repository;
 
 import java.util.List;
 
+import com.hacof.hackathon.entity.Hackathon;
+import com.hacof.hackathon.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,4 +23,7 @@ public interface IndividualRegistrationRequestRepository extends JpaRepository<I
     @Query("SELECT r FROM IndividualRegistrationRequest r WHERE r.hackathon.id = :hackathonId AND r.status = :status")
     List<IndividualRegistrationRequest> findAllByHackathonIdAndStatus(
             @Param("hackathonId") Long hackathonId, @Param("status") IndividualRegistrationRequestStatus status);
+
+    boolean existsByHackathonAndCreatedBy(Hackathon hackathon, User createdBy);
+
 }
