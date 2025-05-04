@@ -1,15 +1,17 @@
 package com.hacof.identity.task;
 
-import com.hacof.identity.constant.Status;
-import com.hacof.identity.entity.Hackathon;
-import com.hacof.identity.repository.HackathonRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.hacof.identity.constant.Status;
+import com.hacof.identity.entity.Hackathon;
+import com.hacof.identity.repository.HackathonRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +24,8 @@ public class HackathonStatusUpdateTask {
     public void updateHackathonStatus() {
         log.info("Checking hackathons to close...");
 
-        List<Hackathon> hackathons = hackathonRepository
-                .findByStatusAndEndDateBefore(Status.ACTIVE, LocalDateTime.now());
+        List<Hackathon> hackathons =
+                hackathonRepository.findByStatusAndEndDateBefore(Status.ACTIVE, LocalDateTime.now());
 
         for (Hackathon h : hackathons) {
             h.setStatus(Status.CLOSED);

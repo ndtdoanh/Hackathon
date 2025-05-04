@@ -14,8 +14,6 @@ public class SubmissionDTO {
     RoundDTO round;
     String teamId;
     TeamDTO team;
-    // List<FileUrlDTO> submissionFiles;
-    // List<JudgeSubmissionDTO> judgeSubmissions;
     String status;
     String submissionAt;
     String finalScore;

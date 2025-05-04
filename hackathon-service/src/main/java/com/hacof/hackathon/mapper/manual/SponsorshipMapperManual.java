@@ -21,7 +21,9 @@ public class SponsorshipMapperManual {
         dto.setTimeTo(sponsorship.getTimeTo());
         dto.setStatus(sponsorship.getStatus().name());
         dto.setCreatedByUserName(
-                sponsorship.getCreatedBy() != null ? sponsorship.getCreatedBy().getUsername() : null);
+                sponsorship.getCreatedBy() != null
+                        ? sponsorship.getCreatedBy().getUsername()
+                        : null);
         dto.setLastModifiedByUserName(
                 sponsorship.getLastModifiedBy() != null
                         ? sponsorship.getLastModifiedBy().getUsername()
@@ -43,7 +45,11 @@ public class SponsorshipMapperManual {
 
         Sponsorship sponsorship = new Sponsorship();
         if (dto.getId() != null) {
-            sponsorship.setId(Long.parseLong(dto.getId()));
+            try {
+                sponsorship.setId(Long.parseLong(dto.getId()));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid ID format: " + dto.getId(), e);
+            }
         }
         sponsorship.setName(dto.getName());
         sponsorship.setBrand(dto.getBrand());
@@ -51,8 +57,15 @@ public class SponsorshipMapperManual {
         sponsorship.setMoney(dto.getMoney());
         sponsorship.setTimeFrom(dto.getTimeFrom());
         sponsorship.setTimeTo(dto.getTimeTo());
-        sponsorship.setStatus(SponsorshipStatus.valueOf(dto.getStatus()));
-
+        if (dto.getStatus() != null) {
+            try {
+                sponsorship.setStatus(SponsorshipStatus.valueOf(dto.getStatus()));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status value: " + dto.getStatus(), e);
+            }
+        } else {
+            sponsorship.setStatus(null);
+        }
         return sponsorship;
     }
 }

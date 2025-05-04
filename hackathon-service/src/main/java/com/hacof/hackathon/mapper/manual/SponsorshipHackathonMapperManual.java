@@ -21,7 +21,7 @@ public class SponsorshipHackathonMapperManual {
 
         if (entity.getSponsorship() != null) {
             dto.setSponsorshipId(String.valueOf(entity.getSponsorship().getId()));
-            // Tránh vòng lặp vô hạn: không nên set sponsorship vào đây nếu DTO cũng chứa sponsorshipHackathons
+            // ignore SponsorshipMapperManual.toDto(entity.getSponsorship()) to avoid circular reference
         }
 
         dto.setCreatedByUserName(

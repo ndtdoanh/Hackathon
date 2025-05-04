@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
@@ -200,22 +199,6 @@ public class TeamController {
 
     // --- TEAM ENDPOINTS ---
     // Step 1: Create bulk team
-    // pending
-    @PostMapping
-    public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(@RequestBody Map<String, Object> request) {
-        Map<String, Object> data = request;
-        String teamLeaderId = (String) data.get("teamLeaderId");
-        List<Long> userIds = ((List<String>) data.get("teamMembers"))
-                .stream().map(Long::parseLong).collect(Collectors.toList());
-        List<TeamDTO> createdTeams = teamService.createBulkTeams(teamLeaderId, userIds);
-        return ResponseEntity.ok(new CommonResponse<>(
-                UUID.randomUUID().toString(),
-                LocalDateTime.now(),
-                "HACOF",
-                new CommonResponse.Result("0000", "Bulk teams created successfully"),
-                createdTeams));
-    }
-
     @PostMapping("/bulk")
     @PreAuthorize("hasAuthority('CREATE_BULK_TEAM')")
     public ResponseEntity<CommonResponse<List<TeamDTO>>> createBulkTeams(

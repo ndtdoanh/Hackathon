@@ -1,6 +1,5 @@
 package com.hacof.hackathon.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,9 +48,8 @@ public class TeamRoundServiceImpl implements TeamRoundService {
 
         validateTeamNotInRound(team.getId(), round.getId());
 
-        String currentUser =
-                teamRoundDTO.getCreatedByUserName() != null ? teamRoundDTO.getCreatedByUserName() : "admin";
-        LocalDateTime now = LocalDateTime.now();
+//        String currentUser =
+//                teamRoundDTO.getCreatedByUserName() != null ? teamRoundDTO.getCreatedByUserName() : "admin";
 
         // Create team round
         TeamRound teamRound = TeamRound.builder()
@@ -79,11 +77,11 @@ public class TeamRoundServiceImpl implements TeamRoundService {
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("TeamRound not found"));
 
-        Team team = teamRepository
+        teamRepository
                 .findById(teamId)
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found with ID: " + teamId));
 
-        Round round = roundRepository
+        roundRepository
                 .findById(roundId)
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found with ID: " + roundId));
 
@@ -108,70 +106,12 @@ public class TeamRoundServiceImpl implements TeamRoundService {
         return TeamRoundMapperManual.toDto(existing);
     }
 
-    private void createNextRoundForTeam(TeamRound passedRound) {
-        Round currentRound = passedRound.getRound();
-        int nextRoundNumber = currentRound.getRoundNumber() + 1;
-        Long hackathonId = currentRound.getHackathon().getId();
-
-        Optional<Round> nextRoundOpt = roundRepository.findByHackathonIdAndRoundNumber(hackathonId, nextRoundNumber);
-
-        if (nextRoundOpt.isPresent()) {
-            Round nextRound = nextRoundOpt.get();
-
-            boolean exists = teamRoundRepository.existsByTeamIdAndRoundId(
-                    passedRound.getTeam().getId(), nextRound.getId());
-
-            if (!exists) {
-                TeamRound nextTeamRound = new TeamRound();
-                nextTeamRound.setTeam(passedRound.getTeam());
-                nextTeamRound.setRound(nextRound);
-                nextTeamRound.setStatus(TeamRoundStatus.PENDING);
-                nextTeamRound.setDescription("Auto-generated for next round");
-
-                teamRoundRepository.save(nextTeamRound);
-            }
-        }
-    }
-
     @Override
     public void delete(String id) {
         if (!teamRoundRepository.existsById(Long.parseLong(id))) {
-            throw new ResourceNotFoundException("Không tìm thấy team round");
+            throw new ResourceNotFoundException("Not found team round with ID: " + id);
         }
         teamRoundRepository.deleteById(Long.parseLong(id));
-    }
-
-    private Team validateTeam(String teamId) {
-        return teamRepository
-                .findById(Long.parseLong(teamId))
-                .orElseThrow(() -> new ResourceNotFoundException("Team was not found"));
-    }
-
-    private Round validateRound(String roundId) {
-        return roundRepository
-                .findById(Long.parseLong(roundId))
-                .orElseThrow(() -> new ResourceNotFoundException("Round was not found"));
-    }
-
-    private void validateTeamInHackathon(Team team, Hackathon hackathon) {
-        boolean exists = team.getTeamHackathons().stream()
-                .anyMatch(th -> th.getHackathon().getId() == (hackathon.getId()));
-
-        if (!exists) {
-            throw new InvalidInputException("Team was not belong to hackathon");
-        }
-    }
-
-    private void validateTeamNotInRound(Long teamId, Long roundId) {
-        if (teamRoundRepository.existsByTeamIdAndRoundId(teamId, roundId)) {
-            throw new InvalidInputException("Team was already in round");
-        }
-    }
-
-    private TeamRound getTeamRound(String id) {
-        return teamRoundRepository
-                .findById(Long.parseLong(id))
-                .orElseThrow(() -> new ResourceNotFoundException("Team round was not found"));
     }
 
     @Override
@@ -226,6 +166,58 @@ public class TeamRoundServiceImpl implements TeamRoundService {
             return Long.parseLong(idStr);
         } catch (NumberFormatException e) {
             throw new InvalidInputException(fieldName + " ID is invalid");
+        }
+    }
+
+    private void validateTeamNotInRound(Long teamId, Long roundId) {
+        if (teamRoundRepository.existsByTeamIdAndRoundId(teamId, roundId)) {
+            throw new InvalidInputException("Team was already in round");
+        }
+    }
+
+    private Team validateTeam(String teamId) {
+        return teamRepository
+                .findById(Long.parseLong(teamId))
+                .orElseThrow(() -> new ResourceNotFoundException("Team was not found"));
+    }
+
+    private Round validateRound(String roundId) {
+        return roundRepository
+                .findById(Long.parseLong(roundId))
+                .orElseThrow(() -> new ResourceNotFoundException("Round was not found"));
+    }
+
+    private void validateTeamInHackathon(Team team, Hackathon hackathon) {
+        boolean exists = team.getTeamHackathons().stream()
+                .anyMatch(th -> th.getHackathon().getId() == (hackathon.getId()));
+
+        if (!exists) {
+            throw new InvalidInputException("Team was not belong to hackathon");
+        }
+    }
+
+    private void createNextRoundForTeam(TeamRound passedRound) {
+        Round currentRound = passedRound.getRound();
+        int nextRoundNumber = currentRound.getRoundNumber() + 1;
+        Long hackathonId = currentRound.getHackathon().getId();
+
+        Optional<Round> nextRoundOpt = roundRepository.findByHackathonIdAndRoundNumber(hackathonId, nextRoundNumber);
+
+        if (nextRoundOpt.isPresent()) {
+            Round nextRound = nextRoundOpt.get();
+
+            boolean exists = teamRoundRepository.existsByTeamIdAndRoundId(
+                    passedRound.getTeam().getId(), nextRound.getId());
+
+            if (!exists) {
+                TeamRound nextTeamRound = new TeamRound();
+                nextTeamRound.setTeam(passedRound.getTeam());
+                nextTeamRound.setRound(nextRound);
+                nextTeamRound.setStatus(TeamRoundStatus.PENDING);
+                nextTeamRound.setDescription("Auto-generated for next round");
+
+                teamRoundRepository.save(nextTeamRound);
+            }
         }
     }
 }

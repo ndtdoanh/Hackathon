@@ -2,6 +2,11 @@ package com.hacof.hackathon.util;
 
 import java.util.Optional;
 
+import com.hacof.hackathon.exception.InvalidInputException;
+import com.hacof.hackathon.exception.ResourceNotFoundException;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,34 +14,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import com.hacof.hackathon.constant.StatusCode;
 import com.hacof.hackathon.entity.User;
-import com.hacof.hackathon.exception.CustomException;
 import com.hacof.hackathon.repository.UserRepository;
 
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SecurityUtil {
+    UserRepository userRepository;
 
-    private final UserRepository userRepository;
-
-    public static String getCurrentUsername() {
+    public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new CustomException(StatusCode.ERROR, "User is not authenticated");
+            throw new InvalidInputException("No authenticated user found");
         }
-
-        Object principal = authentication.getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        }
-
-        return principal.toString();
-    }
-
-    public SecurityUtil(UserRepository userRepository) {
-        this.userRepository = userRepository;
+        String username = authentication.getName();
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
     }
 
     public Optional<User> getCurrentUser() {
@@ -46,6 +41,10 @@ public class SecurityUtil {
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
+    }
+
+    public void setAuditUser() {
+        getCurrentUser().ifPresent(AuditContext::setCurrentUser);
     }
 
     private static String extractPrincipal(Authentication authentication) {
@@ -59,9 +58,5 @@ public class SecurityUtil {
             return s;
         }
         return null;
-    }
-
-    public void setAuditUser() {
-        getCurrentUser().ifPresent(AuditContext::setCurrentUser);
     }
 }

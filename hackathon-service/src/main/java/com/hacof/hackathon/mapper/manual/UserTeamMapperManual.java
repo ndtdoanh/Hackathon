@@ -21,12 +21,6 @@ public class UserTeamMapperManual {
         if (entity.getTeam() != null) {
             dto.setTeamId(String.valueOf(entity.getTeam().getId()));
         }
-
-        //        dto.setCreatedDate(entity.getCreatedDate());
-        //        dto.setCreatedBy(entity.getCreatedBy());
-        //        dto.setUpdatedDate(entity.getUpdatedDate());
-        //        dto.setUpdatedBy(entity.getUpdatedBy());
-
         return dto;
     }
 
@@ -50,12 +44,6 @@ public class UserTeamMapperManual {
             team.setId(Long.parseLong(dto.getTeamId()));
             entity.setTeam(team);
         }
-
-        //        entity.setCreatedDate(dto.getCreatedDate());
-        //        entity.setCreatedBy(dto.getCreatedBy());
-        //        entity.setUpdatedDate(dto.getUpdatedDate());
-        //        entity.setUpdatedBy(dto.getUpdatedBy());
-
         return entity;
     }
 }

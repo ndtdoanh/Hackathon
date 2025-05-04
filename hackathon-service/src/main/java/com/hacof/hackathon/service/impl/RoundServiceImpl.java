@@ -7,11 +7,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.RoundStatus;
@@ -25,13 +24,11 @@ import com.hacof.hackathon.entity.RoundLocation;
 import com.hacof.hackathon.entity.User;
 import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
-import com.hacof.hackathon.mapper.LocationMapper;
 import com.hacof.hackathon.mapper.manual.RoundMapperManual;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.LocationRepository;
 import com.hacof.hackathon.repository.RoundLocationRepository;
 import com.hacof.hackathon.repository.RoundRepository;
-import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.RoundService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,12 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 public class RoundServiceImpl implements RoundService {
     RoundRepository roundRepository;
     HackathonRepository hackathonRepository;
-    UserRepository userRepository;
     LocationRepository locationRepository;
-    private RoundLocationRepository roundLocationRepository;
-
-    LocationServiceImpl locationService;
-    LocationMapper locationMapper;
+    RoundLocationRepository roundLocationRepository;
+    SecurityUtil securityUtil;
 
     @Override
     public RoundDTO create(RoundDTO roundDTO) {
@@ -60,115 +54,49 @@ public class RoundServiceImpl implements RoundService {
         validateUniqueRoundNumber(null, roundDTO.getRoundNumber(), hackathon.getId());
         validateRoundDates(roundDTO.getStartTime(), roundDTO.getEndTime(), hackathon);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
-
-        String username = authentication.getName();
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
-
+        // get the authenticated user
+        User user = securityUtil.getAuthenticatedUser();
         LocalDateTime now = LocalDateTime.now();
 
-        Round round = new Round();
-        round.setHackathon(hackathon);
-        round.setStartTime(roundDTO.getStartTime());
-        round.setEndTime(roundDTO.getEndTime());
-        round.setRoundNumber(roundDTO.getRoundNumber());
-        round.setRoundTitle(roundDTO.getRoundTitle());
-        round.setTotalTeam(roundDTO.getTotalTeam());
-        round.setStatus(RoundStatus.valueOf(roundDTO.getStatus()));
-        round.setCreatedBy(user);
-        round.setLastModifiedBy(user);
-        round.setCreatedDate(now);
-        round.setLastModifiedDate(now);
-
+        Round round = buildRound(roundDTO, hackathon, user, now);
         round = roundRepository.save(round);
 
         List<RoundLocation> savedRoundLocations = new ArrayList<>();
 
         if (roundDTO.getRoundLocations() != null) {
             for (RoundLocationDTO rlDTO : roundDTO.getRoundLocations()) {
-                RoundLocation rl = new RoundLocation();
-                rl.setRound(round);
-
                 Long locationId = Long.parseLong(rlDTO.getLocationId());
                 Location location = locationRepository
                         .findById(locationId)
                         .orElseThrow(() -> new ResourceNotFoundException("Location not found: " + locationId));
 
-                rl.setLocation(location);
-                rl.setType(rlDTO.getType());
-                rl.setCreatedBy(user);
-                rl.setLastModifiedBy(user);
-                rl.setCreatedDate(now);
-                rl.setLastModifiedDate(now);
-
+                RoundLocation rl = buildRoundLocation(rlDTO, round, location, user, now);
                 savedRoundLocations.add(roundLocationRepository.save(rl));
             }
         }
 
         round.setRoundLocations(savedRoundLocations);
 
-        RoundDTO responseDTO = new RoundDTO();
-        responseDTO.setId(String.valueOf(round.getId()));
-        responseDTO.setHackathonId(String.valueOf(hackathon.getId()));
-        responseDTO.setStartTime(round.getStartTime());
-        responseDTO.setEndTime(round.getEndTime());
-        responseDTO.setRoundNumber(round.getRoundNumber());
-        responseDTO.setRoundTitle(round.getRoundTitle());
-        responseDTO.setTotalTeam(round.getTotalTeam());
-        responseDTO.setStatus(round.getStatus().name());
-        responseDTO.setCreatedByUserName(round.getCreatedBy().getUsername());
-        responseDTO.setLastModifiedByUserName(round.getLastModifiedBy().getUsername());
-        responseDTO.setCreatedAt(round.getCreatedDate());
-        responseDTO.setUpdatedAt(round.getLastModifiedDate());
+        RoundDTO responseDTO = RoundMapperManual.toDto(round);
+        responseDTO.setRoundLocations(savedRoundLocations.stream()
+                .map(rl -> {
+                    RoundLocationDTO dto = new RoundLocationDTO();
+                    dto.setId(String.valueOf(rl.getId()));
+                    dto.setLocationId(String.valueOf(rl.getLocation().getId()));
+                    dto.setType(rl.getType());
+                    dto.setCreatedByUserName(rl.getCreatedBy().getUsername());
+                    dto.setLastModifiedByUserName(rl.getLastModifiedBy().getUsername());
+                    dto.setCreatedAt(rl.getCreatedDate());
+                    dto.setUpdatedAt(rl.getLastModifiedDate());
 
-        if (savedRoundLocations != null) {
-            List<RoundLocationDTO> roundLocationDTOs = savedRoundLocations.stream()
-                    .map(rl -> {
-                        RoundLocationDTO dto = new RoundLocationDTO();
-                        dto.setId(String.valueOf(rl.getId()));
-                        dto.setLocationId(String.valueOf(rl.getLocation().getId()));
-                        dto.setType(rl.getType());
-                        dto.setCreatedByUserName(rl.getCreatedBy().getUsername());
-                        dto.setLastModifiedByUserName(rl.getLastModifiedBy().getUsername());
-                        dto.setCreatedAt(rl.getCreatedDate());
-                        dto.setUpdatedAt(rl.getLastModifiedDate());
+                    Location location = rl.getLocation();
+                    if (location != null) {
+                        dto.setLocation(mapToLocationDTO(location));
+                    }
 
-                        Location location = rl.getLocation();
-                        if (location != null) {
-                            LocationDTO locationDTO = new LocationDTO();
-                            locationDTO.setId(String.valueOf(location.getId()));
-                            locationDTO.setName(location.getName());
-                            locationDTO.setAddress(location.getAddress());
-                            locationDTO.setLatitude(location.getLatitude());
-                            locationDTO.setLongitude(location.getLongitude());
-
-                            if (location.getCreatedBy() != null) {
-                                locationDTO.setCreatedByUserName(
-                                        location.getCreatedBy().getUsername());
-                            }
-
-                            if (location.getLastModifiedBy() != null) {
-                                locationDTO.setLastModifiedByUserName(
-                                        location.getLastModifiedBy().getUsername());
-                            }
-
-                            locationDTO.setCreatedAt(location.getCreatedDate());
-                            locationDTO.setUpdatedAt(location.getLastModifiedDate());
-
-                            dto.setLocation(locationDTO);
-                        }
-
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-
-            responseDTO.setRoundLocations(roundLocationDTOs);
-        }
+                    return dto;
+                })
+                .collect(Collectors.toList()));
 
         return responseDTO;
     }
@@ -190,12 +118,8 @@ public class RoundServiceImpl implements RoundService {
 
         validateRoundDates(roundDTO.getStartTime(), roundDTO.getEndTime(), hackathon);
 
-        Authentication authentication = getAuthenticatedUser();
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
-
+        // get the authenticated user
+        User currentUser = securityUtil.getAuthenticatedUser();
         User createdBy = existingRound.getCreatedBy();
 
         existingRound.setRoundTitle(roundDTO.getRoundTitle());
@@ -214,15 +138,7 @@ public class RoundServiceImpl implements RoundService {
                     .findById(Long.parseLong(rlDTO.getLocationId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Location not found: " + rlDTO.getLocationId()));
 
-            RoundLocation rl = new RoundLocation();
-            rl.setRound(existingRound);
-            rl.setLocation(location);
-            rl.setType(rlDTO.getType());
-            rl.setCreatedBy(currentUser);
-            rl.setLastModifiedBy(currentUser);
-            rl.setCreatedDate(LocalDateTime.now());
-            rl.setLastModifiedDate(LocalDateTime.now());
-
+            RoundLocation rl = buildRoundLocation(rlDTO, existingRound, location, currentUser, LocalDateTime.now());
             existingRound.getRoundLocations().add(rl);
         }
 
@@ -285,14 +201,6 @@ public class RoundServiceImpl implements RoundService {
         }
     }
 
-    private Authentication getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
-        return authentication;
-    }
-
     private void validateEnums(RoundDTO roundDTO) {
         if (roundDTO.getStatus() != null) {
             try {
@@ -301,5 +209,55 @@ public class RoundServiceImpl implements RoundService {
                 throw new InvalidInputException("Invalid round status: " + roundDTO.getStatus());
             }
         }
+    }
+
+    private Round buildRound(RoundDTO roundDTO, Hackathon hackathon, User user, LocalDateTime now) {
+        Round round = new Round();
+        round.setHackathon(hackathon);
+        round.setStartTime(roundDTO.getStartTime());
+        round.setEndTime(roundDTO.getEndTime());
+        round.setRoundNumber(roundDTO.getRoundNumber());
+        round.setRoundTitle(roundDTO.getRoundTitle());
+        round.setTotalTeam(roundDTO.getTotalTeam());
+        round.setStatus(RoundStatus.valueOf(roundDTO.getStatus()));
+        round.setCreatedBy(user);
+        round.setLastModifiedBy(user);
+        round.setCreatedDate(now);
+        round.setLastModifiedDate(now);
+        return round;
+    }
+
+    private LocationDTO mapToLocationDTO(Location location) {
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setId(String.valueOf(location.getId()));
+        locationDTO.setName(location.getName());
+        locationDTO.setAddress(location.getAddress());
+        locationDTO.setLatitude(location.getLatitude());
+        locationDTO.setLongitude(location.getLongitude());
+
+        if (location.getCreatedBy() != null) {
+            locationDTO.setCreatedByUserName(location.getCreatedBy().getUsername());
+        }
+
+        if (location.getLastModifiedBy() != null) {
+            locationDTO.setLastModifiedByUserName(location.getLastModifiedBy().getUsername());
+        }
+
+        locationDTO.setCreatedAt(location.getCreatedDate());
+        locationDTO.setUpdatedAt(location.getLastModifiedDate());
+
+        return locationDTO;
+    }
+
+    private RoundLocation buildRoundLocation(RoundLocationDTO rlDTO, Round round, Location location, User user, LocalDateTime now) {
+        RoundLocation rl = new RoundLocation();
+        rl.setRound(round);
+        rl.setLocation(location);
+        rl.setType(rlDTO.getType());
+        rl.setCreatedBy(user);
+        rl.setLastModifiedBy(user);
+        rl.setCreatedDate(now);
+        rl.setLastModifiedDate(now);
+        return rl;
     }
 }

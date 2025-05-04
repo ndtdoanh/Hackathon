@@ -18,9 +18,6 @@ public interface IndividualRegistrationRequestRepository extends JpaRepository<I
 
     List<IndividualRegistrationRequest> findAllByHackathonId(Long hackathonId);
 
-    //    List<IndividualRegistrationRequest> findAllByHackathonIdAndStatus(
-    //            Long hackathonId, IndividualRegistrationRequestStatus status);
-
     @Query("SELECT r FROM IndividualRegistrationRequest r WHERE r.hackathon.id = :hackathonId AND r.status = :status")
     List<IndividualRegistrationRequest> findAllByHackathonIdAndStatus(
             @Param("hackathonId") Long hackathonId, @Param("status") IndividualRegistrationRequestStatus status);

@@ -46,11 +46,6 @@ public class RoundLocationMapperManual {
         entity.setLocation(location);
 
         entity.setType(dto.getType());
-        //        entity.setCreatedByUserName(dto.getCreatedByUserName());
-        //        entity.setCreatedAt(dto.getCreatedAt());
-        //        entity.setLastModifiedByUserName(dto.getLastModifiedByUserName());
-        //        entity.setUpdatedAt(dto.getUpdatedAt());
-
         return entity;
     }
 }

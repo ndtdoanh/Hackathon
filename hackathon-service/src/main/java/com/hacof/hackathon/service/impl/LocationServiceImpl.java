@@ -3,11 +3,11 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.LocationDTO;
@@ -17,7 +17,6 @@ import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.manual.LocationMapperManual;
 import com.hacof.hackathon.repository.LocationRepository;
 import com.hacof.hackathon.repository.RoundLocationRepository;
-import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.LocationService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LocationServiceImpl implements LocationService {
     LocationRepository locationRepository;
     RoundLocationRepository roundLocationRepository;
-    UserRepository userRepository;
+    SecurityUtil securityUtil;
 
     @Override
     public LocationDTO create(LocationDTO locationDTO) {
@@ -41,8 +40,6 @@ public class LocationServiceImpl implements LocationService {
             throw new ResourceNotFoundException("Location name already exists");
         }
 
-        //        Location location = locationMapper.toEntity(locationDTO);
-        //        return locationMapper.toDto(locationRepository.save(location));
         Location location = LocationMapperManual.toEntity(locationDTO);
         return LocationMapperManual.toDto(locationRepository.save(location));
     }
@@ -58,15 +55,7 @@ public class LocationServiceImpl implements LocationService {
             throw new ResourceNotFoundException("Location name already exists");
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
-
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         existingLocation.setName(locationDTO.getName());
         existingLocation.setAddress(locationDTO.getAddress());
@@ -91,10 +80,6 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public List<LocationDTO> getLocations(Specification<Location> spec) {
-        //        if (locationRepository.findAll(spec).isEmpty()) {
-        //            throw new ResourceNotFoundException("Location not found");
-        //        }
-
         return locationRepository.findAll(spec).stream()
                 .map(LocationMapperManual::toDto)
                 .collect(Collectors.toList());
@@ -104,4 +89,5 @@ public class LocationServiceImpl implements LocationService {
     public Location getLocationEntityById(Long id) {
         return locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
     }
+
 }

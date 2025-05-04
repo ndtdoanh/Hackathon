@@ -35,11 +35,6 @@ public class LocationMapperManual {
         entity.setLatitude(dto.getLatitude());
         entity.setLongitude(dto.getLongitude());
 
-        //        entity.setCreatedByUserName(dto.getCreatedByUserName());
-        //        entity.setCreatedAt(dto.getCreatedAt());
-        //        entity.setLastModifiedByUserName(dto.getLastModifiedByUserName());
-        //        entity.setUpdatedAt(dto.getUpdatedAt());
-
         return entity;
     }
 }

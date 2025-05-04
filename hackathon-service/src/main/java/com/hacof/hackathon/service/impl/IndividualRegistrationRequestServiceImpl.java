@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.IndividualRegistrationRequestStatus;
@@ -38,6 +37,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
     IndividualRegistrationRequestRepository requestRepository;
     HackathonRepository hackathonRepository;
     UserRepository userRepository;
+    SecurityUtil securityUtil;
 
     @Override
     public IndividualRegistrationRequestDTO create(IndividualRegistrationRequestDTO individualRegistrationRequestDTO) {
@@ -132,22 +132,8 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + reviewById));
         }
 
-        //        if (existingRequest.getStatus() == IndividualRegistrationRequestStatus.APPROVED
-        //                && !IndividualRegistrationRequestStatus.APPROVED
-        //                        .name()
-        //                        .equalsIgnoreCase(individualRegistrationRequestDTO.getStatus())) {
-        //            throw new InvalidInputException("Cannot update status after it's approved");
-        //        }
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
-
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        // Get the current authenticated user
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         IndividualRegistrationRequestMapperManual.updateEntityFromDto(
                 individualRegistrationRequestDTO, existingRequest, hackathon, reviewedBy, currentUser);
@@ -221,12 +207,7 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
         if (createdByUsername == null || createdByUsername.isEmpty()) {
             throw new InvalidInputException("Created by username cannot be null or empty");
         }
-        //        if (requestRepository
-        //                .findAllByCreatedByUsernameAndHackathonId(createdByUsername, Long.parseLong(hackathonId))
-        //                .isEmpty()) {
-        //            throw new ResourceNotFoundException(
-        //                    "No individual registration requests found for the given username and hackathon ID");
-        //        }
+
         List<IndividualRegistrationRequest> requests = requestRepository.findAllByCreatedByUsernameAndHackathonId(
                 createdByUsername, Long.parseLong(hackathonId));
         return requests.stream()

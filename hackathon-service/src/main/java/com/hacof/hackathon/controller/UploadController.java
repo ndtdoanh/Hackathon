@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hacof.hackathon.dto.ApiResponse;
+import com.hacof.hackathon.dto.ApiResponseUpload;
 import com.hacof.hackathon.dto.FileUrlResponse;
 import com.hacof.hackathon.entity.FileUrl;
 import com.hacof.hackathon.mapper.FileUrlMapper;
@@ -83,7 +83,7 @@ public class UploadController {
 
     // use to upload files to S3 and save the file URL in the database - link to Hackathon
     @PostMapping("/upload")
-    public ApiResponse<List<FileUrlResponse>> uploadFiles(@RequestParam("files") List<MultipartFile> files)
+    public ApiResponseUpload<List<FileUrlResponse>> uploadFiles(@RequestParam("files") List<MultipartFile> files)
             throws IOException {
         List<FileUrlResponse> fileUrlResponses = new ArrayList<>();
 
@@ -109,7 +109,7 @@ public class UploadController {
             fileUrlResponses.add(fileUrlResponse);
         }
 
-        return ApiResponse.<List<FileUrlResponse>>builder()
+        return ApiResponseUpload.<List<FileUrlResponse>>builder()
                 .message("Files uploaded successfully")
                 .data(fileUrlResponses)
                 .build();

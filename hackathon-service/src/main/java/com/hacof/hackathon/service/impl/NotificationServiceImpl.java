@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.TeamRequestMemberStatus;
@@ -23,8 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(makeFinal = true)
 public class NotificationServiceImpl implements NotificationService {
-    private final EmailService emailService;
+    EmailService emailService;
 
     @Override
     public void notifyTeamRequestCreated(TeamRequest request) {
@@ -99,14 +101,13 @@ public class NotificationServiceImpl implements NotificationService {
     public void notifyTeamRequestReviewed(TeamRequest request) {
         validateTeamRequest(request);
 
-        String status = request.getStatus() == TeamRequestStatus.APPROVED ? "approved" : "rejected";
-        String reason = request.getStatus() == TeamRequestStatus.REJECTED ? "\n\nReason: " + request.getNote() : "";
+        String statusAndReason = generateStatusAndReason(request);
 
         String emailContent = String.format(
                 """
 				Dear Team Members,
 
-				Your team request "%s" for hackathon "%s" has been %s.%s
+				Your team request "%s" for hackathon "%s" has been %s
 
 				Next steps:
 				- Approved teams: Prepare for the hackathon!
@@ -115,10 +116,8 @@ public class NotificationServiceImpl implements NotificationService {
 				Best regards,
 				Hackathon Organizers
 				""",
-                request.getName(), request.getHackathon().getTitle(), status, reason);
-
+                request.getName(), request.getHackathon().getTitle(), statusAndReason);
         List<String> allRecipients = extractAllRecipientEmails(request);
-
         if (!allRecipients.isEmpty()) {
             try {
                 emailService.sendBulkEmails(allRecipients, "Team Request Status Update", emailContent);
@@ -186,5 +185,11 @@ public class NotificationServiceImpl implements NotificationService {
         if (member.getTeamRequest() == null) {
             throw new InvalidInputException("TeamRequest cannot be null");
         }
+    }
+
+    private String generateStatusAndReason(TeamRequest request) {
+        String status = request.getStatus() == TeamRequestStatus.APPROVED ? "approved" : "rejected";
+        String reason = request.getStatus() == TeamRequestStatus.REJECTED ? "\n\nReason: " + request.getNote() : "";
+        return String.format("%s%s", status, reason);
     }
 }

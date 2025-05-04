@@ -3,10 +3,9 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.HackathonResultDTO;
@@ -17,7 +16,6 @@ import com.hacof.hackathon.mapper.manual.HackathonResultMapperManual;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.HackathonResultRepository;
 import com.hacof.hackathon.repository.TeamRepository;
-import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.HackathonResultService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 public class HackathonResultServiceImpl implements HackathonResultService {
     HackathonResultRepository hackathonResultRepository;
     TeamRepository teamRepository;
-    UserRepository userRepository;
     HackathonRepository hackathonRepository;
+    SecurityUtil securityUtil;
 
     @Override
     public HackathonResultDTO create(HackathonResultDTO hackathonResultDTO) {
@@ -63,12 +61,7 @@ public class HackathonResultServiceImpl implements HackathonResultService {
     public HackathonResultDTO update(String id, HackathonResultDTO hackathonResultDTO) {
         validateForeignKeys(hackathonResultDTO);
 
-        Authentication authentication = getAuthenticatedUser();
-
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         HackathonResult existingResult = getHackathonResult(id);
 
@@ -134,12 +127,7 @@ public class HackathonResultServiceImpl implements HackathonResultService {
     public List<HackathonResultDTO> updateBulk(List<HackathonResultDTO> hackathonResultDTOs) {
         hackathonResultDTOs.forEach(this::validateForeignKeys);
 
-        Authentication authentication = getAuthenticatedUser();
-
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         List<HackathonResult> updatedResults = hackathonResultDTOs.stream()
                 .map(dto -> {
@@ -199,13 +187,5 @@ public class HackathonResultServiceImpl implements HackathonResultService {
         return hackathonResultRepository
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon result not found"));
-    }
-
-    private Authentication getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
-        return authentication;
     }
 }

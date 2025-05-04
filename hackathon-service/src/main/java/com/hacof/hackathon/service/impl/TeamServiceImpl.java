@@ -5,11 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.ConversationType;
@@ -35,11 +34,9 @@ import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamMapper;
 import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import com.hacof.hackathon.repository.BoardRepository;
-import com.hacof.hackathon.repository.BoardUserRepository;
 import com.hacof.hackathon.repository.ConversationRepository;
 import com.hacof.hackathon.repository.ConversationUserRepository;
 import com.hacof.hackathon.repository.HackathonRepository;
-import com.hacof.hackathon.repository.IndividualRegistrationRequestRepository;
 import com.hacof.hackathon.repository.RoundRepository;
 import com.hacof.hackathon.repository.ScheduleRepository;
 import com.hacof.hackathon.repository.TeamHackathonRepository;
@@ -60,76 +57,19 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(makeFinal = true)
 @Slf4j
 public class TeamServiceImpl implements TeamService {
-    IndividualRegistrationRequestRepository individualRegistrationRequestRepository;
     UserRepository userRepository;
     TeamRepository teamRepository;
-    TeamMapper teamMapper;
-    UserTeamRepository userTeamRepository;
     HackathonRepository hackathonRepository;
     UserTeamRepository teamMemberRepository;
     TeamHackathonRepository teamHackathonRepository;
     BoardRepository boardRepository;
-    BoardUserRepository boardUserRepository;
     ConversationRepository conversationRepository;
     ConversationUserRepository conversationUserRepository;
     ScheduleRepository scheduleRepository;
     TeamRoundRepository teamRoundRepository;
     RoundRepository roundRepository;
-
-    // Create Bulk Teams
-    @Override
-    public List<TeamDTO> createBulkTeams(String teamLeaderId, List<Long> userIds) {
-        //        List<TeamDTO> createdTeams = new ArrayList<>();
-        //        List<IndividualRegistrationRequest> approvedRequests =
-        //
-        // individualRegistrationRequestRepository.findAllByStatus(IndividualRegistrationRequestStatus.PENDING);
-        //
-        //        List<User> users = approvedRequests.stream()
-        //                .map(IndividualRegistrationRequest::getCreatedBy)
-        //                .distinct()
-        //                .collect(Collectors.toList());
-        //
-        //        List<User> eligibleUsers =
-        //                users.stream().filter(user -> user.getStatus() == Status.ACTIVE).collect(Collectors.toList());
-        //
-        //        Random random = new Random();
-        //        for (int i = 0; i < eligibleUsers.size(); i += 4) {
-        //            int teamSize = Math.min(4 + random.nextInt(3), eligibleUsers.size() - i); // Team size between 4
-        // and 6
-        //            List<User> teamMembers = new ArrayList<>(eligibleUsers.subList(i, i + teamSize));
-        //
-        //            // Create and save the team
-        //            Team team = new Team();
-        //            team.setName("Team " + UUID.randomUUID().toString());
-        //            teamRepository.save(team);
-        //
-        //            // Assign members to the team
-        //            for (User member : teamMembers) {
-        //                UserTeam userTeam = new UserTeam();
-        //                userTeam.setUser(member);
-        //                userTeam.setTeam(team);
-        //                userTeamRepository.save(userTeam);
-        //            }
-        //
-        //            // Assign team leader
-        //            User teamLeader = (teamLeaderId != null && !teamLeaderId.isEmpty())
-        //                    ? userRepository
-        //                            .findById(Long.parseLong(teamLeaderId))
-        //                            .orElseThrow(() -> new ResourceNotFoundException("User not found: " +
-        // teamLeaderId))
-        //                    : teamMembers.get(random.nextInt(teamMembers.size()));
-        //            team.setTeamLeader(teamLeader);
-        //            teamRepository.save(team);
-        //
-        //            // Create related entities
-        //            createRelatedEntitiesForTeam(team, teamMembers);
-        //
-        //            // Convert to DTO and add to the result list
-        //            createdTeams.add(TeamMapperManual.toDto(team));
-        //        }
-
-        return null;
-    }
+    TeamMapper teamMapper;
+    SecurityUtil securityUtil;
 
     @Override
     public TeamDTO updateTeam(long id, TeamDTO teamDTO) {
@@ -218,7 +158,11 @@ public class TeamServiceImpl implements TeamService {
 
             // Retrieve hackathon (assumes all hackathons in the list are the same)
             Hackathon hackathon = hackathonRepository
-                    .findById(Long.parseLong(request.getTeamHackathons().get(0).getHackathonId()))
+                    .findById(request.getTeamHackathons().stream()
+                            .findFirst()
+                            .map(TeamHackathonBulkDTO::getHackathonId)
+                            .map(Long::parseLong)
+                            .orElseThrow(() -> new ResourceNotFoundException("No hackathon ID provided")))
                     .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
 
             // Create Hackathon associations for the team
@@ -244,15 +188,7 @@ public class TeamServiceImpl implements TeamService {
             }
 
             // Get current authenticated user
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                throw new InvalidInputException("No authenticated user found");
-            }
-
-            String username = authentication.getName();
-            User currentUser = userRepository
-                    .findByUsername(username)
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+            User currentUser = securityUtil.getAuthenticatedUser();
 
             // Create Board entry only if it doesn't exist
             if (!boardRepository.existsByTeam(team)) {
@@ -299,7 +235,7 @@ public class TeamServiceImpl implements TeamService {
             for (UserTeam userTeam : team.getTeamMembers()) {
                 User user = userTeam.getUser();
 
-                // Kiểm tra xem ConversationUser đã tồn tại chưa
+                // check if ConversationUser already exists
                 boolean exists = conversationUserRepository.existsByConversationAndUser(conversation, user);
                 log.debug(
                         "Checking if conversation user exists: Conversation ID = {}, User ID = {}, Exists = {}",
@@ -308,7 +244,7 @@ public class TeamServiceImpl implements TeamService {
                         exists);
 
                 if (!exists) {
-                    // Tạo ConversationUser mới nếu không tồn tại
+                    // Create ConversationUser entry
                     ConversationUser conversationUser = ConversationUser.builder()
                             .user(user)
                             .conversation(conversation)
@@ -335,7 +271,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<TeamDTO> getTeamsByHackathonId(Long hackathonId) {
-        Hackathon hackathon = hackathonRepository
+        hackathonRepository
                 .findById(hackathonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + hackathonId));
 

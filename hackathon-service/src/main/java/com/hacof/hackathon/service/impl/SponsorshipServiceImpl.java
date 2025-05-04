@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.util.SecurityUtil;
+import lombok.AccessLevel;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.SponsorshipDTO;
@@ -20,7 +20,6 @@ import com.hacof.hackathon.exception.InvalidInputException;
 import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.manual.SponsorshipMapperManual;
 import com.hacof.hackathon.repository.SponsorshipRepository;
-import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.SponsorshipService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,10 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@FieldDefaults(makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SponsorshipServiceImpl implements SponsorshipService {
     SponsorshipRepository sponsorshipRepository;
-    UserRepository userRepository;
+    SecurityUtil securityUtil;
 
     @Override
     public SponsorshipDTO create(SponsorshipDTO sponsorshipDTO) {
@@ -61,15 +60,7 @@ public class SponsorshipServiceImpl implements SponsorshipService {
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("No authenticated user found");
-        }
-
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        User currentUser = securityUtil.getAuthenticatedUser();
         User createdBy = sponsorship.getCreatedBy();
 
         sponsorship.setName(sponsorshipDTO.getName());
@@ -79,6 +70,7 @@ public class SponsorshipServiceImpl implements SponsorshipService {
         sponsorship.setTimeFrom(sponsorshipDTO.getTimeFrom());
         sponsorship.setTimeTo(sponsorshipDTO.getTimeTo());
         sponsorship.setCreatedBy(createdBy);
+        sponsorship.setCreatedDate(sponsorship.getCreatedDate());
         sponsorship.setLastModifiedBy(currentUser);
         sponsorship.setLastModifiedDate(sponsorshipDTO.getUpdatedAt());
 
@@ -96,6 +88,7 @@ public class SponsorshipServiceImpl implements SponsorshipService {
                             hackathon.setId(Long.parseLong(sponsorshipHackathonDTO.getHackathonId()));
                             sponsorshipHackathon.setHackathon(hackathon);
                             sponsorshipHackathon.setTotalMoney(sponsorshipHackathonDTO.getTotalMoney());
+                            sponsorshipHackathon.setLastModifiedBy(currentUser);
                             return sponsorshipHackathon;
                         })
                         .collect(Collectors.toSet())

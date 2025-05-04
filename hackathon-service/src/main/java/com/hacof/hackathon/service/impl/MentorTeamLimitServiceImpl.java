@@ -37,17 +37,9 @@ public class MentorTeamLimitServiceImpl implements MentorTeamLimitService {
 
     @Override
     public MentorTeamLimitDTO create(MentorTeamLimitDTO dto) {
-        Hackathon hackathon = hackathonRepository
-                .findById(Long.parseLong(dto.getHackathonId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
-
-        User mentor = userRepository
-                .findById(Long.parseLong(dto.getMentorId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
-
-        Team team = teamRepository
-                .findById(Long.parseLong(dto.getTeamId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+        Hackathon hackathon = fetchHackathon(dto.getHackathonId());
+        User mentor = fetchMentor(dto.getMentorId());
+        Team team = fetchTeam(dto.getTeamId());
 
         MentorTeamLimit entity = MentorTeamLimitMapperManual.toEntity(dto);
         entity.setHackathon(hackathon);
@@ -64,17 +56,9 @@ public class MentorTeamLimitServiceImpl implements MentorTeamLimitService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentor team limit not found"));
 
-        Hackathon hackathon = hackathonRepository
-                .findById(Long.parseLong(dto.getHackathonId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
-
-        User mentor = userRepository
-                .findById(Long.parseLong(dto.getMentorId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
-
-        Team team = teamRepository
-                .findById(Long.parseLong(dto.getTeamId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+        Hackathon hackathon = fetchHackathon(dto.getHackathonId());
+        User mentor = fetchMentor(dto.getMentorId());
+        Team team = fetchTeam(dto.getTeamId());
 
         // Update fields
         entity.setHackathon(hackathon);
@@ -107,5 +91,23 @@ public class MentorTeamLimitServiceImpl implements MentorTeamLimitService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentor team limit not found"));
         return MentorTeamLimitMapperManual.toDto(entity);
+    }
+
+    private Hackathon fetchHackathon(String hackathonId) {
+        return hackathonRepository
+                .findById(Long.parseLong(hackathonId))
+                .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found"));
+    }
+
+    private User fetchMentor(String mentorId) {
+        return userRepository
+                .findById(Long.parseLong(mentorId))
+                .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
+    }
+
+    private Team fetchTeam(String teamId) {
+        return teamRepository
+                .findById(Long.parseLong(teamId))
+                .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
     }
 }

@@ -60,9 +60,12 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
 
         User evaluatedBy = null;
         if (mentorshipRequestDTO.getEvaluatedById() != null) {
-            evaluatedBy = userRepository
-                    .findById(parseLongSafely(mentorshipRequestDTO.getEvaluatedById()))
-                    .orElseThrow(() -> new ResourceNotFoundException("EvaluatedBy User not found"));
+            Long evaluatedById = parseLongSafely(mentorshipRequestDTO.getEvaluatedById());
+            if (evaluatedById != null) {
+                evaluatedBy = userRepository
+                        .findById(evaluatedById)
+                        .orElseThrow(() -> new ResourceNotFoundException("EvaluatedBy User not found"));
+            }
         }
 
         MentorshipRequest mentorshipRequest = MentorshipRequestMapperManual.toEntity(mentorshipRequestDTO);
@@ -85,7 +88,7 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mentorship request not found"));
 
-        MentorshipRequest partialUpdate = MentorshipRequestMapperManual.toEntity(dto);
+        // MentorshipRequest partialUpdate = MentorshipRequestMapperManual.toEntity(dto);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -129,12 +132,6 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
             mentorshipRequest.setTeam(team);
         }
 
-        //        if (dto.getEvaluatedById() != null) {
-        //            User evaluatedBy = userRepository
-        //                    .findById(Long.parseLong(dto.getEvaluatedById()))
-        //                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        //            mentorshipRequest.setEvaluatedBy(evaluatedBy);
-        //        }
         mentorshipRequest.setEvaluatedAt(LocalDateTime.now());
         mentorshipRequest.setEvaluatedBy(currentUser);
 

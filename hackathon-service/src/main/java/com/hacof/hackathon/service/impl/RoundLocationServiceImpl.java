@@ -29,20 +29,9 @@ public class RoundLocationServiceImpl implements RoundLocationService {
 
     @Override
     public RoundLocationDTO create(RoundLocationDTO roundLocationDTO) {
-        Round round = roundRepository
+        roundRepository
                 .findById(Long.parseLong(roundLocationDTO.getRoundId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
-
-        //        Location location = locationRepository
-        //                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
-        //                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
-
-        //        //RoundLocation roundLocation = roundLocationMapper.toEntity(roundLocationDTO);
-        ////        roundLocation.setRound(round);
-        ////        // roundLocation.setLocation(location);
-        ////
-        ////        roundLocation = roundLocationRepository.save(roundLocation);
-        ////        return roundLocationMapper.toDto(roundLocation);
         return null;
     }
 
@@ -56,10 +45,6 @@ public class RoundLocationServiceImpl implements RoundLocationService {
         Round round = roundRepository
                 .findById(Long.parseLong(roundLocationDTO.getRoundId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Round not found"));
-
-        //        Location location = locationRepository
-        //                .findById(Long.parseLong(roundLocationDTO.getLocationId()))
-        //                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
 
         // roundLocationMapper.updateEntityFromDto(roundLocationDTO, roundLocation);
         roundLocation.setRound(round);

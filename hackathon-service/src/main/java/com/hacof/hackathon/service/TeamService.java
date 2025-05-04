@@ -16,8 +16,6 @@ public interface TeamService {
 
     List<TeamDTO> getTeamsByUserIdAndHackathonId(Long userId, Long hackathonId);
 
-    List<TeamDTO> createBulkTeams(String teamLeaderId, List<Long> userIds);
-
     List<TeamDTO> createBulkTeams(List<TeamBulkRequestDTO> bulkRequest);
 
     // update 23/4/25

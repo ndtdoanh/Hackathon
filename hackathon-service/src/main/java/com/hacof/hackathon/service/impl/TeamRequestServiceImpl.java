@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +58,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
     TeamRoundRepository teamRoundRepository;
     RoundRepository roundRepository;
     NotificationService notificationService;
+    SecurityUtil securityUtil;
 
     @Override
     public List<TeamRequestDTO> getTeamRequestsByMemberIdAndHackathonId(Long memberId, Long hackathonId) {
@@ -203,12 +204,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         request.setNote(note);
         request.setReviewedAt(LocalDateTime.now());
 
-        Authentication authentication = getAuthenticatedUser();
-
-        String username = authentication.getName();
-        User currentUser = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         log.debug("Current user: {}", currentUser.getUsername());
 
@@ -405,11 +401,6 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
 
         List<TeamRequest> teamRequests = teamRequestRepository.findAllByHackathon_Id(id);
-
-        //        if (teamRequests.isEmpty()) {
-        //            throw new ResourceNotFoundException("No team requests found for Hackathon ID = " + id);
-        //        }
-
         return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
@@ -419,6 +410,15 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .findById(teamRequestId)
                 .orElseThrow(() -> new ResourceNotFoundException("TeamRequest not found with ID " + teamRequestId));
         teamRequestRepository.delete(teamRequest);
+    }
+
+    @Override
+    public List<TeamRequestDTO> getTeamRequestsByMemberId(Long memberId) {
+        if (memberId == null) {
+            throw new IllegalArgumentException("Member ID must not be null");
+        }
+        List<TeamRequest> teamRequests = teamRequestRepository.findByTeamRequestMembers_User_Id(memberId);
+        return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
 
     private Team createTeam(TeamRequest request) {
@@ -534,27 +534,10 @@ public class TeamRequestServiceImpl implements TeamRequestService {
         }
     }
 
-    private Authentication getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new InvalidInputException("No authenticated user found");
-        }
-        return authentication;
-    }
-
     private void validateEnrollPeriod(Hackathon hackathon) {
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(hackathon.getEnrollStartDate()) || now.isAfter(hackathon.getEnrollEndDate())) {
             throw new InvalidInputException("Cannot create a team request outside the enrollment period");
         }
-    }
-
-    @Override
-    public List<TeamRequestDTO> getTeamRequestsByMemberId(Long memberId) {
-        if (memberId == null) {
-            throw new IllegalArgumentException("Member ID must not be null");
-        }
-        List<TeamRequest> teamRequests = teamRequestRepository.findByTeamRequestMembers_User_Id(memberId);
-        return teamRequests.stream().map(TeamRequestMapperManual::toDto).collect(Collectors.toList());
     }
 }

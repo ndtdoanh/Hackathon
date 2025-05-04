@@ -32,10 +32,6 @@ public class UserMapperManual {
         user.setAvatarUrl(userDTO.getAvatarUrl());
         user.setBio(userDTO.getBio());
         user.setStatus(Status.valueOf(userDTO.getStatus()));
-        // user.setCreatedByUserName(userDTO.getCreatedByUserName());
-        // user.setCreatedAt(userDTO.getCreatedAt());
-        // user.setLastModifiedByUserName(userDTO.getLastModifiedByUserName());
-        // user.setUpdatedAt(userDTO.getUpdatedAt());
         return user;
     }
 }

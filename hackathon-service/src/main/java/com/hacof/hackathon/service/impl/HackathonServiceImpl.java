@@ -46,12 +46,6 @@ public class HackathonServiceImpl implements HackathonService {
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
-        //        // check Authority
-        //        Authentication authentication = getAuthenticatedUser();
-        //        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
-        //            throw new InvalidInputException("You do not have permission to perform this action.");
-        //        }
-
         validateEnumValues(hackathonDTO);
         validateUniqueTitleForCreate(hackathonDTO.getTitle());
 
@@ -113,12 +107,6 @@ public class HackathonServiceImpl implements HackathonService {
     @Override
     @Transactional
     public HackathonDTO update(String id, HackathonDTO hackathonDTO) {
-        // check Authority
-        //        Authentication authentication = getAuthenticatedUser();
-        //        if(!hasRole(authentication, "ADMIN") && !hasRole(authentication, "ORGANIZER")) {
-        //            throw new InvalidInputException("You do not have permission to perform this action.");
-        //        }
-
         Hackathon existingHackathon = hackathonRepository
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("Hackathon not found with id: " + id));
@@ -265,10 +253,5 @@ public class HackathonServiceImpl implements HackathonService {
             throw new IllegalStateException("No authenticated user found");
         }
         return authentication;
-    }
-
-    private boolean hasRole(Authentication authentication, String role) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(role));
     }
 }
