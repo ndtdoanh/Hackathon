@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
-import lombok.AccessLevel;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +19,9 @@ import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.manual.SponsorshipMapperManual;
 import com.hacof.hackathon.repository.SponsorshipRepository;
 import com.hacof.hackathon.service.SponsorshipService;
+import com.hacof.hackathon.util.SecurityUtil;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;

@@ -28,9 +28,15 @@ public class BoardMapper {
                 .id(String.valueOf(board.getId()))
                 .name(board.getName())
                 .description(board.getDescription())
-                .ownerId(board.getOwner() != null ? String.valueOf(board.getOwner().getId()) : null)
+                .ownerId(
+                        board.getOwner() != null
+                                ? String.valueOf(board.getOwner().getId())
+                                : null)
                 .teamId(board.getTeam() != null ? String.valueOf(board.getTeam().getId()) : null)
-                .hackathonId(board.getHackathon() != null ? String.valueOf(board.getHackathon().getId()) : null)
+                .hackathonId(
+                        board.getHackathon() != null
+                                ? String.valueOf(board.getHackathon().getId())
+                                : null)
                 .createdBy(board.getCreatedBy() != null ? board.getCreatedBy().getUsername() : null)
                 .createdDate(board.getCreatedDate())
                 .lastModifiedDate(board.getLastModifiedDate())

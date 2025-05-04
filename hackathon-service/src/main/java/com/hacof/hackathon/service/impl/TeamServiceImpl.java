@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -46,6 +45,7 @@ import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.repository.UserTeamRepository;
 import com.hacof.hackathon.service.TeamService;
 import com.hacof.hackathon.specification.TeamSpecification;
+import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

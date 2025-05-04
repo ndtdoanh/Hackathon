@@ -1,7 +1,8 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.service.FileUrlService;
-import com.hacof.communication.util.CommonResponse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doThrow;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,8 +10,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
+import com.hacof.communication.service.FileUrlService;
+import com.hacof.communication.util.CommonResponse;
 
 class FileUrlControllerTest {
 
@@ -37,7 +38,9 @@ class FileUrlControllerTest {
     @Test
     void testDeleteFile_IllegalArgumentException() {
         String fileId = "invalid-file";
-        doThrow(new IllegalArgumentException("File not found")).when(fileUrlService).deleteFileById(fileId);
+        doThrow(new IllegalArgumentException("File not found"))
+                .when(fileUrlService)
+                .deleteFileById(fileId);
 
         ResponseEntity<CommonResponse<String>> response = controller.deleteFile(fileId);
 
@@ -51,7 +54,9 @@ class FileUrlControllerTest {
     @Test
     void testDeleteFile_Exception() {
         String fileId = "crash-file";
-        doThrow(new RuntimeException("Something went wrong")).when(fileUrlService).deleteFileById(fileId);
+        doThrow(new RuntimeException("Something went wrong"))
+                .when(fileUrlService)
+                .deleteFileById(fileId);
 
         ResponseEntity<CommonResponse<String>> response = controller.deleteFile(fileId);
 

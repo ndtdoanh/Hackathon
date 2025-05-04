@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +17,7 @@ import com.hacof.hackathon.repository.MentorTeamRepository;
 import com.hacof.hackathon.repository.MentorshipSessionRequestRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.MentorshipSessionRequestService;
+import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -122,5 +122,4 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
                 .findById(Long.parseLong(id))
                 .orElseThrow(() -> new ResourceNotFoundException("MentorshipSessionRequest not found"));
     }
-
 }

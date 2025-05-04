@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.constant.TeamRequestMemberStatus;
@@ -19,6 +18,7 @@ import com.hacof.hackathon.service.EmailService;
 import com.hacof.hackathon.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

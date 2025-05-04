@@ -1,24 +1,25 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
-import com.hacof.communication.dto.response.FileUrlResponse;
-import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
-import com.hacof.communication.service.ScheduleEventService;
-import com.hacof.communication.util.CommonRequest;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import com.hacof.communication.dto.request.ScheduleEventRequestDTO;
+import com.hacof.communication.dto.response.FileUrlResponse;
+import com.hacof.communication.dto.response.ScheduleEventResponseDTO;
+import com.hacof.communication.service.ScheduleEventService;
+import com.hacof.communication.util.CommonRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleEventControllerTest {
@@ -128,8 +129,7 @@ class ScheduleEventControllerTest {
 
     @Test
     void testCreateScheduleEvent_IllegalArgument() {
-        when(service.createScheduleEvent(any()))
-                .thenThrow(new IllegalArgumentException("Not found"));
+        when(service.createScheduleEvent(any())).thenThrow(new IllegalArgumentException("Not found"));
         var response = controller.createScheduleEvent(buildRequest());
         assertEquals(404, response.getStatusCodeValue());
         assertEquals("Not found", response.getBody().getMessage());
@@ -153,66 +153,57 @@ class ScheduleEventControllerTest {
 
     @Test
     void testUpdateScheduleEventFiles_IllegalArgument() {
-        when(service.updateScheduleEventFiles(eq(1L), any()))
-                .thenThrow(new IllegalArgumentException("Missing file"));
+        when(service.updateScheduleEventFiles(eq(1L), any())).thenThrow(new IllegalArgumentException("Missing file"));
         var response = controller.updateScheduleEventFiles(1L, buildRequest());
         assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     void testUpdateScheduleEventFiles_Exception() {
-        when(service.updateScheduleEventFiles(eq(1L), any()))
-                .thenThrow(new RuntimeException("Something went wrong"));
+        when(service.updateScheduleEventFiles(eq(1L), any())).thenThrow(new RuntimeException("Something went wrong"));
         var response = controller.updateScheduleEventFiles(1L, buildRequest());
         assertEquals(500, response.getStatusCodeValue());
     }
 
     @Test
     void testDeleteScheduleEvent_IllegalArgument() {
-        doThrow(new IllegalArgumentException("Invalid id"))
-                .when(service).deleteScheduleEvent(1L);
+        doThrow(new IllegalArgumentException("Invalid id")).when(service).deleteScheduleEvent(1L);
         var response = controller.deleteScheduleEvent(1L);
         assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     void testGetScheduleEvent_IllegalArgument() {
-        when(service.getScheduleEvent(1L))
-                .thenThrow(new IllegalArgumentException("No match"));
+        when(service.getScheduleEvent(1L)).thenThrow(new IllegalArgumentException("No match"));
         var response = controller.getScheduleEvent(1L);
         assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     void testGetScheduleEvent_Exception() {
-        when(service.getScheduleEvent(1L))
-                .thenThrow(new RuntimeException("Failure"));
+        when(service.getScheduleEvent(1L)).thenThrow(new RuntimeException("Failure"));
         var response = controller.getScheduleEvent(1L);
         assertEquals(500, response.getStatusCodeValue());
     }
 
     @Test
     void testGetAllScheduleEvents_Exception() {
-        when(service.getAllScheduleEvents())
-                .thenThrow(new RuntimeException("DB failed"));
+        when(service.getAllScheduleEvents()).thenThrow(new RuntimeException("DB failed"));
         var response = controller.getAllScheduleEvents();
         assertEquals(500, response.getStatusCodeValue());
     }
 
     @Test
     void testGetScheduleEventsByScheduleId_IllegalArgument() {
-        when(service.getScheduleEventsByScheduleId(1L))
-                .thenThrow(new IllegalArgumentException("Bad input"));
+        when(service.getScheduleEventsByScheduleId(1L)).thenThrow(new IllegalArgumentException("Bad input"));
         var response = controller.getScheduleEventsByScheduleId(1L);
         assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     void testGetScheduleEventsByScheduleId_Exception() {
-        when(service.getScheduleEventsByScheduleId(1L))
-                .thenThrow(new RuntimeException("Internal"));
+        when(service.getScheduleEventsByScheduleId(1L)).thenThrow(new RuntimeException("Internal"));
         var response = controller.getScheduleEventsByScheduleId(1L);
         assertEquals(500, response.getStatusCodeValue());
     }
-
 }

@@ -3,7 +3,6 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.HackathonResultRepository;
 import com.hacof.hackathon.repository.TeamRepository;
 import com.hacof.hackathon.service.HackathonResultService;
+import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

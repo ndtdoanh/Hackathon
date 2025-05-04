@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hacof.communication.service.FileUrlService;
-import com.hacof.communication.util.CommonRequest;
 import com.hacof.communication.util.CommonResponse;
 
 @RestController
@@ -21,7 +20,6 @@ public class FileUrlController {
 
     @Autowired
     private FileUrlService fileUrlService;
-
 
     private void setDefaultResponseFields(CommonResponse<?> response) {
         response.setRequestId(UUID.randomUUID().toString());

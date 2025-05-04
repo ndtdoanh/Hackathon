@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +30,7 @@ import com.hacof.hackathon.mapper.manual.TeamRequestMapperManual;
 import com.hacof.hackathon.repository.*;
 import com.hacof.hackathon.service.NotificationService;
 import com.hacof.hackathon.service.TeamRequestService;
+import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

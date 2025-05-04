@@ -1,21 +1,5 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ForumCategoryRequestDTO;
-import com.hacof.communication.dto.response.ForumCategoryResponseDTO;
-import com.hacof.communication.service.ForumCategoryService;
-import com.hacof.communication.util.CommonRequest;
-import com.hacof.communication.util.CommonResponse;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,6 +9,23 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+
+import com.hacof.communication.dto.request.ForumCategoryRequestDTO;
+import com.hacof.communication.dto.response.ForumCategoryResponseDTO;
+import com.hacof.communication.service.ForumCategoryService;
+import com.hacof.communication.util.CommonRequest;
+import com.hacof.communication.util.CommonResponse;
 
 @ExtendWith(MockitoExtension.class)
 class ForumCategoryControllerTest {
@@ -54,8 +55,7 @@ class ForumCategoryControllerTest {
 
         when(service.createForumCategory(any())).thenReturn(new ForumCategoryResponseDTO());
 
-        ResponseEntity<CommonResponse<ForumCategoryResponseDTO>> response =
-                controller.createForumCategory(request);
+        ResponseEntity<CommonResponse<ForumCategoryResponseDTO>> response = controller.createForumCategory(request);
 
         CommonResponse<ForumCategoryResponseDTO> body = response.getBody();
 
@@ -63,7 +63,6 @@ class ForumCategoryControllerTest {
         assertNotNull(body.getRequestDateTime());
         assertEquals("HACOF", body.getChannel());
     }
-
 
     @Test
     void testCreateForumCategory_Success() {
@@ -160,8 +159,7 @@ class ForumCategoryControllerTest {
 
     @Test
     void testUpdateForumCategory_IllegalArgument() {
-        when(service.updateForumCategory(eq(1L), any()))
-                .thenThrow(new IllegalArgumentException("Not found"));
+        when(service.updateForumCategory(eq(1L), any())).thenThrow(new IllegalArgumentException("Not found"));
 
         ResponseEntity<CommonResponse<ForumCategoryResponseDTO>> response =
                 controller.updateForumCategory(1L, buildRequest());
@@ -172,8 +170,7 @@ class ForumCategoryControllerTest {
 
     @Test
     void testUpdateForumCategory_Exception() {
-        when(service.updateForumCategory(eq(1L), any()))
-                .thenThrow(new RuntimeException("Fail"));
+        when(service.updateForumCategory(eq(1L), any())).thenThrow(new RuntimeException("Fail"));
 
         ResponseEntity<CommonResponse<ForumCategoryResponseDTO>> response =
                 controller.updateForumCategory(1L, buildRequest());
@@ -211,5 +208,4 @@ class ForumCategoryControllerTest {
         assertEquals(500, response.getStatusCodeValue());
         assertEquals("Crashed", response.getBody().getMessage());
     }
-
 }

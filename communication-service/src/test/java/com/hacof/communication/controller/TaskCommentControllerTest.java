@@ -168,7 +168,8 @@ class TaskCommentControllerTest {
         List<TaskCommentResponseDTO> mockList = List.of(new TaskCommentResponseDTO());
         when(service.getTaskCommentsByTaskId("123")).thenReturn(mockList);
 
-        ResponseEntity<CommonResponse<List<TaskCommentResponseDTO>>> response = controller.getTaskCommentsByTaskId("123");
+        ResponseEntity<CommonResponse<List<TaskCommentResponseDTO>>> response =
+                controller.getTaskCommentsByTaskId("123");
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(mockList, response.getBody().getData());
@@ -179,11 +180,11 @@ class TaskCommentControllerTest {
     void testGetTaskCommentsByTaskId_Exception() {
         when(service.getTaskCommentsByTaskId("123")).thenThrow(new RuntimeException("Failed to fetch"));
 
-        ResponseEntity<CommonResponse<List<TaskCommentResponseDTO>>> response = controller.getTaskCommentsByTaskId("123");
+        ResponseEntity<CommonResponse<List<TaskCommentResponseDTO>>> response =
+                controller.getTaskCommentsByTaskId("123");
 
         assertEquals(500, response.getStatusCodeValue());
         assertTrue(response.getBody().getMessage().contains("Failed to fetch"));
         assertTrue(response.getBody().getData().isEmpty());
     }
-
 }

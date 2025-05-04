@@ -193,5 +193,4 @@ class TaskLabelControllerTest {
         assertEquals(500, response.getStatusCodeValue());
         assertEquals("Unexpected error", response.getBody().getMessage());
     }
-
 }

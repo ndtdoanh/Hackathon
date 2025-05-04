@@ -1,22 +1,23 @@
 package com.hacof.communication.controller;
 
-import com.hacof.communication.dto.request.ScheduleEventReminderRequestDTO;
-import com.hacof.communication.dto.response.ScheduleEventReminderResponseDTO;
-import com.hacof.communication.service.ScheduleEventReminderService;
-import com.hacof.communication.util.CommonRequest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.hacof.communication.dto.request.ScheduleEventReminderRequestDTO;
+import com.hacof.communication.dto.response.ScheduleEventReminderResponseDTO;
+import com.hacof.communication.service.ScheduleEventReminderService;
+import com.hacof.communication.util.CommonRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleEventReminderControllerTest {
@@ -44,8 +45,7 @@ class ScheduleEventReminderControllerTest {
         request.setChannel(null);
         request.setData(new ScheduleEventReminderRequestDTO());
 
-        when(service.createScheduleEventReminder(any()))
-                .thenReturn(new ScheduleEventReminderResponseDTO());
+        when(service.createScheduleEventReminder(any())).thenReturn(new ScheduleEventReminderResponseDTO());
 
         var response = controller.createScheduleEventReminder(request);
         var body = response.getBody();
@@ -107,8 +107,7 @@ class ScheduleEventReminderControllerTest {
 
     @Test
     void testDeleteScheduleEventReminder_IllegalArgument() {
-        doThrow(new IllegalArgumentException("Invalid id"))
-                .when(service).deleteScheduleEventReminder(1L);
+        doThrow(new IllegalArgumentException("Invalid id")).when(service).deleteScheduleEventReminder(1L);
         var response = controller.deleteScheduleEventReminder(1L);
         assertEquals(404, response.getStatusCodeValue());
     }
@@ -152,18 +151,19 @@ class ScheduleEventReminderControllerTest {
 
     @Test
     void testGetAllScheduleEventReminders_Exception() {
-        when(service.getAllScheduleEventReminders())
-                .thenThrow(new RuntimeException("Error fetching data"));
+        when(service.getAllScheduleEventReminders()).thenThrow(new RuntimeException("Error fetching data"));
         var response = controller.getAllScheduleEventReminders();
         assertEquals(500, response.getStatusCodeValue());
     }
 
     @Test
     void testGetByScheduleEventId_Success() {
-        when(service.getScheduleEventRemindersByScheduleEventId(1L)).thenReturn(List.of(new ScheduleEventReminderResponseDTO()));
+        when(service.getScheduleEventRemindersByScheduleEventId(1L))
+                .thenReturn(List.of(new ScheduleEventReminderResponseDTO()));
         var response = controller.getScheduleEventRemindersByScheduleEventId(1L);
         assertEquals(200, response.getStatusCodeValue());
     }
+
     @Test
     void testGetRemindersByScheduleEventId_IllegalArgument() {
         when(service.getScheduleEventRemindersByScheduleEventId(1L))
@@ -174,8 +174,7 @@ class ScheduleEventReminderControllerTest {
 
     @Test
     void testGetRemindersByScheduleEventId_Exception() {
-        when(service.getScheduleEventRemindersByScheduleEventId(1L))
-                .thenThrow(new RuntimeException("Server error"));
+        when(service.getScheduleEventRemindersByScheduleEventId(1L)).thenThrow(new RuntimeException("Server error"));
         var response = controller.getScheduleEventRemindersByScheduleEventId(1L);
         assertEquals(500, response.getStatusCodeValue());
     }
@@ -186,18 +185,17 @@ class ScheduleEventReminderControllerTest {
         var response = controller.getScheduleEventRemindersByUserId(1L);
         assertEquals(200, response.getStatusCodeValue());
     }
+
     @Test
     void testGetRemindersByUserId_IllegalArgument() {
-        when(service.getScheduleEventRemindersByUserId(2L))
-                .thenThrow(new IllegalArgumentException("Invalid user"));
+        when(service.getScheduleEventRemindersByUserId(2L)).thenThrow(new IllegalArgumentException("Invalid user"));
         var response = controller.getScheduleEventRemindersByUserId(2L);
         assertEquals(404, response.getStatusCodeValue());
     }
 
     @Test
     void testGetRemindersByUserId_Exception() {
-        when(service.getScheduleEventRemindersByUserId(2L))
-                .thenThrow(new RuntimeException("Timeout"));
+        when(service.getScheduleEventRemindersByUserId(2L)).thenThrow(new RuntimeException("Timeout"));
         var response = controller.getScheduleEventRemindersByUserId(2L);
         assertEquals(500, response.getStatusCodeValue());
     }
@@ -209,6 +207,7 @@ class ScheduleEventReminderControllerTest {
         var response = controller.getScheduleEventRemindersByUserIdAndScheduleEventId(1L, 2L);
         assertEquals(200, response.getStatusCodeValue());
     }
+
     @Test
     void testGetRemindersByUserAndEventId_IllegalArgument() {
         when(service.getScheduleEventRemindersByUserIdAndScheduleEventId(anyLong(), anyLong()))
@@ -224,5 +223,4 @@ class ScheduleEventReminderControllerTest {
         var response = controller.getScheduleEventRemindersByUserIdAndScheduleEventId(2L, 3L);
         assertEquals(500, response.getStatusCodeValue());
     }
-
 }

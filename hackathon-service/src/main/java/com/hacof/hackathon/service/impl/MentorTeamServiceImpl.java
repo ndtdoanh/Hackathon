@@ -59,5 +59,4 @@ public class MentorTeamServiceImpl implements MentorTeamService {
         List<MentorTeam> mentorTeams = mentorTeamRepository.findAllByMentorId(Long.parseLong(mentorId));
         return mentorTeams.stream().map(MentorTeamMapperManual::toDto).collect(Collectors.toList());
     }
-
 }
