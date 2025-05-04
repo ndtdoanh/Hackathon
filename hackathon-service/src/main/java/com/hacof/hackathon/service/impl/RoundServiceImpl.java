@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +29,7 @@ import com.hacof.hackathon.repository.LocationRepository;
 import com.hacof.hackathon.repository.RoundLocationRepository;
 import com.hacof.hackathon.repository.RoundRepository;
 import com.hacof.hackathon.service.RoundService;
+import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -249,7 +249,8 @@ public class RoundServiceImpl implements RoundService {
         return locationDTO;
     }
 
-    private RoundLocation buildRoundLocation(RoundLocationDTO rlDTO, Round round, Location location, User user, LocalDateTime now) {
+    private RoundLocation buildRoundLocation(
+            RoundLocationDTO rlDTO, Round round, Location location, User user, LocalDateTime now) {
         RoundLocation rl = new RoundLocation();
         rl.setRound(round);
         rl.setLocation(location);

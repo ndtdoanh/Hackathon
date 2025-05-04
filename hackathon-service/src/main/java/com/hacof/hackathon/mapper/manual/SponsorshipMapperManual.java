@@ -21,9 +21,7 @@ public class SponsorshipMapperManual {
         dto.setTimeTo(sponsorship.getTimeTo());
         dto.setStatus(sponsorship.getStatus().name());
         dto.setCreatedByUserName(
-                sponsorship.getCreatedBy() != null
-                        ? sponsorship.getCreatedBy().getUsername()
-                        : null);
+                sponsorship.getCreatedBy() != null ? sponsorship.getCreatedBy().getUsername() : null);
         dto.setLastModifiedByUserName(
                 sponsorship.getLastModifiedBy() != null
                         ? sponsorship.getLastModifiedBy().getUsername()

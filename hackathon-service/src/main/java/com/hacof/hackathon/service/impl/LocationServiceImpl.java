@@ -3,11 +3,9 @@ package com.hacof.hackathon.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
-
 import org.springframework.stereotype.Service;
 
 import com.hacof.hackathon.dto.LocationDTO;
@@ -18,6 +16,7 @@ import com.hacof.hackathon.mapper.manual.LocationMapperManual;
 import com.hacof.hackathon.repository.LocationRepository;
 import com.hacof.hackathon.repository.RoundLocationRepository;
 import com.hacof.hackathon.service.LocationService;
+import com.hacof.hackathon.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -89,5 +88,4 @@ public class LocationServiceImpl implements LocationService {
     public Location getLocationEntityById(Long id) {
         return locationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
     }
-
 }
