@@ -501,9 +501,9 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         // Add the "TEAM_LEADER" role
         UserRole teamLeaderUserRole =
-                UserRole.builder().user(user).role(teamLeaderRole).build();
+                UserRole.builder().role(teamLeaderRole).build();
+        teamLeaderUserRole.setUser(user); // Use setter to assign the user
         user.getUserRoles().add(teamLeaderUserRole);
-
         // Save the updated user
         userRepository.save(user);
     }
