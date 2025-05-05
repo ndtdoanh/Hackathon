@@ -44,7 +44,7 @@ outbound:
   identity:
     client-id: ${clientId}
     client-secret: ${clientSecret}
-    redirect-uri: 'http://localhost:3000/authenticate'
+    redirect-uri: 'https://hacof.site/authenticate'
 
 jwt:
   signerKey: 'ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3'
