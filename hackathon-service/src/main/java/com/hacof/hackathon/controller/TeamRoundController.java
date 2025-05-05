@@ -136,4 +136,28 @@ public class TeamRoundController {
                 new CommonResponse.Result("0000", "Bulk update successful"),
                 updatedTeamRounds));
     }
+
+    @GetMapping("/filter-by-team-and-round")
+    public ResponseEntity<CommonResponse<List<TeamRoundDTO>>> getByTeamIdAndRoundId(
+            @RequestParam(required = false) String teamId, @RequestParam(required = false) String roundId) {
+
+        if (teamId == null || roundId == null) {
+            return ResponseEntity.badRequest()
+                    .body(new CommonResponse<>(
+                            UUID.randomUUID().toString(),
+                            LocalDateTime.now(),
+                            "HACOF",
+                            new CommonResponse.Result("0400", "Missing teamId or roundId"),
+                            null));
+        }
+
+        List<TeamRoundDTO> teamRounds = teamRoundService.getByTeamIdAndRoundId(teamId, roundId);
+
+        return ResponseEntity.ok(new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched successfully"),
+                teamRounds));
+    }
 }

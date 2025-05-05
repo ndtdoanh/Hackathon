@@ -220,4 +220,20 @@ public class TeamRoundServiceImpl implements TeamRoundService {
             }
         }
     }
+
+    @Override
+    public List<TeamRoundDTO> getByTeamIdAndRoundId(String teamId, String roundId) {
+        Long tId = Long.parseLong(teamId);
+        Long rId = Long.parseLong(roundId);
+
+        List<TeamRound> teamRounds = teamRoundRepository.findAllByTeamIdAndRoundId(tId, rId);
+
+        return teamRounds.stream()
+                .map(tr -> {
+                    TeamRoundDTO dto = TeamRoundMapperManual.toDto(tr);
+                    dto.setTeam(TeamMapperManual.toDtoWithLeaderAndMembers(tr.getTeam()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }

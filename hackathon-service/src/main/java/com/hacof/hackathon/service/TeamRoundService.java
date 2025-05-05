@@ -16,4 +16,6 @@ public interface TeamRoundService {
     List<TeamRoundDTO> getAllByJudgeIdAndRoundId(String judgeId, String roundId);
 
     List<TeamRoundDTO> updateBulk(List<TeamRoundDTO> teamRoundDTOs);
+
+    List<TeamRoundDTO> getByTeamIdAndRoundId(String teamId, String roundId);
 }
