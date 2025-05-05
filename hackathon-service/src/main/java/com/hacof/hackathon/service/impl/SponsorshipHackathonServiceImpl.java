@@ -44,6 +44,9 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(sponsorshipHackathonDTO.getSponsorshipId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
+        validateTotalMoney(sponsorship, sponsorshipHackathonDTO.getTotalMoney());
+        validateRemainingMoney(sponsorship.getId(), sponsorshipHackathonDTO.getTotalMoney(), null);
+
         SponsorshipHackathon sponsorshipHackathon = SponsorshipHackathonMapperManual.toEntity(sponsorshipHackathonDTO);
         sponsorshipHackathon.setHackathon(hackathon);
         sponsorshipHackathon.setSponsorship(sponsorship);
@@ -68,6 +71,9 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(sponsorshipHackathonDTO.getSponsorshipId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
+        validateTotalMoney(sponsorship, sponsorshipHackathonDTO.getTotalMoney());
+        validateRemainingMoney(sponsorship.getId(), sponsorshipHackathonDTO.getTotalMoney(), sponsorshipHackathon.getId());
+
         sponsorshipHackathon.setTotalMoney(sponsorshipHackathonDTO.getTotalMoney());
 
         sponsorshipHackathon.setHackathon(hackathon);
@@ -76,6 +82,28 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
         sponsorshipHackathon = sponsorshipHackathonRepository.save(sponsorshipHackathon);
 
         return SponsorshipHackathonMapperManual.toDto(sponsorshipHackathon);
+    }
+
+    private void validateTotalMoney(Sponsorship sponsorship, double totalMoney) {
+        if (totalMoney > sponsorship.getMoney()) {
+            throw new ResourceNotFoundException("Total money must not exceed sponsorship's available money");
+        }
+    }
+
+    private void validateRemainingMoney(Long sponsorshipId, double incomingMoney, Long excludeSponsorshipHackathonId) {
+        double usedMoney = sponsorshipHackathonRepository
+                .findAllBySponsorshipId(sponsorshipId).stream()
+                .filter(sh  -> excludeSponsorshipHackathonId == null || sh.getId() != excludeSponsorshipHackathonId)
+                .mapToDouble(SponsorshipHackathon::getTotalMoney)
+                .sum();
+
+        double availableMoney = sponsorshipRepository.findById(sponsorshipId)
+                .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"))
+                .getMoney();
+
+        if (usedMoney + incomingMoney > availableMoney) {
+            throw new ResourceNotFoundException("Total money exceeds available sponsorship budget");
+        }
     }
 
     @Override
