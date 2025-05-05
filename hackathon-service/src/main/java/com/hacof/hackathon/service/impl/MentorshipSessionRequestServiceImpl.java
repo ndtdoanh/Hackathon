@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.exception.InvalidInputException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,12 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     @Override
     public MentorshipSessionRequestDTO create(MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
         validateForeignKeys(mentorshipSessionRequestDTO);
+
+        boolean exists = mentorshipSessionRequestRepository.existsByMentorTeamId(
+                Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()));
+        if (exists) {
+            throw new InvalidInputException("A mentorship session request for this mentor team already exists");
+        }
         // Convert DTO to Entity (manual mapper handles setting mentorTeam & evaluatedBy by ID)
         MentorshipSessionRequest mentorshipSessionRequest =
                 MentorshipSessionRequestMapperManual.toEntity(mentorshipSessionRequestDTO);

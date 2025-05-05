@@ -58,6 +58,11 @@ public class MentorshipRequestServiceImpl implements MentorshipRequestService {
                 .findById(Long.parseLong(mentorshipRequestDTO.getTeamId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
 
+        boolean exists = mentorshipRequestRepository.existsByHackathonAndMentorAndTeam(hackathon, mentor, team);
+        if (exists) {
+            throw new InvalidInputException("A mentorship request for this hackathon, mentor, and team already exists");
+        }
+
         User evaluatedBy = null;
         if (mentorshipRequestDTO.getEvaluatedById() != null) {
             Long evaluatedById = parseLongSafely(mentorshipRequestDTO.getEvaluatedById());
