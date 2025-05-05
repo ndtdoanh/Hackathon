@@ -2,13 +2,13 @@ package com.hacof.hackathon.repository;
 
 import java.util.List;
 
-import com.hacof.hackathon.entity.Hackathon;
-import com.hacof.hackathon.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.hacof.hackathon.constant.IndividualRegistrationRequestStatus;
+import com.hacof.hackathon.entity.Hackathon;
 import com.hacof.hackathon.entity.IndividualRegistrationRequest;
+import com.hacof.hackathon.entity.User;
 
 import feign.Param;
 
@@ -25,5 +25,4 @@ public interface IndividualRegistrationRequestRepository extends JpaRepository<I
             @Param("hackathonId") Long hackathonId, @Param("status") IndividualRegistrationRequestStatus status);
 
     boolean existsByHackathonAndCreatedBy(Hackathon hackathon, User createdBy);
-
 }

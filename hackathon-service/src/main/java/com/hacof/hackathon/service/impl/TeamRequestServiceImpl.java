@@ -500,8 +500,7 @@ public class TeamRequestServiceImpl implements TeamRequestService {
                 .removeIf(userRole -> "TEAM_MEMBER".equals(userRole.getRole().getName()));
 
         // Add the "TEAM_LEADER" role
-        UserRole teamLeaderUserRole =
-                UserRole.builder().role(teamLeaderRole).build();
+        UserRole teamLeaderUserRole = UserRole.builder().role(teamLeaderRole).build();
         teamLeaderUserRole.setUser(user); // Use setter to assign the user
         user.getUserRoles().add(teamLeaderUserRole);
         // Save the updated user

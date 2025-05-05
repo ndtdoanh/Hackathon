@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.repository.TeamRequestRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.manual.IndividualRegistrationRequestMapperManual;
 import com.hacof.hackathon.repository.HackathonRepository;
 import com.hacof.hackathon.repository.IndividualRegistrationRequestRepository;
+import com.hacof.hackathon.repository.TeamRequestRepository;
 import com.hacof.hackathon.repository.UserRepository;
 import com.hacof.hackathon.service.IndividualRegistrationRequestService;
 import com.hacof.hackathon.util.SecurityUtil;
