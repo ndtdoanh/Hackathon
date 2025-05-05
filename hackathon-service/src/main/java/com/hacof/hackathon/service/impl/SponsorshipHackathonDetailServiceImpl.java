@@ -45,6 +45,8 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
                 .findById(Long.parseLong(dto.getSponsorshipHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
 
+        validateDetailTotalMoney(sponsorshipHackathon, dto.getMoneySpent(), null);
+
         SponsorshipHackathonDetail entity = SponsorshipHackathonDetailMapperManual.toEntity(dto);
         entity.setSponsorshipHackathon(sponsorshipHackathon);
 
@@ -72,6 +74,7 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
         SponsorshipHackathon sponsorshipHackathon = sponsorshipHackathonRepository
                 .findById(Long.parseLong(dto.getSponsorshipHackathonId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship Hackathon not found"));
+        validateDetailTotalMoney(sponsorshipHackathon, dto.getMoneySpent(), entity.getId());
 
         SponsorshipHackathonDetailMapperManual.updateEntityFromDto(dto, entity);
         entity.setSponsorshipHackathon(sponsorshipHackathon);
@@ -103,6 +106,19 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
 
         return SponsorshipHackathonDetailMapperManual.toDto(updatedDetail);
     }
+
+    private void validateDetailTotalMoney(SponsorshipHackathon sponsorshipHackathon, double incomingMoney, Long excludeDetailId) {
+        double usedMoney = sponsorshipHackathonDetailRepository
+                .findAllBySponsorshipHackathonId(sponsorshipHackathon.getId()).stream()
+                .filter(detail -> excludeDetailId == null || detail.getId() != excludeDetailId)
+                .mapToDouble(SponsorshipHackathonDetail::getMoneySpent)
+                .sum();
+
+        if (usedMoney + incomingMoney > sponsorshipHackathon.getTotalMoney()) {
+            throw new ResourceNotFoundException("Total money of details exceeds SponsorshipHackathon limit");
+        }
+    }
+
 
     @Override
     public void delete(Long id) {

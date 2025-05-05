@@ -44,7 +44,6 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(sponsorshipHackathonDTO.getSponsorshipId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
-        validateTotalMoney(sponsorship, sponsorshipHackathonDTO.getTotalMoney());
         validateRemainingMoney(sponsorship.getId(), sponsorshipHackathonDTO.getTotalMoney(), null);
 
         SponsorshipHackathon sponsorshipHackathon = SponsorshipHackathonMapperManual.toEntity(sponsorshipHackathonDTO);
@@ -71,7 +70,6 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(sponsorshipHackathonDTO.getSponsorshipId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
-        validateTotalMoney(sponsorship, sponsorshipHackathonDTO.getTotalMoney());
         validateRemainingMoney(sponsorship.getId(), sponsorshipHackathonDTO.getTotalMoney(), sponsorshipHackathon.getId());
 
         sponsorshipHackathon.setTotalMoney(sponsorshipHackathonDTO.getTotalMoney());
@@ -82,12 +80,6 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
         sponsorshipHackathon = sponsorshipHackathonRepository.save(sponsorshipHackathon);
 
         return SponsorshipHackathonMapperManual.toDto(sponsorshipHackathon);
-    }
-
-    private void validateTotalMoney(Sponsorship sponsorship, double totalMoney) {
-        if (totalMoney > sponsorship.getMoney()) {
-            throw new ResourceNotFoundException("Total money must not exceed sponsorship's available money");
-        }
     }
 
     private void validateRemainingMoney(Long sponsorshipId, double incomingMoney, Long excludeSponsorshipHackathonId) {
