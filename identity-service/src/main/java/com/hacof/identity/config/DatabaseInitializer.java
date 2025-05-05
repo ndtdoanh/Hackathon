@@ -84,8 +84,11 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "UPDATE_MENTORSHIP_SESSION_REQUEST",
                     "DELETE_MENTORSHIP_SESSION_REQUEST",
 
-                    "CREATE_TEAM_REQUEST"
+                    "CREATE_TEAM_REQUEST",
 
+                    "CREATE_NOTIFICATION",
+                    "DELETE_NOTIFICATION",
+                    "UPDATE_READ_STATUS"
             ),
             "ORGANIZER",
             Set.of(
