@@ -32,7 +32,6 @@ public class BlogPostServiceImpl implements BlogPostService {
         }
 
         BlogPost blogPost = blogPostMapper.toEntity(request);
-        blogPost.setStatus(BlogPostStatus.DRAFT);
 
         return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
     }
@@ -126,7 +125,9 @@ public class BlogPostServiceImpl implements BlogPostService {
         existing.setContent(request.getContent());
         existing.setSlug(request.getSlug());
         existing.setBannerImageUrl(request.getBannerImageUrl());
-
+        if (request.getStatus() != null) {
+            existing.setStatus(request.getStatus());
+        }
         return blogPostMapper.toResponse(blogPostRepository.save(existing));
     }
 

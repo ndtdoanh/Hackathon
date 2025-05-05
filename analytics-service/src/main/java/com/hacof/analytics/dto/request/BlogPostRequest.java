@@ -1,5 +1,6 @@
 package com.hacof.analytics.dto.request;
 
+import com.hacof.analytics.constant.BlogPostStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,6 @@ public class BlogPostRequest {
     String slug;
     String bannerImageUrl;
     String content;
+    BlogPostStatus status;
     int wordCount;
 }

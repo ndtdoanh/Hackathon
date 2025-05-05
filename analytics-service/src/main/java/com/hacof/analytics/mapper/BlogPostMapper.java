@@ -12,7 +12,6 @@ import com.hacof.analytics.entity.BlogPost;
 public interface BlogPostMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", ignore = true)
     BlogPost toEntity(BlogPostRequest request);
 
     @Mapping(target = "id", expression = "java(String.valueOf(blogPost.getId()))")
@@ -24,6 +23,5 @@ public interface BlogPostMapper {
     BlogPostResponse toResponse(BlogPost blogPost);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", ignore = true)
     void updateEntity(@MappingTarget BlogPost blogPost, BlogPostRequest request);
 }
