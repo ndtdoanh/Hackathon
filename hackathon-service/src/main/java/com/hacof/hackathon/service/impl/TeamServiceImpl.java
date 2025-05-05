@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.constant.BoardUserRole;
+import com.hacof.hackathon.entity.BoardUser;
+import com.hacof.hackathon.repository.BoardUserRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -63,6 +66,7 @@ public class TeamServiceImpl implements TeamService {
     UserTeamRepository teamMemberRepository;
     TeamHackathonRepository teamHackathonRepository;
     BoardRepository boardRepository;
+    BoardUserRepository boardUserRepository;
     ConversationRepository conversationRepository;
     ConversationUserRepository conversationUserRepository;
     ScheduleRepository scheduleRepository;
@@ -129,12 +133,14 @@ public class TeamServiceImpl implements TeamService {
             team.setTeamLeader(teamLeader);
             team.setName("Team " + teamLeader.getUsername());
             team = teamRepository.save(team);
+            team.setTeamMembers(new HashSet<>());
 
             // Create UserTeam entry for Team Leader
             UserTeam teamLeaderUserTeam = new UserTeam();
             teamLeaderUserTeam.setUser(teamLeader);
             teamLeaderUserTeam.setTeam(team);
             teamMemberRepository.save(teamLeaderUserTeam);
+            team.getTeamMembers().add(teamLeaderUserTeam);
 
             if (team.getTeamMembers() == null) {
                 team.setTeamMembers(new HashSet<>());
@@ -154,6 +160,7 @@ public class TeamServiceImpl implements TeamService {
                 userTeam.setUser(user);
                 userTeam.setTeam(team);
                 teamMemberRepository.save(userTeam);
+                team.getTeamMembers().add(userTeam);
             }
 
             // Retrieve hackathon (assumes all hackathons in the list are the same)
@@ -194,12 +201,28 @@ public class TeamServiceImpl implements TeamService {
             if (!boardRepository.existsByTeam(team)) {
                 Board board = Board.builder()
                         .team(team)
-                        .owner(currentUser)
+                        .owner(teamLeader) // Set createdBy as teamLeader
                         .name(team.getName() + " Board")
                         .description("Board for team " + team.getName())
                         .hackathon(hackathon)
                         .build();
-                boardRepository.save(board);
+                board = boardRepository.save(board);
+
+                // Create BoardUser entries for all team members
+                for (UserTeam userTeam : team.getTeamMembers()) {
+                    User user = userTeam.getUser();
+
+                    BoardUser boardUser = BoardUser.builder()
+                            .board(board)
+                            .user(user)
+                            .role(
+                                    user.getId() == team.getTeamLeader().getId()
+                                            ? BoardUserRole.ADMIN
+                                            : BoardUserRole.MEMBER
+                            )
+                            .build();
+                    boardUserRepository.save(boardUser);
+                }
             }
 
             // Create TeamRound entry only if it doesn't exist
