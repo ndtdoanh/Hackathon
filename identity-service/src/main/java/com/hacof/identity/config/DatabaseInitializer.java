@@ -222,6 +222,9 @@ public class DatabaseInitializer implements CommandLineRunner {
                     "UPDATE_SUBMISSION",
                     "DELETE_SUBMISSION",
 
+                    "CREATE_INDIVIDUAL_REGISTRATION",
+                    "DELETE_INDIVIDUAL_REGISTRATION",
+
                     "CREATE_MENTORSHIP_REQUEST",
                     "DELETE_MENTORSHIP_REQUEST",
 
