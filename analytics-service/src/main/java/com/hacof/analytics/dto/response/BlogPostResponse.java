@@ -26,6 +26,7 @@ public class BlogPostResponse {
     String content;
     int wordCount;
     BlogPostStatus status;
+    LocalDateTime publishedAt;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     String createdByUserName;

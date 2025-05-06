@@ -1,5 +1,6 @@
 package com.hacof.analytics.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -83,16 +84,18 @@ public class BlogPostServiceImpl implements BlogPostService {
             throw new AppException(ErrorCode.BLOG_CANNOT_PUBLISH);
         }
         blogPost.setStatus(BlogPostStatus.PUBLISHED);
+        blogPost.setPublishedAt(LocalDateTime.now());
         return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
     }
 
     @Override
     public BlogPostResponse unpublishBlogPost(Long id) {
-        BlogPost blogPost = findBlogPostById(id);
+       BlogPost blogPost = findBlogPostById(id);
         if (blogPost.getStatus() != BlogPostStatus.PUBLISHED) {
             throw new AppException(ErrorCode.BLOG_CANNOT_UNPUBLISH);
         }
         blogPost.setStatus(BlogPostStatus.APPROVED);
+        blogPost.setPublishedAt(null);
         return blogPostMapper.toResponse(blogPostRepository.save(blogPost));
     }
 
