@@ -16,4 +16,6 @@ public interface TeamRepository extends JpaRepository<Team, Long>, JpaSpecificat
             + "LEFT JOIN FETCH th.hackathon "
             + "WHERE th.hackathon.id = :hackathonId")
     List<Team> findByHackathonId(@Param("hackathonId") Long hackathonId);
+
+    boolean existsByName(String name);
 }

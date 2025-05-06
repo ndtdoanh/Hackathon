@@ -80,6 +80,10 @@ public class TeamServiceImpl implements TeamService {
         Team existingTeam =
                 teamRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team not found"));
 
+        if (!existingTeam.getName().equals(teamDTO.getName()) && teamRepository.existsByName(teamDTO.getName())) {
+            throw new InvalidInputException("Team name already exists: " + teamDTO.getName());
+        }
+
         existingTeam.setName(teamDTO.getName());
         existingTeam.setBio(teamDTO.getBio());
         existingTeam.setDeleted(teamDTO.isDeleted());
@@ -127,6 +131,12 @@ public class TeamServiceImpl implements TeamService {
             User teamLeader = userRepository
                     .findById(Long.parseLong(request.getTeamLeaderId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Team leader not found"));
+
+            // Validate unique team name
+            String teamName = "Team " + teamLeader.getUsername();
+            if (teamRepository.existsByName(teamName)) {
+                throw new InvalidInputException("Team name already exists: " + teamName);
+            }
 
             // Create Team
             Team team = TeamMapperManual.toEntity(new TeamDTO());

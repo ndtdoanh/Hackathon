@@ -81,6 +81,10 @@ public class TeamRequestServiceImpl implements TeamRequestService {
 
         User currentUser = getCurrentUser();
 
+        if (teamRepository.existsByName(request.getName())) {
+            throw new InvalidInputException("Team name already exists: " + request.getName());
+        }
+
         // Extract and validate userIds
         Set<String> userIds = extractAndValidateUserIds(request, currentUser);
 
