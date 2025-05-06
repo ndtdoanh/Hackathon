@@ -226,4 +226,23 @@ public class IndividualRegistrationRequestController {
                 requests);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/filter-by-hackathon-and-status-pending")
+    public ResponseEntity<CommonResponse<List<IndividualRegistrationRequestDTO>>> getAllByHackathonIdAndStatusPending(
+            @RequestParam String hackathonId) {
+        if (!hackathonId.matches("\\d+")) {
+            throw new InvalidInputException("Hackathon ID must be a numeric value");
+        }
+
+        List<IndividualRegistrationRequestDTO> requests =
+                individualRegistrationRequestService.getAllByHackathonIdAndStatusPending(hackathonId);
+        CommonResponse<List<IndividualRegistrationRequestDTO>> response = new CommonResponse<>(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                "HACOF",
+                new CommonResponse.Result("0000", "Fetched individual registration requests successfully"),
+                requests);
+        return ResponseEntity.ok(response);
+    }
+
 }

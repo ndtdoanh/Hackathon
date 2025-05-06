@@ -30,5 +30,7 @@ public interface IndividualRegistrationRequestService {
 
     List<IndividualRegistrationRequestDTO> getAllByHackathonIdAndStatusCompleted(String hackathonId);
 
+    List<IndividualRegistrationRequestDTO> getAllByHackathonIdAndStatusPending(String hackathonId);
+
     List<IndividualRegistrationRequestDTO> createBulk(List<IndividualRegistrationBulkRequestDTO> bulkRequestDTOList);
 }

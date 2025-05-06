@@ -267,6 +267,19 @@ public class IndividualRegistrationRequestServiceImpl implements IndividualRegis
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<IndividualRegistrationRequestDTO> getAllByHackathonIdAndStatusPending(String hackathonId) {
+        if (hackathonId == null || hackathonId.isEmpty()) {
+            throw new InvalidInputException("Hackathon ID cannot be null or empty");
+        }
+
+        List<IndividualRegistrationRequest> requests = requestRepository.findAllByHackathonIdAndStatus(
+                Long.parseLong(hackathonId), IndividualRegistrationRequestStatus.PENDING);
+        return requests.stream()
+                .map(IndividualRegistrationRequestMapperManual::toDto)
+                .collect(Collectors.toList());
+    }
+
     private void validateEnrollPeriod(Hackathon hackathon) {
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(hackathon.getEnrollStartDate()) || now.isAfter(hackathon.getEnrollEndDate())) {
