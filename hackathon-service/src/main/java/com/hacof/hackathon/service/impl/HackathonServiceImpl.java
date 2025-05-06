@@ -43,6 +43,7 @@ public class HackathonServiceImpl implements HackathonService {
     ScheduleRepository scheduleRepository;
     BoardRepository boardRepository;
     BoardUserRepository boardUserRepository;
+    UserHackathonRepository userHackathonRepository;
 
     @Override
     public HackathonDTO create(HackathonDTO hackathonDTO) {
@@ -61,6 +62,13 @@ public class HackathonServiceImpl implements HackathonService {
         hackathon.setCreatedDate(LocalDateTime.now());
 
         hackathon = hackathonRepository.save(hackathon);
+
+        UserHackathon userHackathon = UserHackathon.builder()
+                .user(currentUser)
+                .hackathon(hackathon)
+                .role("ORGANIZER")
+                .build();
+        userHackathonRepository.save(userHackathon);
 
         if (hackathonDTO.getDocumentation() != null
                 && !hackathonDTO.getDocumentation().isEmpty()) {
