@@ -57,7 +57,7 @@ public class OpenAPIConfig {
                 .info(createApiInfo())
                 .servers(List.of(
                         createServer("http://localhost:8082", "Server URL in Development environment"),
-                        createServer("https://github.com/ndtdoanh", "Server URL in Production environment")))
+                        createServer("18.142.92.26:9082", "Server URL in Production environment")))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()));
     }
