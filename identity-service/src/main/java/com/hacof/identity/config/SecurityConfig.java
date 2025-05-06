@@ -2,6 +2,7 @@ package com.hacof.identity.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,7 +28,20 @@ public class SecurityConfig {
         "/api/v1/auth/outbound/authentication",
         "/v3/api-docs/**",
         "/swagger-ui/**",
-        "/swagger-ui/index.html"
+        "/swagger-ui/index.html",
+    };
+
+    private static final String[] PUBLIC_GET_ENDPOINTS = {
+            "/api/v1/blog-posts/published",
+            "/api/v1/blog-posts/slug/{slug}",
+            "/api/v1/hackathons/**",
+            "/api/v1/forum-categories",
+            "/api/v1/teams/by-hackathon/{hackathonId}",
+            "/api/v1/api/v1/individuals/**",
+            "/api/v1/forum-threads/category/{categoryId}",
+            "/api/v1/thread-posts/forum-thread/{forumThreadId}",
+            "/api/v1/thread-post-likes/thread-post/{threadPostId}",
+            "/api/v1/thread-post-reports/thread-post/{threadPostId}"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -38,8 +52,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS)
-                .permitAll()
+        httpSecurity.authorizeHttpRequests(request -> request
+                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                 .anyRequest()
                 .authenticated());
 

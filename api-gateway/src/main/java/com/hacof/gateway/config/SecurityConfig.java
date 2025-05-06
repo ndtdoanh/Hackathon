@@ -22,7 +22,7 @@ public class SecurityConfig {
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
 
-        source.registerCorsConfiguration("/**", config); // Match all paths
+        source.registerCorsConfiguration("/**", config);
 
         return new CorsWebFilter(source);
     }
