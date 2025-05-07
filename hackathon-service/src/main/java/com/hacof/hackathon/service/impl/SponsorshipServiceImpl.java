@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.hacof.hackathon.constant.SponsorshipStatus;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +70,7 @@ public class SponsorshipServiceImpl implements SponsorshipService {
         sponsorship.setMoney(sponsorshipDTO.getMoney());
         sponsorship.setTimeFrom(sponsorshipDTO.getTimeFrom());
         sponsorship.setTimeTo(sponsorshipDTO.getTimeTo());
+        sponsorship.setStatus(SponsorshipStatus.valueOf(sponsorshipDTO.getStatus()));
         sponsorship.setCreatedBy(createdBy);
         sponsorship.setCreatedDate(sponsorship.getCreatedDate());
         sponsorship.setLastModifiedBy(currentUser);
