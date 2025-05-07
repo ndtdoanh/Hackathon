@@ -1,12 +1,15 @@
 package com.hacof.communication.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
+import com.hacof.communication.dto.response.FileUrlResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,4 +50,24 @@ public class FileUrlController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/media")
+    public ResponseEntity<CommonResponse<List<FileUrlResponse>>> getMediaFiles() {
+        CommonResponse<List<FileUrlResponse>> response = new CommonResponse<>();
+        try {
+            String prefix = "mediaGallery";
+            List<FileUrlResponse> files = fileUrlService.getFilesStartingWith(prefix);
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Files retrieved successfully!");
+            response.setData(files);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            setDefaultResponseFields(response);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setMessage("Error retrieving files: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

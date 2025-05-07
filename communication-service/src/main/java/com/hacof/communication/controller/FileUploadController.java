@@ -68,4 +68,41 @@ public class FileUploadController {
                 .data(fileUrlResponses)
                 .build();
     }
+
+    @PostMapping("/upload/media")
+    public ApiResponse<List<FileUrlResponse>> uploadMediaToGallery(@RequestParam("files") List<MultipartFile> files)
+            throws IOException {
+        List<FileUrlResponse> fileUrlResponses = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String originalFileName = file.getOriginalFilename();
+            long fileSize = file.getSize();
+            String contentType = file.getContentType();
+
+            InputStream inputStream = file.getInputStream();
+
+            String fileUrl = s3Service.uploadFile(inputStream, originalFileName, fileSize, contentType);
+
+            String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+            FileUrl fileUrlEntity = new FileUrl();
+            fileUrlEntity.setFileName(fileName);
+            fileUrlEntity.setFileUrl(fileUrl);
+            fileUrlEntity.setFileType(contentType);
+            fileUrlEntity.setFileSize((int) fileSize);
+
+            fileUrlRepository.save(fileUrlEntity);
+
+            FileUrlResponse fileUrlResponse = fileUrlMapper.toResponse(fileUrlEntity);
+
+            fileUrlResponses.add(fileUrlResponse);
+        }
+
+        return ApiResponse.<List<FileUrlResponse>>builder()
+                .requestId(UUID.randomUUID().toString())
+                .requestDateTime(LocalDateTime.now())
+                .channel("HACOF")
+                .message("Files uploaded successfully")
+                .data(fileUrlResponses)
+                .build();
+    }
 }
