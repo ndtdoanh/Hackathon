@@ -244,5 +244,4 @@ public class IndividualRegistrationRequestController {
                 requests);
         return ResponseEntity.ok(response);
     }
-
 }

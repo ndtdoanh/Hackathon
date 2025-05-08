@@ -18,6 +18,7 @@ import com.hacof.identity.mapper.RoleMapper;
 import com.hacof.identity.mapper.UserMapper;
 import com.hacof.identity.repository.PermissionRepository;
 import com.hacof.identity.repository.RoleRepository;
+import com.hacof.identity.repository.UserRoleRepository;
 import com.hacof.identity.service.RoleService;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -33,6 +34,7 @@ public class RoleServiceImpl implements RoleService {
     RoleRepository roleRepository;
     PermissionRepository permissionRepository;
     RoleMapper roleMapper;
+    UserRoleRepository userRoleRepository;
 
     private final UserMapper userMapper;
 
@@ -168,6 +170,12 @@ public class RoleServiceImpl implements RoleService {
         if (!roleRepository.existsById(roleId)) {
             throw new AppException(ErrorCode.ROLE_NOT_EXISTED);
         }
+
+        boolean isRoleInUse = userRoleRepository.existsByRoleId(roleId);
+        if (isRoleInUse) {
+            throw new AppException(ErrorCode.ROLE_IN_USE);
+        }
+
         roleRepository.deleteById(roleId);
     }
 }

@@ -170,7 +170,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
         List<Submission> sorted = allSubmissions.stream()
                 .sorted((a, b) -> {
-                    int scoreCompare = Double.compare(Optional.ofNullable(b.getFinalScore()).orElse(0.0),
+                    int scoreCompare = Double.compare(
+                            Optional.ofNullable(b.getFinalScore()).orElse(0.0),
                             Optional.ofNullable(a.getFinalScore()).orElse(0.0));
                     if (scoreCompare != 0) return scoreCompare;
                     if (a.getSubmittedAt() == null && b.getSubmittedAt() == null) return 0;

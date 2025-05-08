@@ -25,5 +25,6 @@ public enum Status {
     DRAFT,
     SUBMITTED,
     REVIEWED,
-    CLOSED
+    CLOSED,
+    UNDER_REVIEW
 }

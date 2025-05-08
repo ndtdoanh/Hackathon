@@ -36,11 +36,12 @@ public class MentorshipSessionRequestServiceImpl implements MentorshipSessionReq
     public MentorshipSessionRequestDTO create(MentorshipSessionRequestDTO mentorshipSessionRequestDTO) {
         validateForeignKeys(mentorshipSessionRequestDTO);
 
-//        boolean exists = mentorshipSessionRequestRepository.existsByMentorTeamId(
-//                Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()));
-//        if (exists) {
-//            throw new InvalidInputException("A mentorship session request for this mentor team already exists");
-//        }
+        //        boolean exists = mentorshipSessionRequestRepository.existsByMentorTeamId(
+        //                Long.parseLong(mentorshipSessionRequestDTO.getMentorTeamId()));
+        //        if (exists) {
+        //            throw new InvalidInputException("A mentorship session request for this mentor team already
+        // exists");
+        //        }
         // Convert DTO to Entity (manual mapper handles setting mentorTeam & evaluatedBy by ID)
         MentorshipSessionRequest mentorshipSessionRequest =
                 MentorshipSessionRequestMapperManual.toEntity(mentorshipSessionRequestDTO);

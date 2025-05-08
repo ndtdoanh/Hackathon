@@ -17,29 +17,29 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/v1/auth/token",
-            "/api/v1/auth/introspect",
-            "/api/v1/auth/refresh",
-            "/api/v1/auth/logout",
-            "/api/v1/users/forgot-password",
-            "/api/v1/users/reset-password",
-            "/api/v1/auth/outbound/authentication",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-ui/index.html",
+        "/api/v1/auth/token",
+        "/api/v1/auth/introspect",
+        "/api/v1/auth/refresh",
+        "/api/v1/auth/logout",
+        "/api/v1/users/forgot-password",
+        "/api/v1/users/reset-password",
+        "/api/v1/auth/outbound/authentication",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui/index.html",
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
-            "/api/v1/blog-posts/published",
-            "/api/v1/blog-posts/slug/{slug}",
-            "/api/v1/hackathons/**",
-            "/api/v1/forum-categories",
-            "/api/v1/teams/by-hackathon/{hackathonId}",
-            "/api/v1/api/v1/individuals/**",
-            "/api/v1/forum-threads/category/{categoryId}",
-            "/api/v1/thread-posts/forum-thread/{forumThreadId}",
-            "/api/v1/thread-post-likes/thread-post/{threadPostId}",
-            "/api/v1/thread-post-reports/thread-post/{threadPostId}"
+        "/api/v1/blog-posts/published",
+        "/api/v1/blog-posts/slug/{slug}",
+        "/api/v1/hackathons/**",
+        "/api/v1/forum-categories",
+        "/api/v1/teams/by-hackathon/{hackathonId}",
+        "/api/v1/api/v1/individuals/**",
+        "/api/v1/forum-threads/category/{categoryId}",
+        "/api/v1/thread-posts/forum-thread/{forumThreadId}",
+        "/api/v1/thread-post-likes/thread-post/{threadPostId}",
+        "/api/v1/thread-post-reports/thread-post/{threadPostId}"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -50,9 +50,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request
-                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS)
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS)
+                .permitAll()
                 .anyRequest()
                 .authenticated());
 

@@ -90,7 +90,7 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Override
     public BlogPostResponse unpublishBlogPost(Long id) {
-       BlogPost blogPost = findBlogPostById(id);
+        BlogPost blogPost = findBlogPostById(id);
         if (blogPost.getStatus() != BlogPostStatus.PUBLISHED) {
             throw new AppException(ErrorCode.BLOG_CANNOT_UNPUBLISH);
         }

@@ -2,7 +2,6 @@ package com.hacof.communication.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -70,7 +70,8 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
                 .findById(Long.parseLong(sponsorshipHackathonDTO.getSponsorshipId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"));
 
-        validateRemainingMoney(sponsorship.getId(), sponsorshipHackathonDTO.getTotalMoney(), sponsorshipHackathon.getId());
+        validateRemainingMoney(
+                sponsorship.getId(), sponsorshipHackathonDTO.getTotalMoney(), sponsorshipHackathon.getId());
 
         sponsorshipHackathon.setTotalMoney(sponsorshipHackathonDTO.getTotalMoney());
 
@@ -83,13 +84,13 @@ public class SponsorshipHackathonServiceImpl implements SponsorshipHackathonServ
     }
 
     private void validateRemainingMoney(Long sponsorshipId, double incomingMoney, Long excludeSponsorshipHackathonId) {
-        double usedMoney = sponsorshipHackathonRepository
-                .findAllBySponsorshipId(sponsorshipId).stream()
-                .filter(sh  -> excludeSponsorshipHackathonId == null || sh.getId() != excludeSponsorshipHackathonId)
+        double usedMoney = sponsorshipHackathonRepository.findAllBySponsorshipId(sponsorshipId).stream()
+                .filter(sh -> excludeSponsorshipHackathonId == null || sh.getId() != excludeSponsorshipHackathonId)
                 .mapToDouble(SponsorshipHackathon::getTotalMoney)
                 .sum();
 
-        double availableMoney = sponsorshipRepository.findById(sponsorshipId)
+        double availableMoney = sponsorshipRepository
+                .findById(sponsorshipId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sponsorship not found"))
                 .getMoney();
 

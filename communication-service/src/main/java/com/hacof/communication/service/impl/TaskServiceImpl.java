@@ -57,10 +57,10 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException("Task title cannot be empty");
         }
 
-//        if (taskRequestDTO.getDescription() == null
-//                || taskRequestDTO.getDescription().isEmpty()) {
-//            throw new IllegalArgumentException("Task description cannot be empty");
-//        }
+        //        if (taskRequestDTO.getDescription() == null
+        //                || taskRequestDTO.getDescription().isEmpty()) {
+        //            throw new IllegalArgumentException("Task description cannot be empty");
+        //        }
 
         if (taskRequestDTO.getPosition() < 0) {
             throw new IllegalArgumentException("Position must be a non-negative integer");

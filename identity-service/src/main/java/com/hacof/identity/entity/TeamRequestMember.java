@@ -56,4 +56,3 @@ public class TeamRequestMember extends AuditUserBase {
     @Column(name = "note")
     String note;
 }
-

@@ -107,18 +107,20 @@ public class SponsorshipHackathonDetailServiceImpl implements SponsorshipHackath
         return SponsorshipHackathonDetailMapperManual.toDto(updatedDetail);
     }
 
-    private void validateDetailTotalMoney(SponsorshipHackathon sponsorshipHackathon, double incomingMoney, Long excludeDetailId) {
-        double usedMoney = sponsorshipHackathonDetailRepository
-                .findAllBySponsorshipHackathonId(sponsorshipHackathon.getId()).stream()
-                .filter(detail -> excludeDetailId == null || detail.getId() != excludeDetailId)
-                .mapToDouble(SponsorshipHackathonDetail::getMoneySpent)
-                .sum();
+    private void validateDetailTotalMoney(
+            SponsorshipHackathon sponsorshipHackathon, double incomingMoney, Long excludeDetailId) {
+        double usedMoney =
+                sponsorshipHackathonDetailRepository
+                        .findAllBySponsorshipHackathonId(sponsorshipHackathon.getId())
+                        .stream()
+                        .filter(detail -> excludeDetailId == null || detail.getId() != excludeDetailId)
+                        .mapToDouble(SponsorshipHackathonDetail::getMoneySpent)
+                        .sum();
 
         if (usedMoney + incomingMoney > sponsorshipHackathon.getTotalMoney()) {
             throw new ResourceNotFoundException("Total money of details exceeds SponsorshipHackathon limit");
         }
     }
-
 
     @Override
     public void delete(Long id) {

@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import com.hacof.analytics.constant.Status;
+import com.hacof.analytics.constant.TeamRequestStatus;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_requests")
-public class TeamRequest extends AuditCreatedBase {
+public class TeamRequest extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -48,7 +48,7 @@ public class TeamRequest extends AuditCreatedBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    TeamRequestStatus status;
 
     @JoinColumn(name = "confirmation_deadline")
     LocalDateTime confirmationDeadline;
