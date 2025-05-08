@@ -22,7 +22,7 @@ spring:
 
 jwt:
   signerKey: 'ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3'
-  valid-duration: 3600
+  valid-duration: 36000
   refreshable-duration: 864000
 
 eureka:

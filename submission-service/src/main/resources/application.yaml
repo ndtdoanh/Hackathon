@@ -1,28 +1,33 @@
 server:
   port: 8082
+  timezone: UTC
 
 spring:
   application:
     name: submission-service
   datasource:
-    url: "jdbc:mysql://localhost:3306/hacof"
+    url: "jdbc:mysql://localhost:3306/hacof?serverTimezone=UTC"
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
     password: 12345
+  jackson:
+    time-zone: UTC
 
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate.jdbc.time_zone: UTC
     show-sql: true
 
   servlet:
     multipart:
-      max-file-size: 15MB
-      max-request-size: 15MB
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
-  valid-duration: 3600
+  valid-duration: 36000
   refreshable-duration: 864000
 
 eureka:

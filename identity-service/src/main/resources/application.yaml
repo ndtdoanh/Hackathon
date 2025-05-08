@@ -35,10 +35,11 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  multipart:
-    enabled: true
-    max-file-size: 15MB
-    max-request-size: 15MB
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 outbound:
   identity:
@@ -48,7 +49,7 @@ outbound:
 
 jwt:
   signerKey: "ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3"
-  valid-duration: 3600
+  valid-duration: 36000
   refreshable-duration: 864000
 
 aws:
