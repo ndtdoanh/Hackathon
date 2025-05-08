@@ -60,7 +60,7 @@ public class Submission extends AuditCreatedBase {
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JudgeSubmission> judgeSubmissions;
 
-    Integer finalScore;
+    Double finalScore;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

@@ -2,6 +2,7 @@ package com.hacof.analytics.entity;
 
 import java.time.LocalDateTime;
 
+import com.hacof.analytics.constant.TeamRequestMemberStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,7 +49,7 @@ public class TeamRequestMember extends AuditBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    TeamRequestMemberStatus status;
 
     @Column(name = "responded_at")
     LocalDateTime respondedAt;

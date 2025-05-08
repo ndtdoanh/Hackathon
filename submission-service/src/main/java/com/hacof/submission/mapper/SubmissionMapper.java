@@ -66,7 +66,7 @@ public class SubmissionMapper {
                 .submittedAt(submission.getSubmittedAt())
                 .fileUrls(mapFileUrls(submission))
                 .judgeSubmissions(mapJudgeSubmissions(submission))
-                .finalScore(submission.getFinalScore())
+                .finalScore(submission.getFinalScore() != null ? submission.getFinalScore() : 0.0)
                 .createdAt(submission.getCreatedDate())
                 .updatedAt(submission.getLastModifiedDate())
                 .createdByUserName(

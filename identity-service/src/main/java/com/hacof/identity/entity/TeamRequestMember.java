@@ -32,7 +32,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_request_members")
-public class TeamRequestMember extends AuditBase {
+public class TeamRequestMember extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,9 +47,13 @@ public class TeamRequestMember extends AuditBase {
     User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", length = 50)
     TeamRequestMemberStatus status;
 
     @Column(name = "responded_at")
     LocalDateTime respondedAt;
+
+    @Column(name = "note")
+    String note;
 }
+

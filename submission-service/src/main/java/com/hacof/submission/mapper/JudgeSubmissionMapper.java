@@ -150,7 +150,7 @@ public class JudgeSubmissionMapper {
                 .team(mapTeamToDto(submission.getTeam()))
                 .status(submission.getStatus() != null ? submission.getStatus().name() : "UNKNOWN")
                 .submittedAt(submission.getSubmittedAt())
-                .finalScore(submission.getFinalScore())
+                .finalScore(Double.valueOf(submission.getFinalScore()))
                 .fileUrls(
                         submission.getFileUrls() != null
                                 ? submission.getFileUrls().stream()

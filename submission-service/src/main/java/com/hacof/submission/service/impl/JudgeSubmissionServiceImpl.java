@@ -160,7 +160,7 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
         int numberOfJudges = judgesWhoCompleted.size();
         int finalScore = numberOfJudges > 0 ? totalScore / numberOfJudges : 0;
 
-        submission.setFinalScore(finalScore);
+        submission.setFinalScore((double) finalScore);
         submissionRepository.save(submission);
 
         List<Submission> allSubmissions =
@@ -170,7 +170,8 @@ public class JudgeSubmissionServiceImpl implements JudgeSubmissionService {
 
         List<Submission> sorted = allSubmissions.stream()
                 .sorted((a, b) -> {
-                    int scoreCompare = Integer.compare(b.getFinalScore(), a.getFinalScore());
+                    int scoreCompare = Double.compare(Optional.ofNullable(b.getFinalScore()).orElse(0.0),
+                            Optional.ofNullable(a.getFinalScore()).orElse(0.0));
                     if (scoreCompare != 0) return scoreCompare;
                     if (a.getSubmittedAt() == null && b.getSubmittedAt() == null) return 0;
                     if (a.getSubmittedAt() == null) return 1;

@@ -1,12 +1,7 @@
 package com.hacof.identity.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.hacof.identity.constant.Status;
+import jakarta.persistence.*;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,4 +32,8 @@ public class UserTeam extends AuditBase {
     @ManyToOne
     @JoinColumn(name = "team_id")
     Team team;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    Status status;
 }

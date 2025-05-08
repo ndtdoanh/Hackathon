@@ -1,5 +1,6 @@
 package com.hacof.identity.entity;
 
+import com.hacof.identity.constant.IndividualRegistrationRequestStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import com.hacof.identity.constant.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "individual_registration_requests")
-public class IndividualRegistrationRequest extends AuditCreatedBase {
+public class IndividualRegistrationRequest extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,7 @@ public class IndividualRegistrationRequest extends AuditCreatedBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    IndividualRegistrationRequestStatus status;
 
     @ManyToOne
     @JoinColumn(name = "reviewed_by")

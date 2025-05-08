@@ -25,7 +25,7 @@ public class S3Service {
 
     public String uploadFile(InputStream inputStream, String originalFileName, long fileSize, String contentType)
             throws IOException {
-        String fileName = "hacofpt/" + UUID.randomUUID().toString() + "_" + originalFileName;
+        String fileName = "hacofpt/" + "mediaGallery_" + originalFileName;
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(fileSize);
