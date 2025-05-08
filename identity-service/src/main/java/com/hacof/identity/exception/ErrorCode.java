@@ -48,7 +48,8 @@ public enum ErrorCode {
     INVALID_INPUT(1037, "Invalid input", HttpStatus.BAD_REQUEST),
     USER_INACTIVE(1038, "User inactive", HttpStatus.BAD_REQUEST),
     STATUS_ALREADY_SAME(1039, "Status already same", HttpStatus.BAD_REQUEST),
-    DEVICE_NOT_FOUND(1040, "Device not found", HttpStatus.NOT_FOUND);
+    ROLE_IN_USE(1040, "This role is currently assigned to one or more users", HttpStatus.BAD_REQUEST),
+    DEVICE_NOT_FOUND(1041, "Device not found", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
