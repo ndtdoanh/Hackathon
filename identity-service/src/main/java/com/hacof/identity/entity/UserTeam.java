@@ -1,7 +1,8 @@
 package com.hacof.identity.entity;
 
-import com.hacof.identity.constant.Status;
 import jakarta.persistence.*;
+
+import com.hacof.identity.constant.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

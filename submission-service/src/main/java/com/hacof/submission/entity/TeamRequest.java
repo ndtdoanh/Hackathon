@@ -3,7 +3,6 @@ package com.hacof.submission.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hacof.submission.constant.TeamRequestStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import com.hacof.submission.constant.Status;
+import com.hacof.submission.constant.TeamRequestStatus;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,7 +34,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_requests")
-public class TeamRequest extends AuditCreatedBase {
+public class TeamRequest extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;

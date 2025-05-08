@@ -1,7 +1,8 @@
 package com.hacof.communication.entity;
 
-import com.hacof.communication.constant.Status;
 import jakarta.persistence.*;
+
+import com.hacof.communication.constant.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

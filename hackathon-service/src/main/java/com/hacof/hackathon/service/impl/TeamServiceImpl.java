@@ -5,14 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hacof.hackathon.constant.BoardUserRole;
-import com.hacof.hackathon.entity.BoardUser;
-import com.hacof.hackathon.repository.BoardUserRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.hacof.hackathon.constant.BoardUserRole;
 import com.hacof.hackathon.constant.ConversationType;
 import com.hacof.hackathon.constant.TeamHackathonStatus;
 import com.hacof.hackathon.constant.TeamRoundStatus;
@@ -21,6 +19,7 @@ import com.hacof.hackathon.dto.TeamDTO;
 import com.hacof.hackathon.dto.TeamHackathonBulkDTO;
 import com.hacof.hackathon.dto.TeamMemberBulkDTO;
 import com.hacof.hackathon.entity.Board;
+import com.hacof.hackathon.entity.BoardUser;
 import com.hacof.hackathon.entity.Conversation;
 import com.hacof.hackathon.entity.ConversationUser;
 import com.hacof.hackathon.entity.Hackathon;
@@ -36,6 +35,7 @@ import com.hacof.hackathon.exception.ResourceNotFoundException;
 import com.hacof.hackathon.mapper.TeamMapper;
 import com.hacof.hackathon.mapper.manual.TeamMapperManual;
 import com.hacof.hackathon.repository.BoardRepository;
+import com.hacof.hackathon.repository.BoardUserRepository;
 import com.hacof.hackathon.repository.ConversationRepository;
 import com.hacof.hackathon.repository.ConversationUserRepository;
 import com.hacof.hackathon.repository.HackathonRepository;
@@ -228,8 +228,7 @@ public class TeamServiceImpl implements TeamService {
                             .role(
                                     user.getId() == team.getTeamLeader().getId()
                                             ? BoardUserRole.ADMIN
-                                            : BoardUserRole.MEMBER
-                            )
+                                            : BoardUserRole.MEMBER)
                             .build();
                     boardUserRepository.save(boardUser);
                 }

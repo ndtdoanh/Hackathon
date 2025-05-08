@@ -1,7 +1,8 @@
 package com.hacof.submission.entity;
 
-import com.hacof.submission.constant.Status;
 import jakarta.persistence.*;
+
+import com.hacof.submission.constant.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

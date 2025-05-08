@@ -1,7 +1,8 @@
 package com.hacof.analytics.entity;
 
-import com.hacof.analytics.constant.Status;
 import jakarta.persistence.*;
+
+import com.hacof.analytics.constant.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

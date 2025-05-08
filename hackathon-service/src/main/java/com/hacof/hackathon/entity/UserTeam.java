@@ -1,8 +1,8 @@
 package com.hacof.hackathon.entity;
 
-import com.hacof.hackathon.constant.Status;
 import jakarta.persistence.*;
 
+import com.hacof.hackathon.constant.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
