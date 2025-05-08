@@ -3,6 +3,7 @@ package com.hacof.analytics.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hacof.analytics.constant.TeamRequestStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,7 +49,7 @@ public class TeamRequest extends AuditCreatedBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    TeamRequestStatus status;
 
     @JoinColumn(name = "confirmation_deadline")
     LocalDateTime confirmationDeadline;
