@@ -1,6 +1,6 @@
 package com.hacof.submission.entity;
 
-import io.grpc.Status;
+import com.hacof.submission.constant.Status;
 import jakarta.persistence.*;
 
 import lombok.AccessLevel;
