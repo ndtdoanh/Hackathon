@@ -8,4 +8,5 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/submission-service/target/*.jar submission-service.jar
 EXPOSE 8082
+ENV TZ=Asia/Ho_Chi_Minh
 ENTRYPOINT ["java", "-jar", "submission-service.jar", "--spring.profiles.active=docker"] 

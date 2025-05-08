@@ -8,4 +8,5 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/identity-service/target/*.jar identity-service.jar
 EXPOSE 8080
+ENV TZ=Asia/Ho_Chi_Minh
 ENTRYPOINT ["java", "-jar", "identity-service.jar", "--spring.profiles.active=docker"] 

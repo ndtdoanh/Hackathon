@@ -8,4 +8,5 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/communication-service/target/*.jar communication-service.jar
 EXPOSE 8083
+ENV TZ=Asia/Ho_Chi_Minh
 ENTRYPOINT ["java", "-jar", "communication-service.jar", "--spring.profiles.active=docker"] 

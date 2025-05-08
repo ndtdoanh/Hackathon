@@ -8,4 +8,5 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/hackathon-service/target/*.jar hackathon-service.jar
 EXPOSE 8081
+ENV TZ=Asia/Ho_Chi_Minh
 ENTRYPOINT ["java", "-jar", "hackathon-service.jar", "--spring.profiles.active=docker"] 
