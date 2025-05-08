@@ -1,5 +1,6 @@
 server:
   port: 8083
+  timezone: Asia/Ho_Chi_Minh
 
 spring:
   application:
@@ -16,20 +17,25 @@ spring:
           starttls:
             enable: true
   datasource:
-    url: 'jdbc:mysql://mysql:3306/hacof'
+    url: "jdbc:mysql://mysql:3306/hacof?serverTimezone=Asia/Ho_Chi_Minh"
     driverClassName: 'com.mysql.cj.jdbc.Driver'
     username: root
     password: 12345
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
 
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate.jdbc.time_zone: Asia/Ho_Chi_Minh
     show-sql: true
 
-  multipart:
-    enabled: true
-    max-file-size: 15MB
-    max-request-size: 15MB
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 15MB
+      max-request-size: 15MB
 
 jwt:
   signerKey: 'ufTpTQ4N18O8b7+Av2juOo+ekka1oKm0Y022PhDtv1muMGsV23u4UKLNSkJebOc3'
