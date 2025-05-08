@@ -222,6 +222,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
 
+        if (!user.getStatus().equals(Status.ACTIVE)) {
+            throw new AppException(ErrorCode.USER_INACTIVE);
+        }
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
