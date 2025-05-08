@@ -1,6 +1,7 @@
 package com.hacof.identity.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -34,7 +35,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "team_requests")
-public class TeamRequest extends AuditCreatedBase {
+public class TeamRequest extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -50,16 +51,21 @@ public class TeamRequest extends AuditCreatedBase {
     @Column(name = "status")
     TeamRequestStatus status;
 
-    @JoinColumn(name = "confirmation_deadline")
+    // @JoinColumn(name = "confirmation_deadline")
+    @Column(name = "confirmation_deadline")
     LocalDateTime confirmationDeadline;
 
-    @JoinColumn(name = "note")
+    // @JoinColumn(name = "note")
+    @Column(name = "note")
     String note;
 
     @ManyToOne
     @JoinColumn(name = "reviewed_by")
     User reviewedBy;
 
+    @JoinColumn(name = "reviewed_at")
+    LocalDateTime reviewedAt;
+
     @OneToMany(mappedBy = "teamRequest", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TeamRequestMember> teamRequestMembers;
+    List<TeamRequestMember> teamRequestMembers = new ArrayList<>();
 }

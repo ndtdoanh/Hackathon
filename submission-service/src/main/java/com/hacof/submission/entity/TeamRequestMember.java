@@ -2,6 +2,7 @@ package com.hacof.submission.entity;
 
 import java.time.LocalDateTime;
 
+import com.hacof.submission.constant.TeamRequestMemberStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import com.hacof.submission.constant.Status;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -48,7 +48,7 @@ public class TeamRequestMember extends AuditBase {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    TeamRequestMemberStatus status;
 
     @Column(name = "responded_at")
     LocalDateTime respondedAt;

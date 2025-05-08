@@ -30,7 +30,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "sponsorship_hackathons")
-public class SponsorshipHackathon extends AuditBase {
+public class SponsorshipHackathon extends AuditUserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

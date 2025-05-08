@@ -35,7 +35,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "teams")
-public class Team extends AuditCreatedBase {
+public class Team extends AuditUserBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
