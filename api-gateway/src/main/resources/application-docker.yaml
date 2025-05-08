@@ -16,8 +16,8 @@ spring:
       default-filters:
         - name: RequestRateLimiter
           args:
-            redis-rate-limiter.replenishRate: 10
-            redis-rate-limiter.burstCapacity: 20
+            redis-rate-limiter.replenishRate: 5000
+            redis-rate-limiter.burstCapacity: 5000
             redis-rate-limiter.requestedTokens: 1
 eureka:
   client:
