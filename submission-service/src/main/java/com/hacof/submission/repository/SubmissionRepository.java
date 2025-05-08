@@ -14,4 +14,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByTeamIdAndRoundId(Long teamId, Long roundId);
 
     List<Submission> findByRoundId(Long roundId);
+
+    boolean existsByTeamIdAndRoundId(Long teamId, Long roundId);
+
 }

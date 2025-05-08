@@ -2,6 +2,7 @@ package com.hacof.submission.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.hacof.submission.entity.Submission;
@@ -28,7 +29,7 @@ public class SubmissionResponseDTO {
     LocalDateTime submittedAt;
     List<FileUrlResponseDTO> fileUrls;
     List<JudgeSubmissionResponseDTO> judgeSubmissions;
-    Integer finalScore;
+    Double finalScore;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     String createdByUserName;

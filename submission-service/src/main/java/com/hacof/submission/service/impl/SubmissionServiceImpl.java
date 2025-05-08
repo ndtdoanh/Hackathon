@@ -79,6 +79,10 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new IllegalArgumentException("Submission is not allowed after the round ends.");
         }
 
+        if (submissionRepository.existsByTeamIdAndRoundId(team.getId(), round.getId())) {
+            throw new IllegalArgumentException("Team has already submitted for this round.");
+        }
+
         Submission submission = new Submission();
         submission.setRound(round);
         submission.setTeam(team);
